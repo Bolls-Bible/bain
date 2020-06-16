@@ -1,0 +1,65 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html id="html" data-light="dark" data-theme='dark' data-transitions="true">
+
+<head>
+	<script async rel="preconnect" src="https://www.googletagmanager.com/gtag/js?id=UA-162017974-1"></script>
+	<script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script>
+	<meta charset="UTF-8">
+	<title>Bolls Bible</title>
+	<script>{%if translation %}
+		window.translation = "{{ translation }}";
+		window.book = {{ book}};
+		window.chapter = {{ chapter }};
+		window.verses = {{ verses | safe }}; {% if verse %}
+		window.verse = "{{ verse }}"; {% endif %} {% else %}
+		window.translation = false; {% endif %}
+		</script>
+	<script src="{% static 'bolls/dist/index.js' %}" async></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/mobile_styles.css' %}" media="(max-width: 600px)">
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+	<link rel="manifest" href="{% static 'site.webmanifest' %}">
+	{% if translation %}
+	<link rel="canonical" href="https://bolls.life/{{translation}}/{{book}}/{{chapter}}">
+	{% endif %}
+	<meta property="og:site_name" content="Bolls Bible">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+	<meta name="keywords" content="Bible,Біблія,Библия,read,find,{{translation}},NT,OT">
+	<meta name="description" content="A web app for reading the Bible with full emphasis on the God`s Word only. Sola scriptura">
+	<meta property="og:title" content="A web app for reading the Bible with full emphasis on the God`s Word only. Sola scriptura">
+	<meta property="og:description" content="Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more.">
+	<meta property="og:image" content="{% static 'light.png' %}">
+	<meta name="theme-color" content="#04060c" />
+	<meta name="twitter:card" content="app">
+	<meta name="twitter:site" content="@bolls-twitter-handle">
+	<meta name="twitter:title" content="Bolls Bible">
+	<meta name="twitter:image:src" content="{% static 'light.png' %}">
+	<meta name="twitter:image:alt" content="Bolls logo">
+	<meta name="twitter:app:name:googleplay" content="Bolls">
+	<meta name="twitter:app:id:googleplay" content="life.bolls.bolls">
+	<meta name="twitter:app:url:googleplay" class="meta-url" content="vnd.youtube:/?feature=applinks">
+</head>
+
+<body>
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', function () {
+				navigator.serviceWorker.register("/sw.js").then(function (registration) {
+					console.log('ServiceWorker registration successful with scope: ', registration.scope);
+					registration.update();
+				}, function (err) {
+					console.log('ServiceWorker registration failed: ', err);
+				});
+			});
+		}
+	</script>
+	<noscript>{% trans "Unfortunately, this site requires JavaScript that is disabled in your browser :(" %}</noscript>
+</body>
+
+</html>

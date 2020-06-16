@@ -1,0 +1,79 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html id="html" data-theme='dark'>
+
+<head>
+	<script async rel="preconnect" src="https://www.googletagmanager.com/gtag/js?id=UA-162017974-1"></script>
+	<script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script>
+  <meta charset="UTF-8">
+  <title>Bolls | {% trans "Sign up" %}</title>
+  <link rel="stylesheet" type="text/css" href="/static/registration/registration.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+  <link rel="manifest" href="/static/site.webmanifest">
+  <link rel="canonical" href="https://bolls.life/signup/">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <meta name="description" content="Bolls | {% trans "Sign up" %}. Read the Bible with full emphasis on the God`s Word only. Sola scriptura">
+  <meta property="og:title" content="Bolls | {% trans "Sign up" %}. Read the Bible with full emphasis on the God`s Word only. Sola scriptura">
+  <meta property="og:description" content="Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascending to calm, safety and more.">
+  <meta property="og:image" content="/static/light.png">
+  <meta name="twitter:image:src" content="/static/light.png">
+  <meta name="theme-color" content="#04060c" />
+</head>
+
+<body>
+  <div id="content">
+    <h1 style="font-size: 24px; color: var(--text-color);"><a class="tomain" href="/">Bolls</a> | <span id="h1" style="font: inherit; color: inherit;">{% trans 'Sign up' %}</span></h1>
+    {% block content %}
+    {% if form.errors %} {{ form.errors }} {% endif %}
+    <form method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Create">
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    <p style="font-size: 13px; padding: 16px 0px 64px;" id="donthaveanaccount">{% trans "Already have an account? " %} <a id="create" href="{% url 'login' %}"> Log in </a>
+    </p>
+    {% endblock %}
+  </div>
+
+  <script>
+    if (window.localStorage.getItem('theme')) {
+      var doc = document.querySelector('#html');
+      doc.dataset.theme = window.localStorage.getItem('theme');
+    }
+    if (window.navigator.language.slice(2) == "uk") {
+      var form = document.getElementsByTagName('form')[0];
+      form[5].value = "Створити";
+      var labels = document.getElementsByTagName("label");
+      labels[1].innerText = "Електронна пошта";
+      var helptext = document.getElementsByClassName("helptext");
+      helptext[1].innerText = "Обов'язково. Повідомте дійсну електронну адресу"
+      var donthaveanaccount = document.getElementById("h1");
+      donthaveanaccount.innerText = " Зареєструватися ";
+      var donthaveanaccount = document.getElementById("donthaveanaccount");
+      donthaveanaccount.firstChild.data = "Вже маєте обліковий запис? ";
+      var create = document.getElementById("create");
+      create.innerText = "Увійти";
+    }
+    if (window.navigator.language.slice(2) == "ru") {
+      var form = document.getElementsByTagName('form')[0];
+      form[5].value = "Создать";
+      var labels = document.getElementsByTagName("label");
+      labels[1].innerText = "Електронная почта";
+      var helptext = document.getElementsByClassName("helptext");
+      helptext[1].innerText = "Обязательно. Сообщите настояшую електронную почту"
+      var donthaveanaccount = document.getElementById("h1");
+      donthaveanaccount.innerText = " Зарегестрироватся ";
+      var donthaveanaccount = document.getElementById("donthaveanaccount");
+      donthaveanaccount.firstChild.data = "Уже имеете аккаунт? ";
+      var create = document.getElementById("create");
+      create.innerText = "Войти";
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+html {
+  --background-color: #04060c;
+  --text-color: #fee;
+  --btn-bg: #88f2;
+  --btn-bg-hover: #88f4;
+}
+
+@-webkit-keyframes text-came {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes text-came {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-color: var(--btn-bg-hover) #00000000;
+  scrollbar-width: thin;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease 0s;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  -webkit-animation: text-came 800ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: text-came 800ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #38383D00;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #545454;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #737373;
+}
+
+*::selection {
+  color: #fee;
+  background-color: #417690;
+}
+
+:focus {
+  outline: none;
+}
+
+ul, li {
+  list-style: hebrew;
+  list-style-position: inside;
+}
+
+ul {
+  padding-left: 8vw;
+  padding-bottom: 1em;
+}
+
+li {
+  line-height: 1.8;
+  text-indent: initial;
+}
+
+@keyframes link-hover {
+  0% {
+    background-size: 100% 0.2em;
+    background-position: 0px 110%;
+  }
+  50% {
+    background-size: 0% 0.2em;
+    background-position: 0px 110%;
+  }
+  50.01% {
+    background-size: 0% 0.2em;
+    background-position: right 0px top 110%;
+  }
+  100% {
+    background-size: 100% 0.2em;
+    background-position: right 0px top 110%;
+  }
+}
+
+a {
+  --hover-color: olivedrab;
+  color: var(--hover-color);
+  touch-action: manipulation;
+  background-image: linear-gradient(var(--hover-color) 0px, var(--hover-color) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 0.2em;
+  background-position: 0px 110%;
+  text-decoration: none;
+}
+
+a:hover {
+  --hover-color: sienna;
+  animation: 0.4s cubic-bezier(0.58, 0.3, 0.005, 1) 0s 1 normal none running link-hover;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: serif, sans-serif;
+  margin: 1em 0 0.35em;
+}
+
+button {
+  border: none;
+}
+
+body {
+  font-family: sans, sans-serif;
+  font-size: 20px;
+  background: var(--background-color);
+  color: var(--text-color);
+  padding: 2vh 4vw;
+  text-indent: 4vw;
+}
+
+p {
+  line-height: 1.6;
+}
+
+code, pre {
+  background-color: #88f2;
+  padding: 1px 8px;
+  border-radius: 4px;
+}
+
+pre {
+  overflow-x: auto;
+  margin: 16px;
+  padding: 8px;
+  text-indent: 0;
+}
+
+footer {
+  margin-top: 64px;
+  font-size: 16px;
+}
+
+address {
+  font-style: normal;
+}

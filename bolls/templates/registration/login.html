@@ -1,0 +1,94 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html id="html" data-theme='dark'>
+
+<head>
+	<script async rel="preconnect" src="https://www.googletagmanager.com/gtag/js?id=UA-162017974-1"></script>
+	<script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script>
+  <meta charset="UTF-8">
+  <title>Bolls | {% trans "Log in" %}</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'registration/registration.css' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+  <link rel="canonical" href="https://bolls.life/accounts/login/">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <meta name="description" content="Bolls | {% trans "Log in" %}. Read the Bible with full emphasis on the Bible only. YLT, KJV, NASB, WLC, LXX, NTGT, UBIO, UKRK, HOM, SYNOD, CUV.">
+  <meta property="og:title" content="Bolls | {% trans "Log in" %}. Read the Bible with full emphasis on the Bible only. YLT, KJV, NASB, WLC, LXX, NTGT, UBIO, UKRK, HOM, SYNOD, CUV.">
+  <meta property="og:description" content="Read God`s Word with a deep understanding of His design, Bible elevates your soul with rapid ascending to calm, safety and more.">
+  <meta property="og:image" content="http://bolls.life/static/light.png">
+  <meta name="twitter:image:src" content="http://bolls.life/static/light.png">
+</head>
+
+<body>
+  <div id="content">
+    <h1 style="font-size: 24px; color: var(--text-color);"><a class="tomain" href="/">Bolls</a> | {% trans "Log in" %}</h1>
+
+    {% block content %}
+    {% if form.errors %}
+    <p class="errormessage">{% trans "Your username and password didn't match. Please try again." %}</p>
+    {% endif %}
+
+    {% if next %}
+    {% if user.is_authenticated %}
+    <p>{% trans "Your account doesn't have access to this page. To proceed, please login with an account that has access." %}
+    </p>
+    {% else %}
+    <p>{% trans "Please login to see this page." %}</p>
+    {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form.username.label_tag }}
+      {{ form.username }}
+      {{ form.password.label_tag }}
+      {{ form.password }}
+      <input type="submit" value="Log in">
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    <p style="padding-top: 16px;"><a id="lostpass" href="{% url 'password_reset' %}">{% trans "Lost password?" %}</a></p>
+    <p style="font-size: 13px; padding-bottom: 64px;" id="donthaveanaccount">{% trans "Don’t have an account? " %}<a id="create" href="{% url 'signup' %}">{% trans "Sign up" %}</a></p>
+
+    {% endblock %}
+  </div>
+  <script>
+    if (window.localStorage.getItem('theme')) {
+      var doc = document.querySelector('#html');
+      doc.dataset.theme = window.localStorage.getItem('theme');
+    }
+    if (window.navigator.language.slice(2) == "uk") {
+      var form = document.getElementsByTagName('form')[0];
+      form[3].value = "Увійти";
+      if (document.getElementsByClassName('errormessage').length) {
+        var errormessage = document.getElementsByClassName('errormessage')[0];
+        errormessage.innerText = "Ваше ім'я користувача та пароль не збігаються. Будь ласка, спробуйте ще раз.";
+      }
+      var lostpass = document.getElementById("lostpass");
+      lostpass.innerText = "Забули пароль?";
+      var donthaveanaccount = document.getElementById("donthaveanaccount");
+      donthaveanaccount.firstChild.data = "Не маєте облікового запису? ";
+      var create = document.getElementById("create");
+      create.innerText = "Зареєструватися";
+    }
+    if (window.navigator.language.slice(2) == "ru") {
+      var form = document.getElementsByTagName('form')[0];
+      form[3].value = "Войти";
+      if (document.getElementsByClassName('errormessage').length) {
+        var errormessage = document.getElementsByClassName('errormessage')[0];
+        errormessage.innerText = "Ваше им'я пользователя и пароль не совпадают. Пожалуйста, попробуйте ещё раз.";
+      }
+      var lostpass = document.getElementById("lostpass");
+      lostpass.innerText = "Забыли пароль?";
+      var donthaveanaccount = document.getElementById("donthaveanaccount");
+      donthaveanaccount.firstChild.data = "Нету аккаунта? ";
+      var create = document.getElementById("create");
+      create.innerText = "Зарегестрироватся";
+    }
+  </script>
+</body>
+
+</html>

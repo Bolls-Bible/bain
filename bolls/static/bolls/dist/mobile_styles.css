@@ -1,0 +1,89 @@
+@media screen and (max-width: 600px) {
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  main, main h1 {
+    overflow-wrap: break-word;
+  }
+  .Bible main h1 {
+    margin: 32px 0 16px;
+  }
+  @keyframes showing_search_results {
+    0% {
+      top: 100%;
+    }
+    100% {
+      top: 0%;
+    }
+  }
+  @keyframes hiding_search_results {
+    0% {
+      top: 0%;
+    }
+    100% {
+      top: 100%;
+    }
+  }
+  .search_results {
+    right: 0;
+    height: 100%;
+    width: 100%;
+    border: none;
+    padding: 12px;
+    -webkit-animation: hiding_search_results 300ms ease 0ms both;
+    animation: hiding_search_results 300ms ease 0ms both;
+  }
+  .show_search_results {
+    box-shadow: none;
+    top: 0%;
+    -webkit-animation: showing_search_results 300ms ease 0ms both;
+    animation: showing_search_results 300ms ease 0ms both;
+  }
+  .filters {
+    max-height: 96%;
+    top: 2%;
+    padding: 12px 4px;
+  }
+  .verse_picker {
+    padding: 0 4px;
+    left: 3.125%;
+  }
+  .history {
+    top: auto;
+  }
+  .book_in_filter {
+    max-width: 240px;
+  }
+  .parallel_text {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 0;
+  }
+  .parallel {
+    height: 50%;
+    width: 100%;
+  }
+  .show_parallel {
+    border-top: 2px solid var(--btn-bg-hover);
+  }
+  ._colorpicker {
+    bottom: 0;
+  }
+  .platform-item {
+    width: 100%;
+  }
+  .exhortation {
+    margin: 4vw 8px;
+    font-size: 1.5em;
+  }
+  .navigation {
+    position: absolute;
+  }
+  .change_password span {
+    display: none;
+  }
+  .change_password svg {
+    height: 24px;
+    width: 24px;
+  }
+}

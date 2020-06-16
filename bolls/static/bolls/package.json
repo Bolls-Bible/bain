@@ -1,0 +1,36 @@
+{
+  "name": "bolls-bible",
+  "description": "Bolls Bible",
+  "keywords": [
+    "bolls"
+  ],
+  "author": "Bohuslav Pavlyshynec",
+  "bugs": "https://github.com/Bohooslav/bolls/issues",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "start": "imba src/server.imba",
+    "dev": "webpack-dev-server --hot --content-base dist/",
+    "build": "webpack --mode=production",
+    "watch": "webpack --mode=development --watch --progress --colors --display-modules"
+  },
+  "files": [],
+  "directories": {},
+  "homepage": "https://bolls.life",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Bohooslav/bolls.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "dexie": "^3.0.1",
+    "exports-loader": "^1.0.0",
+    "imba": "^1.5.2",
+    "imports-loader": "^0.8.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
