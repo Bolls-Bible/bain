@@ -1,4 +1,4 @@
-var CACHE_NAME = "v1.3.31";
+var CACHE_NAME = "v1.3.32";
 var urlsToCache = [
   '/',
   '/static/bolls/dist/index.js',

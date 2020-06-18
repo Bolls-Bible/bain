@@ -795,6 +795,22 @@ export tag Bible
 				if books[current_index - 1]
 					getText(settings:translation, books[current_index - 1]:bookid, books[current_index - 1]:chapters)
 
+	def prevChapterLink
+		if settings:chapter - 1 > 0
+			return "/{settings:translation}/{settings:book}/{settings:chapter - 1}/"
+		else
+			let current_index = books.indexOf(books.find(do |element| return element:bookid == settings:book))
+			if books[current_index - 1]
+				return "/{settings:translation}/{books[current_index - 1]:bookid}/{books[current_index - 1]:chapters}/"
+
+	def nextChapterLink
+		if settings:chapter + 1 <= chaptersOfCurrentBook
+			return "/{settings:translation}/{settings:book}/{settings:chapter + 1}/"
+		else
+			let current_index = books.indexOf(books.find(do |element| return element:bookid == settings:book))
+			if books[current_index + 1]
+				return "/{settings:translation}/{books[current_index+1]:bookid}/1/"
+
 	def nextBook
 		let current_index = books.indexOf(books.find(do |element| return element:bookid == settings:book))
 		if books[current_index + 1]
@@ -1567,11 +1583,11 @@ export tag Bible
 										style="background-image:{getHighlight(verse:pk, 'bookmarks')}"
 									>
 							<.arrows>
-								<a.arrow :click.prevent.prevChapter() title=@data.lang:prev>
+								<a.arrow :click.prevent.prevChapter() title=@data.lang:prev href=prevChapterLink>
 									<svg:svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 										<svg:title> @data.lang:prev
 										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-								<a.arrow :click.prevent.nextChapter() title=@data.lang:next>
+								<a.arrow :click.prevent.nextChapter() title=@data.lang:next href=nextChapterLink>
 									<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 										<svg:title> @data.lang:next
 										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -1737,7 +1753,7 @@ export tag Bible
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-09T18:38"> "2019-present"
+						"©",	<time time:datetime="2020-06-18T10:06"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(search:search_div || show_help || show_compare || show_downloads || show_support)>
