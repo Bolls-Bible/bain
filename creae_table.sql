@@ -12,7 +12,8 @@ SELECT book, count(chapter) FROM bolls_verses GROUP BY chapter;
 -- SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
 SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
-UPDATE bolls_verses SET text = ('Dios, en el principio, creó los cielos y la tierra. ') where translation='NVI' and book=1  and chapter=1 and verse=1
+UPDATE bolls_verses SET text = ('Tú construiste tu hogar por encima de los cielos; usaste las nubes como carruaje y cruzaste el cielo con las alas del viento.') where translation = 'PDT' and book = 19 and chapter = 104 and verse = 3;
+select * from bolls_verses where translation = 'PDT' and book = 19 and chapter = 104 and verse = 3;
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete from bolls_verses where translation='HOM' and book = 72;
@@ -23,7 +24,7 @@ delete from bolls_verses where translation='HOM' and book = 72;
 \copy auth_user(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM '/home/b/data-1583933238173.csv' DELIMITER ',' CSV HEADER;
 
 psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432    --username=postgres    --password    --dbname=bain
-#8q^EMgAxWbmLGEp
+
 
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NTjud_verses.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NRT_verses.csv' DELIMITER '|' CSV HEADER;
