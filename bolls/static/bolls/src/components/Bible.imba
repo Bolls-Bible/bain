@@ -1002,7 +1002,14 @@ export tag Bible
 			.then(do |data| @data.showNotification('saved'))
 			.catch(do |e|
 				console.log(e)
-				@data.showNotification('error'))
+				@data.showNotification('error')
+				if @data.can_work_with_db
+					@data.saveBookmarksToStorageUntillOnline({
+						verses: choosenid,
+						color: highlight_color,
+						date: Date.now(),
+						notes: choosen_categories
+					}))
 		elif @data.can_work_with_db
 			@data.saveBookmarksToStorageUntillOnline({
 				verses: choosenid,

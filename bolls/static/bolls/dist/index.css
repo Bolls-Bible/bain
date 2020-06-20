@@ -582,7 +582,7 @@ html[data-light="light"] .choosen_verses {
 #addbuttons {
 	display: flex;
 	grid-gap: 4px;
-	margin: 0px auto;
+	margin: -8px auto 0;
 	width: 320px;
 	justify-content: space-evenly;
 }
@@ -601,7 +601,7 @@ html[data-light="light"] .choosen_verses {
 
 .share_box {
 	display: inline-block;
-	margin: 8px 16px;
+	margin: 0 16px;
 }
 
 .share_btn {

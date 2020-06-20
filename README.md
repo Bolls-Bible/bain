@@ -34,7 +34,7 @@ python manage.py runserver 0:8000
 ```
 
 - and go to <http://0.0.0.0:8000/>
-- check if everything is correct and you do not see any error. You will not see any book, because to do that you should have installed PostreSQL and fill it with translations. Ask me to get it  <https:t.me/Boguslavv>. Using pgAdmin or cmd, create a database `bain`, than run migrations:
+- check if everything is correct and you do not see any error. You will not see any verse, because to do that you should have installed PostreSQL, create bd 'bain', run migrations and fill a table 'bolls_verses' with translations. Ask me to get the translations  <https:t.me/Boguslavv>. Using pgAdmin or cmd, create a database `bain`, than run migrations:
 
 ```bash
 python manage.py makemigrations

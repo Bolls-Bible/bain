@@ -19,14 +19,15 @@ UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete from bolls_verses where translation='HOM' and book = 72;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/repairedbooks.csv' DELIMITER '|' CSV HEADER;
 ----------
+UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 
 \copy auth_user(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM '/home/b/data-1583933238173.csv' DELIMITER ',' CSV HEADER;
 
 psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432    --username=postgres    --password    --dbname=bain
 
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/PDT.csv' DELIMITER '|' CSV HEADER;
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NTjud_verses.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NRT_verses.csv' DELIMITER '|' CSV HEADER;
 
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/lost_books(20,22).csv' DELIMITER '|' CSV HEADER;
@@ -90,3 +91,17 @@ begin
 
 end; $$
 LANGUAGE 'plpgsql';
+
+
+
+
+
+select * from bolls_verses where id = 1523961 or id = 1526351 or id = 1524145 or id = 1506556 or id = 1508819 or id = 1522125 or id = 1523633 or id = 1508764 or id = 1520680 or id = 1520080 or id = 1506559 or id = 1523873 or id = 1525284 or id = 1506560 or id = 1511896 or id = 1524268 or id = 1525921 or id = 1506561 or id = 1525764 or id = 1520581 or id = 1520580 or id = 1525136 or id = 1508946 or id = 1509867 or id = 1509868 or id = 1520923 or id = 1522135;
+
+UPDATE bolls_verses SET translation = ('DELETED') where translation = 'PDT';
+
+DELETE FROM bolls_verses lg
+WHERE  NOT EXISTS (
+   SELECT FROM bolls_bookmarks lr
+   WHERE  lr.verse_id = lg.id
+   ) and translation = 'DELETED';
