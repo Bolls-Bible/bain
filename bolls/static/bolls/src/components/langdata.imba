@@ -74,6 +74,8 @@ export const en_lang = {
 	"change_password": "Change password",
 	"donate": "Donate",
 	"use_it_in_browser": "Use it in browser",
+	"welcome": "Welcome to Bolls :)",
+	"welcome_msg": "This web app is for reading the Bible. The books / translations are in the left panel, other settings in the right one. Enjoy",
 	"bgthnkst": "Big thanks to",
 	"this_translation_is_unavailable": "This translation require internet connection",
 	"snapstore": "Get it from the",
@@ -197,6 +199,8 @@ export const uk_lang = {
 	"change_password": "Змінити пароль",
 	"donate": "Пожертвуйте",
 	"use_it_in_browser": "Користуватися у браузері",
+	"welcome": "Ласкаво просимо в Bolls :)",
+	"welcome_msg": "Цей додаток призначений для читання Біблії. Навігація по книгам / перекладам знаходиться на панелі ліворуч, інші налаштування - праворуч. Насолоджуйтесь",
 	"bgthnkst": "Велика вдячність цим людям",
 	"this_translation_is_unavailable": "Нажаль, цей переклад не є доступним без підключення до інтернету. Потім не забудьте скачати (якщо він вам потрібний)",
 	"snapstore": "Завантажити з",
@@ -320,6 +324,8 @@ export const ru_lang = {
 	"change_password": "Поменять пароль",
 	"donate": "Пожертвовать",
 	"use_it_in_browser": "Пользовать в браузере",
+	"welcome": "Добро пожаловать в Bolls :)",
+	"welcome_msg": "Это веб-приложение для чтения Библии. Навигация по книгам / переводам находится на левой панели, остальные настройки - на правой. Наслаждайтесь",
 	"bgthnkst": "Большая благодарность таким людям",
 	"this_translation_is_unavailable": "Этот перевод не доступен без интернета",
 	"snapstore": "Получить через",
@@ -443,13 +449,15 @@ export const pt_lang = {
 	"change_password": "Mudar senha",
 	"donate": "Doar",
 	"use_it_in_browser": "Use-o no navegador",
+	"welcome": "Bem-vindo ao Bolls :)",
+	"welcome_msg": "Este aplicativo da web é para leitura da Bíblia, a navegação de livros / traduções está no painel esquerdo e as outras configurações no painel direito. Aprecie",
 	"bgthnkst": "Muito obrigado a",
 	"this_translation_is_unavailable": "Esta tradução requer conexão à Internet",
 	"snapstore": "Obtê-lo a partir do",
 	"exhortation": "Um aplicativo da web para ler a Bíblia, com total ênfase apenas na Palavra de Deus. Sola scriptura!",
 	"faqmsg": "Aqui você pode encontrar respostas para as perguntas frequentes",
 	"still_have_questions": "¿Ainda tem dúvidas ou tem algumas ideias? Escreva-me e eu responderei assim que puder:",
-	"install_on_android": " * Este aplicativo da web também pode ser instalado via Google Chrome. Encontre o ícone de adição na linha de endereço e pressione-o. Depois disso, o aplicativo será instalado como um aplicativo nativo.<br/><br/> * No iPhone com iOS <= 12 você também pode adicionar o aplicativo na tela inicial e ele será como um aplicativo nativo, basta pressionar o ícone de compartilhamento abaixo e encontrar a opção 'Adicionar à tela inicial'. ",
+	"install_on_android": " * Este aplicativo da web também pode ser instalado via Google Chrome. Encontre o ícone de adição na linha de endereço e pressione-o. Depois disso, o aplicativo será instalado como um aplicativo nativo.<br/><br/> * No iPhone com iOS <= 12 você também pode adicionar o aplicativo na tela inicial e ele será como um aplicativo nativo, basta pressionar o ícone de compartilhamento abaixo e encontrar a opção 'Adicionar à tela inicial'.",
 	"content": "Conteúdo",
 	"shortcuts": "Atalhos",
 	"shortcuts_list": [
@@ -468,7 +476,7 @@ export const pt_lang = {
 		"Escreva um comentário.",
 		"Envie uma ideia)",
 		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traduza a interface para um novo idioma.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ... "
+		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ..."
 	],
 	"HB": [
 		[
@@ -477,7 +485,7 @@ export const pt_lang = {
 		],
 		[
 			"¿Como baixar uma tradução?",
-			"Como você imagina, este aplicativo da Web está disponível offline e você pode baixar uma tradução para usá-lo offline. Para isso, vá para o menu esquerdo, encontre um ícone de nuvem na parte superior e pressione-o (fica visível se o seu navegador tiver acesso para armazenamento e não possui restrições nas configurações). Então você verá a lista de disponíveis para baixar traduções. Basta pressionar um ícone de nuvem na tradução que deseja baixar e, após alguns segundos, ele será baixado. "
+			"Como você imagina, este aplicativo da Web está disponível offline e você pode baixar uma tradução para usá-lo offline. Para isso, vá para o menu esquerdo, encontre um ícone de nuvem na parte superior e pressione-o (fica visível se o seu navegador tiver acesso para armazenamento e não possui restrições nas configurações). Então você verá a lista de disponíveis para baixar traduções. Basta pressionar um ícone de nuvem na tradução que deseja baixar e, após alguns segundos, ele será baixado."
 		],
 		[
 			"¿Por que se registrar?",
@@ -566,6 +574,8 @@ export const es_lang = {
 	"change_password": "Cambiar contraseña",
 	"donate": "Donar",
 	"use_it_in_browser": "Úselo en el navegador",
+	"welcome": "Bienvenido a Bolls :)",
+	"welcome_msg": "Esta aplicación web es para leer la Biblia, la navegación de libros /traducciones está en el panel izquierdo, las otras configuraciones en el panel de la derecha. Que lo disfrutes",
 	"bgthnkst": "Muchas gracias a",
 	"this_translation_is_unavailable": "Esta traducción requiere conexión a Internet",
 	"snapstore": "Obténlo de",
@@ -608,7 +618,7 @@ export const es_lang = {
 		],
 		[
 			"¿Dónde ver los textos destacados?",
-			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados. "
+			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados."
 		]
 	]
 }

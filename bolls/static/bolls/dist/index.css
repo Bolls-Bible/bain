@@ -1,65 +1,65 @@
 html[data-light="dark"] {
-	--background-color: #04060c;
-	--text-color: #fee;
-	--btn-bg: #88f2;
-	--btn-bg-hover: #88f4;
+	--background-color: rgb(4, 6, 12);
+	--text-color: rgb(255, 238, 238);
+	--btn-bg: rgba(136, 136, 255, 0.1);
+	--btn-bg-hover: rgba(136, 136, 255, 0.3);
 }
 
 html[data-light="light"] {
-	--background-color: #fee;
-	--text-color: #04060c;
-	--btn-bg: #47f4;
-	--btn-bg-hover: #47f1;
+	--background-color: rgb(255, 238, 238);
+	--text-color: rgb(4, 6, 12);
+	--btn-bg: rgba(68, 119, 255, 0.3);
+	--btn-bg-hover: rgba(68, 119, 255, 0.1);
 }
 
 html[data-theme="bluedark"] {
-	--accent-color: #8080ff;
-	--accent-hover-color: #96b6f3fe;
+	--accent-color: rgb(128, 128, 255);
+	--accent-hover-color: rgba(150, 182, 243, 0.996);
 }
 
 html[data-theme="bluelight"] {
 	--accent-color: navy;
-	--accent-hover-color: #417690fe;
+	--accent-hover-color: rgba(65, 118, 144, 0.996);
 }
 
 html[data-theme="greendark"] {
 	--accent-color: olivedrab;
-	--accent-hover-color: yellowgreenfe;
+	--accent-hover-color: yellowgreen;
 }
 
 html[data-theme="greenlight"] {
 	--accent-color: olivedrab;
-	--accent-hover-color: yellowgreenfe;
+	--accent-hover-color: yellowgreen;
 }
 
 html[data-theme="purpledark"] {
-	--accent-color: #984da5;
-	--accent-hover-color: #b171bcfe;
+	--accent-color: rgb(152, 77, 165);
+	--accent-hover-color: rgba(177, 113, 188, 0.996);
 }
 
 html[data-theme="purplelight"] {
-	--accent-color: #66346f;
-	--accent-hover-color: #994ea6fe;
+	--accent-color: rgb(102, 52, 111);
+	--accent-hover-color: rgba(153, 78, 166, 0.996);
 }
 
 html[data-theme="golddark"] {
-	--accent-color: #daa520;
-	--accent-hover-color: #e7c15ffe;
+	--accent-color: rgb(218, 165, 32);
+	--accent-hover-color: rgba(231, 193, 95, 0.996);
 }
 
 html[data-theme="goldlight"] {
-	--accent-color: #a98019;
-	--accent-hover-color: #e1af33fe;
+	--accent-color: rgb(169, 128, 25);
+	--accent-hover-color: rgba(225, 175, 51, 0.996);
 }
 
 html[data-theme="reddark"] {
-	--accent-color: #de5454;
-	--accent-hover-color: #e67a7afe;
+	--accent-color: rgb(222, 84, 84);
+	--accent-hover-color: rgba(230, 122, 122, 0.996);
 }
 
 html[data-theme="redlight"] {
-	--accent-color: #891a1a;
-	--accent-hover-color: #d93a3afe;
+	--accent-color: rgb(137, 26, 26);
+	--accent-hover-color: rgba(217, 58, 58, 0.996);
 }
 
 html[data-transitions="true"] * {
@@ -73,7 +73,7 @@ html[data-transitions="false"] * {
 
 * {
 	box-sizing: border-box;
-	scrollbar-color: var(--btn-bg-hover) #00000000;
+	scrollbar-color: var(--btn-bg-hover) rgba(0, 0, 0, 0);
 	scrollbar-width: auto;
 	margin: 0;
 	padding: 0;
@@ -553,8 +553,8 @@ html[data-light="light"] .choosen_verses {
 	display: inline-flex;
 	cursor: pointer;
 	border: 1px solid var(--btn-bg-hover);
-	--onhoverchangefill: #0000;
-	--onhoverchangestroke: #0000;
+	--onhoverchangefill: rgba(0, 0, 0, 0);
+	--onhoverchangestroke: rgba(0, 0, 0, 0);
 }
 
 .color_mark:hover {
@@ -584,7 +584,7 @@ html[data-light="light"] .choosen_verses {
 	grid-gap: 4px;
 	margin: -8px auto 0;
 	width: 320px;
-	justify-content: space-evenly;
+	justify-content: space-around;
 }
 
 .save_bookmark {
@@ -806,7 +806,7 @@ aside {
 
 .languages button {
 	background-color: transparent;
-	background-image: linear-gradient(#0000, #4477ff0b);
+	background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(66, 117, 255, 0.043));
 	color: var(--text-color);
 	cursor: pointer;
 	padding: 8px 16px;
@@ -877,11 +877,11 @@ aside {
 
 .signin {
 	margin-left: 4px;
-	background: #8f82;
+	background: rgba(136, 255, 136, 0.133);
 }
 
 .signin:hover {
-	background: #8f84;
+	background: rgba(136, 255, 136, 0.267);
 }
 
 .username {
@@ -1024,7 +1024,7 @@ html[data-transitions="true"] .show_search_results {
 	text-align: left;
 	padding: 8px 0;
 	font-size: 16px;
-	color: #9ab;
+	color: rgb(153, 170, 187);
 }
 
 .search_item {
@@ -1359,7 +1359,7 @@ html[data-transitions="true"] .show_history {
 }
 
 .addtocollection {
-	box-shadow: 0 14px 28px #04060c40, 0 10px 10px #04060c38;
+	box-shadow: 0 14px 28px rgba(4, 6, 12, 0.251), 0 10px 10px rgba(4, 6, 12, 0.22);
 	background: var(--background-color);
 	bottom: 0;
 	position: fixed;
@@ -1459,11 +1459,11 @@ html[data-transitions="true"] .show_history {
 
 .add_new_collection {
 	background: royalblue;
-	color: #fff;
+	color: white;
 }
 
 .add_new_collection:hover {
-	background: #4169e1dd;
+	background: rgba(65, 105, 225, 0.867);
 }
 
 .backInProfile {
@@ -1473,21 +1473,21 @@ html[data-transitions="true"] .show_history {
 }
 
 footer {
-	color: #888;
+	color: rgb(136, 136, 136);
 	font-size: 12px;
 	padding-bottom: 8px;
 	text-align: center;
 }
 
 footer a {
-	color: #888;
+	color: rgb(136, 136, 136);
 	font-size: 12px;
 	display: inline-block;
-	background-image: linear-gradient(#888 0px, #888 100%);
+	background-image: linear-gradient(rgb(136, 136, 136) 0px, rgb(136, 136, 136) 100%);
 }
 
 footer a:hover {
-	color: #9ab;
+	color: rgb(153, 170, 187);
 }
 
 .footer_links {
@@ -1720,4 +1720,39 @@ address a:hover {
 
 .drag_handle:hover {
 	fill: var(--accent-hover-color);
+}
+
+#welcome {
+	padding: 16px;
+	animation-duration: 1.2s;
+}
+
+#welcome p {
+	margin-bottom: 8px;
+	text-indent: 1.5em;
+	line-height: 1.5;
+	font-size: 0.9em;
+	text-align: justify;
+}
+
+#welcome span {
+	font-family: 'Apple Color Emoji', 'Droid Sans Fallback', 'Noto Color Emoji', 'Segoe UI Emoji';
+}
+
+#welcome button {
+	width: 100%;
+	height: 32px;
+	background: transparent;
+	color: var(--text-color);
+	text-align: center;
+	border: none;
+	font-size: 1em;
+}
+
+#welcome button:hover {
+	fill: var(--accent-hover-color);
+	color: var(--accent-hover-color);
+	background-color: var(--btn-bg-hover);
+	border-radius: 8px;
+	cursor: pointer;
 }

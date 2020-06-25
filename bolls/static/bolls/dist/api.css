@@ -1,8 +1,8 @@
 html {
-  --background-color: #04060c;
-  --text-color: #fee;
-  --btn-bg: #88f2;
-  --btn-bg-hover: #88f4;
+  --background-color: rgb(4, 6, 12);
+  --text-color: rgb(255, 238, 238);
+  --btn-bg: rgba(136, 136, 255, 0.133);
+  --btn-bg-hover: rgba(136, 136, 255, 0.267);
 }
 
 @-webkit-keyframes text-came {
@@ -25,7 +25,7 @@ html {
 
 * {
   box-sizing: border-box;
-  scrollbar-color: var(--btn-bg-hover) #00000000;
+  scrollbar-color: var(--btn-bg-hover) rgba(0, 0, 0, 0);
   scrollbar-width: thin;
   margin: 0;
   padding: 0;
@@ -45,21 +45,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #38383D00;
+  background: rgba(56, 56, 61, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #545454;
+  background: rgb(84, 84, 84);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #737373;
+  background: rgb(115, 115, 115);
 }
 
 *::selection {
-  color: #fee;
-  background-color: #417690;
+  color: rgb(255, 238, 238);
+  background-color: rgb(65, 118, 144);
 }
 
 :focus {
@@ -139,7 +139,7 @@ p {
 }
 
 code, pre {
-  background-color: #88f2;
+  background-color: rgba(136, 136, 255, 0.133);
   padding: 1px 8px;
   border-radius: 4px;
 }

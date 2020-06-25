@@ -72,6 +72,7 @@ let choosen_for_comparison = []
 let comparison_parallel = []
 let new_comparison_parallel = []
 let show_translations_for_comparison = no
+let welcome = yes
 let was_deleting_translation_from_compare = no
 let compare_translations = []
 let compare_parallel_of_chapter
@@ -309,6 +310,7 @@ export tag Bible
 			settings:transitions = no
 			let html = document.querySelector('#html')
 			html:dataset:transitions = "false"
+		welcome = getCookie('welcome') || welcome
 		settings:font:size = parseInt(getCookie('font')) || settings:font:size
 		settings:font:family = getCookie('font-family') || settings:font:family
 		settings:font:name = getCookie('font-name') || settings:font:name
@@ -713,11 +715,7 @@ export tag Bible
 		show_accents = no
 
 	def getRandomColor
-		var letters = '0123456789ABCDEF'
-		var color = '#'
-		for i in [0..5]
-			color += letters[Math.floor(Math.random() * 16)]
-		return color
+		return 'rgb(' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ')'
 
 	def decreaseFontSize
 		if settings:font:size > 16
@@ -875,7 +873,7 @@ export tag Bible
 		if choosenid:length && choosenid.find(do |element| return element == verse)
 			let img = 'linear-gradient(to right'
 			for i in [0..96]
-				img += ', ' + (i % 2 ? '#0000' : highlight_color) + ' ' + i + '% ' + (i + 8) + '%'
+				img += ', ' + (i % 2 ? 'rgba(0,0,0,0)' : highlight_color) + ' ' + i + '% ' + (i + 8) + '%'
 				i+=4
 			return img += ')'
 		else
@@ -970,7 +968,7 @@ export tag Bible
 		return cookieValue
 
 	def sendBookmarksToDjango
-		if highlight_color:length > 9
+		if highlight_color:length > 15
 			if highlights.find(do |element| return element == highlight_color)
 				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == highlight_color)), 1)
 			highlights.push(highlight_color)
@@ -1438,7 +1436,7 @@ export tag Bible
 			setCookie('font-weight', settings:font:weight)
 
 	def boxShadow grade
-		settings:theme == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px #0001;" : ''
+		settings:theme == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
 
 	def featherSearch feather, haystack
 		feather = feather.toLowerCase()
@@ -1515,6 +1513,10 @@ export tag Bible
 	def hideVersePicker
 		show_parallel_verse_picker = no
 		show_verse_picker = no
+
+	def WelcomeOk
+		welcome = no
+		setCookie('welcome', no)
 
 	def render
 		<self>
@@ -1756,11 +1758,12 @@ export tag Bible
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
+						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> @data.lang:donate, " 🐈"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-18T10:06"> "2019-present"
+						"©",	<time time:datetime="2020-06-23T10:06"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(search:search_div || show_help || show_compare || show_downloads || show_support)>
@@ -2153,3 +2156,9 @@ export tag Bible
 						elif show_parallel_verse_picker
 							for j in [0..@parallel_verses:length]
 								<a.chapter_number :tap.hideVersePicker() href="#p{j + 1}"> j + 1
+
+			if welcome != 'false'
+				<section#welcome.history.filters .show_history=welcome>
+					<h1 style="margin: 0 auto 12px; font-size: 1.2em;"> @data.lang:welcome
+					<p> @data.lang:welcome_msg, <span> ' 😉'
+					<button :tap.prevent.WelcomeOk()> "Ok 👌🏽"

@@ -34,8 +34,9 @@ links.imba
 
 bolls/static/
 static/bolls/package-lock.json
-
-myBible_concordance.sql
+sql/
+languages/
+migrations/
 README.md
 .github
 .vscode
