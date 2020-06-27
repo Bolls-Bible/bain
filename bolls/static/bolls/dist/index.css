@@ -1,14 +1,14 @@
 html[data-light="dark"] {
 	--background-color: rgb(4, 6, 12);
 	--text-color: rgb(255, 238, 238);
-	--btn-bg: rgba(136, 136, 255, 0.1);
-	--btn-bg-hover: rgba(136, 136, 255, 0.3);
+	--btn-bg: rgba(136, 136, 255, 0.25);
+	--btn-bg-hover: rgba(136, 136, 255, 0.4);
 }
 
 html[data-light="light"] {
 	--background-color: rgb(255, 238, 238);
 	--text-color: rgb(4, 6, 12);
-	--btn-bg: rgba(68, 119, 255, 0.3);
+	--btn-bg: rgba(68, 119, 255, 0.25);
 	--btn-bg-hover: rgba(68, 119, 255, 0.1);
 }
 
@@ -222,17 +222,17 @@ nav {
 	}
 }
 
-@keyframes man-up {
+@keyframes heart-beat {
 	0% {
 		transform: none;
 	}
 
-	42% {
-		transform: translateY(-4px);
+	75% {
+		transform: scale(1.2);
 	}
 
-	72% {
-		transform: translateY(-4px);
+	96% {
+		transform: translateY(0.9);
 	}
 
 	100% {
@@ -253,8 +253,10 @@ html[data-transitions="true"] .save_bookmark:hover {
 	animation: shake 300ms ease forwards;
 }
 
-html[data-transitions="true"] .animated-man:hover .helpsvg {
-	animation-name: man-up;
+html[data-transitions="true"] #animated-heart:hover .helpsvg {
+	animation-name: heart-beat;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
 }
 
 .chronological_order {
@@ -443,7 +445,7 @@ nav input[type="text"] {
 	width: calc(32px + 6vw);
 	height: calc(32px + 6vw);
 	padding: 3vw;
-	fill: var(--btn-bg);
+	fill: var(--btn-bg-hover);
 	position: fixed;
 	cursor: pointer;
 }
@@ -1565,7 +1567,7 @@ footer a:hover {
 	max-width: 800px;
 }
 
-.install_on_android {
+.install_via_chrome {
 	max-width: 1000px;
 	display: block;
 	margin: auto;
@@ -1574,11 +1576,11 @@ footer a:hover {
 	padding: 16vh 4vw;
 }
 
-.install_on_android a {
+.install_via_chrome a {
 	color: var(--accent-color);
 }
 
-.install_on_android a:hover {
+.install_via_chrome a:hover {
 	color: var(--accent-hover-color);
 }
 

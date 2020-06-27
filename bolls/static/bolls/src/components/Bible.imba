@@ -13,8 +13,8 @@ for language in languages
 	translations = translations.concat(language:translations)
 
 let settings = {
-	theme: 'light',
-	accent: 'blue',
+	theme: 'dark',
+	accent: 'gold',
 	translation: 'YLT',
 	book: 1,
 	chapter: 1,
@@ -58,15 +58,11 @@ let loading = no
 let menuicons = yes
 let show_fonts = no
 let show_accents = no
-let show_help = no
-let show_support = no
-let show_compare = no
 let show_verse_picker = no
 let show_parallel_verse_picker = no
-let show_downloads = no
 let show_language_of = ''
 let show_share_box = no
-let what_to_show = 'search'
+let what_to_show_in_pop_up_block = ''
 let deleting_of_all_transllations = no
 let choosen_for_comparison = []
 let comparison_parallel = []
@@ -179,15 +175,17 @@ document:onkeyup = do |e|
 window:onpopstate = do |event|
 	let state = event:state
 	if state
-		if state:profile || state:downloads
-			if state:profile
-				let profile = document:getElementsByClassName("Profile")
-				if !profile[0]
-					Imba.mount <Profile[@data]>
-			if state:downloads
-				let downloads = document:getElementsByClassName("Downloads")
-				if !downloads[0]
-					Imba.mount <Downloads[@data]>
+		if state:inner_pop_up
+			let bible = document:getElementsByClassName("Bible")
+			bible[0]:_tag.clearSpace()
+		elif state:profile
+			let profile = document:getElementsByClassName("Profile")
+			if !profile[0]
+				Imba.mount <Profile[@data]>
+		elif state:downloads
+			let downloads = document:getElementsByClassName("Downloads")
+			if !downloads[0]
+				Imba.mount <Downloads[@data]>
 		else
 			onpopstate = yes
 			let profile = document:getElementsByClassName("Profile")
@@ -560,10 +558,7 @@ export tag Bible
 		show_color_picker = no
 		show_collections = no
 		choosen_parallel = no
-		show_help = no
-		show_support = no
-		show_compare = no
-		show_downloads = no
+		what_to_show_in_pop_up_block = ''
 		was_deleting_translation_from_compare = no
 		show_translations_for_comparison = no
 		show_parallel_verse_picker = no
@@ -575,20 +570,20 @@ export tag Bible
 		Imba.commit()
 
 	def turnHelpBox
-		if show_help
-			clearSpace
+		if what_to_show_in_pop_up_block == "show_help"
+			clearSpace()
 		else
-			clearSpace
-			show_help = !show_help
-			what_to_show = 'show_help'
+			clearSpace()
+			what_to_show_in_pop_up_block = 'show_help'
+			window:history.pushState({inner_pop_up: yes}, "Help")
 
 	def turnSupport
-		if show_support
-			clearSpace
+		if what_to_show_in_pop_up_block == "show_support"
+			clearSpace()
 		else
-			clearSpace
-			show_support = !show_support
-			what_to_show = 'show_support'
+			clearSpace()
+			what_to_show_in_pop_up_block = 'show_support'
+			window:history.pushState({inner_pop_up: yes}, "Support")
 
 	def toggleParallelMode parallel
 		if !parallel
@@ -661,8 +656,9 @@ export tag Bible
 					if !@search:bookid_of_results.find(do |element| return element == verse:book)
 						@search:bookid_of_results.push verse:book
 				closeSearch()
-				what_to_show = ''
+				what_to_show_in_pop_up_block = 'search'
 				Imba.commit
+				window:history.pushState({inner_pop_up: yes}, "Search")
 			catch error
 				if @data.can_work_with_db && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
 					@search_verses = await @data.getSearchedTextFromStorage(search)
@@ -670,7 +666,7 @@ export tag Bible
 					for verse in @search_verses
 						if !@search:bookid_of_results.find(do |element| return element == verse:book)
 							@search:bookid_of_results.push verse:book
-					what_to_show = ''
+					what_to_show_in_pop_up_block = 'search'
 					closeSearch()
 					Imba.commit
 
@@ -681,6 +677,7 @@ export tag Bible
 		if close
 			@search:search_div = !@search:search_div
 			@search:change_translation = no
+			clearSpace()
 		@search:search_result_header = @search:search_input
 		settings_menu_left = -300
 		if document.getElementById('search')
@@ -909,9 +906,10 @@ export tag Bible
 		if document.getSelection == ''
 			if !choosen_parallel
 				choosen_parallel = parallel
-				choosenid.push pk
-				choosen.push id
-				pushNoteIfExist pk
+				choosenid.push(pk)
+				choosen.push(id)
+				pushNoteIfExist(pk)
+				window:history.pushState({inner_pop_up: yes}, "Highlight")
 				if window:innerWidth < 600
 					if parallel == "first"
 						window:location:hash = "#{id}"
@@ -1015,24 +1013,21 @@ export tag Bible
 				date: Date.now(),
 				notes: choosen_categories
 			})
+		let bkmrk = {
+			verse: verse,
+			date: Date.now(),
+			color: highlight_color,
+			note: notes}
 		if choosen_parallel == 'second'
 			for verse in choosenid
 				if @parallel_bookmarks.find(do |bookmark| return bookmark:verse == verse)
 					@parallel_bookmarks.splice(@parallel_bookmarks.indexOf(@parallel_bookmarks.find(do |bookmark| return bookmark:verse == verse)), 1)
-				@parallel_bookmarks.push({
-					verse: verse,
-					date: Date.now(),
-					color: highlight_color,
-					note: notes})
+				@parallel_bookmarks.push(bkmrk)
 		else
 			for verse in choosenid
 				if @bookmarks.find(do |bookmark| return bookmark:verse == verse)
 					@bookmarks.splice(@bookmarks.indexOf(@bookmarks.find(do |bookmark| return bookmark:verse == verse)), 1)
-				@bookmarks.push({
-					verse: verse,
-					date: Date.now(),
-					color: highlight_color,
-					note: notes})
+				@bookmarks.push(bkmrk)
 		clearSpace
 
 	def deleteColor color_to_delete
@@ -1327,19 +1322,19 @@ export tag Bible
 		else
 			compare_parallel_of_chapter = settings:chapter
 			compare_parallel_of_book = settings:book
-		if show_compare
+		if what_to_show_in_pop_up_block == "show_compare"
 			clearSpace()
-			show_compare = yes
-			what_to_show = 'show_compare'
+			what_to_show_in_pop_up_block = 'show_compare'
+			window:history.pushState({inner_pop_up: yes}, "Compare")
 		else clearSpace()
 		was_deleting_translation_from_compare = no
 		loading = yes
 		if !window:navigator:onLine && @data.can_work_with_db && @data.downloaded_translations.indexOf(settings:translation) != -1
 			comparison_parallel = await @data.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
 			loading = no
-			show_compare = yes
-			what_to_show = 'show_compare'
+			what_to_show_in_pop_up_block = 'show_compare'
 			Imba.commit()
+			window:history.pushState({inner_pop_up: yes}, "Compare")
 		else
 			comparison_parallel = []
 			window.fetch("/get-paralel-verses/", {
@@ -1359,9 +1354,9 @@ export tag Bible
 			.then(do |data|
 					comparison_parallel = data
 					loading = no
-					show_compare = yes
-					what_to_show = 'show_compare'
+					what_to_show_in_pop_up_block = 'show_compare'
 					Imba.commit()
+					window:history.pushState({inner_pop_up: yes}, "Compare")
 				)
 			.catch(do |error|
 				log error
@@ -1427,8 +1422,8 @@ export tag Bible
 
 	def toggleDownloads
 		clearSpace
-		show_downloads = !show_downloads
-		show_downloads ? what_to_show = 'show_downloads' : undefined
+		what_to_show_in_pop_up_block = 'show_downloads'
+		window:history.pushState({inner_pop_up: yes}, "Downloads")
 
 	def changeFontWeight value
 		if settings:font:weight + value < 1000 && settings:font:weight + value > 0
@@ -1517,6 +1512,7 @@ export tag Bible
 	def WelcomeOk
 		welcome = no
 		setCookie('welcome', no)
+		toggleBibleMenu()
 
 	def render
 		<self>
@@ -1746,11 +1742,10 @@ export tag Bible
 						<svg:path d="M0 0h24v24H0V0z" fill="none">
 						<svg:path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17l-.59.59-.58.58V4h16v12zm-9-4h2v2h-2zm0-6h2v4h-2z">
 					@data.lang:feedback
-				<a.help.animated-man :click.prevent.turnSupport()>
+				<a#animated-heart.help :click.prevent.turnSupport()>
 					<svg:svg.helpsvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 						<svg:title> @data.lang:support
-						<svg:path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2zM12 6c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z">
-						<svg:path d="M0 0h24v24H0z" fill="none">
+						<svg:path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					@data.lang:support
 				<footer>
 					<p.footer_links>
@@ -1758,16 +1753,17 @@ export tag Bible
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
-						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> @data.lang:donate, " 🐈"
+						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
+						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-23T10:06"> "2019-present"
+						"©",	<time time:datetime="2020-06-28T00:21"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
-			<section.search_results .show_search_results=(search:search_div || show_help || show_compare || show_downloads || show_support)>
-				if what_to_show == 'show_help'
+			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>
+				if what_to_show_in_pop_up_block == 'show_help'
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.turnHelpBox() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 							<svg:title> @data.lang:close
@@ -1798,7 +1794,7 @@ export tag Bible
 						<address.still_have_questions>
 							@data.lang:still_have_questions
 							<a href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
-				elif what_to_show == 'show_compare'
+				elif what_to_show_in_pop_up_block == 'show_compare'
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 							<svg:title> @data.lang:close
@@ -1821,7 +1817,7 @@ export tag Bible
 						else
 							<button.more_results style="margin: 16px auto; display: flex;" :click.prevent=(do show_translations_for_comparison = !show_translations_for_comparison)> @data.lang:add_translation_btn
 						<.freespace>
-				elif what_to_show == 'show_downloads'
+				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 							<svg:title> @data.lang:close
@@ -1860,7 +1856,7 @@ export tag Bible
 												<svg:path d="M0 0h24v24H0z" fill="none">
 												<svg:path d=svg_paths:download>
 						<.freespace>
-				elif what_to_show == 'show_support'
+				elif what_to_show_in_pop_up_block == 'show_support'
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.turnSupport() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 							<svg:title> @data.lang:close

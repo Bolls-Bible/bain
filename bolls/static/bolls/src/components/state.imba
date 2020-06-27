@@ -156,16 +156,17 @@ export class State
 					notes += category
 					if key + 1 < bookmarks_in_offline[0]:notes:length
 						notes += " | "
+				let bkmrk = {
+					verses: verses,
+					date: date,
+					color: color,
+					notes: notes
+				}
 				for bookmark in bookmarks_in_offline
 					if bookmark:date == date
 						verses.push(bookmark:verse)
 					else
-						bookmarks.push({
-							verses: verses,
-							date: date,
-							color: color,
-							notes: notes
-						})
+						bookmarks.push(bkmrk)
 						verses = [bookmark:verse]
 						date = bookmark:date
 						color = bookmark:color
@@ -174,12 +175,7 @@ export class State
 							if key + 1 < bookmark:notes:length
 								notes += " | "
 					if bookmark == bookmarks_in_offline[bookmarks_in_offline:length - 1]
-						bookmarks.push({
-							verses: verses,
-							date: date,
-							color: color,
-							notes: notes
-						})
+						bookmarks.push(bkmrk)
 				bookmarks.map(do |bookmark|
 					window.fetch("/save-bookmarks/", {
 						method: "POST",
@@ -221,8 +217,10 @@ export class State
 				console.error(e)
 				handleDownloadingError(translation)
 			if array_of_verses
+				@can_work_with_db = no
 				@db.transaction("rw", @db:verses, do
 					await @db:verses.bulkPut(array_of_verses)
+					@can_work_with_db = yes
 					@downloaded_translations.push(translation)
 					setCookie('downloaded_translations', JSON.stringify(@downloaded_translations))
 					@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
@@ -244,8 +242,10 @@ export class State
 		@downloading_of_this_translations.push(translation)
 		Imba.commit
 		let begtime = Date.now()
+		@can_work_with_db = no
 		@db.transaction("rw", @db:verses, do
 			@db:verses.where({translation: translation}).delete().then(do |deleteCount|
+				@can_work_with_db = yes
 				console.log( "Deleted ", deleteCount, " objects. Time: ", (Date.now() - begtime) / 1000)
 				@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
 				delete translations_current_state[translation]
@@ -337,10 +337,12 @@ export class State
 
 	def getSearchedTextFromStorage search
 		let begtime = Date.now()
+		@can_work_with_db = no
 		@db.transaction("r", @db:verses, do
 			let data = await @db:verses.where({translation: search:search_result_translation}).filter(do |verse|
 				return verse:text.includes(search:search_input)
 			).toArray()
+			@can_work_with_db = yes
 			console.log("Finded ", data:length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data:length
 				return data

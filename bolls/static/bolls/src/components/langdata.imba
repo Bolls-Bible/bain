@@ -82,7 +82,7 @@ export const en_lang = {
 	"exhortation": "A web app for reading the Bible with full emphasis on the God`s Word only. Sola scriptura!",
 	"faqmsg": "Here you can find answers to FAQ",
 	"still_have_questions": "Still have questions or some ideas? Write me and I will answer you as soon as I can:",
-	"install_on_android": " * This web app is also can be installed via Google Chrome. Find plus icon on the address line and press it. After that the app will be installed like a native app.<br/><br/>* On iPhone with iOS <= 12 you also can add the app on your home screen and it will be like a native app, just press the share icon below and found the 'Add to home screen' option.",
+	"install_via_chrome": " * This web app is also can be installed via Google Chrome. Find plus icon on the address line and press it. After that the app will be installed like a native app.",
 	"content": "Content",
 	"shortcuts": "Shortcuts",
 	"shortcuts_list": [
@@ -207,7 +207,7 @@ export const uk_lang = {
 	"exhortation": "Веб-додаток для читання Біблії з повним акцентом лише на Божому Cлові. Sola scriptura!",
 	"faqmsg": "Тут ви зможете знайти відповіді на питання що часто задаються",
 	"still_have_questions": "Все ще маєш запитання чи ідеї? Напиши мені, і я відповім як тільки зможу:",
-	"install_on_android": " * Цей веб-додаток також можна встановити через Google Chrome. Знайдіть значок плюса у адресному рядку та натисніть на нього. Після цього додаток буде встановлено як звичайний додаток. <br/><br/> * На iPhone з iOS <= 12 ви також можете додати цей додаток на ваш головний екран, і він буде як рідний додаток, просто натисніть значок <i>поділитися</i> внизу та знайдіть опцію 'Додати на головний екран'.",
+	"install_via_chrome": " * Цей веб-додаток також можна встановити через Google Chrome. Знайдіть значок плюса у адресному рядку та натисніть на нього. Після цього додаток буде встановлено як звичайний додаток.",
 	"content": "Зміст",
 	"shortcuts": "Гярячі клавіші",
 	"shortcuts_list": [
@@ -332,7 +332,7 @@ export const ru_lang = {
 	"exhortation": "Веб-приложение для чтения Библии с полным акцентом только на Божьем Cлове. Sola scriptura!",
 	"faqmsg": "Здесь вы сможете найти ответы на часто задаваемые вопросы",
 	"still_have_questions": "Все еще есть вопросы или идеи? Напиши мне, и я отвечу, как только смогу:",
-	"install_on_android": " * Это веб-приложение также можно установить через Google Chrome. Найдите значок плюса в адресной строке и ,нажмите него. После этого приложение будет установлено как родное приложение.<br/><br/> * На iPhone с iOS <= 12 вы также можете добавить приложение на главном экране, и оно будет как обычное приложение, просто нажмите значок поделится внизу и найдите параметр «Добавить на главный экран».",
+	"install_via_chrome": " * Это веб-приложение также можно установить через Google Chrome. Найдите значок плюса в адресной строке и ,нажмите него. После этого приложение будет установлено как родное приложение.",
 	"content": "Содержание",
 	"shortcuts": "Горячие клавиши",
 	"shortcuts_list": [
@@ -457,7 +457,7 @@ export const pt_lang = {
 	"exhortation": "Um aplicativo da web para ler a Bíblia, com total ênfase apenas na Palavra de Deus. Sola scriptura!",
 	"faqmsg": "Aqui você pode encontrar respostas para as perguntas frequentes",
 	"still_have_questions": "¿Ainda tem dúvidas ou tem algumas ideias? Escreva-me e eu responderei assim que puder:",
-	"install_on_android": " * Este aplicativo da web também pode ser instalado via Google Chrome. Encontre o ícone de adição na linha de endereço e pressione-o. Depois disso, o aplicativo será instalado como um aplicativo nativo.<br/><br/> * No iPhone com iOS <= 12 você também pode adicionar o aplicativo na tela inicial e ele será como um aplicativo nativo, basta pressionar o ícone de compartilhamento abaixo e encontrar a opção 'Adicionar à tela inicial'.",
+	"install_via_chrome": " * Este aplicativo da web também pode ser instalado via Google Chrome. Encontre o ícone de adição na linha de endereço e pressione-o. Depois disso, o aplicativo será instalado como um aplicativo nativo.",
 	"content": "Conteúdo",
 	"shortcuts": "Atalhos",
 	"shortcuts_list": [
@@ -582,7 +582,7 @@ export const es_lang = {
 	"exhortation": "Una aplicación web para leer la Biblia, con total énfasis en la Palabra de Dios. Sola scriptura!",
 	"faqmsg": "Aquí puedes encontrar respuestas para las preguntas frecuentes",
 	"still_have_questions": "¿Todavía tienes preguntas o tienes alguna idea? Escríbeme y te responderé tan pronto como pueda:",
-	"install_on_android": " * Esta aplicación web también se puede instalar a través de Google Chrome. Busca el ícono 'Más' en la línea de dirección y presiónalo. Después de eso, la aplicación se instalará como una aplicación nativa. <br/><br/> * En iPhone con iOS <= 12 también puedes agregar la aplicación en la pantalla de inicio y será como una aplicación nativa, solo presiona el icono de compartir a continuación y busca la opción 'Agregar a la pantalla de inicio'.",
+	"install_via_chrome": " * Esta aplicación web también se puede instalar a través de Google Chrome. Busca el ícono 'Más' en la línea de dirección y presiónalo. Después de eso, la aplicación se instalará como una aplicación nativa.",
 	"content": "Contenido",
 	"shortcuts": "Atajos",
 	"shortcuts_list": [

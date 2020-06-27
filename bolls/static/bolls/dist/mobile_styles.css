@@ -76,9 +76,6 @@
     margin: 4vw 8px;
     font-size: 1.5em;
   }
-  .navigation {
-    position: absolute;
-  }
   .change_password span {
     display: none;
   }
