@@ -34,11 +34,11 @@ export tag Downloads < main
 					<svg:path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 				<p css:margin="24px" css:font-weight="500"> @data.lang:back
 			<header css:text-align="center">
-				<img style="height: 128px; width: 128px;" src="/static/logoshield.svg" alt="Bolls logo">
+				<img style="height: 128px; width: 128px;" src="/static/logoshield.png" alt="Bolls logo">
 				<h1.exhortation> @data.lang:exhortation
 				if addBtn
-					<a.platform-item :click.prevent.install() style="display: inline-flex;">
-						<img.platforms_svg src="/static/android-chrome-512x512.png">
+					<a.platform-item :click.prevent.install() style="display: inline-flex; width: auto;">
+						<img.platforms_svg src="/static/android-chrome-512x512.png" alt="Bolls logo">
 						<p> @data.lang:install_app
 			<#downloads-container>
 				<a.platform-item rel="noreferrer" target="_blank" href="https://bolls.life">
