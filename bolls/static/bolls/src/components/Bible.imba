@@ -1013,21 +1013,24 @@ export tag Bible
 				date: Date.now(),
 				notes: choosen_categories
 			})
-		let bkmrk = {
-			verse: verse,
-			date: Date.now(),
-			color: highlight_color,
-			note: notes}
 		if choosen_parallel == 'second'
 			for verse in choosenid
 				if @parallel_bookmarks.find(do |bookmark| return bookmark:verse == verse)
 					@parallel_bookmarks.splice(@parallel_bookmarks.indexOf(@parallel_bookmarks.find(do |bookmark| return bookmark:verse == verse)), 1)
-				@parallel_bookmarks.push(bkmrk)
+				@parallel_bookmarks.push({
+					verse: verse,
+					date: Date.now(),
+					color: highlight_color,
+					note: notes})
 		else
 			for verse in choosenid
 				if @bookmarks.find(do |bookmark| return bookmark:verse == verse)
 					@bookmarks.splice(@bookmarks.indexOf(@bookmarks.find(do |bookmark| return bookmark:verse == verse)), 1)
-				@bookmarks.push(bkmrk)
+				@bookmarks.push({
+					verse: verse,
+					date: Date.now(),
+					color: highlight_color,
+					note: notes})
 		clearSpace
 
 	def deleteColor color_to_delete
@@ -1537,9 +1540,10 @@ export tag Bible
 						<svg:path d=svg_paths:download>
 				<.translations_list .show_translations_list=@show_list_of_translations>
 					for language in languages
-						<a.book_in_list dir="auto" .pressed=(language:language == show_language_of) .active=(language:translations.find(do |translation| currentTranslation(translation:short_name))) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
-							language:language
-							<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+						<a.book_in_list css:justify-content="start" .pressed=(language:language == show_language_of) .active=(language:translations.find(do |translation| currentTranslation(translation:short_name))) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
+							<span.emojify> language:language.slice(0,4)
+							language:language.slice(4)
+							<svg:svg.arrow_next css:margin-left="auto" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 								<svg:title> @data.lang:open
 								<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language:language == show_language_of)>
@@ -2156,5 +2160,5 @@ export tag Bible
 			if welcome != 'false'
 				<section#welcome.history.filters .show_history=welcome>
 					<h1 style="margin: 0 auto 12px; font-size: 1.2em;"> @data.lang:welcome
-					<p> @data.lang:welcome_msg, <span> ' 😉'
-					<button :tap.prevent.WelcomeOk()> "Ok 👌🏽"
+					<p> @data.lang:welcome_msg, <span.emojify> ' 😉'
+					<button :tap.prevent.WelcomeOk()> "Ok ", <span.emojify> '👌🏽'

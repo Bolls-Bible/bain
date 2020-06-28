@@ -1567,23 +1567,6 @@ footer a:hover {
 	max-width: 800px;
 }
 
-.install_via_chrome {
-	max-width: 1000px;
-	display: block;
-	margin: auto;
-	line-height: 1.5;
-	opacity: 0.8;
-	padding: 16vh 4vw;
-}
-
-.install_via_chrome a {
-	color: var(--accent-color);
-}
-
-.install_via_chrome a:hover {
-	color: var(--accent-hover-color);
-}
-
 .helpFAQ {
 	text-indent: 4vw;
 }
@@ -1737,8 +1720,9 @@ address a:hover {
 	text-align: justify;
 }
 
-#welcome span {
+.emojify {
 	font-family: 'Apple Color Emoji', 'Droid Sans Fallback', 'Noto Color Emoji', 'Segoe UI Emoji';
+    margin-right: 16px;
 }
 
 #welcome button {
