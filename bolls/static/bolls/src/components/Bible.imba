@@ -42,6 +42,7 @@ let inzone = no
 let onzone = no
 let bible_menu_left = -300
 let settings_menu_left = -300
+let menu_icons_transform = 0
 let choosen = []
 let choosenid = []
 let highlight_color = ''
@@ -290,7 +291,7 @@ export tag Bible
 					getBookmarks("/get-bookmarks/" + window:translation + '/' + window:book + '/' + window:chapter + '/')
 				if window:verse
 					document:title += ':' + window:verse
-					foundVerse(window:verse, "#{window:verse}")
+					findVerse(window:verse)
 				document:title += ' ' + window:translation
 		if getCookie('theme')
 			settings:theme = getCookie('theme')
@@ -473,16 +474,19 @@ export tag Bible
 				@data.showNotification('error')
 			if @data.user then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
 			if verse
-				foundVerse(verse, "#{verse}")
+				findVerse(verse)
 			else setTimeout(&, 100) do window.scroll(0,0)
 		else clearSpace
 
-	def foundVerse id, hash
+	def findVerse id
 		setTimeout(&,250) do
-			let searched_verse = document.getElementById(id)
-			if searched_verse
-				window:location:hash = hash
-			else foundVerse id
+			const verse = document.getElementById(id)
+			if verse
+				if settingsp:display
+					verse:parentNode:parentNode.scroll(0, verse:offsetTop - 64)
+				else
+					window.scroll(0, verse:offsetTop - 64)
+			else findVerse(id)
 
 	def getParallelText translation, book, chapter, verse
 		if !(translation == settingsp:translation && book == settingsp:book && chapter == settingsp:chapter) || !@parallel_verses:length || !settingsp:display
@@ -544,7 +548,7 @@ export tag Bible
 			setCookie('parallel_book', book)
 			setCookie('parallel_chapter', chapter)
 			if verse
-				foundVerse verse, "#p{verse}"
+				findVerse("p{verse}")
 
 	def clearSpace
 		bible_menu_left = -300
@@ -904,6 +908,21 @@ export tag Bible
 			return clearSpace()
 		highlight_color = getRandomColor()
 		if document.getSelection == ''
+			if window:innerWidth > 600
+				if !settingsp:display
+					const verse = document.getElementById(id)
+					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - window:scrollY
+					if offsetTop > window:innerHeight
+						window.scroll(0, window:scrollY + (200 - (window:innerHeight - offsetTop)))
+				else
+					let verse
+					if parallel == 'first'
+						verse = document.getElementById(id)
+					else
+						verse = document.getElementById("p{id}")
+					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
+					if offsetTop > verse:parentNode:parentNode:clientHeight
+						verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop + (200 - (verse:parentNode:parentNode:clientHeight - offsetTop)))
 			if !choosen_parallel
 				choosen_parallel = parallel
 				choosenid.push(pk)
@@ -1517,8 +1536,17 @@ export tag Bible
 		setCookie('welcome', no)
 		toggleBibleMenu()
 
+	def onscroll
+		const last_known_scroll_position = window:scrollY
+		setTimeout(&, 100) do
+			if window:scrollY < last_known_scroll_position
+				menu_icons_transform = 0
+			elif window:scrollY > last_known_scroll_position
+				menu_icons_transform = 400
+			Imba.commit
+
 	def render
-		<self>
+		<self :onscroll=onscroll>
 			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: left;' : ''}">
 				if settingsp:display
 					<.choose_parallel>
@@ -1763,7 +1791,7 @@ export tag Bible
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-28T00:21"> "2019-present"
+						"©",	<time time:datetime="2020-06-29T10:38"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>
@@ -1837,9 +1865,10 @@ export tag Bible
 								<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 					<article.search_body tabindex="0">
 						for language in languages
-							<a.book_in_list dir="auto" style="padding: 12px 8px 12px 0px;" .pressed=(language:language == show_language_of) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
-								language:language
-								<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+							<a.book_in_list dir="auto" style="justify-content: start; padding: 12px 8px 12px 0px;" .pressed=(language:language == show_language_of) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
+								<span.emojify> language:language.slice(0,4)
+								language:language.slice(4)
+								<svg:svg.arrow_next css:margin-left="auto" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<svg:title> @data.lang:open
 									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language:language == show_language_of)>
@@ -2132,10 +2161,10 @@ export tag Bible
 						<p css:padding="12px"> @data.lang:empty_history
 
 			if menuicons
-				<svg:svg.navigation :click.prevent.toggleBibleMenu() style="left: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+				<svg:svg.navigation :click.prevent.toggleBibleMenu() style="left: 0; transform: translateY(-{menu_icons_transform}px);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
 					<svg:title> @data.lang:change_book
 					<svg:path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
-				<svg:svg.navigation :click.prevent.toggleSettingsMenu() style="right: 0; transform: scaleY(0.8);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 10">
+				<svg:svg.navigation :click.prevent.toggleSettingsMenu() style="right: 0; transform: scaleY(0.8) translateY(-{menu_icons_transform}px);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 10">
 					<svg:title> @data.lang:other
 					<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M11.41 6H0.59C0 6 0 5.59 0 5C0 4.41 0 4 0.59 4H11.4C11.99 4 11.99 4.41 11.99 5C11.99 5.59 11.99 6 11.4 6H11.41ZM11.41 2H0.59C0 2 0 1.59 0 1C0 0.41 0 0 0.59 0H11.4C11.99 0 11.99 0.41 11.99 1C11.99 1.59 11.99 2 11.4 2H11.41ZM0.59 8H11.4C11.99 8 11.99 8.41 11.99 9C11.99 9.59 11.99 10 11.4 10H0.59C0 10 0 9.59 0 9C0 8.41 0 8 0.59 8Z">
 

@@ -31,11 +31,9 @@ export tag Profile < main
 
 	def mount
 		@data.hideBible()
-		window:addEventListener('scroll', do render)
 
 	def unmount
 		@data.showBible()
-		window:removeEventListener('scroll', do render)
 
 	def getCookie c_name
 		return window:localStorage.getItem(c_name)
