@@ -21,6 +21,8 @@ export class State
 	prop lastPushedNotificationWasAt
 	prop user
 	prop translations_current_state default: {}
+	prop addBtn default: no
+	prop deferredPrompt
 
 	def initialize
 		@can_work_with_db = yes
@@ -91,6 +93,12 @@ export class State
 		checkSavedBookmarks()
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
+		window.addEventListener('beforeinstallprompt', do |e|
+				e.preventDefault()
+				deferredPrompt = e
+				addBtn = yes
+				Imba.commit
+			)
 
 	def get_cookie name
 		let cookieValue = null

@@ -913,7 +913,7 @@ export tag Bible
 					const verse = document.getElementById(id)
 					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - window:scrollY
 					if offsetTop > window:innerHeight
-						window.scroll(0, window:scrollY + (200 - (window:innerHeight - offsetTop)))
+						window.scroll(0, window:scrollY - (window:innerHeight - offsetTop))
 				else
 					let verse
 					if parallel == 'first'
@@ -922,7 +922,7 @@ export tag Bible
 						verse = document.getElementById("p{id}")
 					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
 					if offsetTop > verse:parentNode:parentNode:clientHeight
-						verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop + (200 - (verse:parentNode:parentNode:clientHeight - offsetTop)))
+						verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop - (verse:parentNode:parentNode:clientHeight - offsetTop))
 			if !choosen_parallel
 				choosen_parallel = parallel
 				choosenid.push(pk)
@@ -1569,8 +1569,8 @@ export tag Bible
 				<.translations_list .show_translations_list=@show_list_of_translations>
 					for language in languages
 						<a.book_in_list css:justify-content="start" .pressed=(language:language == show_language_of) .active=(language:translations.find(do |translation| currentTranslation(translation:short_name))) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
-							<span.emojify> language:language.slice(0,4)
-							language:language.slice(4)
+							<span.emojify> language:language.slice(0,5)
+							language:language.slice(5)
 							<svg:svg.arrow_next css:margin-left="auto" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 								<svg:title> @data.lang:open
 								<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -1591,7 +1591,7 @@ export tag Bible
 								for i in [0..book:chapters]
 									<li.chapter_number .active=((i + 1) == settingsp:chapter &&book:bookid==settingsp:book ) :click.prevent.getParallelText(settingsp:translation, book:bookid, i+1) tabindex="0"> i+1
 						if !filteredBooks('parallel_books'):length
-							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ)    ¯\\_(ツ)_/¯   ノ( ゜-゜ノ)"
+							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ) ¯\\_(ツ)_/¯   ノ( ゜-゜ノ)"
 					else
 						for book in filteredBooks('books')
 							<a.book_in_list dir="auto" .active=(book:bookid==settings:book) :click.prevent.showChapters(book:bookid) tabindex="0"> book:name
@@ -1599,7 +1599,7 @@ export tag Bible
 								for i in [0..book:chapters]
 									<li.chapter_number .active=((i + 1) == settings:chapter && book:bookid==settings:book) :click.prevent.getText(settings:translation, book:bookid, i+1)  tabindex="0"> i+1
 						if !filteredBooks('books'):length
-							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ)    ¯\\_(ツ)_/¯   ノ( ゜-゜ノ)"
+							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ) ¯\\_(ツ)_/¯   ノ( ゜-゜ノ)"
 					<.freespace>
 				<input[store:book_search].search type="text" placeholder=@data.lang:search input:aria-label=@data.lang:search> @data.lang:search
 				<svg:svg.close_book_search :click.prevent=(do store:book_search = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
@@ -1791,7 +1791,7 @@ export tag Bible
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-29T10:38"> "2019-present"
+						"©",	<time time:datetime="2020-06-29T21:14"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>
@@ -2127,7 +2127,7 @@ export tag Bible
 							<svg:path d=svg_paths:copy>
 						<svg:svg.save_bookmark :click.prevent.toggleCompare() version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="580.125px" height="580.125px" viewBox="0 0 580.125 580.125" style="enable-background:new 0 0 580.125 580.125; transform: rotate(90deg);" xml:space="preserve">
 							<svg:title> @data.lang:compare
-							<svg:path d="M573.113,298.351l-117.301-117.3c-3.824-3.825-10.199-5.1-15.299-2.55c-5.102,2.55-8.926,7.65-8.926,12.75v79.05    c-38.25,0-70.125,6.375-96.9,19.125V145.35h73.951c6.375,0,11.475-3.825,12.75-8.925c2.549-5.1,1.273-11.475-2.551-15.3    L301.537,3.825C298.988,1.275,295.162,0,291.338,0c-3.825,0-7.65,1.275-10.2,3.825l-118.575,117.3    c-3.825,3.825-5.1,10.2-2.55,15.3c2.55,5.1,7.65,8.925,12.75,8.925h75.225v142.8c-26.775-12.75-58.65-19.125-98.175-19.125v-79.05    c0-6.375-3.825-11.475-8.925-12.75c-5.1-2.55-11.475-1.275-15.3,2.55l-117.3,117.3c-2.55,2.55-3.825,6.375-3.825,10.2    s1.275,7.649,3.825,10.2l117.3,117.3c3.825,3.825,10.2,5.1,15.3,2.55c5.1-2.55,8.925-7.65,8.925-12.75v-66.3    c72.675,0,96.9,24.225,96.9,98.175v79.05c0,24.226,19.125,43.351,42.075,44.625h2.55c22.949-1.274,42.074-20.399,42.074-44.625    v-79.05c0-73.95,22.951-98.175,96.9-98.175v66.3c0,6.375,3.826,11.475,8.926,12.75c5.1,2.55,11.475,1.275,15.299-2.55    l117.301-117.3c2.551-2.551,3.824-6.375,3.824-10.2S575.662,300.9,573.113,298.351z">
+							<svg:path d="M573.113,298.351l-117.301-117.3c-3.824-3.825-10.199-5.1-15.299-2.55c-5.102,2.55-8.926,7.65-8.926,12.75v79.05 c-38.25,0-70.125,6.375-96.9,19.125V145.35h73.951c6.375,0,11.475-3.825,12.75-8.925c2.549-5.1,1.273-11.475-2.551-15.3 L301.537,3.825C298.988,1.275,295.162,0,291.338,0c-3.825,0-7.65,1.275-10.2,3.825l-118.575,117.3 c-3.825,3.825-5.1,10.2-2.55,15.3c2.55,5.1,7.65,8.925,12.75,8.925h75.225v142.8c-26.775-12.75-58.65-19.125-98.175-19.125v-79.05 c0-6.375-3.825-11.475-8.925-12.75c-5.1-2.55-11.475-1.275-15.3,2.55l-117.3,117.3c-2.55,2.55-3.825,6.375-3.825,10.2 s1.275,7.649,3.825,10.2l117.3,117.3c3.825,3.825,10.2,5.1,15.3,2.55c5.1-2.55,8.925-7.65,8.925-12.75v-66.3 c72.675,0,96.9,24.225,96.9,98.175v79.05c0,24.226,19.125,43.351,42.075,44.625h2.55c22.949-1.274,42.074-20.399,42.074-44.625 v-79.05c0-73.95,22.951-98.175,96.9-98.175v66.3c0,6.375,3.826,11.475,8.926,12.75c5.1,2.55,11.475,1.275,15.299-2.55 l117.301-117.3c2.551-2.551,3.824-6.375,3.824-10.2S575.662,300.9,573.113,298.351z">
 						<svg:svg.save_bookmark .filled=choosen_categories:length :click.prevent.turnCollections() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=@data.lang:addtocollection>
 							<svg:title> @data.lang:addtocollection
 							<svg:path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
