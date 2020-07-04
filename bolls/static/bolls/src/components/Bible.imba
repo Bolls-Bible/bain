@@ -421,7 +421,7 @@ export tag Bible
 		try
 			@bookmarks = await loadData(url)
 		catch error
-			if @data.can_work_with_db
+			if @data.db_is_available
 				@bookmarks = await @data.getBookmarksFromStorage(@verses.map(do |verse| return verse:pk))
 		Imba.commit
 
@@ -442,7 +442,7 @@ export tag Bible
 						parallel-chapter: settingsp:chapter,
 						parallel-verse: 0,
 					},
-					nameOfBook(settings:book, settings:translation) + ' ' + settings:chapter,
+					0,
 					window:location:origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
 			onpopstate = no
@@ -461,7 +461,7 @@ export tag Bible
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
 			try
 				@verses = []
-				if @data.can_work_with_db && @data.downloaded_translations.indexOf(translation) != -1
+				if @data.db_is_available && @data.downloaded_translations.indexOf(translation) != -1
 					@verses = await @data.getChapterFromDB(translation, book, chapter, verse)
 				else
 					@verses = await loadData(url)
@@ -503,7 +503,7 @@ export tag Bible
 						parallel-chapter: chapter,
 						parallel-verse: verse,
 					},
-					nameOfBook(settings:book, settings:translation) + ' ' + settings:chapter,
+					0,
 					null
 				)
 			onpopstate = no
@@ -519,7 +519,7 @@ export tag Bible
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
 			@parallel_verses = []
 			try
-				if @data.can_work_with_db && @data.downloaded_translations.indexOf(translation) != -1
+				if @data.db_is_available && @data.downloaded_translations.indexOf(translation) != -1
 					@parallel_verses = await @data.getChapterFromDB(translation, book, chapter, verse)
 				else
 					@parallel_verses = await loadData(url)
@@ -536,7 +536,7 @@ export tag Bible
 					@parallel_bookmarks = await loadData(url)
 					Imba.commit
 				catch error
-					if @data.can_work_with_db
+					if @data.db_is_available
 						let verseids = []
 						for verse in @parallel_verses
 							verseids.push(verse:pk)
@@ -664,7 +664,7 @@ export tag Bible
 				Imba.commit
 				window:history.pushState({inner_pop_up: yes}, "Search")
 			catch error
-				if @data.can_work_with_db && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
+				if @data.db_is_available && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
 					@search_verses = await @data.getSearchedTextFromStorage(search)
 					@search:bookid_of_results = []
 					for verse in @search_verses
@@ -1018,14 +1018,14 @@ export tag Bible
 			.catch(do |e|
 				console.log(e)
 				@data.showNotification('error')
-				if @data.can_work_with_db
+				if @data.db_is_available
 					@data.saveBookmarksToStorageUntillOnline({
 						verses: choosenid,
 						color: highlight_color,
 						date: Date.now(),
 						notes: choosen_categories
 					}))
-		elif @data.can_work_with_db
+		elif @data.db_is_available
 			@data.saveBookmarksToStorageUntillOnline({
 				verses: choosenid,
 				color: highlight_color,
@@ -1351,7 +1351,7 @@ export tag Bible
 		else clearSpace()
 		was_deleting_translation_from_compare = no
 		loading = yes
-		if !window:navigator:onLine && @data.can_work_with_db && @data.downloaded_translations.indexOf(settings:translation) != -1
+		if !window:navigator:onLine && @data.db_is_available && @data.downloaded_translations.indexOf(settings:translation) != -1
 			comparison_parallel = await @data.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
 			loading = no
 			what_to_show_in_pop_up_block = 'show_compare'
@@ -1561,7 +1561,7 @@ export tag Bible
 				<svg:svg.chronological_order .hide_chron_order=@show_list_of_translations .chronological_order_in_use=@chronorder :click.prevent.toggleChronorder xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" title=@data.lang:chronological_order>
 					<svg:title> @data.lang:chronological_order
 					<svg:path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
-				if @data.can_work_with_db
+				if @data.db_is_available
 					<svg:svg.download_translations .hide_chron_order=@show_list_of_translations :click.prevent.toggleDownloads() xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 						<svg:title> @data.lang:download
 						<svg:path d="M0 0h24v24H0z" fill="none">
@@ -1569,8 +1569,7 @@ export tag Bible
 				<.translations_list .show_translations_list=@show_list_of_translations>
 					for language in languages
 						<a.book_in_list css:justify-content="start" .pressed=(language:language == show_language_of) .active=(language:translations.find(do |translation| currentTranslation(translation:short_name))) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
-							<span.emojify> language:language.slice(0,5)
-							language:language.slice(5)
+							language:language
 							<svg:svg.arrow_next css:margin-left="auto" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 								<svg:title> @data.lang:open
 								<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -1866,8 +1865,7 @@ export tag Bible
 					<article.search_body tabindex="0">
 						for language in languages
 							<a.book_in_list dir="auto" style="justify-content: start; padding: 12px 8px 12px 0px;" .pressed=(language:language == show_language_of) :click.prevent.showLanguageTranslations(language:language) tabindex="0">
-								<span.emojify> language:language.slice(0,4)
-								language:language.slice(4)
+								language:language
 								<svg:svg.arrow_next css:margin-left="auto" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<svg:title> @data.lang:open
 									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">

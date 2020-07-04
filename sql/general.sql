@@ -12,15 +12,20 @@ SELECT book, count(chapter) FROM bolls_verses GROUP BY chapter;
 -- SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
 SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
-UPDATE bolls_verses SET text = ('Tú construiste tu hogar por encima de los cielos; usaste las nubes como carruaje y cruzaste el cielo con las alas del viento.') where translation = 'PDT' and book = 19 and chapter = 104 and verse = 3;
-select * from bolls_verses where translation = 'PDT' and book = 19 and chapter = 104 and verse = 3;
+UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, with beauty because I tasted a little of thisand Jehovah saith, \'Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+
+
+/YLT/9/16/12/
+
+
+
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete from bolls_verses where translation='HOM' and book = 72;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/repairedbooks.csv' DELIMITER '|' CSV HEADER;
 ----------
 UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
-
 
 \copy auth_user(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM '/home/b/data-1583933238173.csv' DELIMITER ',' CSV HEADER;
 

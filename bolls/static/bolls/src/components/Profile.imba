@@ -27,16 +27,13 @@ export tag Profile < main
 		show_options_of = ''
 		getProfileBookmarks(limits_of_range:from, limits_of_range:to)
 		if window:navigator:onLine
-			getCategories
+			getCategories()
 
 	def mount
 		@data.hideBible()
 
 	def unmount
 		@data.showBible()
-
-	def getCookie c_name
-		return window:localStorage.getItem(c_name)
 
 	def loadData url
 		var res = await window.fetch url
@@ -169,7 +166,7 @@ export tag Profile < main
 		Imba.commit
 
 	def copyToClipboard bookmark
-		@data.copyToClipboard(bookmark)
+		@data.shareCopying(bookmark)
 		show_options_of = ''
 
 	def render

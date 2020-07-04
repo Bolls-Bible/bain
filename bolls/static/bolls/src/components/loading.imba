@@ -13,10 +13,10 @@ export tag Load
 		return Math.cos(((Date.now - @genesis - delay) / @period + 0.25)*2*Math.PI) + 2
 
 	def translateX delay
-		return 64 * Math.cos(((Date.now - @genesis - delay) / @period)*2*Math.PI)
+		return 32 * Math.cos(((Date.now - @genesis - delay) / @period)*2*Math.PI)
 
 	def translateY delay
-		return 32 * Math.sin(((Date.now - @genesis - delay) / @period)*2*Math.PI)
+		return 16 * Math.sin(((Date.now - @genesis - delay) / @period)*2*Math.PI)
 
 	def rotate delay
 		return Math.floor(((Date.now - @genesis - delay) / @period) * 360 - 270)

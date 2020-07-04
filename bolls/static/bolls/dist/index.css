@@ -1502,9 +1502,6 @@ footer a:hover {
 .Load {
 	display: flex;
 	justify-content: center;
-	margin-top: 16px;
-	font-size: 1em;
-	height: 128px;
 	-webkit-animation: text-came 300ms cubic-bezier(0.39, 0.575, 0.565, 1) 800ms both;
 	animation: text-came 300ms cubic-bezier(0.39, 0.575, 0.565, 1) 800ms both;
 }
@@ -1514,8 +1511,8 @@ footer a:hover {
 }
 
 .Load svg {
-	height: 24px;
-	width: 24px;
+	height: 12px;
+	width: 12px;
 	fill: var(--text-color);
 	transition-duration: 300ms;
 	transition-timing-function: linear;

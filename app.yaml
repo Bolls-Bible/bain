@@ -1,8 +1,7 @@
 # [START django_app]
 runtime: python37
-instance_class: F1
 automatic_scaling:
-  max_concurrent_requests: 8
+  max_concurrent_requests: 9
 
 # default_expiration: "4d 5h"
 

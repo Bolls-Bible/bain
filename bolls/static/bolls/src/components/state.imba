@@ -10,7 +10,7 @@ for language in languages
 
 export class State
 	prop downloaded_translations
-	prop can_work_with_db
+	prop db_is_available
 	prop db
 	prop downloading_of_this_translations
 	prop deleting_of_all_transllations
@@ -25,7 +25,7 @@ export class State
 	prop deferredPrompt
 
 	def initialize
-		@can_work_with_db = yes
+		@db_is_available = yes
 		@downloaded_translations = []
 		@downloading_of_this_translations = []
 		@deleting_of_all_transllations = no
@@ -207,7 +207,7 @@ export class State
 					@db:bookmarks.clear()
 				)
 		).catch(do |e|
-			@can_work_with_db = no
+			@db_is_available = no
 			console.log('Uh oh : ' + e)
 		)
 
@@ -225,10 +225,10 @@ export class State
 				console.error(e)
 				handleDownloadingError(translation)
 			if array_of_verses
-				@can_work_with_db = no
+				@db_is_available = no
 				@db.transaction("rw", @db:verses, do
 					await @db:verses.bulkPut(array_of_verses)
-					@can_work_with_db = yes
+					@db_is_available = yes
 					@downloaded_translations.push(translation)
 					setCookie('downloaded_translations', JSON.stringify(@downloaded_translations))
 					@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
@@ -250,10 +250,10 @@ export class State
 		@downloading_of_this_translations.push(translation)
 		Imba.commit
 		let begtime = Date.now()
-		@can_work_with_db = no
+		@db_is_available = no
 		@db.transaction("rw", @db:verses, do
 			@db:verses.where({translation: translation}).delete().then(do |deleteCount|
-				@can_work_with_db = yes
+				@db_is_available = yes
 				console.log( "Deleted ", deleteCount, " objects. Time: ", (Date.now() - begtime) / 1000)
 				@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
 				delete translations_current_state[translation]
@@ -345,12 +345,12 @@ export class State
 
 	def getSearchedTextFromStorage search
 		let begtime = Date.now()
-		@can_work_with_db = no
+		@db_is_available = no
 		@db.transaction("r", @db:verses, do
 			let data = await @db:verses.where({translation: search:search_result_translation}).filter(do |verse|
 				return verse:text.includes(search:search_input)
 			).toArray()
-			@can_work_with_db = yes
+			@db_is_available = yes
 			console.log("Finded ", data:length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data:length
 				return data
