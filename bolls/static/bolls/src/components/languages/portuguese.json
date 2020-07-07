@@ -42,13 +42,12 @@
 	"add_translation_btn": "Adicionar tradução",
 	"the_verse_is_not_available": "O verso não está disponível na tradução:",
 	"copy": "Cópia",
-	"clear_copy": "Cópia limpa",
-	"clear_copy_explain": "Copiando sem link para o site",
 	"addtocollection": "Adicionar à coleção",
 	"create": "Criar",
 	"prev": "Ant",
 	"next": "Pos",
 	"addfilter": "Adicionar filtro",
+	"view_source": "Veja o código fonte",
 	"nighttheme": "Ativar o tema noturno",
 	"lighttheme": "Ativar o tema claro",
 	"canvastitle": "Escolha uma cor para destacar os versos escolhidos",
@@ -56,6 +55,7 @@
 	"thereisnobookmarks": "Agora aqui não é nada. Aqui você pode ver seus lugares destacados da Bíblia",
 	"history": "Historía",
 	"empty_history": "A história está vazia(",
+	"share_via": "Compartilhar via",
 	"cancel": "Cancelar",
 	"saveto": "Salvar em",
 	"save": "Salve",
@@ -69,17 +69,19 @@
 	"change_translation": "Mudar tradução",
 	"change_book": "Mudar livro ou capítulo",
 	"download": "Baixar",
-	"download_for": "Baixar para",
 	"download_translations": "Baixar traduções",
 	"change_password": "Mudar senha",
+	"donate": "Doar",
 	"use_it_in_browser": "Use-o no navegador",
+	"welcome": "Bem-vindo ao Bolls :)",
+	"welcome_msg": "Este aplicativo da web é para leitura da Bíblia, a navegação de livros / traduções está no painel esquerdo e as outras configurações no painel direito. Aprecie",
 	"bgthnkst": "Muito obrigado a",
 	"this_translation_is_unavailable": "Esta tradução requer conexão à Internet",
 	"snapstore": "Obtê-lo a partir do",
 	"exhortation": "Um aplicativo da web para ler a Bíblia, com total ênfase apenas na Palavra de Deus. Sola scriptura!",
 	"faqmsg": "Aqui você pode encontrar respostas para as perguntas frequentes",
 	"still_have_questions": "¿Ainda tem dúvidas ou tem algumas ideias? Escreva-me e eu responderei assim que puder:",
-	"install_on_android": " * Este aplicativo da web também pode ser instalado via Google Chrome. Encontre o ícone de adição na linha de endereço e pressione-o. Depois disso, o aplicativo será instalado como um aplicativo nativo.<br/><br/> * Você também pode instalar este aplicativo Web no seu telefone ou tablet rodando no <b>Android </b>. Para isso, acesse o Google Chrome e abra <a href='https://bolls.life'> bolls.life </a> na linha de endereço ou encontrada no Google 'Bolls Bible'. Você verá uma mensagem na parte inferior da tela 'Adicionar Bolls à tela inicial'. Toque nesta mensagem e envie. Aguarde um momento e este aplicativo será instalado no seu telefone como um aplicativo nativo. Se a mensagem não estiver sendo exibida, encontre 'Adicionar à tela inicial' no menu do site, no chrome ou em outro navegador, e o efeito será o mesmo. <br/> <br/> * No iPhone com iOS <= 12 você também pode adicionar o aplicativo na tela inicial e ele será como um aplicativo nativo, basta pressionar o ícone de compartilhamento abaixo e encontrar a opção 'Adicionar à tela inicial'. ",
+	"install_app": "Instalar aplicativo",
 	"content": "Conteúdo",
 	"shortcuts": "Atalhos",
 	"shortcuts_list": [
@@ -98,7 +100,7 @@
 		"Escreva um comentário.",
 		"Envie uma ideia)",
 		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traduza a interface para um novo idioma.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'> Doe </a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ... "
+		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ..."
 	],
 	"HB": [
 		[
@@ -107,7 +109,7 @@
 		],
 		[
 			"¿Como baixar uma tradução?",
-			"Como você imagina, este aplicativo da Web está disponível offline e você pode baixar uma tradução para usá-lo offline. Para isso, vá para o menu esquerdo, encontre um ícone de nuvem na parte superior e pressione-o (fica visível se o seu navegador tiver acesso para armazenamento e não possui restrições nas configurações). Então você verá a lista de disponíveis para baixar traduções. Basta pressionar um ícone de nuvem na tradução que deseja baixar e, após alguns segundos, ele será baixado. "
+			"Como você imagina, este aplicativo da Web está disponível offline e você pode baixar uma tradução para usá-lo offline. Para isso, vá para o menu esquerdo, encontre um ícone de nuvem na parte superior e pressione-o (fica visível se o seu navegador tiver acesso para armazenamento e não possui restrições nas configurações). Então você verá a lista de disponíveis para baixar traduções. Basta pressionar um ícone de nuvem na tradução que deseja baixar e, após alguns segundos, ele será baixado."
 		],
 		[
 			"¿Por que se registrar?",

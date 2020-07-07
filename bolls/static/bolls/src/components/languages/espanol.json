@@ -42,13 +42,12 @@
 	"add_translation_btn": "Agregar traducción",
 	"the_verse_is_not_available": "El versículo no está disponible en la traducción:",
 	"copy": "Copiar",
-	"clear_copy": "Copia limpia",
-	"clear_copy_explain": "Copiar sin un enlace al sitio",
 	"addtocollection": "Agregar una colección",
 	"create": "Crear",
 	"prev": "Ant",
 	"next": "Pos",
 	"addfilter": "Agregar filtro",
+	"view_source": "Ver el código fuente",
 	"nighttheme": "Activar el tema nocturno",
 	"lighttheme": "Activar el tema claro",
 	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",
@@ -56,6 +55,7 @@
 	"thereisnobookmarks": "Aquí ahora no hay nada. Aquí puedes ver tus  lugares destacados de la Biblia",
 	"history": "Historial",
 	"empty_history": "El historial está vacío(",
+	"share_via": "Compartir via",
 	"cancel": "Cancelar",
 	"saveto": "Guardar en",
 	"save": "Guardar",
@@ -69,17 +69,19 @@
 	"change_translation": "Cambiar traducción",
 	"change_book": "Cambiar libro o capítulo",
 	"download": "Bajar",
-	"download_for": "Bajar para",
 	"download_translations": "Bajar traducciones",
 	"change_password": "Cambiar contraseña",
+	"donate": "Donar",
 	"use_it_in_browser": "Úselo en el navegador",
+	"welcome": "Bienvenido a Bolls :)",
+	"welcome_msg": "Esta aplicación web es para leer la Biblia, la navegación de libros /traducciones está en el panel izquierdo, las otras configuraciones en el panel de la derecha. Que lo disfrutes",
 	"bgthnkst": "Muchas gracias a",
 	"this_translation_is_unavailable": "Esta traducción requiere conexión a Internet",
 	"snapstore": "Obténlo de",
 	"exhortation": "Una aplicación web para leer la Biblia, con total énfasis en la Palabra de Dios. Sola scriptura!",
 	"faqmsg": "Aquí puedes encontrar respuestas para las preguntas frecuentes",
 	"still_have_questions": "¿Todavía tienes preguntas o tienes alguna idea? Escríbeme y te responderé tan pronto como pueda:",
-	"install_on_android": " * Esta aplicación web también se puede instalar a través de Google Chrome. Busca el ícono 'Más' en la línea de dirección y presiónalo. Después de eso, la aplicación se instalará como una aplicación nativa. <br/> <br/> * También puedes instalar esta aplicación web en tu teléfono o tableta con <b> Android </b>. Para hacerlo, accede a Google Chrome y abre <a href='https://bolls.life'> bolls.life </a> en la línea de dirección o en la 'Biblia de Bolls' de Google. Verás un mensaje en la parte inferior de la pantalla 'Agregar Bolls a la pantalla de inicio'. Toca este mensaje y envía. Espera un momento y la aplicación se instalará en tu teléfono como una aplicación nativa. Si no se muestra el mensaje, busca 'Agregar a la pantalla de inicio' en el menú del sitio web, en Chrome o en otro navegador, y el efecto será el mismo. <br/> <br/> * En iPhone con iOS <= 12 también puedes agregar la aplicación en la pantalla de inicio y será como una aplicación nativa, solo presiona el icono de compartir a continuación y busca la opción 'Agregar a la pantalla de inicio' . ",
+	"install_app": "Instalar aplicación",
 	"content": "Contenido",
 	"shortcuts": "Atajos",
 	"shortcuts_list": [
@@ -98,7 +100,7 @@
 		"Escribe un comentario.",
 		"Enviar una idea)",
 		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traducir la interfaz a un nuevo idioma.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'> Donar </a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
+		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
 	],
 	"HB": [
 		[
@@ -115,7 +117,7 @@
 		],
 		[
 			"¿Dónde ver los textos destacados?",
-			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados. "
+			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados."
 		]
 	]
 }

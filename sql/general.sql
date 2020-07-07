@@ -16,10 +16,6 @@ UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is
 select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 
 
-/YLT/9/16/12/
-
-
-
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete from bolls_verses where translation='HOM' and book = 72;
