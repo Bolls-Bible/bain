@@ -246,9 +246,7 @@ nav {
 
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
-html[data-transitions="true"] .close_search:hover,
-html[data-transitions="true"] .help:hover .helpsvg,
-html[data-transitions="true"] .save_bookmark:hover {
+html[data-transitions="true"] .help:hover .helpsvg {
 	-webkit-animation: shake 300ms ease forwards;
 	animation: shake 300ms ease forwards;
 }

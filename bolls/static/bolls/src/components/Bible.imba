@@ -894,7 +894,7 @@ export tag Bible
 
 	def getNoteOfChoosen verse
 		let highlight = @bookmarks.find(do |element| return element:verse == verse)
-		highlight ? highlight:note : ''
+		if highlight then highlight:note else ''
 
 	def pushNoteIfExist pk
 		let note = getNoteOfChoosen(pk)
@@ -928,7 +928,10 @@ export tag Bible
 				choosenid.push(pk)
 				choosen.push(id)
 				pushNoteIfExist(pk)
-				window:history.pushState({inner_pop_up: yes}, "Highlight")
+				window:history.pushState(
+					{inner_pop_up: yes},
+					"Highlight",
+					window:location:origin + '/' + settings:translation + '/' + settings:book + '/' + settings:chapter + '/' + id + '/')
 				if window:innerWidth < 600
 					if parallel == "first"
 						window:location:hash = "#{id}"
@@ -968,7 +971,7 @@ export tag Bible
 					continue
 				else row += '-' + id
 			else
-				if !key
+				unless key
 					row += id
 				else row += ',' + id
 		return row
@@ -995,7 +998,7 @@ export tag Bible
 			notes += category
 			if key + 1 < choosen_categories:length
 				notes += " | "
-		if !@data.user
+		unless @data.user
 			window:location:pathname = "/signup/"
 			return
 		if window:navigator:onLine
@@ -1050,7 +1053,7 @@ export tag Bible
 					date: Date.now(),
 					color: highlight_color,
 					note: notes})
-		clearSpace
+		clearSpace()
 
 	def deleteColor color_to_delete
 		highlights.splice(highlights.indexOf(color_to_delete), 1)
@@ -1074,7 +1077,7 @@ export tag Bible
 				for verse in choosenid
 					if @bookmarks.find(do |bookmark| return bookmark:verse == verse)
 						@bookmarks.splice(@bookmarks.indexOf(@bookmarks.find(do |bookmark| return bookmark:verse == verse)), 1)
-		clearSpace
+		clearSpace()
 
 	def getShareObj
 		let copyobj = {
@@ -1534,6 +1537,21 @@ export tag Bible
 	def WelcomeOk
 		welcome = no
 		setCookie('welcome', no)
+		window:history.pushState({
+				translation: settings:translation,
+				book: settings:book,
+				chapter: settings:chapter,
+				verse: 0,
+				parallel: no,
+				parallel_display: settingsp:display
+				parallel-translation: settingsp:translation,
+				parallel-book: settingsp:book,
+				parallel-chapter: settingsp:chapter,
+				parallel-verse: 0,
+			},
+			"Welcome 🤗",
+			window:location:origin + '/' + settings:translation + '/' + settings:book + '/' + settings:chapter + '/'
+		)
 		toggleBibleMenu()
 
 	def onscroll
@@ -1784,13 +1802,13 @@ export tag Bible
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
-						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> @data.lang:donate, " 🐈"
+						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', @data.lang:donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-06-29T21:14"> "2019-present"
+						"©",	<time time:datetime="2020-07-12T12:11"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>

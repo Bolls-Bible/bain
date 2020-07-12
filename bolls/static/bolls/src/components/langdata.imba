@@ -95,6 +95,7 @@ export const en_lang = {
 	],
 	"error": "Error. Try again later)",
 	"ycdtitnw": "You can support this app in the next way:",
+	"ugch": "Use Google Chrome!",
 	"SUPPORT": [
 		"Just share it -=> bolls.life",
 		"Write a feedback.",
@@ -219,6 +220,7 @@ export const uk_lang = {
 	],
 	"error": "Помилка. Спробуйте ще раз пізніше)",
 	"ycdtitnw": "Ви можете підтримати даний додаток наступним чином:",
+	"ugch": "Використовуйте Google Chrome!",
 	"SUPPORT": [
 		"Просто поширьте його -=> bolls.life",
 		"Напишіть відгук.",
@@ -343,6 +345,7 @@ export const ru_lang = {
 	],
 	"error": "Ошибка. Попробуйте ещё раз позже)",
 	"ycdtitnw": "Вы можете поддержать даное приложение так:",
+	"ugch": "Используйте Google Chrome!",
 	"SUPPORT": [
 		"Просто поделитесь им -=> bolls.life",
 		"Напишите отзыв.",
@@ -467,6 +470,7 @@ export const pt_lang = {
 	],
 	"error": "Erro. Tente mais tarde)",
 	"ycdtitnw": "Você pode apoiar este aplicativo da próxima maneira:",
+	"ugch": "Use o Google Chrome!",
 	"SUPPORT": [
 		"Apenas compartilhe -=> bolls.life",
 		"Escreva um comentário.",
@@ -591,6 +595,7 @@ export const es_lang = {
 	],
 	"error": "Error. Intente más tarde)",
 	"ycdtitnw": "Puedes apoyar a esta aplicación de la siguiente manera:",
+	"ugch": "Utiliza Google Chrome!",
 	"SUPPORT": [
 		"Compartiéndolo -=> bolls.life",
 		"Escribe un comentario.",
