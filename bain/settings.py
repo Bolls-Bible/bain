@@ -150,3 +150,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'bollsbible@gmail.com'
 EMAIL_PORT = 587
+
+SESSION_COOKIE_AGE = 2419200

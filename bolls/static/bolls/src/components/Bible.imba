@@ -1806,6 +1806,7 @@ export tag Bible
 						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
+						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
 						"©",	<time time:datetime="2020-07-12T12:11"> "2019-present"

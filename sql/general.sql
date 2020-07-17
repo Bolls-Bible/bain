@@ -5,14 +5,14 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/
 INSERT into bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
 
 
-SELECT * FROM bolls_verses ORDER BY BOOK, CHAPTER, VERSE
+SELECT * FROM bolls_verses ORDER BY BOOK, CHAPTER, VERSE;
 
-SELECT translation, count(id) FROM bolls_verses GROUP BY translation
+SELECT translation, count(id) FROM bolls_verses GROUP BY translation;
 SELECT book, count(chapter) FROM bolls_verses GROUP BY chapter;
 -- SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
-SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
+SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE;
 
-UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, with beauty because I tasted a little of thisand Jehovah saith, \'Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, with beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 
 
@@ -54,46 +54,6 @@ END;
 $body$  LANGUAGE 'plpgsql';
 
 select table_name || '_' || column_name || '_seq', reset_sequence(table_name, column_name) from information_schema.columns where column_default like 'nextval%';
-
-
-create or replace function calculate_translation_hashes()
-RETURNS TABLE (
-  translation_name VARCHAR,
-  translation_hash varchar
-) AS $$
-declare
- var_r record;
-begin
- for var_r in (
-    select
-     subquery.translation,
-     (
-      select
-       md5(CAST((array_agg(bv.* order by id)) AS text))
-      from
-       bolls_verses bv
-      WHERE
-       bv.translation = subquery.translation
-     ) as hash_translation
-    from (
-      select distinct
-       bv."translation"
-      from
-       bolls_verses bv
-      group by
-       "translation"
-      ) subquery
-     )
-    LOOP
-           translation_name := var_r.translation ;
-     translation_hash := var_r.hash_translation;
-           RETURN NEXT;
-    END LOOP;
-
-end; $$
-LANGUAGE 'plpgsql';
-
-
 
 
 

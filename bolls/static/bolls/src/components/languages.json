@@ -39,6 +39,12 @@
 				"updated": 1591185595149
 			},
 			{
+				"short_name": "ESV",
+				"full_name": "English Standard Version 2001, 2016",
+				"info": "https://en.wikipedia.org/wiki/English_Standard_Version",
+				"updated": 1591185595149
+			},
+			{
 				"short_name": "GNV",
 				"full_name": "Geneva Bible (1599)",
 				"info": "https://wikipedia.org/wiki/Geneva_Bible",

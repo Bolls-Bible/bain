@@ -29,7 +29,7 @@ export tag Downloads < main
 					<a.platform-item :click.prevent.install() style="display: inline-flex; width: auto; animation: text-came 300ms ease;">
 						<img.platforms_svg src="/static/android-chrome-512x512.png" alt="Bolls logo">
 						<p> @data.lang:install_app
-				else
+				else unless window:navigator:appCodeName == "Mozilla"
 					<p style="font-family: monospace;font-size: 12px;"> data.lang:ugch
 			<#downloads-container>
 				<a.platform-item rel="noreferrer" target="_blank" href="http://bolls.life">
