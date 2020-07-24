@@ -66,7 +66,7 @@
   .show_parallel {
     border-top: 2px solid var(--btn-bg-hover);
   }
-  ._colorpicker {
+  ._colorPicker {
     bottom: 0;
   }
   .platform-item {
@@ -82,5 +82,14 @@
   .change_password svg {
     height: 24px;
     width: 24px;
+  }
+  #page_search input {
+    width: calc(100vw - 210px);
+  }
+  #page_search .close_search {
+    margin: 0 8px 0 auto
+  }
+  #page_search p {
+    margin-left: 8px;
   }
 }

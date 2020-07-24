@@ -12,6 +12,7 @@ from .models import Verses, Bookmarks, History
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 
+
 def index(request):
 	return render(request, 'bolls/index.html')
 
@@ -104,12 +105,31 @@ def search(request, translation, piece):
 	return response
 
 
+def getDescription(verses, verse, endverse):
+	if verse < len(verses):
+		i = 0
+		description = verses[verse]['text']
+		if endverse > 0 and endverse - verse != 0:
+			for i in range(verse + 1, endverse):
+				if i < len(verses):
+					description += ' ' + verses[i]['text']
+		return description
+	else: return 'Corrupted link!!!'
+
+
 def linkToVerse(request, translation, book, chapter, verse):
-	return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": json.dumps(getChapter(translation, book, chapter))})
+	verses = getChapter(translation, book, chapter)
+	return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
+
+
+def linkToVerses(request, translation, book, chapter, verse, endverse):
+	verses = getChapter(translation, book, chapter)
+	return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
 
 
 def linkToChapter(request, translation, book, chapter):
-	return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": json.dumps(getChapter(translation, book, chapter))})
+	verses = getChapter(translation, book, chapter)
+	return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 0, 3)})
 
 
 def signUp(request):
@@ -194,6 +214,7 @@ def getCategories(request):
 	all_objects = user.bookmarks_set.values('note').annotate(
 		dcount=Count('note')).order_by('-date')
 	return JsonResponse({"data": [b for b in all_objects]}, safe=False)
+
 
 @csrf_exempt
 def getParallelVerses(request):

@@ -3,10 +3,12 @@ import "./languages.json" as languages
 import {Profile} from './Profile'
 import {Load} from "./loading.imba"
 import {Downloads} from "./downloads.imba"
+import {colorPicker} from "./colorPicker.imba"
 require "./compare-draggable-item"
 require './search-text-as-html'
 require './text-as-html'
 import {thanks_to} from './thanks_to'
+
 
 let translations = []
 for language in languages
@@ -45,13 +47,23 @@ let settings_menu_left = -300
 let menu_icons_transform = 0
 let choosen = []
 let choosenid = []
-let highlight_color = ''
 let highlights = []
-let show_color_picker = no
 let show_collections = no
 let show_history = no
 let choosen_parallel = no
-let store = {newcollection: '', book_search: ''}
+let store =
+	newcollection: ''
+	book_search: ''
+	highlight_color: ''
+	show_color_picker: no
+
+let page_search =
+	d: no
+	query: ''
+	matches: []
+	current_occurence: 1
+	selections: []
+
 let addcollection = no
 let choosen_categories = []
 let onpopstate = no
@@ -68,6 +80,7 @@ let deleting_of_all_transllations = no
 let choosen_for_comparison = []
 let comparison_parallel = []
 let new_comparison_parallel = []
+let show_delete_bookmark = no
 let show_translations_for_comparison = no
 let welcome = yes
 let was_deleting_translation_from_compare = no
@@ -163,23 +176,21 @@ document:onkeyup = do |e|
 			bible[0]:_tag.prevBook
 	if e:code == "Escape"
 		let bible = document:getElementsByClassName("Bible")
-		bible[0]:_tag.clearSpace
-		let profile = document:getElementsByClassName("Profile")
-		if profile[0]
-			profile[0]:_tag.orphanize
-			window:history.back()
+		bible[0]:_tag.clearSpace()
+	if e:ctrlKey && e:code == "KeyF"
+		page_search:query = window.getSelection().toString()
+		let bible = document:getElementsByClassName("Bible")
+		bible[0]:_tag.clearSpace()
+		bible[0]:_tag.pageSearch()
 	if e:code == "KeyH" && e:altKey && e:ctrlKey
 		menuicons = !menuicons
-		Imba.commit
+		Imba.commit()
 		window:localStorage.setItem("menuicons", menuicons)
 
 window:onpopstate = do |event|
-	let state = event:state
-	if state
-		if state:inner_pop_up
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.clearSpace()
-		elif state:profile
+	if event:state
+		let state = event:state
+		if state:profile
 			let profile = document:getElementsByClassName("Profile")
 			if !profile[0]
 				Imba.mount <Profile[@data]>
@@ -203,62 +214,9 @@ window:onpopstate = do |event|
 			bible[0]:_tag.getText(state:translation, state:book, state:chapter, state:verse)
 			settingsp:display = state:parallel_display
 			window:localStorage.setItem('parallel_display', state:parallel_display)
-
-tag colorpicker < canvas
-	prop imgData
-	prop rgba
-
-	def build
-		self.width = 320
-		self.height = 207
-		let gradient = self:context('2d').createLinearGradient(0,0,self.width,0)
-		gradient.addColorStop(0, '#ff0000')
-		gradient.addColorStop(1/6, '#ffff00')
-		gradient.addColorStop((1/6)*2, '#00ff00')
-		gradient.addColorStop((1/6)*3, '#00ffff')
-		gradient.addColorStop((1/6)*4, '#0000ff')
-		gradient.addColorStop((1/6)*5, '#ff00ff')
-		gradient.addColorStop(1, '#ff0000')
-		self:context('2d'):fillStyle = gradient
-		self:context('2d').fillRect(0, 0, self.width, self.height)
-
-		gradient = self:context('2d').createLinearGradient(0,0,0,self.height)
-		gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
-		gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)')
-		gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
-		self:context('2d'):fillStyle = gradient
-		self:context('2d').fillRect(0, 0, self.width, self.height)
-
-		gradient = self:context('2d').createLinearGradient(0,0,0,self.height)
-		gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-		gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)')
-		gradient.addColorStop(1, 'rgba(0, 0, 0, 1)')
-		self:context('2d'):fillStyle = gradient
-		self:context('2d').fillRect(0, 0, self.width, self.height)
-
-	def ontouchstart e
-		let offsetX = (window:innerWidth - 320) / 2 + e:_x
-		let offsetY = window:innerWidth <= 600 ? e:_y - (window:innerHeight - 209) : e:_y - (window:innerHeight - 383)
-		@imgData = self:context('2d').getImageData(offsetX, offsetY, 1, 1)
-		@rgba = @imgData:data
-		highlight_color = "rgba(" + @rgba[0] + "," + @rgba[1] + "," + @rgba[2] + "," + @rgba[3] + ")"
-		self
-
-	def ontouchupdate e
-		let offsetX = e:_x - ((window:innerWidth - 330) / 2)
-		let offsetY = window:innerWidth <= 600 ? e:_y - (window:innerHeight - 209) : e:_y - (window:innerHeight - 383)
-		@imgData = self:context('2d').getImageData(offsetX, offsetY, 1, 1)
-		@rgba = @imgData:data
-		highlight_color = "rgba(" + @rgba[0] + "," + @rgba[1] + "," + @rgba[2] + "," + @rgba[3] + ")"
-		Imba.commit
-
-	def onclick e
-		@imgData = self:context('2d').getImageData(e:_event:offsetX, e:_event:offsetY, 1, 1)
-		@rgba = @imgData:data
-		highlight_color = "rgba(" + @rgba[0] + "," + @rgba[1] + "," + @rgba[2] + "," + @rgba[3] + ")"
-
-	def render
-		<self .show-canvas=show_color_picker>
+	else
+		let bible = document:getElementsByClassName("Bible")
+		bible[0]:_tag.clearSpace()
 
 export tag Bible
 	prop verses default: []
@@ -277,6 +235,7 @@ export tag Bible
 	prop search default: Object.create(null)
 
 	def setup
+		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
 		if window:translation
 			if translations.find(do |element| return element:short_name == window:translation)
 				setCookie('translation', window:translation)
@@ -292,6 +251,7 @@ export tag Bible
 				if window:verse
 					document:title += ':' + window:verse
 					findVerse(window:verse)
+					highlightLinkedVerses()
 				document:title += ' ' + window:translation
 		if getCookie('theme')
 			settings:theme = getCookie('theme')
@@ -370,7 +330,7 @@ export tag Bible
 			search:onscroll = do
 				if this:scrollTop > this:scrollHeight - this:clientHeight - 512
 					self:_search:counter += 20
-					Imba.commit
+					Imba.commit()
 
 	def getCookie c_name
 		window:localStorage.getItem(c_name)
@@ -446,7 +406,7 @@ export tag Bible
 					window:location:origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
 			onpopstate = no
-			clearSpace
+			clearSpace()
 			document:title = "Bolls Bible " + " " + nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| return element:short_name == translation):full_name
 			if @chronorder
 				@chronorder = !@chronorder
@@ -478,16 +438,6 @@ export tag Bible
 			else setTimeout(&, 100) do window.scroll(0,0)
 		else clearSpace
 
-	def findVerse id
-		setTimeout(&,250) do
-			const verse = document.getElementById(id)
-			if verse
-				if settingsp:display
-					verse:parentNode:parentNode.scroll(0, verse:offsetTop - 64)
-				else
-					window.scroll(0, verse:offsetTop - 64)
-			else findVerse(id)
-
 	def getParallelText translation, book, chapter, verse
 		if !(translation == settingsp:translation && book == settingsp:book && chapter == settingsp:chapter) || !@parallel_verses:length || !settingsp:display
 			if !onpopstate && @verses
@@ -515,7 +465,7 @@ export tag Bible
 			settingsp:edited_version = translation
 			settingsp:book = book
 			settingsp:chapter = chapter
-			clearSpace
+			clearSpace()
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
 			@parallel_verses = []
 			try
@@ -550,6 +500,152 @@ export tag Bible
 			if verse
 				findVerse("p{verse}")
 
+	def findVerse id
+		setTimeout(&,250) do
+			const verse = document.getElementById(id)
+			if verse
+				if settingsp:display
+					verse:parentNode:parentNode.scroll(0, verse:offsetTop - 16)
+				else
+					window.scroll(0, verse:offsetTop - 16)
+			else findVerse(id)
+
+	def highlightLinkedVerses
+		setTimeout(&, 250) do
+			const verse = document.getElementById(window:verse)
+			if verse
+				if window:endverse
+					let nodes = []
+					for id in [window:verse..window:endverse]
+						if id <= @verses:length
+							nodes.push document.getElementById(id):nextSibling
+					let node = document.getElementById(window:verse):nextSibling
+					if window:getSelection
+						const selection = window.getSelection()
+						selection.removeAllRanges()
+						for node in nodes
+							const range = document.createRange()
+							range.selectNodeContents(node)
+							selection.addRange(range)
+					else
+						console.warn("Could not select text in node: Unsupported browser.")
+				else
+					let node = document.getElementById(window:verse):nextSibling
+					if window:getSelection
+						const selection = window.getSelection()
+						const range = document.createRange()
+						range.selectNodeContents(node)
+						selection.removeAllRanges()
+						selection.addRange(range)
+					else
+						console.warn("Could not select text in node: Unsupported browser.")
+
+			else
+				highlightLinkedVerses()
+
+	def pageSearch
+		# Show pageSearhc box
+		clearSpace()
+		page_search:d = yes
+
+		# Get selection and clear it
+		const selection = document.getSelection()
+		selection.removeAllRanges()
+
+		def focusInput
+			if document:activeElement:id == "pagesearch"
+				return
+			const input = document.getElementById('pagesearch')
+			if input
+				input.focus()
+				input.setSelectionRange(page_search:query:length, page_search:query:length)
+			else setTimeout(&,50) do focusInput()
+
+		# Check if query is not an empty string
+		unless page_search:query:length
+			page_search:matches = []
+			page_search:selections = []
+			focusInput()
+			return 0
+		# if the query is not an emty string lets clean it up for regex
+		let regex_compatible_query = page_search:query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
+
+		# Lets get chapter node to iterate verses for match
+		let all_articles = document.getElementsByTagName('article')
+		let chapter_articles = []
+		for article in all_articles
+			# articles that does not have className contain chapters
+			if article:className == ''
+				chapter_articles.push(article)
+
+		# Search process
+		const regex1 = RegExp(regex_compatible_query, 'gi')
+		let array1
+		page_search:matches = []
+		page_search:selections = []
+		for chapter in chapter_articles
+			for child in chapter:children
+				while ((array1 = regex1.exec(child:textContent)) !== null)
+					# # Save the index of found text to page_search:matches
+					# for further navigation
+					page_search:matches.push(child:previousSibling:id)
+
+					# Highlight found text
+					if page_search:current_occurence == page_search:matches:length
+						highlightText(child, regex1:lastIndex, 'current_occurence')
+					else
+						highlightText(child, regex1:lastIndex, 'another_occurences')
+
+		# After all scroll to results
+		if page_search:current_occurence > page_search:matches:length
+			page_search:current_occurence = 1
+			if page_search:matches:length
+				pageSearch()
+		findVerse(page_search:matches[page_search:current_occurence - 1])
+		focusInput()
+		Imba.commit()
+
+	def highlightText node, lastIndex, cssclass
+		# Create range of matched text to get its position in document
+		const range = document.createRange()
+		range.setStart(node:firstChild, lastIndex - page_search:query:length)	# Start at first character of query
+		range.setEnd(node:firstChild, lastIndex)	# End at last character
+
+		# getClientRects returns metrics of selections
+		const rects = range.getClientRects()
+		for rect in rects
+			if rect:width && rect:height
+				# Save data about selection rectangles to display them later
+				const selection = {
+					top: rect:top + window:scrollY
+					left: rect:left
+					height: rect:height
+					width: rect:width
+					class: cssclass
+				}
+				# Save it to array to display it later
+				page_search:selections.push(selection)
+
+	def prevOccurence
+		page_search:selections[page_search:current_occurence - 1]:class = 'another_occurences'
+		if page_search:current_occurence == 1
+			page_search:current_occurence = page_search:matches:length
+		else
+			page_search:current_occurence--
+		page_search:selections[page_search:current_occurence - 1]:class = 'current_occurence'
+		findVerse(page_search:matches[page_search:current_occurence - 1])
+		Imba.commit()
+
+	def nextOccurence
+		page_search:selections[page_search:current_occurence - 1]:class = 'another_occurences'
+		if page_search:current_occurence == page_search:matches:length
+			page_search:current_occurence = 1
+		else
+			page_search:current_occurence++
+		page_search:selections[page_search:current_occurence - 1]:class = 'current_occurence'
+		findVerse(page_search:matches[page_search:current_occurence - 1])
+		Imba.commit()
+
 	def clearSpace
 		bible_menu_left = -300
 		settings_menu_left = -300
@@ -559,7 +655,7 @@ export tag Bible
 		choosen = []
 		choosenid = []
 		addcollection = no
-		show_color_picker = no
+		store:show_color_picker = no
 		show_collections = no
 		choosen_parallel = no
 		what_to_show_in_pop_up_block = ''
@@ -568,7 +664,15 @@ export tag Bible
 		show_parallel_verse_picker = no
 		show_verse_picker = no
 		show_share_box = no
+		if page_search:d = no
+			page_search:d = no
+			page_search:matches = []
+			page_search:selections = []
 		choosen_categories = []
+		let profile = document:getElementsByClassName("Profile")
+		if profile[0]
+			profile[0]:_tag.orphanize
+			window:history.back()
 		if document.getElementsByTagName('main')[0]
 			document.getElementsByTagName('main')[0].focus()
 		Imba.commit()
@@ -579,7 +683,7 @@ export tag Bible
 		else
 			clearSpace()
 			what_to_show_in_pop_up_block = 'show_help'
-			window:history.pushState({inner_pop_up: yes}, "Help")
+			window:history.pushState(no, "Help")
 
 	def turnSupport
 		if what_to_show_in_pop_up_block == "show_support"
@@ -587,7 +691,7 @@ export tag Bible
 		else
 			clearSpace()
 			what_to_show_in_pop_up_block = 'show_support'
-			window:history.pushState({inner_pop_up: yes}, "Support")
+			window:history.pushState(no, "Support")
 
 	def toggleParallelMode parallel
 		if !parallel
@@ -662,7 +766,7 @@ export tag Bible
 				closeSearch()
 				what_to_show_in_pop_up_block = 'search'
 				Imba.commit
-				window:history.pushState({inner_pop_up: yes}, "Search")
+				window:history.pushState(no, "Search")
 			catch error
 				if @data.db_is_available && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
 					@search_verses = await @data.getSearchedTextFromStorage(search)
@@ -874,7 +978,7 @@ export tag Bible
 		if choosenid:length && choosenid.find(do |element| return element == verse)
 			let img = 'linear-gradient(to right'
 			for i in [0..96]
-				img += ', ' + (i % 2 ? 'rgba(0,0,0,0)' : highlight_color) + ' ' + i + '% ' + (i + 8) + '%'
+				img += ', ' + (i % 2 ? 'rgba(0,0,0,0)' : store:highlight_color) + ' ' + i + '% ' + (i + 8) + '%'
 				i+=4
 			return img += ')'
 		else
@@ -886,7 +990,7 @@ export tag Bible
 
 	def getParallelHighlight verse
 		if choosenid:length && choosenid.find(do |element| return element == verse)
-			return highlight_color
+			return store:highlight_color
 		else
 			let highlight = @parallel_bookmarks.find(do |element| return element:verse == verse)
 			if highlight
@@ -906,7 +1010,7 @@ export tag Bible
 	def addToChoosen pk, id, parallel
 		if !settings_menu_left || !bible_menu_left
 			return clearSpace()
-		highlight_color = getRandomColor()
+		store:highlight_color = getRandomColor()
 		if document.getSelection == ''
 			if window:innerWidth > 600
 				if !settingsp:display
@@ -923,20 +1027,20 @@ export tag Bible
 					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
 					if offsetTop > verse:parentNode:parentNode:clientHeight
 						verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop - (verse:parentNode:parentNode:clientHeight - offsetTop))
+			else
+				if parallel == "first"
+					findVerse(id)
+				else
+					findVerse('p' + id)
 			if !choosen_parallel
 				choosen_parallel = parallel
 				choosenid.push(pk)
 				choosen.push(id)
 				pushNoteIfExist(pk)
 				window:history.pushState(
-					{inner_pop_up: yes},
+					no,
 					"Highlight",
 					window:location:origin + '/' + settings:translation + '/' + settings:book + '/' + settings:chapter + '/' + id + '/')
-				if window:innerWidth < 600
-					if parallel == "first"
-						window:location:hash = "#{id}"
-					else
-						window:location:hash = "#p{id}"
 			elif choosen_parallel == parallel
 				if choosenid.find(do |element| return element == pk)
 					choosenid.splice(choosenid.indexOf(pk), 1)
@@ -958,10 +1062,11 @@ export tag Bible
 				highlighted_title = getHighlightedRow(settings:translation, settings:book, settings:chapter, choosen)
 			else
 				highlighted_title = getHighlightedRow(settingsp:translation, settingsp:book, settingsp:chapter, choosen)
+			showDeleteBookmark()
 
 	def changeHighlightColor color
-		show_color_picker = no
-		highlight_color = color
+		store:show_color_picker = no
+		store:highlight_color = color
 
 	def getHighlightedRow translation, book, chapter, verses
 		let row = nameOfBook(book, translation) + ' ' + chapter + ':'
@@ -988,10 +1093,10 @@ export tag Bible
 		return cookieValue
 
 	def sendBookmarksToDjango
-		if highlight_color:length > 15
-			if highlights.find(do |element| return element == highlight_color)
-				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == highlight_color)), 1)
-			highlights.push(highlight_color)
+		if store:highlight_color:length > 15
+			if highlights.find(do |element| return element == store:highlight_color)
+				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == store:highlight_color)), 1)
+			highlights.push(store:highlight_color)
 			window:localStorage.setItem("highlights", JSON.stringify(highlights))
 		let notes = ''
 		for category, key in choosen_categories
@@ -1011,7 +1116,7 @@ export tag Bible
 				},
 				body: JSON.stringify({
 					verses: JSON.stringify(choosenid),
-					color: highlight_color,
+					color: store:highlight_color,
 					date: Date.now(),
 					notes: notes
 				}),
@@ -1024,14 +1129,14 @@ export tag Bible
 				if @data.db_is_available
 					@data.saveBookmarksToStorageUntillOnline({
 						verses: choosenid,
-						color: highlight_color,
+						color: store:highlight_color,
 						date: Date.now(),
 						notes: choosen_categories
 					}))
 		elif @data.db_is_available
 			@data.saveBookmarksToStorageUntillOnline({
 				verses: choosenid,
-				color: highlight_color,
+				color: store:highlight_color,
 				date: Date.now(),
 				notes: choosen_categories
 			})
@@ -1042,7 +1147,7 @@ export tag Bible
 				@parallel_bookmarks.push({
 					verse: verse,
 					date: Date.now(),
-					color: highlight_color,
+					color: store:highlight_color,
 					note: notes})
 		else
 			for verse in choosenid
@@ -1051,7 +1156,7 @@ export tag Bible
 				@bookmarks.push({
 					verse: verse,
 					date: Date.now(),
-					color: highlight_color,
+					color: store:highlight_color,
 					note: notes})
 		clearSpace()
 
@@ -1226,7 +1331,7 @@ export tag Bible
 			addcollection = no
 		else
 			show_collections = !show_collections
-			show_color_picker = no
+			store:show_color_picker = no
 			if show_collections && @data.user
 				let url = "/get-categories/"
 				if window:navigator:onLine
@@ -1350,7 +1455,7 @@ export tag Bible
 		if what_to_show_in_pop_up_block == "show_compare"
 			clearSpace()
 			what_to_show_in_pop_up_block = 'show_compare'
-			window:history.pushState({inner_pop_up: yes}, "Compare")
+			window:history.pushState(no, "Compare")
 		else clearSpace()
 		was_deleting_translation_from_compare = no
 		loading = yes
@@ -1359,7 +1464,7 @@ export tag Bible
 			loading = no
 			what_to_show_in_pop_up_block = 'show_compare'
 			Imba.commit()
-			window:history.pushState({inner_pop_up: yes}, "Compare")
+			window:history.pushState(no, "Compare")
 		else
 			comparison_parallel = []
 			window.fetch("/get-paralel-verses/", {
@@ -1381,7 +1486,7 @@ export tag Bible
 					loading = no
 					what_to_show_in_pop_up_block = 'show_compare'
 					Imba.commit()
-					window:history.pushState({inner_pop_up: yes}, "Compare")
+					window:history.pushState(no, "Compare")
 				)
 			.catch(do |error|
 				log error
@@ -1448,7 +1553,7 @@ export tag Bible
 	def toggleDownloads
 		clearSpace
 		what_to_show_in_pop_up_block = 'show_downloads'
-		window:history.pushState({inner_pop_up: yes}, "Downloads")
+		window:history.pushState(no, "Downloads")
 
 	def changeFontWeight value
 		if settings:font:weight + value < 1000 && settings:font:weight + value > 0
@@ -1563,6 +1668,22 @@ export tag Bible
 				menu_icons_transform = 400
 			Imba.commit
 
+	def showDeleteBookmark
+		show_delete_bookmark = no
+		for verse in choosenid
+			let highlight = bookmarks.find(do |element| return element:verse == verse) || parallel_bookmarks.find(do |element| return element:verse == verse)
+			if highlight
+				show_delete_bookmark = yes
+
+	def pageSearchKkeyupManager e
+		const event = e:_event
+		if event:code == "Enter"
+			if event:shiftKey
+				prevOccurence()
+			else
+				nextOccurence()
+		else pageSearch()
+
 	def render
 		<self :onscroll=onscroll>
 			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: left;' : ''}">
@@ -1619,9 +1740,13 @@ export tag Bible
 							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ) ¯\\_(ツ)_/¯   ノ( ゜-゜ノ)"
 					<.freespace>
 				<input[store:book_search].search type="text" placeholder=@data.lang:search input:aria-label=@data.lang:search> @data.lang:search
-				<svg:svg.close_book_search :click.prevent=(do store:book_search = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+				<svg:svg#close_book_search :click.prevent=(do store:book_search = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 					<svg:title> @data.lang:delete
 					<svg:path d=svg_paths:close css:margin="auto">
+
+			if page_search:d
+				for rect in page_search:selections
+					<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 
 			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family: {settings:font:family}; font-size: {settings:font:size}px; line-height: {settings:font:line-height}; font-weight: {settings:font:weight};">
 				<section .parallel=settingsp:display dir="auto" style="margin: auto; max-width: {settings:font:max-width}em;">
@@ -1636,16 +1761,16 @@ export tag Bible
 										:click.prevent.addToChoosen(verse:pk, verse:verse, 'first')
 										style="background-image:{getHighlight(verse:pk, 'bookmarks')}"
 									>
-							<.arrows>
-								<a.arrow :click.prevent.prevChapter() title=@data.lang:prev href=prevChapterLink>
-									<svg:svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
-										<svg:title> @data.lang:prev
-										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-								<a.arrow :click.prevent.nextChapter() title=@data.lang:next href=nextChapterLink>
-									<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
-										<svg:title> @data.lang:next
-										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							if choosen:length
+						<.arrows>
+							<a.arrow :click.prevent.prevChapter() title=@data.lang:prev href=prevChapterLink>
+								<svg:svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+									<svg:title> @data.lang:prev
+									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+							<a.arrow :click.prevent.nextChapter() title=@data.lang:next href=nextChapterLink>
+								<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+									<svg:title> @data.lang:next
+									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+						if choosen:length
 								<.freespace>
 					if !window:navigator:onLine && @data.downloaded_translations.indexOf(settings:translation) == -1 && !(@verses:length)
 						<p.in_offline>
@@ -1663,17 +1788,17 @@ export tag Bible
 								<text-as-html[verse]
 									:click.prevent.addToChoosen(verse:pk, verse:verse, 'second')
 									style="background-image:{getHighlight(verse:pk, 'parallel_bookmarks')}">
-							<.arrows>
-								<a.arrow :click.prevent.prevChapter("true")>
-									<svg:svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
-										<svg:title> @data.lang:prev
-										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-								<a.arrow :click.prevent.nextChapter("true")>
-									<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
-										<svg:title> @data.lang:next
-										<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							if choosenid:length
-								<.freespace>
+						<.arrows>
+							<a.arrow :click.prevent.prevChapter("true")>
+								<svg:svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+									<svg:title> @data.lang:prev
+									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+							<a.arrow :click.prevent.nextChapter("true")>
+								<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+									<svg:title> @data.lang:next
+									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+						if choosenid:length
+							<.freespace>
 					if !window:navigator:onLine && @data.downloaded_translations.indexOf(settingsp:translation) == -1 && !(@parallel_verses:length)
 						<p.in_offline> @data.lang:this_translation_is_unavailable
 
@@ -1684,7 +1809,7 @@ export tag Bible
 					<.accents .show_accents=show_accents>
 						for accent in accents when accent:name != settings:accent
 							<.accent :click.prevent.changeAccent(accent:name) style="background-color: {settings:theme == 'dark' ? accent:light : accent:dark};">
-				<input[search:search_input].search id='search' type='text' placeholder=@data.lang:search input:aria-label=@data.lang:search :keydown.enter.prevent.getSearchText> @data.lang:search
+				<input[search:search_input].search id='search' type='text' placeholder=@data.lang:search input:aria-label=@data.lang:search :keyup.enter.prevent.getSearchText> @data.lang:search
 				<.btnbox>
 					<svg:svg.cbtn :click.prevent.changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
 						<svg:title> @data.lang:nighttheme
@@ -1751,6 +1876,11 @@ export tag Bible
 						<svg:path d="M0 0h24v24H0z" fill="none">
 						<svg:path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
 					@data.lang:history
+				<.help :click.prevent.pageSearch()>
+					<svg:svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+						<svg:title> @data.lang:find_in_chapter
+						<svg:path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+					@data.lang:find_in_chapter
 				<.nighttheme.flex :click.prevent=(do @data.show_languages = !@data.show_languages)>
 					@data.lang:language
 					<button.change_language> currentLanguage()
@@ -1823,8 +1953,8 @@ export tag Bible
 							<svg:svg.filter_search xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
 								<svg:title> @data.lang:help
 								<svg:g>
-										<svg:path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
-										<svg:path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
+									<svg:path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
+									<svg:path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
 					<article.helpFAQ.search_body tabindex="0">
 						<p style="color: var(--accent-hover-color); font-size: 0.9em;"> @data.lang:faqmsg
 						<h3> @data.lang:content
@@ -2008,7 +2138,7 @@ export tag Bible
 								<svg:line x1="10" y1="0" x2="10" y2="20">
 					<.mark_grid>
 						if addcollection
-							<input[store:newcollection].newcollectioninput :keydown.enter.prevent.addNewCollection(store:newcollection) id="newcollectioninput" type="text">
+							<input[store:newcollection].newcollectioninput :keyup.enter.prevent.addNewCollection(store:newcollection) id="newcollectioninput" type="text">
 						elif @categories:length
 							for category in @categories
 								if category
@@ -2098,15 +2228,15 @@ export tag Bible
 										C257.667,202.578,262.113,202.429,260.722,202.523z">
 					<button.cancel :click.prevent=(do show_share_box = no)> @data.lang:cancel
 				else
-					if show_color_picker
+					if store:show_color_picker
 						if window:innerWidth < 600
-							<svg:svg.close_colorpicker
-								:click.prevent=(do show_color_picker = !show_color_picker)
+							<svg:svg.close_colorPicker
+								:click.prevent=(do store:show_color_picker = !store:show_color_picker)
 								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" tabindex="0"
 							>
 								<svg:title> @data.lang:close
 								<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-						<colorpicker .show-canvas=show_color_picker width="320" height="207" canvas:alt=@data.lang:canvastitle id="" tabindex="0">  @data.lang:canvastitle
+						<colorPicker[store] .show-canvas=store:show_color_picker width="320" height="208" canvas:alt=@data.lang:canvastitle id="" tabindex="0">  @data.lang:canvastitle
 					<p> highlighted_title, ' ', choosen_parallel == "first" ? settings:translation : settingsp:translation
 					<ul.mark_grid>
 						for highlight in highlights.slice().reverse()
@@ -2128,9 +2258,9 @@ export tag Bible
 							css:background="linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
 							linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
 							linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)"
-							:click.prevent=(do show_color_picker = !show_color_picker)>
+							:click.prevent=(do store:show_color_picker = !store:show_color_picker)>
 					<#addbuttons>
-						<svg:svg.close_search :click.prevent.deleteBookmarks(choosenid) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=@data.lang:delete>
+						if show_delete_bookmark then <svg:svg.close_search :click.prevent.deleteBookmarks(choosenid) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=@data.lang:delete>
 							<svg:title> @data.lang:delete
 							<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 						<svg:svg.close_search :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=@data.lang:close>
@@ -2148,7 +2278,6 @@ export tag Bible
 						<svg:svg.save_bookmark .filled=choosen_categories:length :click.prevent.turnCollections() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=@data.lang:addtocollection>
 							<svg:title> @data.lang:addtocollection
 							<svg:path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-
 						<svg:svg.save_bookmark css:padding="10px 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" :click.prevent.sendBookmarksToDjango alt=@data.lang:create>
 							<svg:title> @data.lang:create
 							<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
@@ -2208,3 +2337,22 @@ export tag Bible
 					<h1 style="margin: 0 auto 12px; font-size: 1.2em;"> @data.lang:welcome
 					<p> @data.lang:welcome_msg, <span.emojify> ' 😉'
 					<button :tap.prevent.WelcomeOk()> "Ok ", <span.emojify> '👌🏽'
+
+			if page_search:d
+				<section#page_search style="background-color: {page_search:matches:length ? 'var(--background-color)' : 'firebrick'}">
+					<input[page_search:query]#pagesearch.search :keyup.pageSearchKkeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang:search>
+					<button.arrow :click.prevent.prevOccurence() title=@data.lang:prev style="border-radius: 0;">
+						<svg:svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5" style="transform: rotate(180deg);">
+							<svg:title> @data.lang:prev
+							<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+					<button.arrow :click.prevent.nextOccurence() title=@data.lang:next style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
+						<svg:svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5">
+							<svg:title> @data.lang:next
+							<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+					if page_search:matches:length
+						<p> page_search:current_occurence, ' / ', page_search:matches:length
+					elif page_search:query:length != 0 && window:innerWidth > 640
+						<p> @data.lang:phrase_not_found, '!'
+					<svg:svg.close_search style="margin: 0 16px 0 auto; padding: 0; height: 32px;" :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg:title> @data.lang:delete
+						<svg:path d=svg_paths:close css:margin="auto">

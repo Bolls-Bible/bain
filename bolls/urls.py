@@ -31,12 +31,10 @@ urlpatterns = [
 		views.getProfileBookmarks),
 	path('<slug:translation>/<int:book>/<int:chapter>/',
 		views.linkToChapter),
-	path('/<slug:translation>/<int:book>/<int:chapter>/',
-		views.linkToChapter),
 	path('<slug:translation>/<int:book>/<int:chapter>/<int:verse>/',
 		views.linkToVerse),
-	path('/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/',
-		views.linkToVerse),
+	path('<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/',
+		views.linkToVerses),
 ]
 handler404 = views.handler404
 handler500 = views.handler500

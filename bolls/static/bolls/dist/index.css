@@ -153,7 +153,7 @@ a {
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] .list_of_chapters,
 html[data-transitions="true"] .bookmark_in_list,
-html[data-transitions="true"] .close_colorpicker {
+html[data-transitions="true"] .close_colorPicker {
 	-webkit-animation: text-came 300ms ease;
 	animation: text-came 300ms ease;
 }
@@ -165,8 +165,9 @@ html[data-transitions="true"] .mark_grid,
 html[data-transitions="true"] .collectionshat,
 html[data-transitions="true"] .collectionsflex,
 html[data-transitions="true"] #addbuttons,
+html[data-transitions="true"] #page_search,
 html[data-transitions="true"] .Downloads,
-html[data-transitions="true"] ._colorpicker,
+html[data-transitions="true"] ._colorPicker,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] main section article {
 	-webkit-animation: text-came 300ms ease forwards;
@@ -423,17 +424,17 @@ nav input[type="text"] {
 	width: 268px;
 }
 
-.close_book_search {
+#close_book_search {
 	transform: translateY(-59px) translateX(252px);
 	width: 26px;
-	height: 50px;
+	height: 52px;
 	padding: 12px 0;
 	fill: var(--text-color);
 	cursor: pointer;
 	opacity: 0.33;
 }
 
-.close_book_search:hover {
+#close_book_search:hover {
 	fill: firebrick;
 	opacity: 1;
 }
@@ -511,7 +512,7 @@ html[data-light="light"] .choosen_verses {
 	transition-property: bottom;
 }
 
-._colorpicker {
+._colorPicker {
 	position: absolute;
 	bottom: 100%;
 	cursor: crosshair;
@@ -521,7 +522,7 @@ html[data-light="light"] .choosen_verses {
 	touch-action: none;
 }
 
-.close_colorpicker {
+.close_colorPicker {
 	position: absolute;
 	bottom: 215px;
 	right: calc((100vw - 320px) / 2);
@@ -758,11 +759,13 @@ aside {
 
 .verse,
 nav,
+button,
 aside,
 ._compare-draggable-item,
 .platform-item,
 img,
 .mark_grid,
+#page_search,
 .collectionshat {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -811,7 +814,7 @@ img,
 	padding: 8px 16px;
 	border-radius: 4px;
 	font-size: 18px;
-	border: 0.1px solid var(--btn-bg);
+	border: 0.5px solid var(--btn-bg);
 	display: block;
 	width: 100%;
 }
@@ -839,20 +842,23 @@ img,
 	padding: 4px;
 	font-size: 20px;
 	border: none;
-	background-color: transparent;
+	background: var(--btn-bg);
+	border: 1px solid var(--btn-bg);
 	margin: 24px 0 0;
 	color: inherit;
-	padding: 6px 16px;
+	padding: 4px 8px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	opacity: 0.7;
 }
 
 .search:hover {
-	border-radius: 8px;
-	-webkit-border-radius: 8px;
-	background: var(--btn-bg);
+	opacity: 1;
 }
 
 .search:focus {
 	border-radius: 8px;
+	opacity: 1;
 	background: var(--btn-bg-hover);
 }
 
@@ -1734,4 +1740,52 @@ address a:hover {
 	background-color: var(--btn-bg-hover);
 	border-radius: 8px;
 	cursor: pointer;
+}
+
+#page_search {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	border-top: 1px solid var(--btn-bg);
+	padding: 8px;
+}
+
+#page_search input {
+	width: 256px;
+	height: 36px;
+	margin: 0;
+}
+
+#page_search .arrow {
+	height: 36px;
+	width: 36px;
+	opacity: 0.7;
+	background: var(--btn-bg);
+	border: 1px solid var(--btn-bg);
+}
+
+#page_search .arrow:hover{
+	background: var(--btn-bg-hover);
+	opacity: 1;
+	transform: none;
+}
+
+#page_search .arrow:active, .search:active {
+	background-color: transparent;
+}
+
+#page_search p {
+	margin-left: 16px;
+}
+
+.current_occurence {
+	background-color: var(--accent-hover-color);
+	position: absolute;
+}
+.another_occurences {
+	background-color: var(--btn-bg-hover);
+	position: absolute;
 }
