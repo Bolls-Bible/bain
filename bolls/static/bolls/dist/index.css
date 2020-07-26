@@ -1115,6 +1115,7 @@ html[data-light="light"] .show_search_results {
 	height: 100%;
 	overflow-y: auto;
 	width: 50%;
+	position: relative;
 }
 
 .flex {

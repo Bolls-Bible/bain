@@ -62,7 +62,6 @@ let page_search =
 	query: ''
 	matches: []
 	current_occurence: 1
-	selections: []
 
 let addcollection = no
 let choosen_categories = []
@@ -564,7 +563,7 @@ export tag Bible
 		# Check if query is not an empty string
 		unless page_search:query:length
 			page_search:matches = []
-			page_search:selections = []
+			# page_search:selections = []
 			focusInput()
 			return 0
 		# if the query is not an emty string lets clean it up for regex
@@ -578,72 +577,98 @@ export tag Bible
 			if article:className == ''
 				chapter_articles.push(article)
 
+		def highlightText node, lastIndex, cssclass, parallel
+			# Create range of matched text to get its position in document
+			const range = document.createRange()
+			range.setStart(node:firstChild, lastIndex - page_search:query:length)	# Start at first character of query
+			range.setEnd(node:firstChild, lastIndex)	# End at last character
+
+			def getSearchSelectionTopOffset rect_top
+				if settingsp:display
+					return rect_top + chapter_articles[parallel]:parentElement:scrollTop
+				else return rect_top + window:scrollY
+
+			def getSearchSelectionLeftOffset rect_left
+				if settingsp:display
+					if parallel
+						return rect_left - chapter_articles[parallel]:parentNode:offsetLeft - chapter_articles[parallel]:offsetLeft
+					else
+						return rect_left - window:innerWidth * 0.02
+				else return rect_left
+
+			# getClientRects returns metrics of selections
+			const rects = range.getClientRects()
+			let selections = []
+			for rect in rects
+				if rect:width && rect:height
+					# Save data about selection rectangles to display them later
+					const selection = {
+						top: getSearchSelectionTopOffset(rect:top)
+						left: getSearchSelectionLeftOffset(rect:left)
+						height: rect:height
+						width: rect:width
+						class: cssclass
+						mathcid: node:id
+					}
+					# Save it to and array to display it later
+					selections.push(selection)
+			return selections
+
 		# Search process
 		const regex1 = RegExp(regex_compatible_query, 'gi')
 		let array1
 		page_search:matches = []
-		page_search:selections = []
+		let parallel = 0
 		for chapter in chapter_articles
 			for child in chapter:children
 				while ((array1 = regex1.exec(child:textContent)) !== null)
 					# # Save the index of found text to page_search:matches
 					# for further navigation
-					page_search:matches.push(child:previousSibling:id)
+					def getSelectionHighlightRect
+						# Highlight found text
+						if page_search:current_occurence == page_search:matches:length
+							highlightText(child, regex1:lastIndex, 'current_occurence', parallel)
+						else
+							highlightText(child, regex1:lastIndex, 'another_occurences', parallel)
 
-					# Highlight found text
-					if page_search:current_occurence == page_search:matches:length
-						highlightText(child, regex1:lastIndex, 'current_occurence')
-					else
-						highlightText(child, regex1:lastIndex, 'another_occurences')
+					page_search:matches.push({
+						id: child:previousSibling:id
+						rects: getSelectionHighlightRect()
+					})
+			parallel++
 
 		# After all scroll to results
-		if page_search:current_occurence > page_search:matches:length
-			page_search:current_occurence = 1
+		if page_search:current_occurence > page_search:matches:length - 1
+			page_search:current_occurence = 0
 			if page_search:matches:length
 				pageSearch()
-		findVerse(page_search:matches[page_search:current_occurence - 1])
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
 		focusInput()
 		Imba.commit()
 
-	def highlightText node, lastIndex, cssclass
-		# Create range of matched text to get its position in document
-		const range = document.createRange()
-		range.setStart(node:firstChild, lastIndex - page_search:query:length)	# Start at first character of query
-		range.setEnd(node:firstChild, lastIndex)	# End at last character
-
-		# getClientRects returns metrics of selections
-		const rects = range.getClientRects()
+	def changeSelectionRectClass class_name
+		let rects = page_search:matches[page_search:current_occurence]:rects
 		for rect in rects
-			if rect:width && rect:height
-				# Save data about selection rectangles to display them later
-				const selection = {
-					top: rect:top + window:scrollY
-					left: rect:left
-					height: rect:height
-					width: rect:width
-					class: cssclass
-				}
-				# Save it to array to display it later
-				page_search:selections.push(selection)
+			rect:class = class_name
 
 	def prevOccurence
-		page_search:selections[page_search:current_occurence - 1]:class = 'another_occurences'
-		if page_search:current_occurence == 1
-			page_search:current_occurence = page_search:matches:length
+		changeSelectionRectClass('another_occurences')
+		if page_search:current_occurence == 0
+			page_search:current_occurence = page_search:matches:length - 1
 		else
 			page_search:current_occurence--
-		page_search:selections[page_search:current_occurence - 1]:class = 'current_occurence'
-		findVerse(page_search:matches[page_search:current_occurence - 1])
+		changeSelectionRectClass('current_occurence')
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
 		Imba.commit()
 
 	def nextOccurence
-		page_search:selections[page_search:current_occurence - 1]:class = 'another_occurences'
-		if page_search:current_occurence == page_search:matches:length
-			page_search:current_occurence = 1
+		changeSelectionRectClass('another_occurences')
+		if page_search:current_occurence == page_search:matches:length - 1
+			page_search:current_occurence = 0
 		else
 			page_search:current_occurence++
-		page_search:selections[page_search:current_occurence - 1]:class = 'current_occurence'
-		findVerse(page_search:matches[page_search:current_occurence - 1])
+		changeSelectionRectClass('current_occurence')
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
 		Imba.commit()
 
 	def clearSpace
@@ -664,17 +689,17 @@ export tag Bible
 		show_parallel_verse_picker = no
 		show_verse_picker = no
 		show_share_box = no
-		if page_search:d = no
-			page_search:d = no
-			page_search:matches = []
-			page_search:selections = []
+		window.getSelection().removeAllRanges()
 		choosen_categories = []
 		let profile = document:getElementsByClassName("Profile")
 		if profile[0]
 			profile[0]:_tag.orphanize
 			window:history.back()
-		if document.getElementsByTagName('main')[0]
+		if document.getElementsByTagName('main')[0] && !page_search:d
 			document.getElementsByTagName('main')[0].focus()
+		if page_search:d
+			page_search:d = no
+			page_search:matches = []
 		Imba.commit()
 
 	def turnHelpBox
@@ -1744,12 +1769,13 @@ export tag Bible
 					<svg:title> @data.lang:delete
 					<svg:path d=svg_paths:close css:margin="auto">
 
-			if page_search:d
-				for rect in page_search:selections
-					<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
-
 			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family: {settings:font:family}; font-size: {settings:font:size}px; line-height: {settings:font:line-height}; font-weight: {settings:font:weight};">
 				<section .parallel=settingsp:display dir="auto" style="margin: auto; max-width: {settings:font:max-width}em;">
+					if page_search:d
+						for match in page_search:matches when match:id.charAt(0) != 'p'
+							' '
+							for rect in match:rects
+								<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 					if @verses:length
 						<h1 style="font-family: {settings:font:family}; font-weight: {settings:font:weight + 200};" :click.prevent.toggleBibleMenu() title=translationFullName(settings:translation)> nameOfBook(settings:book, settings:translation), ' ', settings:chapter
 						<article>
@@ -1778,6 +1804,11 @@ export tag Bible
 							<br>
 							<a.reload :tap=(do window:location.reload(yes))> @data.lang:reload
 				<section.display_none.parallel .show_parallel=settingsp:display dir="auto" style="margin: auto;max-width: {settings:font:max-width}em;">
+					if page_search:d
+						for match in page_search:matches when match:id.charAt(0) == 'p'
+							' '
+							for rect in match:rects
+								<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 					if @parallel_verses:length
 						<h1 style="font-family: {settings:font:family}; font-weight: {settings:font:weight + 200};" :click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp:translation)> nameOfBook(settingsp:book, settingsp:translation), ' ', settingsp:chapter
 						<article>
@@ -2339,7 +2370,7 @@ export tag Bible
 					<button :tap.prevent.WelcomeOk()> "Ok ", <span.emojify> '👌🏽'
 
 			if page_search:d
-				<section#page_search style="background-color: {page_search:matches:length ? 'var(--background-color)' : 'firebrick'}">
+				<section#page_search style="background-color: {page_search:matches:length || !page_search:query:length ? 'var(--background-color)' : 'firebrick'}">
 					<input[page_search:query]#pagesearch.search :keyup.pageSearchKkeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang:search>
 					<button.arrow :click.prevent.prevOccurence() title=@data.lang:prev style="border-radius: 0;">
 						<svg:svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5" style="transform: rotate(180deg);">
@@ -2350,7 +2381,7 @@ export tag Bible
 							<svg:title> @data.lang:next
 							<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					if page_search:matches:length
-						<p> page_search:current_occurence, ' / ', page_search:matches:length
+						<p> page_search:current_occurence + 1, ' / ', page_search:matches:length
 					elif page_search:query:length != 0 && window:innerWidth > 640
 						<p> @data.lang:phrase_not_found, '!'
 					<svg:svg.close_search style="margin: 0 16px 0 auto; padding: 0; height: 32px;" :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
