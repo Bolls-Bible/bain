@@ -687,6 +687,8 @@ export tag Bible
 		show_collections = no
 		choosen_parallel = no
 		what_to_show_in_pop_up_block = ''
+		show_fonts = no
+		show_language_of = ''
 		was_deleting_translation_from_compare = no
 		show_translations_for_comparison = no
 		show_parallel_verse_picker = no
@@ -1776,7 +1778,7 @@ export tag Bible
 				<section .parallel=settingsp:display dir="auto" style="margin: auto; max-width: {settings:font:max-width}em;">
 					if page_search:d
 						for match in page_search:matches when match:id.charAt(0) != 'p'
-							' '
+							<i>
 							for rect in match:rects
 								<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 					if @verses:length
@@ -1809,7 +1811,7 @@ export tag Bible
 				<section.display_none.parallel .show_parallel=settingsp:display dir="auto" style="margin: auto;max-width: {settings:font:max-width}em;">
 					if page_search:d
 						for match in page_search:matches when match:id.charAt(0) == 'p'
-							' '
+							<i>
 							for rect in match:rects
 								<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 					if @parallel_verses:length
@@ -1973,7 +1975,7 @@ export tag Bible
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-07-12T12:11"> "2019-present"
+						"©",	<time time:datetime="2020-07-26T12:11"> "2019-present"
 						" Павлишинець Богуслав 🎻"
 
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>

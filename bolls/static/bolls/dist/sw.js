@@ -1,10 +1,12 @@
-var CACHE_NAME = "v1.3.51";
+var CACHE_NAME = "v1.3.52";
 var urlsToCache = [
 	'/',
 	'/static/bolls/dist/index.js',
 	'/static/bolls/dist/index.css',
 	'/static/bolls/fonts/fontstylesheet.css',
 	'/static/bolls/dist/mobile_styles.css',
+	'/static/bolls/dist/dexie.min.js',
+	'/static/bolls/dist/dexie_worker.js'
 ];
 
 self.addEventListener('install', function (event) {

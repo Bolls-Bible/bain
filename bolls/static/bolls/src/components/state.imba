@@ -1,17 +1,25 @@
 import "./languages.json" as languages
 import en_lang, uk_lang, ru_lang, pt_lang, es_lang from './langdata'
 
-let Dexie = require 'dexie'
-Dexie = Dexie:default
+# Now i use Dexie from a separatefile to use it in a worker
+# let Dexie = require 'dexie'
+# Dexie = Dexie:default
 
 let translations = []
 for language in languages
 	translations = translations.concat(language:translations)
 
+let db = Dexie.new('versesdb')
+
+db.version(1).stores({
+	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+	bookmarks: '&verse, *notes'
+})
+
 export class State
 	prop downloaded_translations
 	prop db_is_available
-	prop db
+	# prop db
 	prop downloading_of_this_translations
 	prop deleting_of_all_transllations
 	prop show_languages
@@ -25,7 +33,7 @@ export class State
 	prop deferredPrompt
 
 	def initialize
-		@db_is_available = yes
+		db_is_available = yes
 		@downloaded_translations = []
 		@downloading_of_this_translations = []
 		@deleting_of_all_transllations = no
@@ -84,11 +92,11 @@ export class State
 					@language = 'eng'
 					document:lastChild:lang = "en"
 			setLanguage(@language)
-		@db = Dexie.new('versesdb')
-		@db.version(1).stores({
-			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-			bookmarks: '&verse, *notes'
-		})
+		# db = Dexie.new('versesdb')
+		# db.version(1).stores({
+		# 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+		# 	bookmarks: '&verse, *notes'
+		# })
 		checkDownloadedTranslations()
 		checkSavedBookmarks()
 		setTimeout(&, 2048) do
@@ -126,8 +134,8 @@ export class State
 		let checked_translations = await Promise.all(
 			translations.map(
 				do |translation|
-					@db.transaction('r', @db:verses, do
-						const data = await @db:verses.get({translation: translation:short_name})
+					db.transaction('r', db:verses, do
+						const data = await db:verses.get({translation: translation:short_name})
 						return data:translation
 					).catch(do |e|
 						return null
@@ -154,10 +162,10 @@ export class State
 			window:localStorage.setItem('stored_translations_updates', JSON.stringify(translations_current_state))
 
 	def checkSavedBookmarks
-		@db.transaction('rw', @db:bookmarks, do
-			const stored_bookmarks_count = await @db:bookmarks.count()
+		db.transaction('rw', db:bookmarks, do
+			const stored_bookmarks_count = await db:bookmarks.count()
 			if stored_bookmarks_count > 0 &&  window:navigator:onLine
-				const bookmarks_in_offline = await @db:bookmarks.toArray()
+				const bookmarks_in_offline = await db:bookmarks.toArray()
 				let verses = [], bookmarks = [], date = bookmarks_in_offline[0]:date, color = bookmarks_in_offline[0]:color
 				let notes = ''
 				for category, key in bookmarks_in_offline[0]:notes
@@ -203,73 +211,112 @@ export class State
 					.then(do |data| undefined)
 					.catch(do |e| console.log(e))
 				)
-				@db.transaction('rw', @db:bookmarks, do
-					@db:bookmarks.clear()
+				db.transaction('rw', db:bookmarks, do
+					db:bookmarks.clear()
 				)
 		).catch(do |e|
-			@db_is_available = no
+			db_is_available = no
 			console.log('Uh oh : ' + e)
 		)
 
+	# TODO bring it out to separate Worker
 	def downloadTranslation translation
 		if (@downloaded_translations.indexOf(translation) < 0 && window:navigator:onLine)
 			@downloading_of_this_translations.push(translation)
-			Imba.commit
 			let begtime = Date.now()
 			let url = '/get-translation/' + translation + '/'
-			let array_of_verses = null
-			try
-				array_of_verses = await loadData(url)
-				console.log("Translation is downloaded. Time: ", (Date.now() - begtime) / 1000, "s")
-			catch e
-				console.error(e)
-				handleDownloadingError(translation)
-			if array_of_verses
-				@db_is_available = no
-				@db.transaction("rw", @db:verses, do
-					await @db:verses.bulkPut(array_of_verses)
-					@db_is_available = yes
-					@downloaded_translations.push(translation)
-					setCookie('downloaded_translations', JSON.stringify(@downloaded_translations))
-					@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
-					@translations_current_state[translation] = Date.now()
-					setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
-					console.log("Translation is saved. Time: ", (Date.now() - begtime) / 1000, "s")
-					Imba.commit
-				).catch (do |e|
-					handleDownloadingError(translation)
-					console.error(e)
+
+			def resolveDownload
+				db_is_available = yes
+				@downloaded_translations.push(translation)
+				setCookie('downloaded_translations', JSON.stringify(@downloaded_translations))
+				@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
+				@translations_current_state[translation] = Date.now()
+				setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
+				console.log("Translation is saved. Time: ", (Date.now() - begtime) / 1000, "s")
+				Imba.commit
+
+			if window:Worker
+				var dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage(url)
+
+				dexieWorker.addEventListener('message', do |event|
+					if event:data == translation
+						resolveDownload()
 				)
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					handleDownloadingError(translation)
+				)
+
+			else
+				let array_of_verses = null
+				try
+					array_of_verses = await loadData(url)
+					console.log("Translation is downloaded. Time: ", (Date.now() - begtime) / 1000, "s")
+				catch e
+					console.error(e)
+					handleDownloadingError(translation)
+				if array_of_verses
+					db_is_available = no
+					db.transaction("rw", db:verses, do
+						await db:verses.bulkPut(array_of_verses)
+						resolveDownload()
+					).catch (do |e|
+						handleDownloadingError(translation)
+						console.error(e)
+					)
 
 	def handleDownloadingError translation
 		@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
 		showNotification('error')
 
+	# TODO bring it out to separate Worker
 	def deleteTranslation translation
 		@downloaded_translations.splice(@downloaded_translations.indexOf(translation), 1)
 		@downloading_of_this_translations.push(translation)
-		Imba.commit
 		let begtime = Date.now()
-		@db_is_available = no
-		@db.transaction("rw", @db:verses, do
-			@db:verses.where({translation: translation}).delete().then(do |deleteCount|
-				@db_is_available = yes
-				console.log( "Deleted ", deleteCount, " objects. Time: ", (Date.now() - begtime) / 1000)
-				@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
-				delete translations_current_state[translation]
-				setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
-				Imba.commit
-				return 1
+		db_is_available = no
+
+		def resolveDeletion deleteCount
+			db_is_available = yes
+			console.log( "Deleted ", deleteCount[1], " objects of ",  deleteCount[0], ". Time: ", (Date.now() - begtime) / 1000)
+			@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(deleteCount[1]), 1)
+			delete translations_current_state[deleteCount[1]]
+			setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
+			Imba.commit
+
+		if window:Worker
+			var dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
+
+			dexieWorker.postMessage(translation)
+
+			dexieWorker.addEventListener('message', do |event|
+				if event:data[1] == translation
+					resolveDeletion(event:data)
 			)
-		).catch(do |e|
-			console.log(e)
-		)
+
+			dexieWorker.addEventListener('error', do |event|
+				console.error('error received from dexieWorker => ', event)
+				handleDownloadingError(translation)
+			)
+		else
+			db.transaction("rw", db:verses, do
+				db:verses.where({translation: translation}).delete().then(do |deleteCount|
+					resolveDeletion(deleteCount)
+					return 1
+				)
+			).catch(do |e|
+				console.log(e)
+			)
 
 	def deleteBookmark pks
 		let begtime = Date.now()
-		@db.transaction("rw", @db:bookmarks, do
+		db.transaction("rw", db:bookmarks, do
 			const res = await Promise.all(pks.map(do |pk|
-				@db:bookmarks.where({verse: pk}).delete().then(do |deleteCount|
+				db:bookmarks.where({verse: pk}).delete().then(do |deleteCount|
 					console.log( "Deleted ", deleteCount, " objects. Time: ", (Date.now() - begtime) / 1000)
 				)
 			))
@@ -280,8 +327,8 @@ export class State
 	def clearVersesTable
 		@deleting_of_all_transllations = yes
 		Imba.commit
-		@db.transaction("rw", @db:verses, do
-			await @db:verses.clear()
+		db.transaction("rw", db:verses, do
+			await db:verses.clear()
 			@downloaded_translations = []
 			@downloading_of_this_translations = []
 			@deleting_of_all_transllations = no
@@ -299,17 +346,17 @@ export class State
 				color: bookmarkobj:color,
 				notes: bookmarkobj:notes
 			})
-		@db.transaction("rw", @db:bookmarks, do
-			await @db:bookmarks.bulkPut(bookmarks_array)
+		db.transaction("rw", db:bookmarks, do
+			await db:bookmarks.bulkPut(bookmarks_array)
 		).catch (do |e|
 			console.error(e)
 		)
 
 	def getBookmarksFromStorage bookmarks_array
-		@db.transaction("r", @db:bookmarks, do
+		db.transaction("r", db:bookmarks, do
 			let some_array = await Promise.all(
 				bookmarks_array.map(do |versepk|
-					await @db:bookmarks.get(versepk)
+					await db:bookmarks.get(versepk)
 				)
 			)
 			return some_array.filter(do |item| return item != undefined)
@@ -318,8 +365,8 @@ export class State
 		)
 
 	def getChapterFromDB translation, book, chapter, verse
-		@db.transaction("r", @db:verses, do
-			let data = await @db:verses.where({translation: translation, book: book, chapter: chapter}).toArray()
+		db.transaction("r", db:verses, do
+			let data = await db:verses.where({translation: translation, book: book, chapter: chapter}).toArray()
 			if data:length
 				data.sort(do |a, b| return a:verse - b:verse)
 				return data
@@ -333,8 +380,8 @@ export class State
 	def getParallelVersesFromStorage compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter
 		return await Promise.all(compare_translations.map(do |translation|
 			const finded_verses = await Promise.all(choosen_for_comparison.map(do |verse|
-				@db.transaction("r", @db:verses, do
-					const wait_for_verses = await @db:verses.get({translation: translation, book: compare_parallel_of_book, chapter: compare_parallel_of_chapter, verse: verse})
+				db.transaction("r", db:verses, do
+					const wait_for_verses = await db:verses.get({translation: translation, book: compare_parallel_of_book, chapter: compare_parallel_of_chapter, verse: verse})
 					return wait_for_verses ? wait_for_verses : {"translation": translation}
 				).catch(do |e|
 					console.log(e)
@@ -343,14 +390,15 @@ export class State
 			return finded_verses
 		))
 
+	# TODO bring it out to separate Worker
 	def getSearchedTextFromStorage search
 		let begtime = Date.now()
-		@db_is_available = no
-		@db.transaction("r", @db:verses, do
-			let data = await @db:verses.where({translation: search:search_result_translation}).filter(do |verse|
+		db_is_available = no
+		db.transaction("r", db:verses, do
+			let data = await db:verses.where({translation: search:search_result_translation}).filter(do |verse|
 				return verse:text.includes(search:search_input)
 			).toArray()
-			@db_is_available = yes
+			db_is_available = yes
 			console.log("Finded ", data:length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data:length
 				return data
@@ -362,11 +410,11 @@ export class State
 		)
 
 	def getBookmarksFromStorage
-		@db.transaction("r", @db:bookmarks, @db:verses, do
-			let bookmarks = await @db:bookmarks.toArray()
+		db.transaction("r", db:bookmarks, db:verses, do
+			let bookmarks = await db:bookmarks.toArray()
 			bookmarks = Promise.all(bookmarks.map(do |bookmark|
-				bookmark:verse = await @db.transaction("r", @db:verses, do
-					@db:verses.get({pk: bookmark:verse})
+				bookmark:verse = await db.transaction("r", db:verses, do
+					db:verses.get({pk: bookmark:verse})
 				).catch (do |e|
 					console.error(e)
 				)

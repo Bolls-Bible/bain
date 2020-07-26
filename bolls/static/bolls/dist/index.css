@@ -444,13 +444,14 @@ nav input[type="text"] {
 	width: calc(32px + 6vw);
 	height: calc(32px + 6vw);
 	padding: 3vw;
-	fill: var(--btn-bg-hover);
+	fill: var(--accent-hover-color);
 	position: fixed;
 	cursor: pointer;
+	opacity: 0.5;
 }
 
 .navigation:hover {
-	fill: var(--accent-hover-color);
+	opacity: 1;
 }
 
 h1 {
@@ -755,6 +756,11 @@ aside {
 	color: var(--accent-hover-color);
 	background-color: var(--btn-bg-hover);
 	border-radius: 8px;
+}
+
+.cbtn:active {
+	transform: translateY(4px);
+	background-color: var(--btn-bg);
 }
 
 .verse,
