@@ -585,12 +585,15 @@ export tag Bible
 
 			def getSearchSelectionTopOffset rect_top
 				if settingsp:display
-					return rect_top + chapter_articles[parallel]:parentElement:scrollTop
+					if window:innerWidth < 600 && parallel
+						return rect_top + chapter_articles[parallel]:parentElement:scrollTop - chapter_articles[parallel]:parentElement:offsetTop
+					else
+						return rect_top + chapter_articles[parallel]:parentElement:scrollTop
 				else return rect_top + window:scrollY
 
 			def getSearchSelectionLeftOffset rect_left
 				if settingsp:display
-					if parallel
+					if window:innerWidth > 600 && parallel
 						return rect_left - chapter_articles[parallel]:parentNode:offsetLeft - chapter_articles[parallel]:offsetLeft
 					else
 						return rect_left - window:innerWidth * 0.02
