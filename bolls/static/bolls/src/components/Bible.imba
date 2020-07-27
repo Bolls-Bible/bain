@@ -543,17 +543,14 @@ export tag Bible
 				highlightLinkedVerses()
 
 	def pageSearch
-		# Show pageSearhc box
+		# Show pageSearch box
 		clearSpace()
 		page_search:d = yes
 
-		# Get selection and clear it
-		const selection = document.getSelection()
-		selection.removeAllRanges()
-
 		def focusInput
-			if document:activeElement:id == "pagesearch"
-				return
+			if document.getSelection():anchorNode && document:activeElement:id == 'pagesearch'
+				if document.getSelection():anchorNode:id == 'page_search'
+					return
 			const input = document.getElementById('pagesearch')
 			if input
 				input.focus()
@@ -563,7 +560,6 @@ export tag Bible
 		# Check if query is not an empty string
 		unless page_search:query:length
 			page_search:matches = []
-			# page_search:selections = []
 			focusInput()
 			return 0
 		# if the query is not an emty string lets clean it up for regex
@@ -625,7 +621,7 @@ export tag Bible
 		for chapter in chapter_articles
 			for child in chapter:children
 				while ((array1 = regex1.exec(child:textContent)) !== null)
-					# # Save the index of found text to page_search:matches
+					# Save the index of found text to page_search:matches
 					# for further navigation
 					def getSelectionHighlightRect
 						# Highlight found text
@@ -694,7 +690,6 @@ export tag Bible
 		show_parallel_verse_picker = no
 		show_verse_picker = no
 		show_share_box = no
-		window.getSelection().removeAllRanges()
 		choosen_categories = []
 		let profile = document:getElementsByClassName("Profile")
 		if profile[0]
@@ -702,6 +697,7 @@ export tag Bible
 			window:history.back()
 		if document.getElementsByTagName('main')[0] && !page_search:d
 			document.getElementsByTagName('main')[0].focus()
+			window.getSelection().removeAllRanges()
 		if page_search:d
 			page_search:d = no
 			page_search:matches = []
@@ -775,7 +771,7 @@ export tag Bible
 		let query = search:search_input.replace(/\//g, '')
 		query = query.replace(/\\/g, '')
 		if query:length > 1 && (search:search_result_header != query || !@search:search_div)
-			clearSpace
+			clearSpace()
 			loading = yes
 			let url
 			if settingsp:edited_version == settingsp:translation && settingsp:display

@@ -11,7 +11,9 @@ db.version(1).stores({
 
 self.onmessage = function (msg) {
 	console.log(msg.data);
-	if (msg.data.charAt(0) == '/') {
+	if (typeof msg.data == 'object') {
+		search(msg.data);
+	} else if (msg.data.charAt(0) == '/') {
 		downloadTranslation(msg.data);
 	} else {
 		deleteTranslation(msg.data);
@@ -27,8 +29,10 @@ function downloadTranslation(url) {
 					.then(() =>
 						postMessage(url.substring(17, url.length - 1))
 					);
-			}).catch((e) =>
-				console.error(e)
+			}).catch((e) => {
+				console.error(e);
+				throw (url.substring(17, url.length - 1));
+			}
 			)
 		})
 }
@@ -37,7 +41,16 @@ function deleteTranslation(translation) {
 	db.transaction("rw", db.verses, () => {
 		db.verses.where({ translation: translation }).delete().then((deleteCount) =>
 			postMessage([deleteCount, translation]))
-	}).catch((e) =>
-		console.error(e)
+	}).catch((e) => {
+		console.error(e);
+		throw (translation);
+	}
 	)
+}
+
+function search(search) {
+	db.transaction("r", db.verses, () => {
+		db.verses.where({ translation: search.search_result_translation }).filter((verse) => { return verse.text.toLowerCase().includes(search.search_input); }
+		).toArray().then(data => { postMessage(data); });
+	})
 }

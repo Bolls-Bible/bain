@@ -126,7 +126,7 @@ export class State
 		window:localStorage.setItem(c_name, value)
 
 	def loadData url
-		var res = await window.fetch url
+		let res = await window.fetch url
 		return res.json
 
 	def checkDownloadedTranslations
@@ -219,7 +219,6 @@ export class State
 			console.log('Uh oh : ' + e)
 		)
 
-	# TODO bring it out to separate Worker
 	def downloadTranslation translation
 		if (@downloaded_translations.indexOf(translation) < 0 && window:navigator:onLine)
 			@downloading_of_this_translations.push(translation)
@@ -237,19 +236,17 @@ export class State
 				Imba.commit
 
 			if window:Worker
-				var dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
+				let dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
 
 				dexieWorker.postMessage(url)
 
 				dexieWorker.addEventListener('message', do |event|
 					if event:data == translation
-						resolveDownload()
-				)
+						resolveDownload())
 
 				dexieWorker.addEventListener('error', do |event|
 					console.error('error received from dexieWorker => ', event)
-					handleDownloadingError(translation)
-				)
+					handleDownloadingError(translation))
 
 			else
 				let array_of_verses = null
@@ -273,7 +270,6 @@ export class State
 		@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
 		showNotification('error')
 
-	# TODO bring it out to separate Worker
 	def deleteTranslation translation
 		@downloaded_translations.splice(@downloaded_translations.indexOf(translation), 1)
 		@downloading_of_this_translations.push(translation)
@@ -289,19 +285,17 @@ export class State
 			Imba.commit
 
 		if window:Worker
-			var dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
+			let dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
 
 			dexieWorker.postMessage(translation)
 
 			dexieWorker.addEventListener('message', do |event|
 				if event:data[1] == translation
-					resolveDeletion(event:data)
-			)
+					resolveDeletion(event:data))
 
 			dexieWorker.addEventListener('error', do |event|
 				console.error('error received from dexieWorker => ', event)
-				handleDownloadingError(translation)
-			)
+				handleDownloadingError(translation))
 		else
 			db.transaction("rw", db:verses, do
 				db:verses.where({translation: translation}).delete().then(do |deleteCount|
@@ -309,7 +303,7 @@ export class State
 					return 1
 				)
 			).catch(do |e|
-				console.log(e)
+				console.error(e)
 			)
 
 	def deleteBookmark pks
@@ -321,7 +315,7 @@ export class State
 				)
 			))
 		).catch(do |e|
-			console.log(e)
+			console.error(e)
 		)
 
 	def clearVersesTable
@@ -390,24 +384,42 @@ export class State
 			return finded_verses
 		))
 
-	# TODO bring it out to separate Worker
 	def getSearchedTextFromStorage search
 		let begtime = Date.now()
-		db_is_available = no
-		db.transaction("r", db:verses, do
-			let data = await db:verses.where({translation: search:search_result_translation}).filter(do |verse|
-				return verse:text.includes(search:search_input)
-			).toArray()
-			db_is_available = yes
+		@db_is_available = no
+		search:search_input = search:search_input.toLowerCase()
+
+		def resolveSearch data
+			@db_is_available = yes
 			console.log("Finded ", data:length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data:length
 				return data
 			else
 				return []
-		).catch(do |e|
-			console.log(e)
-			return []
-		)
+
+		if window:Worker
+			return Promise.new(do |resolveSearch|
+				let dexieWorker = Worker.new('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage(search)
+
+				dexieWorker.addEventListener('message', do |event|
+					console.log(event:data)
+					resolveSearch(event:data))
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					return [])).then(do |data| resolveSearch(data))
+		else
+			db.transaction("r", db:verses, do
+				let data = await db:verses.where({translation: search:search_result_translation}).filter(do |verse|
+					return verse:text.includes(search:search_input)
+				).toArray()
+				resolveSearch(data)
+			).catch(do |e|
+				console.error(e)
+				return []
+			)
 
 	def getBookmarksFromStorage
 		db.transaction("r", db:bookmarks, db:verses, do
