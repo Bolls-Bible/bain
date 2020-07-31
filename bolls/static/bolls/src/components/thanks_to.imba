@@ -5,4 +5,5 @@ export const thanks_to = [
     "Eric Tirado, contributor"
     "Павлишинець Тимофій, advocate"
     "Володимир Стільник, advocate"
+    "Vladimir Pandovski, donator"
 ]

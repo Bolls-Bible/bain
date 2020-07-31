@@ -7,6 +7,8 @@ let limits_of_range = {
 	loaded: 0
 }
 let query = ''
+let storage =
+	query: ''
 let loading = no
 let show_options_of = ''
 
@@ -169,21 +171,28 @@ export tag Profile < main
 		@data.shareCopying(bookmark)
 		show_options_of = ''
 
+	def showDeleteForm
+		show_options_of = 'show_delete_form'
+		storage:query = ''
+
 	def render
 		<self :onscroll=onscroll>
 			<header.profile_hat>
 				if !query
-					<.collectionsflex css:flex-wrap="wrap">
+					<.collectionsflex style="flex-wrap: wrap; z-index: 100000;">
 						<svg:svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" :tap.prevent.toBible>
 							<svg:title> @data.lang:back
 							<svg:path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-						<h1> @data.user.charAt(0).toUpperCase() + @data.user.slice(1)
-						if window:navigator:onLine then <a.change_password.help href="/accounts/password_change/">
-							<span> @data.lang:change_password
-							<svg:svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
-								<svg:title> @data.lang:change_password
-								<svg:path d="M0 0h24v24H0z" fill="none">
-								<svg:path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
+						<h1> @data.user
+						if window:navigator:onLine
+							<.change_password.help>
+								<svg:svg.helpsvg :tap.showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+									<svg:title> @data.lang:change_password
+									<svg:path d="M0 0h24v24H0z" fill="none">
+									<svg:path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
+								<.languages css:right="{window:innerWidth > 960 ? (window:innerWidth - 886) / 2 : 36}px" .show_languages=(show_options_of == 'account_actions')>
+									<a href="/accounts/password_change/"><button> @data.lang:change_password
+									<button :tap.prevent.showDeleteForm()> @data.lang:delete_account
 					<.collectionsflex css:flex-wrap="wrap">
 						for category in @categories
 							if category
@@ -217,10 +226,22 @@ export tag Profile < main
 			if !@loaded_bookmarks:length && !@categories:length
 				<p css:text-align="center"> @data.lang:thereisnobookmarks
 
-		if !window:navigator:onLine
-			<div style="position: fixed;bottom: 16px;left: 16px;color: var(--text-color);background: var(--background-color);padding: 8px;border-radius: 8px;text-align: center;border: 1px solid var(--btn-bg-hover);z-index: 1000">
-				@data.lang:offline
-				<svg:svg css:transform="translateY(0.2em)" fill="var(--text-color)" xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.26em" viewBox="0 0 24 24">
-					<svg:path fill="none" d="M0 0h24v24H0V0z">
-					<svg:path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.32 0-2.55.14-3.69.38L18.43 13.5 23.64 7zM3.41 1.31L2 2.72l2.05 2.05C1.91 5.76.59 6.82.36 7L12 21.5l3.91-4.87 3.32 3.32 1.41-1.41L3.41 1.31z">
-				<a.reload :tap=(do window:location.reload(true))> @data.lang:reload
+			if show_options_of == "show_delete_form"
+				<section#daf>
+					<form action="/delete-my-account/">
+						<h1 style="margin-top:12px;"> @data.lang:are_you_sure
+						<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
+						<label> @data.lang:delete_account_label
+						<input[storage:query].search style="margin:8px 0;border-radius:4px;">
+						if storage:query == @data.user
+							<button.change_language> @data.lang:i_understand
+						else
+							<button.change_language disabled> @data.lang:i_understand
+
+			if !window:navigator:onLine
+				<div style="position: fixed;bottom: 16px;left: 16px;color: var(--text-color);background: var(--background-color);padding: 8px;border-radius: 8px;text-align: center;border: 1px solid var(--btn-bg-hover);z-index: 1000">
+					@data.lang:offline
+					<svg:svg css:transform="translateY(0.2em)" fill="var(--text-color)" xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.26em" viewBox="0 0 24 24">
+						<svg:path fill="none" d="M0 0h24v24H0V0z">
+						<svg:path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.32 0-2.55.14-3.69.38L18.43 13.5 23.64 7zM3.41 1.31L2 2.72l2.05 2.05C1.91 5.76.59 6.82.36 7L12 21.5l3.91-4.87 3.32 3.32 1.41-1.41L3.41 1.31z">
+					<a.reload :tap=(do window:location.reload(true))> @data.lang:reload

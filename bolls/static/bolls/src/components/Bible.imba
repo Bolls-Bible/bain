@@ -27,6 +27,7 @@ let settings = {
 		line-height: window:innerWidth > 512 ? 2 : 1.8,
 		weight: 400,
 		max-width: 30,
+		align: ''
 	},
 	verse_break: no,
 	lock_drawers: no,
@@ -154,33 +155,28 @@ let accents = [
 
 document:onkeyup = do |e|
 	var e = e || window:event
-	if document.getElementById("search") != document:activeElement && document.getSelection == ''
-		if e:code == "ArrowRight" && e:altKey && e:ctrlKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.nextChapter('true')
-		elif e:code == "ArrowLeft" && e:altKey && e:ctrlKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.prevChapter('true')
-		elif e:code == "ArrowRight" && e:ctrlKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.nextChapter
-		elif e:code == "ArrowLeft" && e:ctrlKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.prevChapter
-		elif e:code == "KeyN" && e:altKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.nextBook
-		elif e:code == "KeyP" && e:altKey
-			let bible = document:getElementsByClassName("Bible")
-			bible[0]:_tag.prevBook
-	if e:code == "Escape"
-		let bible = document:getElementsByClassName("Bible")
-		bible[0]:_tag.clearSpace()
-	if e:ctrlKey && e:code == "KeyF"
-		page_search:query = window.getSelection().toString()
-		let bible = document:getElementsByClassName("Bible")
-		bible[0]:_tag.clearSpace()
-		bible[0]:_tag.pageSearch()
+	const bible = document:getElementsByClassName("Bible")
+	if bible[0]
+		const bibletag = bible[0]:_tag
+		if document.getElementById("search") != document:activeElement && document.getSelection == ''
+			if e:code == "ArrowRight" && e:altKey && e:ctrlKey
+				bibletag.nextChapter('true')
+			elif e:code == "ArrowLeft" && e:altKey && e:ctrlKey
+				bibletag.prevChapter('true')
+			elif e:code == "ArrowRight" && e:ctrlKey
+				bibletag.nextChapter
+			elif e:code == "ArrowLeft" && e:ctrlKey
+				bibletag.prevChapter
+			elif e:code == "KeyN" && e:altKey
+				bibletag.nextBook
+			elif e:code == "KeyP" && e:altKey
+				bibletag.prevBook
+		if e:code == "Escape"
+			bibletag.clearSpace()
+		if e:ctrlKey && e:code == "KeyF"
+			page_search:query = window.getSelection().toString()
+			bibletag.clearSpace()
+			bibletag.pageSearch()
 	if e:code == "KeyH" && e:altKey && e:ctrlKey
 		menuicons = !menuicons
 		Imba.commit()
@@ -262,8 +258,6 @@ export tag Bible
 			let html = document.querySelector('#html')
 			html:dataset:light = settings:theme
 			html:dataset:theme = settings:accent + settings:theme
-		if window:location:pathname == '/profile/' then toProfile yes
-		elif window:location:pathname == '/downloads/'then toDownloads yes
 		if getCookie('transitions') == 'false'
 			settings:transitions = no
 			let html = document.querySelector('#html')
@@ -275,6 +269,7 @@ export tag Bible
 		settings:font:weight = parseInt(getCookie('font-weight')) || settings:font:weight
 		settings:font:line-height = parseFloat(getCookie('line-height')) || settings:font:line-height
 		settings:font:max-width = parseInt(getCookie('max-width')) || settings:font:max-width
+		settings:font:align = parseInt(getCookie('align')) || settings:font:align
 		settings:verse_picker = (getCookie('verse_picker') == 'true') || settings:verse_picker
 		settings:verse_break = (getCookie('verse_break') == 'true') || settings:verse_break
 		settings:lock_drawers = (getCookie('lock_drawers') == 'true') || settings:lock_drawers
@@ -288,16 +283,22 @@ export tag Bible
 			toggleParallelMode("build")
 		if window:navigator:onLine
 			try
-				let data = await loadData("/user-logged/")
-				if data:username
-					@data.user = data:username
+				let userdata = await loadData("/user-logged/")
+				if userdata:username
+					@data.user = userdata:username
 					setCookie('username', @data.user)
-					@history = JSON.parse(data:history)
+					if typeof userdata:history == 'srting'
+						@history = JSON.parse(userdata:history)
+					else @history = []
 					if @history:length then window:localStorage.setItem("history", JSON.stringify(@history))
 				else @data.user = ''
 			catch error
 				console.error('Error: ', error)
 				@data.showNotification('error')
+		if window:location:pathname == '/profile/' then toProfile yes
+		elif window:location:pathname == '/downloads/'then toDownloads yes
+		if window:message
+			data.showNotification(window:message)
 		if getCookie('chronorder') == 'true'
 			toggleChronorder()
 		highlights = JSON.parse(getCookie("highlights")) || []
@@ -381,7 +382,7 @@ export tag Bible
 			@bookmarks = await loadData(url)
 		catch error
 			if @data.db_is_available
-				@bookmarks = await @data.getBookmarksFromStorage(@verses.map(do |verse| return verse:pk))
+				@bookmarks = await @data.getChapterBookmarksFromStorage(@verses.map(do |verse| return verse:pk))
 		Imba.commit
 
 	def getText translation, book, chapter, verse
@@ -489,7 +490,7 @@ export tag Bible
 						let verseids = []
 						for verse in @parallel_verses
 							verseids.push(verse:pk)
-						@parallel_bookmarks = await @data.getBookmarksFromStorage(verseids)
+						@parallel_bookmarks = await @data.getChapterBookmarksFromStorage(verseids)
 			Imba.commit
 			setCookie('parallel_display', settingsp:display)
 			saveToHistory translation, book, chapter, 0, yes
@@ -646,9 +647,10 @@ export tag Bible
 		Imba.commit()
 
 	def changeSelectionRectClass class_name
-		let rects = page_search:matches[page_search:current_occurence]:rects
-		for rect in rects
-			rect:class = class_name
+		if page_search:matches[page_search:current_occurence]
+			let rects = page_search:matches[page_search:current_occurence]:rects
+			for rect in rects
+				rect:class = class_name
 
 	def prevOccurence
 		changeSelectionRectClass('another_occurences')
@@ -1119,7 +1121,7 @@ export tag Bible
 		return cookieValue
 
 	def sendBookmarksToDjango
-		if store:highlight_color:length > 15
+		if store:highlight_color:length >= 16
 			if highlights.find(do |element| return element == store:highlight_color)
 				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == store:highlight_color)), 1)
 			highlights.push(store:highlight_color)
@@ -1292,7 +1294,7 @@ export tag Bible
 		clearSpace()
 
 	def toProfile from_build = no
-		clearSpace
+		clearSpace()
 		flag("display_none")
 		if !from_build
 			window:history.pushState({
@@ -1565,6 +1567,13 @@ export tag Bible
 			settings:font:line-height -= 0.2
 		setCookie('line-height', settings:font:line-height)
 
+	def changeAlign auto
+		if auto
+			settings:font:align = ''
+		else
+			settings:font:align = 'justify'
+		setCookie('align', settings:font:align)
+
 	def changeMaxWidth increase
 		if increase && settings:font:max-width < 120 && (settings:font:max-width - 15) * settings:font:size < window:innerWidth
 			settings:font:max-width += 15
@@ -1770,7 +1779,7 @@ export tag Bible
 					<svg:title> @data.lang:delete
 					<svg:path d=svg_paths:close css:margin="auto">
 
-			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family: {settings:font:family}; font-size: {settings:font:size}px; line-height: {settings:font:line-height}; font-weight: {settings:font:weight};">
+			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family: {settings:font:family}; font-size: {settings:font:size}px; line-height: {settings:font:line-height}; font-weight: {settings:font:weight}; text-align: {settings:font:align};">
 				<section .parallel=settingsp:display dir="auto" style="margin: auto; max-width: {settings:font:max-width}em;">
 					if page_search:d
 						for match in page_search:matches when match:id.charAt(0) != 'p'
@@ -1860,16 +1869,24 @@ export tag Bible
 					<a.cbtn style="padding: 8px; font-size: 24px; font-weight: 100;" :click.prevent.changeFontWeight(-100) title=@data.lang:decrease_font_weight> "B"
 					<a.cbtn style="padding: 8px; font-size: 24px; font-weight: 900;" :click.prevent.changeFontWeight(100) title=@data.lang:increase_font_weight> "B"
 				<.btnbox>
-					<svg:svg.cbtn :click.prevent.changeLineHeight(no) xmlns="http://www.w3.org/2000/svg" width="38" height="14" viewBox="0 0 38 14" fill="context-fill" style="padding: calc(42px - 26px) 0;">
+					<svg:svg.cbtn :click.prevent.changeLineHeight(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 14" fill="context-fill" style="padding: 16px 0;">
 						<svg:title> @data.lang:decrease_line_height
 						<svg:rect x="0" y="0" width="28" height="2">
 						<svg:rect x="0" y="6" width="38" height="2">
 						<svg:rect x="0" y="12" width="18" height="2">
-					<svg:svg.cbtn :click.prevent.changeLineHeight(yes) xmlns="http://www.w3.org/2000/svg" width="38" height="24" viewBox="0 0 38 24" fill="context-fill" style="padding: calc(42px - 32px) 0;">
+					<svg:svg.cbtn :click.prevent.changeLineHeight(yes) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 24" fill="context-fill" style="padding: 10px 0;">
 						<svg:title> @data.lang:increase_line_height
 						<svg:rect x="0" y="0" width="28" height="2">
 						<svg:rect x="0" y="11" width="38" height="2">
 						<svg:rect x="0" y="22" width="18" height="2">
+				<.btnbox>
+					<svg:svg.cbtn :click.prevent.changeAlign(yes)  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+						<svg:title> @data.lang:auto_align
+						<svg:path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
+					<svg:svg.cbtn :click.prevent.changeAlign(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+						<svg:title> @data.lang:align_justified
+						<svg:path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
+
 				if window:innerWidth > 600
 					<.btnbox>
 						<svg:svg.cbtn :click.prevent.changeMaxWidth(no) xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
@@ -1897,7 +1914,7 @@ export tag Bible
 							<button :click.prevent.setFontFamily(font) css:font-family=font:code> font:name
 				<.profile_in_settings>
 					if @data.user
-						<a.username :click.prevent.toProfile(no)> @data.user.charAt(0).toUpperCase() + @data.user.slice(1)
+						<a.username :click.prevent.toProfile(no)> @data.user
 						<a.prof_btn href="/accounts/logout/"> @data.lang:logout
 					else
 						<a.prof_btn href="/accounts/login/"> @data.lang:login
@@ -2052,21 +2069,22 @@ export tag Bible
 									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language:language == show_language_of)>
 								for tr in language:translations
-									<a.search_res_verse_header>
-										<.search_res_verse_text style="margin-right: auto;text-align: left;"> tr:short_name, ', ', tr:full_name
-										if @data:downloading_of_this_translations().find(do |translation| return translation == tr:short_name)
-											<svg:svg.remove_parallel.close_search.animated_downloading xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-												<svg:title> @data.lang:loading
-												<svg:path d=svg_paths:loading style="marker:none" color="#000" overflow="visible" fill="var(--text-color)">
-										elif @data:downloaded_translations().indexOf(tr:short_name) != -1
-											<svg:svg.remove_parallel.close_search :click.prevent=(do @data.deleteTranslation(tr:short_name)) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=@data.lang:delete>
-												<svg:title> @data.lang:delete
-												<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-										else
-											<svg:svg.remove_parallel.close_search :click.prevent=(do @data.downloadTranslation(tr:short_name)) xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-												<svg:title> @data.lang:download
-												<svg:path d="M0 0h24v24H0z" fill="none">
-												<svg:path d=svg_paths:download>
+									if window:navigator:onLine || @data:downloaded_translations().indexOf(tr:short_name) != -1
+										<a.search_res_verse_header>
+											<.search_res_verse_text style="margin-right: auto;text-align: left;"> tr:short_name, ', ', tr:full_name
+											if @data:downloading_of_this_translations().find(do |translation| return translation == tr:short_name)
+												<svg:svg.remove_parallel.close_search.animated_downloading xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+													<svg:title> @data.lang:loading
+													<svg:path d=svg_paths:loading style="marker:none" color="#000" overflow="visible" fill="var(--text-color)">
+											elif @data:downloaded_translations().indexOf(tr:short_name) != -1
+												<svg:svg.remove_parallel.close_search :click.prevent=(do @data.deleteTranslation(tr:short_name)) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=@data.lang:delete>
+													<svg:title> @data.lang:delete
+													<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+											else
+												<svg:svg.remove_parallel.close_search :click.prevent=(do @data.downloadTranslation(tr:short_name)) xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+													<svg:title> @data.lang:download
+													<svg:path d="M0 0h24v24H0z" fill="none">
+													<svg:path d=svg_paths:download>
 						<.freespace>
 				elif what_to_show_in_pop_up_block == 'show_support'
 					<article.search_hat>

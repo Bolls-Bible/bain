@@ -27,7 +27,7 @@ function downloadTranslation(url) {
 			db.transaction("rw", db.verses, () => {
 				db.verses.bulkPut(data)
 					.then(() =>
-						postMessage(url.substring(17, url.length - 1))
+						postMessage(['downloaded', url.substring(17, url.length - 1)])
 					);
 			}).catch((e) => {
 				console.error(e);
@@ -44,13 +44,15 @@ function deleteTranslation(translation) {
 	}).catch((e) => {
 		console.error(e);
 		throw (translation);
-	}
-	)
+	})
 }
 
 function search(search) {
 	db.transaction("r", db.verses, () => {
 		db.verses.where({ translation: search.search_result_translation }).filter((verse) => { return verse.text.toLowerCase().includes(search.search_input); }
-		).toArray().then(data => { postMessage(data); });
+		).toArray().then(data => { postMessage(['search',data]); });
+	}).catch((e) => {
+		console.error(e);
+		throw (translation);
 	})
 }

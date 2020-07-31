@@ -9,6 +9,9 @@
 	<meta charset="UTF-8">
 	<title>Bolls Bible</title>
 	<script>
+{% if message %}
+	window.message = "{{ message }}";
+{% endif %}
 {%if translation %}
 	window.translation = "{{ translation }}";
 	window.book = {{ book}};
@@ -73,6 +76,32 @@
 		}
 	</script>
 	<noscript>{% trans "Unfortunately, this site requires JavaScript that is disabled in your browser :(" %}</noscript>
+	<script>
+		console.log("                        `,:::\n\
+                    ,*yHK3yy2w6E}\n\
+                -uHR@H*`       `!eK\n\
+                PC-:i`            *Q%$KKGu*\n\
+          .\\y$GhOe\\- `*CSGHQGC!  =G(,  `~|$N%\n\
+        \"%N2!`    ,lOw!`   `!1RRP!         ,yNu\n\
+      `SB3.       :E;         `lN%`          !Rp\n\
+     _9Nr        .H!            ~R1           ,R6\n\
+     A@v         ly              =Q            sB\n\
+    ~BM`       _2y`    `C        {X            lB\n\
+    *@N       `Qy      =g        1K,   r       eN\n\
+    :BB,      ;B!      KR         \\K `F6      *B\n\
+     oB5`   ~$(B*     !@@\\        rH=RB=    '3N\n\
+     `FBP,  {BR@k     s@BR,  _^rsSNBBBx   ~CRg\n\
+       *9Nu;*N@@@h:   5@@BpPNB@@@@@@H^  ,z{*_`K%\n\
+         :uRRN@@@BBHsrgB@@@@@@@BBHu^          uB\n\
+           .sEN@@@@BNN@@@@@@@Bt^`            ~gN\n\
+               .__.`lRBk\\;\"^CNHl~`         -lNR\n\
+                  `yBBi      ;HBBNHXuv=|l}GNHl\n\
+                  CBBQ         !yHMB@BN$z>!\n\
+                  H@@S             .'\n\
+                  H@@\n\
+                  rNB\n\
+                   _\nWelcome to Bolls:)")
+	</script>
 </body>
 
 </html>

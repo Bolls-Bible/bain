@@ -502,10 +502,6 @@ html[data-transitions="true"] .helpFAQ a:hover {
 	padding: 16px 0;
 }
 
-html[data-light="light"] .choosen_verses {
-	box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
-}
-
 .choosen_verses {
 	bottom: 0;
 	z-index: 999;
@@ -946,8 +942,8 @@ img,
 	top: 100%;
 	right: 10%;
 	max-width: 60em;
-	background: var(--background-color);
 	position: fixed;
+	background: var(--background-color);
 	border: 1px solid var(--btn-bg-hover);
 	border-radius: 16px;
 	padding: 12px 24px;
@@ -971,7 +967,8 @@ img,
 	visibility: visible;
 }
 
-html[data-transitions="true"] .show_search_results {
+html[data-transitions="true"] .show_search_results,
+html[data-transitions="true"] #daf {
 	-webkit-animation: showing_search_results 300ms ease 0ms alternate;
 	animation: showing_search_results 300ms ease 0ms alternate;
 }
@@ -1108,7 +1105,8 @@ html[data-transitions="true"] .show_search_results {
 
 html[data-light="light"] .filters,
 html[data-light="light"] .Notification p,
-html[data-light="light"] .show_search_results {
+html[data-light="light"] .show_search_results,
+html[data-light="light"] #daf form {
 	box-shadow: 0 2.74416px 2.74416px rgba(0, 0, 0, .0274351), 0 5.48831px 5.48831px rgba(0, 0, 0, .0400741), 0 13.7208px 10.9766px rgba(0, 0, 0, .0499982), 0 20.5812px 20.5812px rgba(0, 0, 0, .0596004), 0 41.1623px 41.1623px rgba(0, 0, 0, .0709366), 0 96.0454px 89.1851px rgba(0, 0, 0, .09);
 }
 
@@ -1212,23 +1210,20 @@ html[data-light="light"] .show_search_results {
 .change_password {
 	margin: auto 8px auto auto;
 	color: inherit;
-	overflow: hidden;
 	--fill-on-hover: var(--text-color);
-	--span-transform: 150%;
 }
 
 .change_password svg {
 	margin: 0;
 }
 
-.change_password span {
-	transform: translateX(var(--span-transform));
-}
-
 .change_password:hover {
 	color: var(--accent-hover-color);
 	--fill-on-hover: var(--accent-hover-color);
-	--span-transform: 0;
+}
+
+.change_password .show_languages {
+	transform: translateY(64px);
 }
 
 .display_none {
@@ -1677,8 +1672,8 @@ address a:hover {
 .Notification p {
 	color: var(--background-color);
 	background-color: var(--accent-hover-color);
-	-webkit-animation: show-notification 2000ms cubic-bezier(1, 0, 0, 1) both;
-	animation: show-notification 2000ms cubic-bezier(1, 0, 0, 1) both;
+	-webkit-animation: show-notification 3000ms cubic-bezier(1, 0, 0, 1) both;
+	animation: show-notification 3000ms cubic-bezier(1, 0, 0, 1) both;
 	padding: 16px 32px;
 	border-radius: 16px;
 	position: absolute;
@@ -1728,7 +1723,7 @@ address a:hover {
 
 .emojify {
 	font-family: 'Apple Color Emoji', 'Droid Sans Fallback', 'Noto Color Emoji', 'Segoe UI Emoji';
-    margin-right: 16px;
+	margin-right: 16px;
 }
 
 #welcome button {
@@ -1774,13 +1769,14 @@ address a:hover {
 	border: 1px solid var(--btn-bg);
 }
 
-#page_search .arrow:hover{
+#page_search .arrow:hover {
 	background: var(--btn-bg-hover);
 	opacity: 1;
 	transform: none;
 }
 
-#page_search .arrow:active, .search:active {
+#page_search .arrow:active,
+.search:active {
 	background-color: transparent;
 }
 
@@ -1792,7 +1788,43 @@ address a:hover {
 	background-color: var(--accent-hover-color);
 	position: absolute;
 }
+
 .another_occurences {
 	background-color: var(--btn-bg-hover);
 	position: absolute;
+}
+
+#daf {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+}
+
+#daf form {
+	background: var(--background-color);
+	border: 1px solid var(--btn-bg-hover);
+	border-radius: 16px;
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	max-width: 480px;
+}
+
+#daf button {
+	margin: 0;
+	font-size: 16px;
+}
+
+#daf button:disabled {
+	opacity: 0.5;
+}
+
+#daf button:hover {
+	background: firebrick;
 }

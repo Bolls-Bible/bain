@@ -5,6 +5,10 @@ let Data = State.new
 
 Imba.mount <Bible[Data]>
 
+import 'smoothscroll-polyfill' as smoothscroll
+
+smoothscroll.polyfill()
+
 tag Notification < section
 	def render
 		<self> if @data.notifications:length

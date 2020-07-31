@@ -7,10 +7,13 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
-from bolls.forms import SignUpForm
-from .models import Verses, Bookmarks, History
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.messages import get_messages
+
+from bolls.forms import SignUpForm
+
+from .models import Verses, Bookmarks, History
 
 
 def index(request):
@@ -108,13 +111,14 @@ def search(request, translation, piece):
 def getDescription(verses, verse, endverse):
 	if verse < len(verses):
 		i = 0
-		description = verses[verse]['text']
+		description = verses[verse - 1]['text']
 		if endverse > 0 and endverse - verse != 0:
-			for i in range(verse + 1, endverse):
+			for i in range(verse, endverse):
 				if i < len(verses):
 					description += ' ' + verses[i]['text']
 		return description
-	else: return 'Corrupted link!!!'
+	else:
+		return 'Corrupted link!'
 
 
 def linkToVerse(request, translation, book, chapter, verse):
@@ -145,6 +149,19 @@ def signUp(request):
 	else:
 		form = SignUpForm()
 	return render(request, 'registration/signup.html', {'form': form})
+
+
+def deleteAccount(request):
+	message = ''
+	if request.user.is_authenticated:
+		try:
+			request.user.delete()
+			message = "account_deleted"
+
+		except Exception as e:
+			return render(request, 'bolls/index.html', {'message': e.message})
+	print(message)
+	return render(request, 'bolls/index.html', {"message": message})
 
 
 def getBookmarks(request, translation, book, chapter):
@@ -272,6 +289,10 @@ def saveBookmarks(request):
 			except Bookmarks.DoesNotExist:
 				user.bookmarks_set.create(
 					verse=verse, date=received_json_data["date"], color=received_json_data["color"], note=received_json_data["notes"])
+			except Bookmarks.MultipleObjectsReturned:
+				deleteBookmarks(request)
+				user.bookmarks_set.create(
+					verse=verse, date=received_json_data["date"], color=received_json_data["color"], note=received_json_data["notes"])
 	return JsonResponse({"response": "200"}, safe=False)
 
 
@@ -308,10 +329,6 @@ def historyOf(user):
 			return []
 	else:
 		return []
-
-
-def getHistory(request):
-	return JsonResponse({"history": historyOf(request.user)}, safe=False)
 
 
 def userLogged(request):

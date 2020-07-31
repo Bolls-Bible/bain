@@ -1,25 +1,21 @@
 import "./languages.json" as languages
 import en_lang, uk_lang, ru_lang, pt_lang, es_lang from './langdata'
 
-# Now i use Dexie from a separatefile to use it in a worker
-# let Dexie = require 'dexie'
-# Dexie = Dexie:default
-
 let translations = []
 for language in languages
 	translations = translations.concat(language:translations)
 
-let db = Dexie.new('versesdb')
+# let db = Dexie.new('versesdb')
 
-db.version(1).stores({
-	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-	bookmarks: '&verse, *notes'
-})
+# db.version(1).stores({
+# 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+# 	bookmarks: '&verse, *notes'
+# })
 
 export class State
 	prop downloaded_translations
 	prop db_is_available
-	# prop db
+	prop db
 	prop downloading_of_this_translations
 	prop deleting_of_all_transllations
 	prop show_languages
@@ -33,11 +29,16 @@ export class State
 	prop deferredPrompt
 
 	def initialize
-		db_is_available = yes
+		@db_is_available = yes
 		@downloaded_translations = []
 		@downloading_of_this_translations = []
 		@deleting_of_all_transllations = no
 		@show_languages = no
+		@db = Dexie.new('versesdb')
+		@db.version(1).stores({
+			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+			bookmarks: '&verse, *notes'
+		})
 		@user = getCookie('username') || ''
 		if getCookie('language')
 			setLanguage(getCookie('language'))
@@ -92,11 +93,6 @@ export class State
 					@language = 'eng'
 					document:lastChild:lang = "en"
 			setLanguage(@language)
-		# db = Dexie.new('versesdb')
-		# db.version(1).stores({
-		# 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-		# 	bookmarks: '&verse, *notes'
-		# })
 		checkDownloadedTranslations()
 		checkSavedBookmarks()
 		setTimeout(&, 2048) do
@@ -215,7 +211,7 @@ export class State
 					db:bookmarks.clear()
 				)
 		).catch(do |e|
-			db_is_available = no
+			@db_is_available = no
 			console.log('Uh oh : ' + e)
 		)
 
@@ -225,8 +221,8 @@ export class State
 			let begtime = Date.now()
 			let url = '/get-translation/' + translation + '/'
 
-			def resolveDownload
-				db_is_available = yes
+			def resolveDownload translation
+				@db_is_available = yes
 				@downloaded_translations.push(translation)
 				setCookie('downloaded_translations', JSON.stringify(@downloaded_translations))
 				@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(translation), 1)
@@ -241,8 +237,8 @@ export class State
 				dexieWorker.postMessage(url)
 
 				dexieWorker.addEventListener('message', do |event|
-					if event:data == translation
-						resolveDownload())
+					if event:data[0] == 'downloaded'
+						resolveDownload(event:data[1]))
 
 				dexieWorker.addEventListener('error', do |event|
 					console.error('error received from dexieWorker => ', event)
@@ -257,7 +253,7 @@ export class State
 					console.error(e)
 					handleDownloadingError(translation)
 				if array_of_verses
-					db_is_available = no
+					@db_is_available = no
 					db.transaction("rw", db:verses, do
 						await db:verses.bulkPut(array_of_verses)
 						resolveDownload()
@@ -274,10 +270,10 @@ export class State
 		@downloaded_translations.splice(@downloaded_translations.indexOf(translation), 1)
 		@downloading_of_this_translations.push(translation)
 		let begtime = Date.now()
-		db_is_available = no
+		@db_is_available = no
 
 		def resolveDeletion deleteCount
-			db_is_available = yes
+			@db_is_available = yes
 			console.log( "Deleted ", deleteCount[1], " objects of ",  deleteCount[0], ". Time: ", (Date.now() - begtime) / 1000)
 			@downloading_of_this_translations.splice(@downloading_of_this_translations.indexOf(deleteCount[1]), 1)
 			delete translations_current_state[deleteCount[1]]
@@ -320,7 +316,6 @@ export class State
 
 	def clearVersesTable
 		@deleting_of_all_transllations = yes
-		Imba.commit
 		db.transaction("rw", db:verses, do
 			await db:verses.clear()
 			@downloaded_translations = []
@@ -333,20 +328,29 @@ export class State
 
 	def saveBookmarksToStorageUntillOnline bookmarkobj
 		let bookmarks_array = []
+		let bookmarks = await db.transaction("r", db:bookmarks, do
+			return db:bookmarks.toArray()
+		).catch (do |e|
+			console.error(e)
+		)
+
 		for verse in bookmarkobj:verses
+			if bookmarks.find(do |element| return element:verse == verse)
+				deleteBookmark([verse])
 			bookmarks_array.push({
 				verse: verse,
 				date: bookmarkobj:date,
 				color: bookmarkobj:color,
 				notes: bookmarkobj:notes
 			})
+		console.log bookmarks[0], bookmarks_array[0]
 		db.transaction("rw", db:bookmarks, do
 			await db:bookmarks.bulkPut(bookmarks_array)
 		).catch (do |e|
 			console.error(e)
 		)
 
-	def getBookmarksFromStorage bookmarks_array
+	def getChapterBookmarksFromStorage bookmarks_array
 		db.transaction("r", db:bookmarks, do
 			let some_array = await Promise.all(
 				bookmarks_array.map(do |versepk|
@@ -404,8 +408,8 @@ export class State
 				dexieWorker.postMessage(search)
 
 				dexieWorker.addEventListener('message', do |event|
-					console.log(event:data)
-					resolveSearch(event:data))
+					if event:data[0] == 'search'
+						resolveSearch(event:data[1]))
 
 				dexieWorker.addEventListener('error', do |event|
 					console.error('error received from dexieWorker => ', event)
@@ -492,10 +496,11 @@ export class State
 		verses:length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return a - b)[verses:length - 1]) : (verses.sort(do |a, b| return a - b)[0])
 
 	def showNotification ntfctn
-		@notifications.push(@lang[ntfctn])
+		if @lang[ntfctn]
+			@notifications.push(@lang[ntfctn])
+		else @notifications.push(ntfctn)
 		@lastPushedNotificationWasAt = Date.now()
-		Imba.commit
-		setTimeout(&, 3000) do
+		setTimeout(&, 5000) do
 			if Date.now() - @lastPushedNotificationWasAt > 2000
 				@notifications = []
 				Imba.commit
@@ -526,4 +531,4 @@ export class State
 
 	def showBible
 		let bible = document:getElementsByClassName("Bible")
-		bible[0]:classList.remove("display_none")
+		if bible[0] then bible[0]:classList.remove("display_none")
