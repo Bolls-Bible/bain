@@ -185,7 +185,7 @@ export tag Profile < main
 						<svg:svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" :tap.prevent.toBible>
 							<svg:title> @data.lang:back
 							<svg:path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-						<h1> @data.user
+						<h1> @data.getUserName()
 						if window:navigator:onLine
 							<.change_password.help>
 								<svg:svg.helpsvg :tap.showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
@@ -239,7 +239,7 @@ export tag Profile < main
 						<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
 						<label> @data.lang:delete_account_label
 						<input[storage:username].search style="margin:8px 0;border-radius:4px;">
-						if storage:username == @data.user
+						if storage:username == @data.user:username
 							<button.change_language> @data.lang:i_understand
 						else
 							<button.change_language disabled> @data.lang:i_understand

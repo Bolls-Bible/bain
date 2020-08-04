@@ -334,7 +334,10 @@ def historyOf(user):
 
 
 def userLogged(request):
-	return JsonResponse({"username": request.user.username, "history": historyOf(request.user)}, safe=False)
+	if request.user.is_authenticated:
+		return JsonResponse({"username": request.user.username, "name": request.user.first_name, "history": historyOf(request.user)}, safe=False)
+	return JsonResponse({"username": ""}, safe=False)
+
 
 
 def robots(request):

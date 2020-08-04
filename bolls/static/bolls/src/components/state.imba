@@ -23,7 +23,7 @@ export class State
 	prop lang
 	prop notifications default: []
 	prop lastPushedNotificationWasAt
-	prop user
+	prop user default: {}
 	prop translations_current_state default: {}
 	prop addBtn default: no
 	prop deferredPrompt
@@ -39,7 +39,7 @@ export class State
 			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
 			bookmarks: '&verse, *notes'
 		})
-		@user = getCookie('username') || ''
+		@user:username = getCookie('username') || ''
 		if getCookie('language')
 			setLanguage(getCookie('language'))
 		else
@@ -532,3 +532,10 @@ export class State
 	def showBible
 		let bible = document:getElementsByClassName("Bible")
 		if bible[0] then bible[0]:classList.remove("display_none")
+
+	def getUserName
+		if @user:username
+			if @user:name
+				return @user:name
+			return @user:username
+		return undefined

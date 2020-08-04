@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
+from .secret_settings import *
 import os
 import psycopg2.extensions
 
@@ -22,7 +23,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljdsuug_5fy&%eyg='
 
-from .secret_settings import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.getenv('GAE_APPLICATION', None):
@@ -158,6 +158,7 @@ SESSION_COOKIE_AGE = 2419200
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 AUTHENTICATION_BACKENDS = (
-    # 'social.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2',
-    'django.contrib.auth.backends.ModelBackend')
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2')

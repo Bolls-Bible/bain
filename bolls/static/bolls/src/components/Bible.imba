@@ -280,7 +280,9 @@ export tag Bible
 			try
 				let userdata = await loadData("/user-logged/")
 				if userdata:username
-					@data.user = userdata:username
+					@data.user:username = userdata:username
+					if userdata:name
+						@data.user:name = userdata:name
 					setCookie('username', @data.user)
 					if typeof userdata:history == 'srting'
 						@history = JSON.parse(userdata:history)
@@ -349,7 +351,7 @@ export tag Bible
 		@history.push({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
 		window:localStorage.setItem("history", JSON.stringify(@history))
 
-		if @data.user && window:navigator:onLine
+		if @data.user:username && window:navigator:onLine
 			window.fetch("/save-history/", {
 				method: "POST",
 				cache: "no-cache",
@@ -427,7 +429,7 @@ export tag Bible
 				loading = no
 				console.error('Error: ', error)
 				@data.showNotification('error')
-			if @data.user then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
+			if @data.user:username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
 			if verse
 				findVerse(verse)
 			else setTimeout(&, 100) do window.scroll(0,0)
@@ -474,7 +476,7 @@ export tag Bible
 			catch error
 				console.error('Error: ', error)
 				@data.showNotification('error')
-			if @data.user
+			if @data.user:username
 				url = "/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/'
 				@parallel_bookmarks = []
 				try
@@ -1126,7 +1128,7 @@ export tag Bible
 			notes += category
 			if key + 1 < choosen_categories:length
 				notes += " | "
-		unless @data.user
+		unless @data.user:username
 			window:location:pathname = "/signup/"
 			return
 		if window:navigator:onLine
@@ -1195,7 +1197,7 @@ export tag Bible
 			if indexes_of_bookmarks.indexOf(pk) != -1
 				should_to_delete = yes
 				break
-		if @data.user && should_to_delete
+		if @data.user:username && should_to_delete
 			@data.requestDeleteBookmark(pks)
 			if choosen_parallel == 'second'
 				for verse in choosenid
@@ -1299,7 +1301,7 @@ export tag Bible
 				"profile",
 				"/profile/"
 			)
-		document:title = "Bolls " + " | " + @data.user
+		document:title = "Bolls " + " | " + @data.getUserName()
 		Imba.mount <Profile[@data]>
 
 	def toDownloads from_build
@@ -1331,7 +1333,7 @@ export tag Bible
 		turnHistory
 		@history = []
 		window:localStorage.setItem("history", "[]")
-		if @data.user
+		if @data.user:username
 			window.fetch("/save-history/", {
 				method: "POST",
 				cache: "no-cache",
@@ -1355,7 +1357,7 @@ export tag Bible
 		else
 			show_collections = !show_collections
 			store:show_color_picker = no
-			if show_collections && @data.user
+			if show_collections && @data.user:username
 				let url = "/get-categories/"
 				if window:navigator:onLine
 					let data = await loadData(url)
@@ -1908,8 +1910,8 @@ export tag Bible
 						for font in fonts
 							<button :click.prevent.setFontFamily(font) css:font-family=font:code> font:name
 				<.profile_in_settings>
-					if @data.user
-						<a.username :click.prevent.toProfile(no)> @data.user
+					if @data.getUserName()
+						<a.username :click.prevent.toProfile(no)> @data.getUserName()
 						<a.prof_btn href="/accounts/logout/"> @data.lang:logout
 					else
 						<a.prof_btn href="/accounts/login/"> @data.lang:login
