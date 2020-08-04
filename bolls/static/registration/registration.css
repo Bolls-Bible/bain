@@ -1,16 +1,16 @@
 html[data-theme='dark'] {
-  --background-color: #04060c;
-  --text-color: #fee;
+  --background-color: rgb(4, 6, 11);
+  --text-color: rgb(255, 238, 238);
 }
 
 html[data-theme='light'] {
-  --background-color: #fee;
-  --text-color: #04060c;
+  --background-color: rgb(255, 238, 238);
+  --text-color: rgb(4, 6, 11);
 }
 
 * {
   box-sizing: border-box;
-  scrollbar-color: #737373 #38383D33;
+  scrollbar-color: rgb(115, 115, 115) rgba(56, 56, 61, 0.2);
   scrollbar-width: thin;
   margin: 0px;
   padding: 0px;
@@ -25,21 +25,21 @@ html[data-theme='light'] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #38383D33;
+  background: rgba(56, 56, 61, 0.2);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #545454;
+  background: rgb(84, 84, 84);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #737373;
+  background: rgb(115, 115, 115);
 }
 
 *::selection {
-  color: #fee;
-  background-color: #417690;
+  color: hsl(0, 100%, 97%);
+  background-color: rgb(65, 118, 144);
 }
 
 :focus {
@@ -107,19 +107,19 @@ label {
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-  background: #88f2;
-  border: 1px solid #88f4;
+  background: rgba(136, 136, 255, 0.133);
+  border: 1px solid rgba(138, 138, 255, 0.267);
   color: var(--text-color);
   padding: 4px 8px;
   margin-bottom: 4px;
 }
 
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-  background: #88f4;
-  border: 1px solid #88f8;
+  background: rgba(138, 138, 255, 0.267);
+  border: 1px solid rgba(136, 136, 255, 0.533);
 }
 
-#login_after_reset, input[type="submit"] {
+.with, #login_after_reset, input[type="submit"] {
   background: var(--background-color);
   color: var(--text-color);
   cursor: pointer;
@@ -137,13 +137,30 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
   text-align: center;
 }
 
-#login_after_reset, input[type="submit"]:hover {
+.with, #login_after_reset, input[type="submit"]:hover {
   transform: translateY(-2px);
   -webkit-transform: translateY(-2px);
   -moz-transform: translateY(-2px);
   -ms-transform: translateY(-2px);
   -o-transform: translateY(-2px);
   background: var(--background-color);
+}
+
+.with {
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.with svg {
+  height: 16px;
+  margin-right: 8px;
+}
+
+hr {
+  margin: 16px 32px;
+  color: rgba(138, 138, 255, 0.267);
 }
 
 a {

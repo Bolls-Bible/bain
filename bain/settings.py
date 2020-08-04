@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -78,8 +81,6 @@ WSGI_APPLICATION = 'bain.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-# [START db_setup]
-
 if DEBUG:
     DATABASES = {
         'default': {
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'uk-ru-en-us'
+LANGUAGE_CODE = 'uk-ru-en-us-es-pt'
 
 TIME_ZONE = 'Europe/Kiev'
 
@@ -152,3 +153,11 @@ EMAIL_HOST_USER = 'bollsbible@gmail.com'
 EMAIL_PORT = 587
 
 SESSION_COOKIE_AGE = 2419200
+# SESSION_SAVE_EVERY_REQUEST = True
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+AUTHENTICATION_BACKENDS = (
+    # 'social.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend')

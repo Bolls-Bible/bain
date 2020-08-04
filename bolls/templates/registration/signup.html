@@ -35,6 +35,11 @@
       <input type="submit" value="Create">
       <input type="hidden" name="next" value="{{ next }}">
     </form>
+		<hr>
+		<a class="with" href="{% url "social:begin" "google-oauth2" %}">
+			<svg viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z" fill="#4285f4"/><path d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z" fill="#34a853"/><path d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z" fill="#fbbc04"/><path d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z" fill="#ea4335"/></svg>
+			Google+
+		</a>
     <p style="font-size: 13px; padding: 16px 0px 64px;" id="donthaveanaccount">{% trans "Already have an account? " %} <a id="create" href="{% url 'login' %}"> Log in </a>
     </p>
     {% endblock %}
@@ -44,34 +49,6 @@
     if (window.localStorage.getItem('theme')) {
       var doc = document.querySelector('#html');
       doc.dataset.theme = window.localStorage.getItem('theme');
-    }
-    if (window.navigator.language.slice(2) == "uk") {
-      var form = document.getElementsByTagName('form')[0];
-      form[5].value = "Створити";
-      var labels = document.getElementsByTagName("label");
-      labels[1].innerText = "Електронна пошта";
-      var helptext = document.getElementsByClassName("helptext");
-      helptext[1].innerText = "Обов'язково. Повідомте дійсну електронну адресу"
-      var donthaveanaccount = document.getElementById("h1");
-      donthaveanaccount.innerText = " Зареєструватися ";
-      var donthaveanaccount = document.getElementById("donthaveanaccount");
-      donthaveanaccount.firstChild.data = "Вже маєте обліковий запис? ";
-      var create = document.getElementById("create");
-      create.innerText = "Увійти";
-    }
-    if (window.navigator.language.slice(2) == "ru") {
-      var form = document.getElementsByTagName('form')[0];
-      form[5].value = "Создать";
-      var labels = document.getElementsByTagName("label");
-      labels[1].innerText = "Електронная почта";
-      var helptext = document.getElementsByClassName("helptext");
-      helptext[1].innerText = "Обязательно. Сообщите настояшую електронную почту"
-      var donthaveanaccount = document.getElementById("h1");
-      donthaveanaccount.innerText = " Зарегестрироватся ";
-      var donthaveanaccount = document.getElementById("donthaveanaccount");
-      donthaveanaccount.firstChild.data = "Уже имеете аккаунт? ";
-      var create = document.getElementById("create");
-      create.innerText = "Войти";
     }
   </script>
 </body>

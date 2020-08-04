@@ -1,6 +1,8 @@
 import "./translations_books.json" as BOOKS
 import {Load} from "./loading"
 
+import {svg_paths} from "./svg_paths.imba"
+
 let limits_of_range = {
 	from: 0,
 	to: 32,
@@ -8,7 +10,7 @@ let limits_of_range = {
 }
 let query = ''
 let storage =
-	query: ''
+	username: ''
 let loading = no
 let show_options_of = ''
 
@@ -173,7 +175,7 @@ export tag Profile < main
 
 	def showDeleteForm
 		show_options_of = 'show_delete_form'
-		storage:query = ''
+		storage:username = ''
 
 	def render
 		<self :onscroll=onscroll>
@@ -229,11 +231,15 @@ export tag Profile < main
 			if show_options_of == "show_delete_form"
 				<section#daf>
 					<form action="/delete-my-account/">
-						<h1 style="margin-top:12px;"> @data.lang:are_you_sure
+						<header.search_hat>
+							<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+								<svg:title> @data.lang:close
+								<svg:path d=svg_paths:close css:margin="auto">
+							<h1 style="margin:auto;"> @data.lang:are_you_sure
 						<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
 						<label> @data.lang:delete_account_label
-						<input[storage:query].search style="margin:8px 0;border-radius:4px;">
-						if storage:query == @data.user
+						<input[storage:username].search style="margin:8px 0;border-radius:4px;">
+						if storage:username == @data.user
 							<button.change_language> @data.lang:i_understand
 						else
 							<button.change_language disabled> @data.lang:i_understand

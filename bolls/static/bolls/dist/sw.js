@@ -4,7 +4,7 @@ var urlsToCache = [
 	'/static/bolls/dist/index.js',
 	'/static/bolls/dist/index.css',
 	'/static/bolls/fonts/fontstylesheet.css',
-	'/static/bolls/dist/mobile_styles.css',
+	'/static/bolls/dist/mobile_index.css',
 	'/static/bolls/dist/dexie.min.js',
 	'/static/bolls/dist/dexie_worker.js'
 ];
