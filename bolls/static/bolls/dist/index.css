@@ -904,11 +904,13 @@ img,
 
 @keyframes showing_search_results {
 	0% {
-		top: 100%;
+		/* top: 100%; */
+		transform: translateY(100%);
 	}
 
 	100% {
-		top: 7%;
+		/* top: 7%; */
+		transform: translateY(0);
 		box-shadow: 0 2.74416px 2.74416px rgba(0, 0, 0, .0274351), 0 5.48831px 5.48831px rgba(0, 0, 0, .0400741), 0 13.7208px 10.9766px rgba(0, 0, 0, .0499982), 0 20.5812px 20.5812px rgba(0, 0, 0, .0596004), 0 41.1623px 41.1623px rgba(0, 0, 0, .0709366), 0 96.0454px 89.1851px rgba(0, 0, 0, .09);
 	}
 }
@@ -1106,7 +1108,8 @@ html[data-transitions="true"] #daf {
 html[data-light="light"] .filters,
 html[data-light="light"] .Notification p,
 html[data-light="light"] .show_search_results,
-html[data-light="light"] #daf form {
+html[data-light="light"] #daf form,
+html[data-light="light"] #daf article {
 	box-shadow: 0 2.74416px 2.74416px rgba(0, 0, 0, .0274351), 0 5.48831px 5.48831px rgba(0, 0, 0, .0400741), 0 13.7208px 10.9766px rgba(0, 0, 0, .0499982), 0 20.5812px 20.5812px rgba(0, 0, 0, .0596004), 0 41.1623px 41.1623px rgba(0, 0, 0, .0709366), 0 96.0454px 89.1851px rgba(0, 0, 0, .09);
 }
 
@@ -1205,6 +1208,8 @@ html[data-light="light"] #daf form {
 
 .Profile {
 	padding: 0 calc(50% - 470px);
+	display: flex;
+	flex-direction: column;
 }
 
 .change_password {
@@ -1798,18 +1803,29 @@ address a:hover {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 16px;
+	right: 0;
+	bottom: 0;
+	display: flex
 }
 
-#daf form {
-	background: var(--background-color);
-	border: 1px solid var(--btn-bg-hover);
-	border-radius: 16px;
+#daf section {
+	width: auto;
+	height: auto;
+	margin: auto;
+	position: static;
+	padding: 0;
+}
+
+#daf .search_results {
+	transform: translateY(calc(50vh + 100%));
+}
+
+#daf .show_search_results {
+	transform: translateY(0);
+}
+
+#daf form,
+#daf article {
 	padding: 16px;
 	display: flex;
 	flex-direction: column;
@@ -1827,4 +1843,19 @@ address a:hover {
 
 #daf button:hover {
 	background: firebrick;
+}
+
+#daf button:active {
+	background: indianred;
+}
+
+input:invalid,
+.invalid {
+	box-shadow: 0px 0px 4px red, 0px 0px 3px red, 0px 0px 2px red;
+}
+
+.errormessage {
+	margin-bottom: 16px;
+	color: indianred;
+	font-size: 18px;
 }

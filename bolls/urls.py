@@ -16,6 +16,7 @@ urlpatterns = [
 	path('save-history/', views.saveHistory),
 	path('save-bookmarks/', views.saveBookmarks),
 	path('delete-bookmarks/', views.deleteBookmarks),
+	path('edit-account/', views.editAccount),
 	path('delete-my-account/', views.deleteAccount),
 	path('user-logged/', views.userLogged),
 	path('get-translation/<slug:translation>/',

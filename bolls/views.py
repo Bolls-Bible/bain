@@ -4,12 +4,14 @@ import math
 import json
 from django.db.models import Count, Q
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
-from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
-from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import is_password_usable
+from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.contrib.messages import get_messages
+from django.shortcuts import render, redirect
+from django.template import RequestContext
+from django.http import JsonResponse, HttpResponse
 
 from bolls.forms import SignUpForm
 
@@ -164,6 +166,23 @@ def deleteAccount(request):
 	return render(request, 'bolls/index.html', {"message": message})
 
 
+def editAccount(request):
+	if request.method == 'POST':
+		received_json_data = json.loads(request.body)
+		newusername = received_json_data["newusername"]
+		newname = newname = received_json_data.get("newname", '')
+		if User.objects.filter(username=newusername).exists():
+			if request.user.username != newusername:
+				return HttpResponse(status=409)
+		user = request.user
+		user.username = newusername
+		user.first_name = newname
+		user.save()
+		return HttpResponse(status=200)
+	else:
+		return HttpResponse(status=405)
+
+
 def getBookmarks(request, translation, book, chapter):
 	if request.user.is_authenticated:
 		all_objects = Verses.objects.filter(
@@ -238,7 +257,7 @@ def getCategories(request):
 @csrf_exempt
 def getParallelVerses(request):
 	received_json_data = json.loads(request.body)
-	if received_json_data["chapter"] > 0 and received_json_data["book"] > 0 and len(received_json_data["translations"]) > 5 and len(received_json_data["verses"]) > 2:
+	if request.method == 'POST' and received_json_data["chapter"] > 0 and received_json_data["book"] > 0 and len(received_json_data["translations"]) > 5 and len(received_json_data["verses"]) > 2:
 		book = received_json_data["book"]
 		chapter = received_json_data["chapter"]
 		response = []
@@ -335,9 +354,8 @@ def historyOf(user):
 
 def userLogged(request):
 	if request.user.is_authenticated:
-		return JsonResponse({"username": request.user.username, "name": request.user.first_name, "history": historyOf(request.user)}, safe=False)
+		return JsonResponse({"username": request.user.username, "name": request.user.first_name, "is_password_usable": is_password_usable(request.user.password), "history": historyOf(request.user)}, safe=False)
 	return JsonResponse({"username": ""}, safe=False)
-
 
 
 def robots(request):

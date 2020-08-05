@@ -11,6 +11,9 @@ let limits_of_range = {
 let query = ''
 let storage =
 	username: ''
+	name: ''
+
+let taken_usernames = []
 let loading = no
 let show_options_of = ''
 
@@ -174,8 +177,52 @@ export tag Profile < main
 		show_options_of = ''
 
 	def showDeleteForm
-		show_options_of = 'show_delete_form'
+		show_options_of = 'delete_form'
 		storage:username = ''
+		window:history.pushState({profile: yes}, "Delete Account")
+
+	def showEditForm
+		show_options_of = 'edit_form'
+		storage:username = @data.user:username
+		storage:name = @data.user:name
+		window:history.pushState({profile: yes}, "Edit Account")
+
+	def editAccountFormIsValid
+		let valid = -1
+		let edit_account = document.getElementById('edit_account')
+		if edit_account
+			for node in edit_account:childNodes
+				if node:tagName == 'INPUT'
+					if node.checkValidity()
+						valid++
+		return valid
+
+	def editAccount
+		if editAccountFormIsValid() && window:navigator:onLine
+			loading = yes
+			window.fetch("/edit-account/", {
+				method: "POST",
+				cache: "no-cache",
+				headers: {
+					'X-CSRFToken': @data.get_cookie('csrftoken'),
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					newusername: storage:username,
+					newname: storage:name || '',
+				}),
+			})
+			.then(do |response|
+				if response:status == 200
+					@data.showNotification('account_edited')
+					@data.user:username = storage:username
+					@data.user:name = storage:name
+					show_options_of = ''
+				elif response:status == 409
+					taken_usernames.push storage:username
+					@data.showNotification('username_taken')
+			)
+			loading = no
 
 	def render
 		<self :onscroll=onscroll>
@@ -189,12 +236,13 @@ export tag Profile < main
 						if window:navigator:onLine
 							<.change_password.help>
 								<svg:svg.helpsvg :tap.showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
-									<svg:title> @data.lang:change_password
+									<svg:title> @data.lang:edit_account
 									<svg:path d="M0 0h24v24H0z" fill="none">
 									<svg:path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
 								<.languages css:right="{window:innerWidth > 960 ? (window:innerWidth - 886) / 2 : 36}px" .show_languages=(show_options_of == 'account_actions')>
-									<a href="/accounts/password_change/"><button> @data.lang:change_password
+									if @data.user:is_password_usable then <a href="/accounts/password_change/"><button> @data.lang:change_password
 									<button :tap.prevent.showDeleteForm()> @data.lang:delete_account
+									<button :tap.prevent.showEditForm()> @data.lang:edit_account
 					<.collectionsflex css:flex-wrap="wrap">
 						for category in @categories
 							if category
@@ -228,21 +276,39 @@ export tag Profile < main
 			if !@loaded_bookmarks:length && !@categories:length
 				<p css:text-align="center"> @data.lang:thereisnobookmarks
 
-			if show_options_of == "show_delete_form"
-				<section#daf>
-					<form action="/delete-my-account/">
-						<header.search_hat>
-							<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
-								<svg:title> @data.lang:close
-								<svg:path d=svg_paths:close css:margin="auto">
-							<h1 style="margin:auto;"> @data.lang:are_you_sure
-						<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
-						<label> @data.lang:delete_account_label
-						<input[storage:username].search style="margin:8px 0;border-radius:4px;">
-						if storage:username == @data.user:username
-							<button.change_language> @data.lang:i_understand
-						else
-							<button.change_language disabled> @data.lang:i_understand
+			<div#daf>
+				<section.search_results .show_search_results=(show_options_of == "delete_form" || show_options_of == "edit_form")>
+					if show_options_of == "delete_form"
+						<form action="/delete-my-account/">
+							<header.search_hat>
+								<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+									<svg:title> @data.lang:close
+									<svg:path d=svg_paths:close css:margin="auto">
+								<h1 style="margin:auto;"> @data.lang:are_you_sure
+							<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
+							<label> @data.lang:delete_account_label
+							<input[storage:username].search style="margin:8px 0;border-radius:4px;">
+							if storage:username == @data.user:username
+								<button.change_language> @data.lang:i_understand
+							else
+								<button.change_language disabled> @data.lang:i_understand
+					else
+						<article#edit_account>
+							<header.search_hat>
+								<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+									<svg:title> @data.lang:close
+									<svg:path d=svg_paths:close css:margin="auto">
+								<h1 style="margin:auto;"> @data.lang:edit_account
+							<label> @data.lang:edit_username_label
+							<input[storage:username].search .invalid=taken_usernames.includes(storage:username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 style="margin:8px 0;border-radius:4px;">
+							if taken_usernames.includes(storage:username)
+								<p.errormessage> @data.lang:username_taken
+							<label> @data.lang:edit_name_label
+							<input[storage:name].search maxlength=30 style="margin:8px 0;border-radius:4px;">
+							if editAccountFormIsValid()
+								<button.change_language :click.prevent.editAccount()> @data.lang:edit_account
+							else
+								<button.change_language disabled :click.prevent.editAccount()> @data.lang:edit_account
 
 			if !window:navigator:onLine
 				<div style="position: fixed;bottom: 16px;left: 16px;color: var(--text-color);background: var(--background-color);padding: 8px;border-radius: 8px;text-align: center;border: 1px solid var(--btn-bg-hover);z-index: 1000">

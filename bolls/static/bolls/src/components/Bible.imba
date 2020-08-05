@@ -281,14 +281,15 @@ export tag Bible
 				let userdata = await loadData("/user-logged/")
 				if userdata:username
 					@data.user:username = userdata:username
+					@data.user:is_password_usable = userdata:is_password_usable
 					if userdata:name
 						@data.user:name = userdata:name
-					setCookie('username', @data.user)
+					setCookie('username', @data.user:username)
 					if typeof userdata:history == 'srting'
 						@history = JSON.parse(userdata:history)
 					else @history = []
 					if @history:length then window:localStorage.setItem("history", JSON.stringify(@history))
-				else @data.user = ''
+				else @data.user = {}
 			catch error
 				console.error('Error: ', error)
 				@data.showNotification('error')
@@ -356,7 +357,7 @@ export tag Bible
 				method: "POST",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': get_cookie('csrftoken'),
+					'X-CSRFToken': @data.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -1037,26 +1038,20 @@ export tag Bible
 			return clearSpace()
 		store:highlight_color = getRandomColor()
 		if document.getSelection == ''
-			if window:innerWidth > 600
-				if !settingsp:display
-					const verse = document.getElementById(id)
-					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - window:scrollY
-					if offsetTop > window:innerHeight
-						window.scroll(0, window:scrollY - (window:innerHeight - offsetTop))
-				else
-					let verse
-					if parallel == 'first'
-						verse = document.getElementById(id)
-					else
-						verse = document.getElementById("p{id}")
-					const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
-					if offsetTop > verse:parentNode:parentNode:clientHeight
-						verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop - (verse:parentNode:parentNode:clientHeight - offsetTop))
+			if !settingsp:display
+				const verse = document.getElementById(id)
+				const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - window:scrollY
+				if offsetTop > window:innerHeight
+					window.scroll(0, window:scrollY - (window:innerHeight - offsetTop))
 			else
-				if parallel == "first"
-					findVerse(id)
+				let verse
+				if parallel == 'first'
+					verse = document.getElementById(id)
 				else
-					findVerse('p' + id)
+					verse = document.getElementById("p{id}")
+				const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
+				if offsetTop > verse:parentNode:parentNode:clientHeight
+					verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop - (verse:parentNode:parentNode:clientHeight - offsetTop))
 			if !choosen_parallel
 				choosen_parallel = parallel
 				choosenid.push(pk)
@@ -1106,17 +1101,6 @@ export tag Bible
 				else row += ',' + id
 		return row
 
-	def get_cookie name
-		let cookieValue = null
-		if document:cookie && document:cookie !== ''
-			let cookies = document:cookie.split(';')
-			for i in cookies
-				let cookie = i.trim()
-				if (cookie.substring(0, name:length + 1) === (name + '='))
-					cookieValue = window.decodeURIComponent(cookie.substring(name:length + 1))
-					break
-		return cookieValue
-
 	def sendBookmarksToDjango
 		if store:highlight_color:length >= 16
 			if highlights.find(do |element| return element == store:highlight_color)
@@ -1136,7 +1120,7 @@ export tag Bible
 				method: "POST",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': get_cookie('csrftoken'),
+					'X-CSRFToken': @data.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -1295,7 +1279,6 @@ export tag Bible
 		flag("display_none")
 		if !from_build
 			window:history.pushState({
-					parallel: no,
 					profile: yes
 				},
 				"profile",
@@ -1338,7 +1321,7 @@ export tag Bible
 				method: "POST",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': get_cookie('csrftoken'),
+					'X-CSRFToken': @data.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -1707,7 +1690,7 @@ export tag Bible
 			if highlight
 				show_delete_bookmark = yes
 
-	def pageSearchKkeyupManager e
+	def pageSearchKeyupManager e
 		const event = e:_event
 		if event:code == "Enter"
 			if event:shiftKey
@@ -2381,7 +2364,7 @@ export tag Bible
 
 			if page_search:d
 				<section#page_search style="background-color: {page_search:matches:length || !page_search:query:length ? 'var(--background-color)' : 'firebrick'}">
-					<input[page_search:query]#pagesearch.search :keyup.pageSearchKkeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang:search>
+					<input[page_search:query]#pagesearch.search :keyup.pageSearchKeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang:search>
 					<button.arrow :click.prevent.prevOccurence() title=@data.lang:prev style="border-radius: 0;">
 						<svg:svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5" style="transform: rotate(180deg);">
 							<svg:title> @data.lang:prev
