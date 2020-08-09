@@ -585,6 +585,10 @@ html[data-transitions="true"] .helpFAQ a:hover {
 	justify-content: space-around;
 }
 
+#addbuttons svg:nth-child(2n+1) {
+	padding: 24px 0 0;
+}
+
 .save_bookmark {
 	width: 26px;
 	height: 50px;

@@ -281,10 +281,10 @@ export tag Profile < main
 					if show_options_of == "delete_form"
 						<form action="/delete-my-account/">
 							<header.search_hat>
+								<h1 style="margin:auto;"> @data.lang:are_you_sure
 								<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 									<svg:title> @data.lang:close
 									<svg:path d=svg_paths:close css:margin="auto">
-								<h1 style="margin:auto;"> @data.lang:are_you_sure
 							<p style="margin-bottom:16px;"> @data.lang:cannot_be_undone
 							<label> @data.lang:delete_account_label
 							<input[storage:username].search style="margin:8px 0;border-radius:4px;">
@@ -295,10 +295,10 @@ export tag Profile < main
 					else
 						<article#edit_account>
 							<header.search_hat>
+								<h1 style="margin:auto;"> @data.lang:edit_account
 								<svg:svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 									<svg:title> @data.lang:close
 									<svg:path d=svg_paths:close css:margin="auto">
-								<h1 style="margin:auto;"> @data.lang:edit_account
 							<label> @data.lang:edit_username_label
 							<input[storage:username].search .invalid=taken_usernames.includes(storage:username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 style="margin:8px 0;border-radius:4px;">
 							if taken_usernames.includes(storage:username)
