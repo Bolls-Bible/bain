@@ -195,7 +195,7 @@ def getBookmarks(request, translation, book, chapter):
 						"verse": bookmark.verse.pk,
 						"date": bookmark.date,
 						"color": bookmark.color,
-						"note": bookmark.note,
+						"collection": bookmark.collection,
 					})
 		return JsonResponse(bookmarks, safe=False)
 	else:
@@ -220,7 +220,7 @@ def getProfileBookmarks(request, range_from, range_to):
 				},
 				"date": bookmark.date,
 				"color": bookmark.color,
-				"note": bookmark.note,
+				"collection": bookmark.collection,
 			})
 
 		return JsonResponse(bookmarks, safe=False)
@@ -230,7 +230,7 @@ def getProfileBookmarks(request, range_from, range_to):
 def getSearchedProfileBookmarks(request, query):
 	user = request.user
 	bookmarks = []
-	for bookmark in user.bookmarks_set.all().filter(note__icontains=query).order_by('-date', 'verse'):
+	for bookmark in user.bookmarks_set.all().filter(collection__icontains=query).order_by('-date', 'verse'):
 		bookmarks.append({
 			"verse": {
 				"pk": bookmark.verse.pk,
@@ -242,15 +242,15 @@ def getSearchedProfileBookmarks(request, query):
 			},
 			"date": bookmark.date,
 			"color": bookmark.color,
-			"note": bookmark.note,
+			"collection": bookmark.collection,
 		})
 	return JsonResponse(bookmarks, safe=False)
 
 
 def getCategories(request):
 	user = request.user
-	all_objects = user.bookmarks_set.values('note').annotate(
-		dcount=Count('note')).order_by('-date')
+	all_objects = user.bookmarks_set.values('collection').annotate(
+		dcount=Count('collection')).order_by('-date')
 	return JsonResponse({"data": [b for b in all_objects]}, safe=False)
 
 
@@ -305,15 +305,15 @@ def saveBookmarks(request):
 				obj = user.bookmarks_set.get(user=user, verse=verse)
 				obj.date = received_json_data["date"]
 				obj.color = received_json_data["color"]
-				obj.note = received_json_data["notes"]
+				obj.collection = received_json_data["collections"]
 				obj.save()
 			except Bookmarks.DoesNotExist:
 				user.bookmarks_set.create(
-					verse=verse, date=received_json_data["date"], color=received_json_data["color"], note=received_json_data["notes"])
+					verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"])
 			except Bookmarks.MultipleObjectsReturned:
 				deleteBookmarks(request)
 				user.bookmarks_set.create(
-					verse=verse, date=received_json_data["date"], color=received_json_data["color"], note=received_json_data["notes"])
+					verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"])
 	return JsonResponse({"response": "200"}, safe=False)
 
 

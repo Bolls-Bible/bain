@@ -40,6 +40,7 @@ export class State
 			bookmarks: '&verse, *notes'
 		})
 		@user:username = getCookie('username') || ''
+		@user:name = getCookie('name') || ''
 		if getCookie('language')
 			setLanguage(getCookie('language'))
 		else

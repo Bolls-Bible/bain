@@ -71,7 +71,7 @@ export tag Profile < main
 		for item, key in bookmarksdata
 			newItem:date = Date.new(item:date)
 			newItem:color = item:color
-			newItem:note = item:note
+			newItem:collection = item:collection
 			newItem:translation = item:verse:translation
 			newItem:book = item:verse:book
 			newItem:chapter = item:verse:chapter
@@ -118,7 +118,7 @@ export tag Profile < main
 		@categories = []
 		let data = await loadData(url)
 		for categories in data:data
-			for piece in categories:note.split(' | ')
+			for piece in categories:collection.split(' | ')
 				if piece != ''
 					@categories.push(piece)
 		@categories = Array.from(Set.new(@categories))
@@ -217,6 +217,8 @@ export tag Profile < main
 					@data.showNotification('account_edited')
 					@data.user:username = storage:username
 					@data.user:name = storage:name
+					setCookie('username', @data.user:username)
+					setCookie('name', @data.user:name)
 					show_options_of = ''
 				elif response:status == 409
 					taken_usernames.push storage:username
@@ -257,8 +259,8 @@ export tag Profile < main
 			for bookmark in (query ? @bookmarks : @loaded_bookmarks)
 				<article.bookmark_in_list css:border-color="{bookmark:color}">
 					<text-as-html[{text: bookmark:text.join(" ")}].bookmark_text :tap.prevent.goToBookmark(bookmark) dir="auto">
-					if bookmark:note
-						<p.note> bookmark:note
+					if bookmark:collection
+						<p.note> bookmark:collection
 					<p.dataflex>
 						<span.booktitle dir="auto"> bookmark:title, ' ', bookmark:translation
 						<time.time time:datetime="bookmark:date"> bookmark:date.toLocaleString()
@@ -276,7 +278,7 @@ export tag Profile < main
 			if !@loaded_bookmarks:length && !@categories:length
 				<p css:text-align="center"> @data.lang:thereisnobookmarks
 
-			<div#daf>
+			<div#daf style="visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}">
 				<section.search_results .show_search_results=(show_options_of == "delete_form" || show_options_of == "edit_form")>
 					if show_options_of == "delete_form"
 						<form action="/delete-my-account/">

@@ -282,12 +282,12 @@ export tag Bible
 				if userdata:username
 					@data.user:username = userdata:username
 					@data.user:is_password_usable = userdata:is_password_usable
-					if userdata:name
-						@data.user:name = userdata:name
+					@data.user:name = userdata:name || ''
 					setCookie('username', @data.user:username)
+					setCookie('name', @data.user:name)
 					if typeof userdata:history == 'srting'
 						@history = JSON.parse(userdata:history)
-					else @history = []
+					else @history = JSON.parse(getCookie("history")) || []
 					if @history:length then window:localStorage.setItem("history", JSON.stringify(@history))
 				else @data.user = {}
 			catch error
@@ -346,7 +346,7 @@ export tag Bible
 
 	def saveToHistory translation, book, chapter, verse, parallel
 		if getCookie("history")
-			@history = JSON.parse(getCookie("history"))
+			@history = JSON.parse(getCookie("history")) || []
 		if @history.find(do |element| return element:chapter == chapter && element:book == book && element:translation == translation)
 			@history.splice(@history.indexOf(@history.find(do |element| return element:chapter == chapter && element:book == book && element:translation == translation)), 1)
 		@history.push({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
@@ -671,6 +671,7 @@ export tag Bible
 		Imba.commit()
 
 	def clearSpace
+		document:body:className = ''
 		bible_menu_left = -300
 		settings_menu_left = -300
 		search:search_div = no
@@ -708,7 +709,7 @@ export tag Bible
 			clearSpace()
 		else
 			clearSpace()
-			what_to_show_in_pop_up_block = 'show_help'
+			popUp 'show_help'
 			window:history.pushState(no, "Help")
 
 	def turnSupport
@@ -716,7 +717,7 @@ export tag Bible
 			clearSpace()
 		else
 			clearSpace()
-			what_to_show_in_pop_up_block = 'show_support'
+			popUp 'show_support'
 			window:history.pushState(no, "Support")
 
 	def toggleParallelMode parallel
@@ -790,7 +791,7 @@ export tag Bible
 					if !@search:bookid_of_results.find(do |element| return element == verse:book)
 						@search:bookid_of_results.push verse:book
 				closeSearch()
-				what_to_show_in_pop_up_block = 'search'
+				popUp 'search'
 				Imba.commit
 				window:history.pushState(no, "Search")
 			catch error
@@ -800,7 +801,7 @@ export tag Bible
 					for verse in @search_verses
 						if !@search:bookid_of_results.find(do |element| return element == verse:book)
 							@search:bookid_of_results.push verse:book
-					what_to_show_in_pop_up_block = 'search'
+					popUp 'search'
 					closeSearch()
 					Imba.commit
 
@@ -1024,12 +1025,12 @@ export tag Bible
 
 	def getNoteOfChoosen verse
 		let highlight = @bookmarks.find(do |element| return element:verse == verse)
-		if highlight then highlight:note else ''
+		if highlight then highlight:collection else ''
 
 	def pushNoteIfExist pk
-		let note = getNoteOfChoosen(pk)
-		if note
-			for piece in note.split(' | ')
+		let collection = getNoteOfChoosen(pk)
+		if collection
+			for piece in collection.split(' | ')
 				if piece != '' && !choosen_categories.find(do |element| return element == piece)
 					choosen_categories.push(piece)
 
@@ -1065,9 +1066,9 @@ export tag Bible
 				if choosenid.find(do |element| return element == pk)
 					choosenid.splice(choosenid.indexOf(pk), 1)
 					choosen.splice(choosen.indexOf(id), 1)
-					let note = getNoteOfChoosen(pk)
-					if note
-						for piece in note.split(' | ')
+					let collection = getNoteOfChoosen(pk)
+					if collection
+						for piece in collection.split(' | ')
 							if piece != ''
 								choosen_categories.splice(choosen_categories.indexOf(choosen_categories.find(do |element| return element == piece)), 1)
 				else
@@ -1107,11 +1108,11 @@ export tag Bible
 				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == store:highlight_color)), 1)
 			highlights.push(store:highlight_color)
 			window:localStorage.setItem("highlights", JSON.stringify(highlights))
-		let notes = ''
+		let collections = ''
 		for category, key in choosen_categories
-			notes += category
+			collections += category
 			if key + 1 < choosen_categories:length
-				notes += " | "
+				collections += " | "
 		unless @data.user:username
 			window:location:pathname = "/signup/"
 			return
@@ -1127,7 +1128,7 @@ export tag Bible
 					verses: JSON.stringify(choosenid),
 					color: store:highlight_color,
 					date: Date.now(),
-					notes: notes
+					collections: collections
 				}),
 			})
 			.then(do |response| response.json())
@@ -1140,14 +1141,14 @@ export tag Bible
 						verses: choosenid,
 						color: store:highlight_color,
 						date: Date.now(),
-						notes: choosen_categories
+						collections: choosen_categories
 					}))
 		elif @data.db_is_available
 			@data.saveBookmarksToStorageUntillOnline({
 				verses: choosenid,
 				color: store:highlight_color,
 				date: Date.now(),
-				notes: choosen_categories
+				collections: choosen_categories
 			})
 		if choosen_parallel == 'second'
 			for verse in choosenid
@@ -1157,7 +1158,7 @@ export tag Bible
 					verse: verse,
 					date: Date.now(),
 					color: store:highlight_color,
-					note: notes})
+					collection: collections})
 		else
 			for verse in choosenid
 				if @bookmarks.find(do |bookmark| return bookmark:verse == verse)
@@ -1166,7 +1167,7 @@ export tag Bible
 					verse: verse,
 					date: Date.now(),
 					color: store:highlight_color,
-					note: notes})
+					collection: collections})
 		clearSpace()
 
 	def deleteColor color_to_delete
@@ -1346,7 +1347,7 @@ export tag Bible
 					let data = await loadData(url)
 					@categories = []
 					for categories in data:data
-						for piece in categories:note.split(' | ')
+						for piece in categories:collection.split(' | ')
 							if piece != ''
 								@categories.push(piece)
 					for category in choosen_categories
@@ -1451,6 +1452,11 @@ export tag Bible
 	def translationFullName tr
 		translations.find(do |translation| return translation:short_name == tr):full_name
 
+	def popUp what
+		document:body:className = 'noscroll'
+		what_to_show_in_pop_up_block = what
+
+
 	def toggleCompare
 		let book, chapter
 		if choosen:length then choosen_for_comparison = choosen
@@ -1462,7 +1468,7 @@ export tag Bible
 			compare_parallel_of_book = settings:book
 		if what_to_show_in_pop_up_block == "show_compare"
 			clearSpace()
-			what_to_show_in_pop_up_block = 'show_compare'
+			popUp 'show_compare'
 			window:history.pushState(no, "Compare")
 		else clearSpace()
 		was_deleting_translation_from_compare = no
@@ -1470,7 +1476,7 @@ export tag Bible
 		if !window:navigator:onLine && @data.db_is_available && @data.downloaded_translations.indexOf(settings:translation) != -1
 			comparison_parallel = await @data.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
 			loading = no
-			what_to_show_in_pop_up_block = 'show_compare'
+			popUp 'show_compare'
 			Imba.commit()
 			window:history.pushState(no, "Compare")
 		else
@@ -1492,12 +1498,12 @@ export tag Bible
 			.then(do |data|
 					comparison_parallel = data
 					loading = no
-					what_to_show_in_pop_up_block = 'show_compare'
+					popUp 'show_compare'
 					Imba.commit()
 					window:history.pushState(no, "Compare")
 				)
 			.catch(do |error|
-				log error
+				console.error error
 				loading = no
 				@data.showNotification('error'))
 
@@ -1567,7 +1573,7 @@ export tag Bible
 
 	def toggleDownloads
 		clearSpace
-		what_to_show_in_pop_up_block = 'show_downloads'
+		popUp 'show_downloads'
 		window:history.pushState(no, "Downloads")
 
 	def changeFontWeight value

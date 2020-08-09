@@ -258,6 +258,14 @@ html[data-transitions="true"] #animated-heart:hover .helpsvg {
 	animation-iteration-count: infinite;
 }
 
+body {
+	overflow-y: scroll;
+}
+
+.noscroll {
+	overflow: hidden;
+}
+
 .chronological_order {
 	fill: var(--text-color);
 	width: 54px;

@@ -11,8 +11,7 @@ click==7.1.2
 cryptography==3.0
 decorator==4.4.2
 defusedxml==0.6.0
-Django==2.2
-django>=2.2.13
+django==2.2.13
 ecdsa==0.14.1
 entrypoints==0.3
 idna==2.10
