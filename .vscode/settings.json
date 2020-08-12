@@ -2,5 +2,6 @@
   "files.trimTrailingWhitespace": true,
   "files.trimFinalNewlines": true,
   "git.ignoreLimitWarning": true,
-  "python.formatting.provider": "autopep8"
+  "python.formatting.provider": "autopep8",
+  "svg.preview.background": "custom"
 }

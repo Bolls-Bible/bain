@@ -504,7 +504,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 	bottom: -256px;
 	width: 100%;
 	background: var(--background-color);
-	border-top: 1px solid var(--btn-bg);
+	border-top: 2px solid var(--btn-bg);
 	visibility: hidden;
 	text-align: center;
 	padding: 16px 0;
@@ -512,7 +512,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 
 .choosen_verses {
 	bottom: 0;
-	z-index: 999;
+	z-index: 1100;
 	visibility: visible;
 	transition-property: bottom;
 }
@@ -675,6 +675,7 @@ aside {
 	top: 0;
 	bottom: 0;
 	width: 300px;
+	z-index: 1000;
 	background-color: var(--background-color);
 }
 
@@ -855,7 +856,6 @@ img,
 	width: 100%;
 	padding: 4px;
 	font-size: 20px;
-	border: none;
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-bg);
 	margin: 24px 0 0;
@@ -916,12 +916,10 @@ img,
 
 @keyframes showing_search_results {
 	0% {
-		/* top: 100%; */
 		transform: translateY(100%);
 	}
 
 	100% {
-		/* top: 7%; */
 		transform: translateY(0);
 		box-shadow: 0 2.74416px 2.74416px rgba(0, 0, 0, .0274351), 0 5.48831px 5.48831px rgba(0, 0, 0, .0400741), 0 13.7208px 10.9766px rgba(0, 0, 0, .0499982), 0 20.5812px 20.5812px rgba(0, 0, 0, .0596004), 0 41.1623px 41.1623px rgba(0, 0, 0, .0709366), 0 96.0454px 89.1851px rgba(0, 0, 0, .09);
 	}
@@ -962,7 +960,7 @@ img,
 	border-radius: 16px;
 	padding: 12px 24px;
 	visibility: hidden;
-	z-index: 2;
+	z-index: 1200;
 }
 
 .search_hat {
@@ -1272,17 +1270,16 @@ html[data-light="light"] #daf article {
 	font-size: 0.75em;
 }
 
-.note {
+.bookmark_collections {
 	padding: 8px;
 	font-size: 0.875em;
 	opacity: 0.9;
-	padding-bottom: 0;
 }
 
 .dataflex {
 	display: flex;
 	align-items: center;
-	margin: 16px 0 0;
+	/* margin: 16px 0 0; */
 	cursor: default;
 }
 
@@ -1870,4 +1867,41 @@ input:invalid,
 	margin-bottom: 16px;
 	color: indianred;
 	font-size: 18px;
+}
+
+.profile_note {
+	overflow: hidden;
+	display: block;
+	max-height: 128px;
+	opacity: 0.75;
+	background-color: var(--btn-bg);
+	padding: 4px 8px;
+	font-size: 0.8em;
+	border-radius: 4px;
+}
+
+#note_placeholder {
+	height: 0;
+	opacity: 0.5;
+	margin: 8px 0 -8px 16px;
+}
+
+.RichTextEditor {
+	width: 100%;
+	height: calc(100% - 60px);
+	overflow: auto;
+	border: 1px solid var(--btn-bg);
+	padding: 8px 16px;
+	color: inherit;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+
+.RichTextEditor:hover {
+	box-shadow: 0px 0px 4px var(--btn-bg-hover), 0px 0px 3px var(--btn-bg-hover), 0px 0px 2px var(--btn-bg-hover);
+}
+
+.RichTextEditor:focus {
+	box-shadow: 0px 0px 4px var(--btn-bg-hover), 0px 0px 3px var(--btn-bg-hover), 0px 0px 2px var(--btn-bg-hover);
+	border: 1px solid var(--btn-bg-hover);
 }

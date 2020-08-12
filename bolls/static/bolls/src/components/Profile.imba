@@ -21,7 +21,7 @@ export tag Profile < main
 	prop bookmarks default: []
 	prop loaded_bookmarks default: []
 	prop books default: []
-	prop categories default: []
+	prop collections default: []
 
 	def setup
 		limits_of_range:from = 0
@@ -72,6 +72,7 @@ export tag Profile < main
 			newItem:date = Date.new(item:date)
 			newItem:color = item:color
 			newItem:collection = item:collection
+			newItem:note = item:note
 			newItem:translation = item:verse:translation
 			newItem:book = item:verse:book
 			newItem:chapter = item:verse:chapter
@@ -114,15 +115,12 @@ export tag Profile < main
 		Imba.commit
 
 	def getCategories
-		let url = "/get-categories/"
-		@categories = []
-		let data = await loadData(url)
-		for categories in data:data
-			for piece in categories:collection.split(' | ')
-				if piece != ''
-					@categories.push(piece)
-		@categories = Array.from(Set.new(@categories))
+		const url = "/get-categories/"
+		@collections = []
+		const data = await loadData(url)
+		@collections = data:data
 		Imba.commit()
+		# ctgrs.split(' | ')
 
 	def toBible
 		window:history.back()
@@ -137,11 +135,11 @@ export tag Profile < main
 		bible[0]:_tag.getText(bookmark:translation, bookmark:book, bookmark:chapter, bookmark:verse[0])
 		orphanize
 
-	def getSearchedBookmarks category
-		if category
-			query = category
+	def getSearchedBookmarks collection
+		if collection
+			query = collection
 			@bookmarks = []
-			let url = "/get-searched-bookmarks/" + category + '/'
+			let url = "/get-searched-bookmarks/" + collection + '/'
 			let data = await loadData(url)
 			parseBookmarks(data, 'bookmarks')
 			if !bookmarks:length
@@ -217,8 +215,8 @@ export tag Profile < main
 					@data.showNotification('account_edited')
 					@data.user:username = storage:username
 					@data.user:name = storage:name
-					setCookie('username', @data.user:username)
-					setCookie('name', @data.user:name)
+					@data.setCookie('username', @data.user:username)
+					@data.setCookie('name', @data.user:name)
 					show_options_of = ''
 				elif response:status == 409
 					taken_usernames.push storage:username
@@ -246,9 +244,9 @@ export tag Profile < main
 									<button :tap.prevent.showDeleteForm()> @data.lang:delete_account
 									<button :tap.prevent.showEditForm()> @data.lang:edit_account
 					<.collectionsflex css:flex-wrap="wrap">
-						for category in @categories
-							if category
-								<p.collection :tap.prevent.getSearchedBookmarks(category)> category
+						for collection in @collections
+							if collection
+								<p.collection :tap.prevent.getSearchedBookmarks(collection)> collection
 						<div css:min-width="16px">
 				else
 					<.collectionsflex css:flex-wrap="wrap">
@@ -260,7 +258,11 @@ export tag Profile < main
 				<article.bookmark_in_list css:border-color="{bookmark:color}">
 					<text-as-html[{text: bookmark:text.join(" ")}].bookmark_text :tap.prevent.goToBookmark(bookmark) dir="auto">
 					if bookmark:collection
-						<p.note> bookmark:collection
+						<p.bookmark_collections>
+							for collection in bookmark:collection.split(' | ')
+								<p.collection :tap.prevent.getSearchedBookmarks(collection)> collection
+					if bookmark:note
+						<text-as-html[{text: bookmark:note}].profile_note style="max-height:128px;margin:8px 0;" dir="auto">
 					<p.dataflex>
 						<span.booktitle dir="auto"> bookmark:title, ' ', bookmark:translation
 						<time.time time:datetime="bookmark:date"> bookmark:date.toLocaleString()
@@ -275,7 +277,7 @@ export tag Profile < main
 				<Load css:padding="128px 0">
 			else
 				<div.freespace>
-			if !@loaded_bookmarks:length && !@categories:length
+			if !@loaded_bookmarks:length && !@collections:length
 				<p css:text-align="center"> @data.lang:thereisnobookmarks
 
 			<div#daf style="visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}">
@@ -294,6 +296,10 @@ export tag Profile < main
 								<button.change_language> @data.lang:i_understand
 							else
 								<button.change_language disabled> @data.lang:i_understand
+					elif show_options_of == "note_preview"
+						<article style="max-width:80%;">
+							<h1> "title"
+							<text-as-html[{text: "Note"}]>
 					else
 						<article#edit_account>
 							<header.search_hat>

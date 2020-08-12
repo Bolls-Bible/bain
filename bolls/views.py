@@ -15,7 +15,7 @@ from django.http import JsonResponse, HttpResponse
 
 from bolls.forms import SignUpForm
 
-from .models import Verses, Bookmarks, History
+from .models import Verses, Bookmarks, History, Note
 
 
 def index(request):
@@ -191,11 +191,15 @@ def getBookmarks(request, translation, book, chapter):
 		for obj in all_objects:
 			if list(obj.bookmarks_set.all().filter(user=request.user)):
 				for bookmark in obj.bookmarks_set.all():
+					note = ''
+					if bookmark.note is not None:
+						note = bookmark.note.text
 					bookmarks.append({
 						"verse": bookmark.verse.pk,
 						"date": bookmark.date,
 						"color": bookmark.color,
 						"collection": bookmark.collection,
+						"note": note,
 					})
 		return JsonResponse(bookmarks, safe=False)
 	else:
@@ -209,6 +213,9 @@ def getProfileBookmarks(request, range_from, range_to):
 		bookmarkslist = user.bookmarks_set.all().order_by(
 			'-date', 'verse')[range_from:range_to]
 		for bookmark in bookmarkslist:
+			note = ''
+			if bookmark.note is not None:
+				note = bookmark.note.text
 			bookmarks.append({
 				"verse": {
 					"pk": bookmark.verse.pk,
@@ -221,6 +228,7 @@ def getProfileBookmarks(request, range_from, range_to):
 				"date": bookmark.date,
 				"color": bookmark.color,
 				"collection": bookmark.collection,
+				"note": note,
 			})
 
 		return JsonResponse(bookmarks, safe=False)
@@ -251,7 +259,13 @@ def getCategories(request):
 	user = request.user
 	all_objects = user.bookmarks_set.values('collection').annotate(
 		dcount=Count('collection')).order_by('-date')
-	return JsonResponse({"data": [b for b in all_objects]}, safe=False)
+	fresh_collections = [b for b in all_objects]
+	collections = []
+	for collections_dict in fresh_collections:
+		for collection in collections_dict['collection'].split(' | '):
+			if not collection in collections and len(collection):
+				collections.append(collection)
+	return JsonResponse({"data": collections}, safe=False)
 
 
 @csrf_exempt
@@ -299,6 +313,12 @@ def saveBookmarks(request):
 	if request.user.is_authenticated:
 		received_json_data = json.loads(request.body)
 		user = request.user
+
+		def createNewBookmark():
+			note = Note.objects.create(text=received_json_data["note"])
+			user.bookmarks_set.create(
+				verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"], note=note)
+
 		for verseid in ast.literal_eval(received_json_data["verses"]):
 			verse = Verses.objects.get(pk=verseid)
 			try:
@@ -306,14 +326,21 @@ def saveBookmarks(request):
 				obj.date = received_json_data["date"]
 				obj.color = received_json_data["color"]
 				obj.collection = received_json_data["collections"]
+				note = obj.note
+				if note is not None:
+					print(obj.note.text)
+					obj.note.text = received_json_data["note"]
+					obj.note.save()
+				else:
+					note = Note.objects.create(text=received_json_data["note"])
+					obj.note = note
+				print(obj.note.text)
 				obj.save()
 			except Bookmarks.DoesNotExist:
-				user.bookmarks_set.create(
-					verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"])
+				createNewBookmark()
 			except Bookmarks.MultipleObjectsReturned:
 				deleteBookmarks(request)
-				user.bookmarks_set.create(
-					verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"])
+				createNewBookmark()
 	return JsonResponse({"response": "200"}, safe=False)
 
 

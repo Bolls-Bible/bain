@@ -3,6 +3,7 @@ import "./languages.json" as languages
 import {Profile} from './Profile'
 import {Load} from "./loading.imba"
 import {Downloads} from "./downloads.imba"
+import {RichTextEditor} from "./rich_text_editor.imba"
 import {svg_paths} from "./svg_paths.imba"
 import {colorPicker} from "./colorPicker.imba"
 require "./compare-draggable-item"
@@ -58,6 +59,7 @@ let store =
 	book_search: ''
 	highlight_color: ''
 	show_color_picker: no
+	note: ''
 
 let page_search =
 	d: no
@@ -408,7 +410,7 @@ export tag Bible
 			document:title = "Bolls Bible " + " " + nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| return element:short_name == translation):full_name
 			if @chronorder
 				@chronorder = !@chronorder
-				toggleChronorder
+				toggleChronorder()
 			settings:book = book
 			settings:chapter = chapter
 			settings:translation = translation
@@ -1023,22 +1025,32 @@ export tag Bible
 			if highlight
 				return highlight:color
 
-	def getNoteOfChoosen verse
+	def getCollectionOfChoosen verse
 		let highlight = @bookmarks.find(do |element| return element:verse == verse)
 		if highlight then highlight:collection else ''
 
-	def pushNoteIfExist pk
-		let collection = getNoteOfChoosen(pk)
+	def pushCollectionIfExist pk
+		let collection = getCollectionOfChoosen(pk)
 		if collection
 			for piece in collection.split(' | ')
 				if piece != '' && !choosen_categories.find(do |element| return element == piece)
 					choosen_categories.push(piece)
+
+	def mergeNotes
+		store:note = ''
+		for verse in choosenid
+			let vrs = bookmarks.find(do |element| return element:verse == verse) || parallel_bookmarks.find(do |element| return element:verse == verse)
+			if vrs
+				if store:note.indexOf(vrs:note) < 0
+					store:note += vrs:note
 
 	def addToChoosen pk, id, parallel
 		if !settings_menu_left || !bible_menu_left
 			return clearSpace()
 		store:highlight_color = getRandomColor()
 		if document.getSelection == ''
+			# # If the verse is in area under bottom section
+			# scroll to it, to see the full verse
 			if !settingsp:display
 				const verse = document.getElementById(id)
 				const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - window:scrollY
@@ -1053,20 +1065,25 @@ export tag Bible
 				const offsetTop = verse:nextSibling:offsetHeight + verse:offsetTop + 200 - verse:parentNode:parentNode:scrollTop
 				if offsetTop > verse:parentNode:parentNode:clientHeight
 					verse:parentNode:parentNode.scroll(0, verse:parentNode:parentNode:scrollTop - (verse:parentNode:parentNode:clientHeight - offsetTop))
+
+			# # Handle the first click
+			# initial setup of "Choosing" verses
 			if !choosen_parallel
 				choosen_parallel = parallel
 				choosenid.push(pk)
 				choosen.push(id)
-				pushNoteIfExist(pk)
+				pushCollectionIfExist(pk)
 				window:history.pushState(
 					no,
 					"Highlight",
 					window:location:origin + '/' + settings:translation + '/' + settings:book + '/' + settings:chapter + '/' + id + '/')
+
+			# Check if the user choosed a verse in the same parallel scope
 			elif choosen_parallel == parallel
 				if choosenid.find(do |element| return element == pk)
 					choosenid.splice(choosenid.indexOf(pk), 1)
 					choosen.splice(choosen.indexOf(id), 1)
-					let collection = getNoteOfChoosen(pk)
+					let collection = getCollectionOfChoosen(pk)
 					if collection
 						for piece in collection.split(' | ')
 							if piece != ''
@@ -1074,7 +1091,7 @@ export tag Bible
 				else
 					choosenid.push(pk)
 					choosen.push(id)
-					pushNoteIfExist(pk)
+					pushCollectionIfExist(pk)
 				if !choosenid:length
 					clearSpace()
 				show_collections = no
@@ -1084,6 +1101,15 @@ export tag Bible
 			else
 				highlighted_title = getHighlightedRow(settingsp:translation, settingsp:book, settingsp:chapter, choosen)
 			showDeleteBookmark()
+			mergeNotes()
+
+	def showDeleteBookmark
+		show_delete_bookmark = no
+		for verse in choosenid
+			let vrs = bookmarks.find(do |element| return element:verse == verse) || parallel_bookmarks.find(do |element| return element:verse == verse)
+			if vrs
+				show_delete_bookmark = yes
+				return 1
 
 	def changeHighlightColor color
 		store:show_color_picker = no
@@ -1103,6 +1129,8 @@ export tag Bible
 		return row
 
 	def sendBookmarksToDjango
+		if store:note == '<br>'
+			store:note == ''
 		if store:highlight_color:length >= 16
 			if highlights.find(do |element| return element == store:highlight_color)
 				highlights.splice(highlights.indexOf(highlights.find(do |element| return element == store:highlight_color)), 1)
@@ -1129,6 +1157,7 @@ export tag Bible
 					color: store:highlight_color,
 					date: Date.now(),
 					collections: collections
+					note: store:note
 				}),
 			})
 			.then(do |response| response.json())
@@ -1142,6 +1171,7 @@ export tag Bible
 						color: store:highlight_color,
 						date: Date.now(),
 						collections: choosen_categories
+						note: store:note
 					}))
 		elif @data.db_is_available
 			@data.saveBookmarksToStorageUntillOnline({
@@ -1149,6 +1179,7 @@ export tag Bible
 				color: store:highlight_color,
 				date: Date.now(),
 				collections: choosen_categories
+				note: store:note
 			})
 		if choosen_parallel == 'second'
 			for verse in choosenid
@@ -1158,7 +1189,8 @@ export tag Bible
 					verse: verse,
 					date: Date.now(),
 					color: store:highlight_color,
-					collection: collections})
+					collection: collections
+					note: store:note})
 		else
 			for verse in choosenid
 				if @bookmarks.find(do |bookmark| return bookmark:verse == verse)
@@ -1167,7 +1199,8 @@ export tag Bible
 					verse: verse,
 					date: Date.now(),
 					color: store:highlight_color,
-					collection: collections})
+					collection: collections
+					note: store:note})
 		clearSpace()
 
 	def deleteColor color_to_delete
@@ -1346,10 +1379,7 @@ export tag Bible
 				if window:navigator:onLine
 					let data = await loadData(url)
 					@categories = []
-					for categories in data:data
-						for piece in categories:collection.split(' | ')
-							if piece != ''
-								@categories.push(piece)
+					@categories = data:data
 					for category in choosen_categories
 						if !@categories.find(do |element| return element == category)
 							@categories.unshift category
@@ -1456,6 +1486,12 @@ export tag Bible
 		document:body:className = 'noscroll'
 		what_to_show_in_pop_up_block = what
 
+	def makeNote
+		if what_to_show_in_pop_up_block
+			what_to_show_in_pop_up_block = ''
+		else
+			popUp 'show_note'
+			window:history.pushState(no, "Note")
 
 	def toggleCompare
 		let book, chapter
@@ -1689,13 +1725,6 @@ export tag Bible
 				menu_icons_transform = 400
 			Imba.commit
 
-	def showDeleteBookmark
-		show_delete_bookmark = no
-		for verse in choosenid
-			let highlight = bookmarks.find(do |element| return element:verse == verse) || parallel_bookmarks.find(do |element| return element:verse == verse)
-			if highlight
-				show_delete_bookmark = yes
-
 	def pageSearchKeyupManager e
 		const event = e:_event
 		if event:code == "Enter"
@@ -1704,6 +1733,9 @@ export tag Bible
 			else
 				nextOccurence()
 		else pageSearch()
+
+	def isNoteEmpty
+		return store:note && store:note != '<br>'
 
 	def render
 		<self :onscroll=onscroll>
@@ -2085,6 +2117,19 @@ export tag Bible
 						<h3> @data.lang:bgthnkst, ":"
 						<ul> for i in thanks_to
 							<li> <text-as-html[{text: i}]>
+				elif what_to_show_in_pop_up_block == "show_note"
+					<article.search_hat>
+						<svg:svg.close_search :click.prevent.makeNote() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+							<svg:title> @data.lang:close
+							<svg:path d=svg_paths:close css:margin="auto">
+						<h1> @data.lang:note
+						<svg:svg.save_bookmark style="width: 26px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" :click.prevent.sendBookmarksToDjango alt=@data.lang:create>
+							<svg:title> @data.lang:create
+							<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+					unless isNoteEmpty()
+						<p#note_placeholder> @data.lang:write_something_awesone
+					<RichTextEditor[store] contenteditable="" tabindex="0" dir="auto">
+
 				else
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
@@ -2305,6 +2350,9 @@ export tag Bible
 						<svg:svg.save_bookmark :click.prevent.toggleCompare() version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="580.125px" height="580.125px" viewBox="0 0 580.125 580.125" style="enable-background:new 0 0 580.125 580.125;" xml:space="preserve">
 							<svg:title> @data.lang:compare
 							<svg:path d="M573.113,298.351l-117.301-117.3c-3.824-3.825-10.199-5.1-15.299-2.55c-5.102,2.55-8.926,7.65-8.926,12.75v79.05 c-38.25,0-70.125,6.375-96.9,19.125V145.35h73.951c6.375,0,11.475-3.825,12.75-8.925c2.549-5.1,1.273-11.475-2.551-15.3 L301.537,3.825C298.988,1.275,295.162,0,291.338,0c-3.825,0-7.65,1.275-10.2,3.825l-118.575,117.3 c-3.825,3.825-5.1,10.2-2.55,15.3c2.55,5.1,7.65,8.925,12.75,8.925h75.225v142.8c-26.775-12.75-58.65-19.125-98.175-19.125v-79.05 c0-6.375-3.825-11.475-8.925-12.75c-5.1-2.55-11.475-1.275-15.3,2.55l-117.3,117.3c-2.55,2.55-3.825,6.375-3.825,10.2 s1.275,7.649,3.825,10.2l117.3,117.3c3.825,3.825,10.2,5.1,15.3,2.55c5.1-2.55,8.925-7.65,8.925-12.75v-66.3 c72.675,0,96.9,24.225,96.9,98.175v79.05c0,24.226,19.125,43.351,42.075,44.625h2.55c22.949-1.274,42.074-20.399,42.074-44.625 v-79.05c0-73.95,22.951-98.175,96.9-98.175v66.3c0,6.375,3.826,11.475,8.926,12.75c5.1,2.55,11.475,1.275,15.299-2.55 l117.301-117.3c2.551-2.551,3.824-6.375,3.824-10.2S575.662,300.9,573.113,298.351z">
+						<svg:svg.save_bookmark .filled=isNoteEmpty() :click.prevent.makeNote() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px" alt=@data.lang:note>
+							<svg:title> @data.lang:note
+							<svg:path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
 						<svg:svg.save_bookmark .filled=choosen_categories:length :click.prevent.turnCollections() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=@data.lang:addtocollection>
 							<svg:title> @data.lang:addtocollection
 							<svg:path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
