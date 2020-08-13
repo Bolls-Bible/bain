@@ -120,7 +120,6 @@ export tag Profile < main
 		const data = await loadData(url)
 		@collections = data:data
 		Imba.commit()
-		# ctgrs.split(' | ')
 
 	def toBible
 		window:history.back()
@@ -262,7 +261,7 @@ export tag Profile < main
 							for collection in bookmark:collection.split(' | ')
 								<p.collection :tap.prevent.getSearchedBookmarks(collection)> collection
 					if bookmark:note
-						<text-as-html[{text: bookmark:note}].profile_note style="max-height:128px;margin:8px 0;" dir="auto">
+						<text-as-html[{text: bookmark:note}].profile_note.EditingArea dir="auto">
 					<p.dataflex>
 						<span.booktitle dir="auto"> bookmark:title, ' ', bookmark:translation
 						<time.time time:datetime="bookmark:date"> bookmark:date.toLocaleString()
@@ -296,10 +295,6 @@ export tag Profile < main
 								<button.change_language> @data.lang:i_understand
 							else
 								<button.change_language disabled> @data.lang:i_understand
-					elif show_options_of == "note_preview"
-						<article style="max-width:80%;">
-							<h1> "title"
-							<text-as-html[{text: "Note"}]>
 					else
 						<article#edit_account>
 							<header.search_hat>

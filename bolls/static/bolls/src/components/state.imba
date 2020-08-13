@@ -5,13 +5,6 @@ let translations = []
 for language in languages
 	translations = translations.concat(language:translations)
 
-# let db = Dexie.new('versesdb')
-
-# db.version(1).stores({
-# 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-# 	bookmarks: '&verse, *notes'
-# })
-
 export class State
 	prop downloaded_translations
 	prop db_is_available

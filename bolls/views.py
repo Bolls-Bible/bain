@@ -328,13 +328,11 @@ def saveBookmarks(request):
 				obj.collection = received_json_data["collections"]
 				note = obj.note
 				if note is not None:
-					print(obj.note.text)
 					obj.note.text = received_json_data["note"]
 					obj.note.save()
 				else:
 					note = Note.objects.create(text=received_json_data["note"])
 					obj.note = note
-				print(obj.note.text)
 				obj.save()
 			except Bookmarks.DoesNotExist:
 				createNewBookmark()

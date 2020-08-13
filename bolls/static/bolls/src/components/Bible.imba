@@ -242,8 +242,7 @@ export tag Bible
 					getBookmarks("/get-bookmarks/" + window:translation + '/' + window:book + '/' + window:chapter + '/')
 				if window:verse
 					document:title += ':' + window:verse
-					findVerse(window:verse)
-					highlightLinkedVerses()
+					findVerse(window:verse, window:endverse)
 				document:title += ' ' + window:translation
 		if getCookie('theme')
 			settings:theme = getCookie('theme')
@@ -433,10 +432,10 @@ export tag Bible
 				console.error('Error: ', error)
 				@data.showNotification('error')
 			if @data.user:username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
-			if verse
-				findVerse(verse)
 			else setTimeout(&, 100) do window.scroll(0,0)
-		else clearSpace
+		else clearSpace()
+		if verse
+			findVerse(verse)
 
 	def getParallelText translation, book, chapter, verse
 		if !(translation == settingsp:translation && book == settingsp:book && chapter == settingsp:chapter) || !@parallel_verses:length || !settingsp:display
@@ -500,7 +499,7 @@ export tag Bible
 			if verse
 				findVerse("p{verse}")
 
-	def findVerse id
+	def findVerse id, endverse
 		setTimeout(&,250) do
 			const verse = document.getElementById(id)
 			if verse
@@ -508,18 +507,19 @@ export tag Bible
 					verse:parentNode:parentNode.scroll(0, verse:offsetTop - 16)
 				else
 					window.scroll(0, verse:offsetTop - 16)
-			else findVerse(id)
+				highlightLinkedVerses(id, endverse)
+			else findVerse(id, endverse)
 
-	def highlightLinkedVerses
+	def highlightLinkedVerses verse, endverse
 		setTimeout(&, 250) do
-			const verse = document.getElementById(window:verse)
+			const verse = document.getElementById(verse)
 			if verse
-				if window:endverse
+				if endverse
 					let nodes = []
-					for id in [window:verse..window:endverse]
+					for id in [verse..endverse]
 						if id <= @verses:length
 							nodes.push document.getElementById(id):nextSibling
-					let node = document.getElementById(window:verse):nextSibling
+					let node = document.getElementById(verse):nextSibling
 					if window:getSelection
 						const selection = window.getSelection()
 						selection.removeAllRanges()
@@ -530,7 +530,7 @@ export tag Bible
 					else
 						console.warn("Could not select text in node: Unsupported browser.")
 				else
-					let node = document.getElementById(window:verse):nextSibling
+					let node = verse:nextSibling
 					if window:getSelection
 						const selection = window.getSelection()
 						const range = document.createRange()
@@ -539,9 +539,8 @@ export tag Bible
 						selection.addRange(range)
 					else
 						console.warn("Could not select text in node: Unsupported browser.")
-
 			else
-				highlightLinkedVerses()
+				highlightLinkedVerses verse, endverse
 
 	def pageSearch
 		# Show pageSearch box
@@ -2128,7 +2127,7 @@ export tag Bible
 							<svg:path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 					unless isNoteEmpty()
 						<p#note_placeholder> @data.lang:write_something_awesone
-					<RichTextEditor[store] contenteditable="" tabindex="0" dir="auto">
+					<RichTextEditor[store] dir="auto">
 
 				else
 					<article.search_hat>

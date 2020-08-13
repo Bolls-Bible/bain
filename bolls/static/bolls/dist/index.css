@@ -117,8 +117,7 @@ html {
 	touch-action: pan-y;
 }
 
-ul,
-li {
+ul li {
 	list-style: none;
 }
 
@@ -1279,7 +1278,6 @@ html[data-light="light"] #daf article {
 .dataflex {
 	display: flex;
 	align-items: center;
-	/* margin: 16px 0 0; */
 	cursor: default;
 }
 
@@ -1870,38 +1868,101 @@ input:invalid,
 }
 
 .profile_note {
-	overflow: hidden;
 	display: block;
-	max-height: 128px;
-	opacity: 0.75;
 	background-color: var(--btn-bg);
-	padding: 4px 8px;
+	max-height: 128px;
 	font-size: 0.8em;
+	margin: 8px 0;
+	padding: 4px 8px;
 	border-radius: 4px;
+	opacity: 0.75;
 }
 
 #note_placeholder {
 	height: 0;
 	opacity: 0.5;
-	margin: 8px 0 -8px 16px;
 }
 
 .RichTextEditor {
 	width: 100%;
-	height: calc(100% - 60px);
+	height: calc(100% - 50px);
+	display: flex;
+	flex-direction: column;
+}
+
+.EditingArea {
 	overflow: auto;
-	border: 1px solid var(--btn-bg);
-	padding: 8px 16px;
+	height: 100%;
+}
+
+.EditingArea h1 {
+	font-weight: 400;
+	line-height: 42px;
+	font-size: 36px;
+	margin-top: 0.78em;
+	margin-bottom: -0.27em;
+	text-align: unset;
+}
+
+.EditingArea h2 {
+	font-size: 24px;
+	line-height: 32px;
+	opacity: 0.75;
+	font-weight: 300;
+	margin-top: 0.79em;
+	margin-bottom: 1em;
+}
+
+blockquote {
+	margin: 0;
+	padding: 4px 16px;
+	padding-right: 0;
+	margin: 16px 0;
+	box-shadow: var(--accent-hover-color) 3px 0px 0px 0px inset;
+}
+
+.EditingArea ul,
+.EditingArea ol {
+	padding-left: 36px;
+	margin: 8px 0 16px;
+}
+
+.EditingArea ul li {
+	list-style: hebrew;
+}
+
+.EditingArea pre {
+	white-space: break-spaces;
+    display: block;
+    padding: 8px 0;
+}
+
+#actionrte {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-top: 8px;
+}
+
+.editing-icon {
+	width: 32px;
+	padding: 4px 0;
+	background: transparent;
+	font-size: 20px;
+	cursor: pointer;
 	color: inherit;
-	-webkit-border-radius: 8px;
-	border-radius: 8px;
 }
 
-.RichTextEditor:hover {
-	box-shadow: 0px 0px 4px var(--btn-bg-hover), 0px 0px 3px var(--btn-bg-hover), 0px 0px 2px var(--btn-bg-hover);
+.editing-icon:hover {
+	color: var(--accent-color);
 }
 
-.RichTextEditor:focus {
-	box-shadow: 0px 0px 4px var(--btn-bg-hover), 0px 0px 3px var(--btn-bg-hover), 0px 0px 2px var(--btn-bg-hover);
-	border: 1px solid var(--btn-bg-hover);
+.editing-icon:hover svg {
+	fill: var(--accent-color);
+}
+
+.editing-icon svg {
+	width: 20px;
+	height: 20px;
+	fill: var(--text-color);
 }

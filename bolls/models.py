@@ -16,9 +16,6 @@ class Verses(models.Model):
 class Note(models.Model):
     text = models.TextField()
 
-    def natural_key(self):
-        return (self.text)
-
 
 class Bookmarks(models.Model):
     verse = models.ForeignKey(Verses, on_delete=models.CASCADE)
