@@ -461,7 +461,7 @@ nav input[type="text"] {
 	opacity: 1;
 }
 
-h1 {
+main h1 {
 	text-align: center;
 	margin: 1em 4px;
 }
@@ -1904,13 +1904,12 @@ input:invalid,
 	font-size: 36px;
 	margin-top: 0.78em;
 	margin-bottom: -0.27em;
-	text-align: unset;
 }
 
 .EditingArea h2 {
 	font-size: 24px;
 	line-height: 32px;
-	opacity: 0.75;
+	opacity: 0.9;
 	font-weight: 300;
 	margin-top: 0.79em;
 	margin-bottom: 1em;
@@ -1938,6 +1937,10 @@ blockquote {
 	white-space: break-spaces;
     display: block;
     padding: 8px 0;
+}
+
+.EditingArea p {
+	padding: 8px 0px 4px;
 }
 
 #actionrte {

@@ -963,10 +963,12 @@ export tag Bible
 				settings_menu_left = -300
 
 	def ontouchstart touch
-		if touch.x < 16 || touch.x > window:innerWidth - 16
+		if touch.x < 16 or touch.x > window:innerWidth - 16
 			inzone = yes
-		elif bible_menu_left > -300 || settings_menu_left > -300
+		elif bible_menu_left > -300 or settings_menu_left > -300
 			onzone = yes
+		if inzone or onzone
+			document:body:className = 'noscroll'
 		self
 
 	def ontouchupdate touch
@@ -1000,7 +1002,8 @@ export tag Bible
 				settingsp:display && touch.y > window:innerHeight / 2 ? prevChapter("true") : prevChapter
 		inzone = no
 		onzone = no
-		Imba.commit
+		if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
+			document:body:className = ''
 
 	def getHighlight verse, bookmarks
 		if choosenid:length && choosenid.find(do |element| return element == verse)
@@ -1732,10 +1735,9 @@ export tag Bible
 	def isNoteEmpty
 		return store:note && store:note != '<br>'
 
-
 	def render
 		<self :onscroll=onscroll>
-			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: left;' : ''}">
+			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;' : ''}">
 				if settingsp:display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings:translation) a:role="button" .current_translation=(settingsp:edited_version == settings:translation) :click.prevent.changeEditedParallel(settings:translation) tabindex="0"> settings:translation
@@ -1857,9 +1859,9 @@ export tag Bible
 					if !window:navigator:onLine && @data.downloaded_translations.indexOf(settingsp:translation) == -1 && !(@parallel_verses:length)
 						<p.in_offline> @data.lang:this_translation_is_unavailable
 
-			<aside style="right: {settings_menu_left}px; {boxShadow(settings_menu_left)} {settings_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: right;' : ''}">
+			<aside style="right: {settings_menu_left}px; {boxShadow(settings_menu_left)} {settings_menu_left > - 300 && (inzone || onzone) ? 'transition: none;' : ''}">
 				<p.settings_header#animated-heart>
-					<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" style="animation-name:heart-beat;animation-duration:1s;animation-iteration-count:infinite;">
+					<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 						<svg:title> @data.lang:support
 						<svg:path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					@data.lang:other
@@ -2000,8 +2002,8 @@ export tag Bible
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time time:datetime="2020-07-26T12:11"> "2019-present"
-						" Павлишинець Богуслав 🎻"
+						"©",	<time time:datetime="2020-07-26T12:11"> "2019"
+						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>
 				if what_to_show_in_pop_up_block == 'show_help'

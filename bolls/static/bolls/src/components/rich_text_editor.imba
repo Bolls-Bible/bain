@@ -11,12 +11,11 @@ tag EditingArea
 			dom:innerHTML = data:note
 		else
 			dom:innerHTML = ''
-
-		setTimeout(&, 1000) do
-			dom.focus()
+		setTimeout(&, 1000) do dom.focus()
 
 	def exec command, value = null
-		document.execCommand(command, false, value)
+		document.execCommand(command, no, value)
+		dom.focus()
 
 	def oninput e
 		const firstChild = e:_event:target:firstChild
@@ -29,6 +28,7 @@ tag EditingArea
 	def onkeydown event
 		event = event:_event
 		if event:ctrlKey == yes
+			log event:code
 			switch event:code
 				when 'KeyI'
 					event.preventDefault()
@@ -39,6 +39,18 @@ tag EditingArea
 				when 'KeyU'
 					event.preventDefault()
 					exec('underline')
+				when 'KeyE'
+					event.preventDefault()
+					exec('justifycenter')
+				when 'KeyR'
+					event.preventDefault()
+					exec('justifyright')
+				when 'KeyL'
+					event.preventDefault()
+					exec('justifyleft')
+				when 'KeyJ'
+					event.preventDefault()
+					exec('justifyFull')
 
 		# If tab is pressed prevent the event and insert a tab
 		if event:which == 9
@@ -75,17 +87,18 @@ tag EditingArea
 		let plainText = event:clipboardData.getData('text/plain')
 		let cleanText = replaceInvalidCharacters(plainText)
 
-		document.execCommand('inserttext', false, cleanText)
+		document.execCommand('inserttext', no, cleanText)
 
 		# // Backup to the event.preventDefault()
-		return false
+		return no
 
 	def render
 		<self>
 
 export tag RichTextEditor
 	def exec command, value = null
-		document.execCommand(command, false, value)
+		document.execCommand(command, no, value)
+		document.getElementsByClassName("EditingArea")[0].focus()
 
 	def render
 		<self>
