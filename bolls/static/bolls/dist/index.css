@@ -682,45 +682,47 @@ aside {
 	font-size: 24px;
 	text-align: center;
 	cursor: default;
-	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .current_accent {
-	position: absolute;
-	top: 2px;
-	right: 8px;
+	cursor: pointer;
+	height: 1em;
+	width: 1em;
+	z-index: 1100;
+}
+
+.visible_accent {
+	background-color: var(--accent-hover-color);
 	border-radius: 23%;
 	height: 1em;
 	width: 1em;
-	background-color: var(--accent-hover-color);
-	cursor: pointer;
 }
 
-.blur_current_accent {
+.enlarge_current_accent, .enlarge_current_accent .visible_accent {
 	height: 32px;
 	width: 32px;
 }
 
 .accents {
-	position: absolute;
-	top: 0.1em;
-	right: 8px;
+	margin-right: 1em;
+	margin-top: -1em;
 	border-radius: 23%;
 	display: flex;
 	flex-direction: column;
 	cursor: pointer;
 	visibility: hidden;
 	opacity: 0;
-	z-index: -1;
 	transform: scale(0.8);
 	transform-origin: top right;
 }
 
 .show_accents {
-	top: 36px;
+	margin-top: 0;
 	visibility: visible;
 	opacity: 1;
-	z-index: 1;
 	transform: none;
 	filter: none;
 }
@@ -1182,6 +1184,7 @@ html[data-light="light"] #daf article {
 	fill: var(--fill-on-hover);
 	height: 32px;
 	width: 32px;
+	cursor: pointer;
 }
 
 .nighttheme:hover {
@@ -1965,4 +1968,12 @@ blockquote {
 	width: 20px;
 	height: 20px;
 	fill: var(--text-color);
+}
+
+#heart_donate {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 }

@@ -39,6 +39,7 @@ tag EditingArea
 				when 'KeyU'
 					event.preventDefault()
 					exec('underline')
+
 		# If tab is pressed prevent the event and insert a tab
 		if event:which == 9
 			event.preventDefault()

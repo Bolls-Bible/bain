@@ -154,7 +154,7 @@ document:onkeyup = do |e|
 	const bible = document:getElementsByClassName("Bible")
 	if bible[0]
 		const bibletag = bible[0]:_tag
-		if document.getElementById("search") != document:activeElement && document.getSelection == ''
+		if document.getElementById("search") != document:activeElement && !document:activeElement:className.includes('EditingArea') && document.getSelection == ''
 			if e:code == "ArrowRight" && e:altKey && e:ctrlKey
 				bibletag.nextChapter('true')
 			elif e:code == "ArrowLeft" && e:altKey && e:ctrlKey
@@ -504,9 +504,9 @@ export tag Bible
 			const verse = document.getElementById(id)
 			if verse
 				if settingsp:display
-					verse:parentNode:parentNode.scroll(0, verse:offsetTop - 16)
+					verse:parentNode:parentNode.scroll(0, verse:offsetTop - (window:innerHeight * 0.1))
 				else
-					window.scroll(0, verse:offsetTop - 16)
+					window.scroll(0, verse:offsetTop - (window:innerHeight * 0.1))
 				highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse)
 
@@ -672,6 +672,9 @@ export tag Bible
 		Imba.commit()
 
 	def clearSpace
+		if what_to_show_in_pop_up_block == "show_note"
+			what_to_show_in_pop_up_block = ''
+			return 0
 		document:body:className = ''
 		bible_menu_left = -300
 		settings_menu_left = -300
@@ -711,7 +714,6 @@ export tag Bible
 		else
 			clearSpace()
 			popUp 'show_help'
-			window:history.pushState(no, "Help")
 
 	def turnSupport
 		if what_to_show_in_pop_up_block == "show_support"
@@ -719,7 +721,6 @@ export tag Bible
 		else
 			clearSpace()
 			popUp 'show_support'
-			window:history.pushState(no, "Support")
 
 	def toggleParallelMode parallel
 		if !parallel
@@ -794,7 +795,6 @@ export tag Bible
 				closeSearch()
 				popUp 'search'
 				Imba.commit
-				window:history.pushState(no, "Search")
 			catch error
 				if @data.db_is_available && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
 					@search_verses = await @data.getSearchedTextFromStorage(search)
@@ -1484,13 +1484,13 @@ export tag Bible
 	def popUp what
 		document:body:className = 'noscroll'
 		what_to_show_in_pop_up_block = what
+		window:history.pushState(no, what)
 
 	def makeNote
 		if what_to_show_in_pop_up_block
 			what_to_show_in_pop_up_block = ''
 		else
 			popUp 'show_note'
-			window:history.pushState(no, "Note")
 
 	def toggleCompare
 		let book, chapter
@@ -1504,7 +1504,6 @@ export tag Bible
 		if what_to_show_in_pop_up_block == "show_compare"
 			clearSpace()
 			popUp 'show_compare'
-			window:history.pushState(no, "Compare")
 		else clearSpace()
 		was_deleting_translation_from_compare = no
 		loading = yes
@@ -1513,7 +1512,6 @@ export tag Bible
 			loading = no
 			popUp 'show_compare'
 			Imba.commit()
-			window:history.pushState(no, "Compare")
 		else
 			comparison_parallel = []
 			window.fetch("/get-paralel-verses/", {
@@ -1535,7 +1533,6 @@ export tag Bible
 					loading = no
 					popUp 'show_compare'
 					Imba.commit()
-					window:history.pushState(no, "Compare")
 				)
 			.catch(do |error|
 				console.error error
@@ -1607,9 +1604,8 @@ export tag Bible
 		getText(e:translation, e:book, e:chapter, e:verse)
 
 	def toggleDownloads
-		clearSpace
+		clearSpace()
 		popUp 'show_downloads'
-		window:history.pushState(no, "Downloads")
 
 	def changeFontWeight value
 		if settings:font:weight + value < 1000 && settings:font:weight + value > 0
@@ -1736,6 +1732,7 @@ export tag Bible
 	def isNoteEmpty
 		return store:note && store:note != '<br>'
 
+
 	def render
 		<self :onscroll=onscroll>
 			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: left;' : ''}">
@@ -1861,12 +1858,16 @@ export tag Bible
 						<p.in_offline> @data.lang:this_translation_is_unavailable
 
 			<aside style="right: {settings_menu_left}px; {boxShadow(settings_menu_left)} {settings_menu_left > - 300 && (inzone || onzone) ? 'transition: none;will-change: right;' : ''}">
-				<p.settings_header>
+				<p.settings_header#animated-heart>
+					<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" style="animation-name:heart-beat;animation-duration:1s;animation-iteration-count:infinite;">
+						<svg:title> @data.lang:support
+						<svg:path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					@data.lang:other
-					<.current_accent .blur_current_accent=show_accents :click.prevent=(do show_accents = !show_accents)>
-					<.accents .show_accents=show_accents>
-						for accent in accents when accent:name != settings:accent
-							<.accent :click.prevent.changeAccent(accent:name) style="background-color: {settings:theme == 'dark' ? accent:light : accent:dark};">
+					<.current_accent .enlarge_current_accent=show_accents>
+						<.visible_accent :click.prevent=(do show_accents = !show_accents)>
+						<.accents .show_accents=show_accents>
+							for accent in accents when accent:name != settings:accent
+								<.accent :click.prevent.changeAccent(accent:name) style="background-color: {settings:theme == 'dark' ? accent:light : accent:dark};">
 				<input[search:search_input].search id='search' type='text' placeholder=@data.lang:search input:aria-label=@data.lang:search :keyup.enter.prevent.getSearchText> @data.lang:search
 				<.btnbox>
 					<svg:svg.cbtn :click.prevent.changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
@@ -2128,7 +2129,10 @@ export tag Bible
 					unless isNoteEmpty()
 						<p#note_placeholder> @data.lang:write_something_awesone
 					<RichTextEditor[store] dir="auto">
-
+				elif what_to_show_in_pop_up_block == "donate"
+					<article#heart_donate>
+						<img src="/static/blobcri.svg" style="max-height:512px;max-width:512px;width:100%;height:auto;">
+						<a.more_results style="margin-top:8px;" target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', @data.lang:donate, " 🐈"
 				else
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">

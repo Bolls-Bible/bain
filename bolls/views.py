@@ -315,7 +315,9 @@ def saveBookmarks(request):
 		user = request.user
 
 		def createNewBookmark():
-			note = Note.objects.create(text=received_json_data["note"])
+			note = None
+			if len(received_json_data["note"]):
+				note = Note.objects.create(text=received_json_data["note"])
 			user.bookmarks_set.create(
 				verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"], note=note)
 
@@ -328,11 +330,17 @@ def saveBookmarks(request):
 				obj.collection = received_json_data["collections"]
 				note = obj.note
 				if note is not None:
-					obj.note.text = received_json_data["note"]
-					obj.note.save()
+					if len(received_json_data["note"]):
+						obj.note.text = received_json_data["note"]
+						obj.note.save()
+					else:
+						obj.note.delete()
+						obj.note = None
 				else:
-					note = Note.objects.create(text=received_json_data["note"])
-					obj.note = note
+					if len(received_json_data["note"]):
+						note = Note.objects.create(text=received_json_data["note"])
+						obj.note = note
+						obj.note.save()
 				obj.save()
 			except Bookmarks.DoesNotExist:
 				createNewBookmark()
