@@ -499,7 +499,7 @@ export tag Bible
 			if verse
 				findVerse("p{verse}")
 
-	def findVerse id, endverse
+	def findVerse id, endverse, highlight = yes
 		setTimeout(&,250) do
 			const verse = document.getElementById(id)
 			if verse
@@ -507,8 +507,8 @@ export tag Bible
 					verse:parentNode:parentNode.scroll(0, verse:offsetTop - (window:innerHeight * 0.1))
 				else
 					window.scroll(0, verse:offsetTop - (window:innerHeight * 0.1))
-				highlightLinkedVerses(id, endverse)
-			else findVerse(id, endverse)
+				if highlight then highlightLinkedVerses(id, endverse)
+			else findVerse(id, endverse, highlight)
 
 	def highlightLinkedVerses verse, endverse
 		setTimeout(&, 250) do
@@ -641,7 +641,7 @@ export tag Bible
 			page_search:current_occurence = 0
 			if page_search:matches:length
 				pageSearch()
-		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id, no, no)
 		focusInput()
 		Imba.commit()
 
@@ -658,7 +658,7 @@ export tag Bible
 		else
 			page_search:current_occurence--
 		changeSelectionRectClass('current_occurence')
-		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id, no, no)
 		Imba.commit()
 
 	def nextOccurence
@@ -668,7 +668,7 @@ export tag Bible
 		else
 			page_search:current_occurence++
 		changeSelectionRectClass('current_occurence')
-		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id)
+		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id, no, no)
 		Imba.commit()
 
 	def clearSpace
@@ -961,6 +961,10 @@ export tag Bible
 			elif 300 < e.x < window:innerWidth - 300
 				bible_menu_left = -300
 				settings_menu_left = -300
+			if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
+				document:body:className = ''
+			else
+				document:body:className = 'noscroll'
 
 	def ontouchstart touch
 		if touch.x < 16 or touch.x > window:innerWidth - 16
@@ -1861,9 +1865,10 @@ export tag Bible
 
 			<aside style="right: {settings_menu_left}px; {boxShadow(settings_menu_left)} {settings_menu_left > - 300 && (inzone || onzone) ? 'transition: none;' : ''}">
 				<p.settings_header#animated-heart>
-					<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-						<svg:title> @data.lang:support
-						<svg:path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
+					if window:navigator:onLine
+						<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+							<svg:title> @data.lang:support
+							<svg:path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					@data.lang:other
 					<.current_accent .enlarge_current_accent=show_accents>
 						<.visible_accent :click.prevent=(do show_accents = !show_accents)>
@@ -1906,7 +1911,6 @@ export tag Bible
 					<svg:svg.cbtn :click.prevent.changeAlign(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
 						<svg:title> @data.lang:align_justified
 						<svg:path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
-
 				if window:innerWidth > 600
 					<.btnbox>
 						<svg:svg.cbtn :click.prevent.changeMaxWidth(no) xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
@@ -2436,6 +2440,6 @@ export tag Bible
 						<p> page_search:current_occurence + 1, ' / ', page_search:matches:length
 					elif page_search:query:length != 0 && window:innerWidth > 640
 						<p> @data.lang:phrase_not_found, '!'
-					<svg:svg.close_search style="margin: 0 16px 0 auto; padding: 0; height: 32px;" :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+					<svg:svg.close_search style="margin: 0 4px 0 auto; padding: 0; height: 32px;" :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 						<svg:title> @data.lang:delete
 						<svg:path d=svg_paths:close css:margin="auto">

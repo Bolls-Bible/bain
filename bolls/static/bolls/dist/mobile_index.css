@@ -92,4 +92,7 @@
   #page_search p {
     margin-left: 8px;
   }
+  .noscroll {
+    padding-right: 0;
+  }
 }
