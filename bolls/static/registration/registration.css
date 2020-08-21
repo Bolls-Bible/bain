@@ -180,3 +180,9 @@ a {
   font-size: 14px;
   color: inherit;
 }
+
+input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}

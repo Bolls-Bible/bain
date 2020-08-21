@@ -109,7 +109,7 @@ html[data-transitions="false"] * {
 	outline: none;
 }
 
-html {
+html, body {
 	font-family: sans, sans-serif, 'Apple Color Emoji', 'Droid Sans Fallback', 'Noto Color Emoji', 'Segoe UI Emoji';
 	font-size: 18px;
 	background: var(--background-color);
@@ -123,6 +123,12 @@ ul li {
 
 a {
 	text-decoration: none;
+}
+
+input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
 
 @keyframes text-came {
@@ -261,6 +267,7 @@ html[data-transitions="true"] #animated-heart:hover .helpsvg {
 body {
 	overflow-y: scroll;
 	transition-duration: 0s !important;
+	-webkit-overflow-scrolling: none;
 }
 
 .noscroll {
@@ -417,7 +424,7 @@ body {
 
 .main {
 	width: 100%;
-	padding: 4vw 3vw;
+	padding: 4vw 3vw calc(4vw + 32px);
 	color: var(--text-color);
 	margin: auto;
 }
@@ -634,7 +641,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 	display: flex;
 	justify-content: space-between;
 	direction: ltr;
-	padding: 24px 8px;
+	padding: 24px 8px 128px;
 	overflow: hidden;
 }
 
@@ -707,6 +714,7 @@ aside {
 .enlarge_current_accent, .enlarge_current_accent .visible_accent {
 	height: 32px;
 	width: 32px;
+	overflow: visible;
 }
 
 .accents {
@@ -1684,7 +1692,7 @@ address a:hover {
 	display: flex;
 	justify-content: center;
 	height: 0;
-	z-index: 2;
+	z-index: 1600;
 }
 
 .Notification p {

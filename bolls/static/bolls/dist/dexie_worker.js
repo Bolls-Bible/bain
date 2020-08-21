@@ -4,13 +4,12 @@ Dexie = Dexie.default
 
 let db = new Dexie('versesdb')
 
-db.version(1).stores({
+db.version(2).stores({
 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-	bookmarks: '&verse, *notes'
+	bookmarks: '&verse, *collections'
 })
 
 self.onmessage = function (msg) {
-	console.log(msg.data);
 	if (typeof msg.data == 'object') {
 		search(msg.data);
 	} else if (msg.data.charAt(0) == '/') {
@@ -30,7 +29,6 @@ function downloadTranslation(url) {
 						postMessage(['downloaded', url.substring(17, url.length - 1)])
 					);
 			}).catch((e) => {
-				console.error(e);
 				throw (url.substring(17, url.length - 1));
 			}
 			)
@@ -42,7 +40,6 @@ function deleteTranslation(translation) {
 		db.verses.where({ translation: translation }).delete().then((deleteCount) =>
 			postMessage([deleteCount, translation]))
 	}).catch((e) => {
-		console.error(e);
 		throw (translation);
 	})
 }
@@ -50,9 +47,8 @@ function deleteTranslation(translation) {
 function search(search) {
 	db.transaction("r", db.verses, () => {
 		db.verses.where({ translation: search.search_result_translation }).filter((verse) => { return verse.text.toLowerCase().includes(search.search_input); }
-		).toArray().then(data => { postMessage(['search',data]); });
+		).toArray().then(data => { postMessage(['search', data]); });
 	}).catch((e) => {
-		console.error(e);
 		throw (translation);
 	})
 }

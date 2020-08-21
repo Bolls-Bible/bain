@@ -28,10 +28,13 @@ export class State
 		@deleting_of_all_transllations = no
 		@show_languages = no
 		@db = Dexie.new('versesdb')
-		@db.version(1).stores({
+		@db.version(2).stores({
 			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-			bookmarks: '&verse, *notes'
-		})
+			bookmarks: '&verse, *collections'
+		}).upgrade (do |tx|
+			return tx.table("bookmarks").toCollection().modify (do |bookmark|
+				bookmark:collections = bookmark:notes
+				delete bookmark:notes))
 		@user:username = getCookie('username') || ''
 		@user:name = getCookie('name') || ''
 		if getCookie('language')
@@ -92,11 +95,11 @@ export class State
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
 		window.addEventListener('beforeinstallprompt', do |e|
-				e.preventDefault()
-				deferredPrompt = e
-				addBtn = yes
-				Imba.commit
-			)
+			e.preventDefault()
+			deferredPrompt = e
+			addBtn = yes
+			Imba.commit
+		)
 
 	def get_cookie name
 		let cookieValue = null
@@ -156,17 +159,17 @@ export class State
 			const stored_bookmarks_count = await db:bookmarks.count()
 			if stored_bookmarks_count > 0 &&  window:navigator:onLine
 				const bookmarks_in_offline = await db:bookmarks.toArray()
-				let verses = [], bookmarks = [], date = bookmarks_in_offline[0]:date, color = bookmarks_in_offline[0]:color
-				let notes = ''
-				for category, key in bookmarks_in_offline[0]:notes
-					notes += category
-					if key + 1 < bookmarks_in_offline[0]:notes:length
-						notes += " | "
+				let verses = [], bookmarks = [], date = bookmarks_in_offline[0]:date, color = bookmarks_in_offline[0]:color, collections = '', note = bookmarks_in_offline[0]:note
+				for category, key in bookmarks_in_offline[0]:collections
+					collections += category
+					if key + 1 < bookmarks_in_offline[0]:collections:length
+						collections += " | "
 				let bkmrk = {
 					verses: verses,
 					date: date,
 					color: color,
-					notes: notes
+					collections: collections
+					note: note
 				}
 				for bookmark in bookmarks_in_offline
 					if bookmark:date == date
@@ -176,10 +179,10 @@ export class State
 						verses = [bookmark:verse]
 						date = bookmark:date
 						color = bookmark:color
-						for category, key in bookmark:notes
-							notes += category
-							if key + 1 < bookmark:notes:length
-								notes += " | "
+						for category, key in bookmark:collections
+							collections += category
+							if key + 1 < bookmark:collections:length
+								collections += " | "
 					if bookmark == bookmarks_in_offline[bookmarks_in_offline:length - 1]
 						bookmarks.push(bkmrk)
 				bookmarks.map(do |bookmark|
@@ -194,19 +197,20 @@ export class State
 							verses: JSON.stringify(bookmark:verses),
 							color: bookmark:color,
 							date: bookmark:date,
-							notes: bookmark:notes
+							collections: bookmark:collections
+							note: bookmark:note
 						}),
 					})
 					.then(do |response| response.json())
 					.then(do |data| undefined)
-					.catch(do |e| console.log(e))
+					.catch(do |e| console.error(e))
 				)
 				db.transaction('rw', db:bookmarks, do
 					db:bookmarks.clear()
 				)
 		).catch(do |e|
 			@db_is_available = no
-			console.log('Uh oh : ' + e)
+			console.error('Uh oh : ' + e)
 		)
 
 	def downloadTranslation translation
@@ -237,7 +241,6 @@ export class State
 				dexieWorker.addEventListener('error', do |event|
 					console.error('error received from dexieWorker => ', event)
 					handleDownloadingError(translation))
-
 			else
 				let array_of_verses = null
 				try
@@ -317,7 +320,7 @@ export class State
 			@deleting_of_all_transllations = no
 			Imba.commit
 		).catch(do |e|
-			console.log(e)
+			console.error(e)
 		)
 
 	def saveBookmarksToStorageUntillOnline bookmarkobj
@@ -335,9 +338,9 @@ export class State
 				verse: verse,
 				date: bookmarkobj:date,
 				color: bookmarkobj:color,
-				notes: bookmarkobj:notes
+				collections: bookmarkobj:collections
+				note: bookmarkobj:note
 			})
-		console.log bookmarks[0], bookmarks_array[0]
 		db.transaction("rw", db:bookmarks, do
 			await db:bookmarks.bulkPut(bookmarks_array)
 		).catch (do |e|
@@ -365,7 +368,7 @@ export class State
 			else
 				return []
 		).catch(do |e|
-			console.log(e)
+			console.error(e)
 			return []
 		)
 
@@ -376,7 +379,7 @@ export class State
 					const wait_for_verses = await db:verses.get({translation: translation, book: compare_parallel_of_book, chapter: compare_parallel_of_chapter, verse: verse})
 					return wait_for_verses ? wait_for_verses : {"translation": translation}
 				).catch(do |e|
-					console.log(e)
+					console.error(e)
 					return {"translation": translation}
 				)))
 			return finded_verses
@@ -448,6 +451,7 @@ export class State
 	def fallbackCopyTextToClipboard text
 		let textArea = document.createElement("textarea")
 		textArea:value = text
+		textArea:tabIndex = -1
 		textArea:style:top = "0"
 		textArea:style:left = "0"
 		textArea:style:position = "fixed"

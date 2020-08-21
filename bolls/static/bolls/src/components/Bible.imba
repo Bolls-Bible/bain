@@ -512,8 +512,8 @@ export tag Bible
 
 	def highlightLinkedVerses verse, endverse
 		setTimeout(&, 250) do
-			const verse = document.getElementById(verse)
-			if verse
+			const versenode = document.getElementById(verse)
+			if versenode
 				if endverse
 					let nodes = []
 					for id in [verse..endverse]
@@ -530,7 +530,7 @@ export tag Bible
 					else
 						console.warn("Could not select text in node: Unsupported browser.")
 				else
-					let node = verse:nextSibling
+					let node = versenode:nextSibling
 					if window:getSelection
 						const selection = window.getSelection()
 						const range = document.createRange()
@@ -1272,12 +1272,12 @@ export tag Bible
 
 	def canShareViaTelegram
 		const copyobj = getShareObj()
-		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + copyobj:verse.sort(do |a, b| return a - b)[0] + '/')}&text={window.encodeURIComponent('«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation)}") < 4096
+		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + @data.versePart(copyobj:verse) + '/')}&text={window.encodeURIComponent('«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation)}") < 4096
 
 	def shareTelegram
 		const copyobj = getShareObj()
 		const text = '«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation
-		const url = "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + copyobj:verse.sort(do |a, b| return a - b)[0] + '/'
+		const url = "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + @data.versePart(copyobj:verse) + '/'
 		const link = "https://t.me/share/url?url={window.encodeURIComponent(url)}&text={window.encodeURIComponent(text)}"
 		if byteCount(link) < 4096
 			window.open(link, '_blank')
@@ -1285,7 +1285,7 @@ export tag Bible
 
 	def sharedText
 		const copyobj = getShareObj()
-		const text = '«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation + "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + copyobj:verse.sort(do |a, b| return a - b)[0] + '/'
+		const text = '«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation + "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + @data.versePart(copyobj:verse) + '/'
 
 	def canMakeTweet
 		return sharedText():length < 281
@@ -1296,7 +1296,7 @@ export tag Bible
 
 	def shareViaFB
 		const copyobj = getShareObj()
-		window.open("https://www.facebook.com/sharer.php?u=https://bolls.life/" + copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + copyobj:verse.sort(do |a, b| return a - b)[0] + '/', '_blank')
+		window.open("https://www.facebook.com/sharer.php?u=https://bolls.life/" + copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + @data.versePart(copyobj:verse) + '/', '_blank')
 		clearSpace()
 
 	def shareViaWhatsApp
@@ -1306,7 +1306,7 @@ export tag Bible
 	def shareViaVK
 		const copyobj = getShareObj()
 		const text = '«' + copyobj:text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj:title + ' ' + copyobj:translation
-		const url = "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + copyobj:verse.sort(do |a, b| return a - b)[0] + '/'
+		const url = "https://bolls.life" + '/'+ copyobj:translation + '/' + copyobj:book + '/' + copyobj:chapter + '/' + @data.versePart(copyobj:verse) + '/'
 		window.open("http://vk.com/share.php?url={window.encodeURIComponent(url)}&title={window.encodeURIComponent(text)}", '_blank')
 		clearSpace()
 
@@ -1721,7 +1721,7 @@ export tag Bible
 	def onscroll
 		const last_known_scroll_position = window:scrollY
 		setTimeout(&, 100) do
-			if window:scrollY < last_known_scroll_position
+			if window:scrollY < last_known_scroll_position || not window:scrollY
 				menu_icons_transform = 0
 			elif window:scrollY > last_known_scroll_position
 				menu_icons_transform = 400
@@ -1741,7 +1741,7 @@ export tag Bible
 
 	def render
 		<self :onscroll=onscroll>
-			<nav style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)} {bible_menu_left > - 300 && (inzone || onzone) ? 'transition: none;' : ''}">
+			<nav style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < 0 ? 'overflow:hidden' : ''}">
 				if settingsp:display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings:translation) a:role="button" .current_translation=(settingsp:edited_version == settings:translation) :click.prevent.changeEditedParallel(settings:translation) tabindex="0"> settings:translation
@@ -1799,7 +1799,7 @@ export tag Bible
 					<svg:title> @data.lang:delete
 					<svg:path d=svg_paths:close css:margin="auto">
 
-			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family: {settings:font:family}; font-size: {settings:font:size}px; line-height: {settings:font:line-height}; font-weight: {settings:font:weight}; text-align: {settings:font:align};">
+			<main.main tabindex="0" .parallel_text=settingsp:display style="font-family:{settings:font:family};font-size: {settings:font:size}px; line-height:{settings:font:line-height};font-weight:{settings:font:weight};text-align: {settings:font:align};">
 				<section .parallel=settingsp:display dir="auto" style="margin: auto; max-width: {settings:font:max-width}em;">
 					if page_search:d
 						for match in page_search:matches when match:id.charAt(0) != 'p'
@@ -1826,8 +1826,6 @@ export tag Bible
 								<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<svg:title> @data.lang:next
 									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-						if choosen:length
-								<.freespace>
 					if !window:navigator:onLine && @data.downloaded_translations.indexOf(settings:translation) == -1 && !(@verses:length)
 						<p.in_offline>
 							@data.lang:this_translation_is_unavailable
@@ -1858,12 +1856,10 @@ export tag Bible
 								<svg:svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<svg:title> @data.lang:next
 									<svg:polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-						if choosenid:length
-							<.freespace>
 					if !window:navigator:onLine && @data.downloaded_translations.indexOf(settingsp:translation) == -1 && !(@parallel_verses:length)
 						<p.in_offline> @data.lang:this_translation_is_unavailable
 
-			<aside style="right: {settings_menu_left}px; {boxShadow(settings_menu_left)} {settings_menu_left > - 300 && (inzone || onzone) ? 'transition: none;' : ''}">
+			<aside style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{settings_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window:navigator:onLine
 						<svg:svg.helpsvg :click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -2137,8 +2133,11 @@ export tag Bible
 					<RichTextEditor[store] dir="auto">
 				elif what_to_show_in_pop_up_block == "donate"
 					<article#heart_donate>
+						<svg:svg.close_search :click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0" style="margin:0 auto auto 0;">
+							<svg:title> @data.lang:close
+							<svg:path d=svg_paths:close css:margin="auto">
 						<img src="/static/blobcri.svg" style="max-height:512px;max-width:512px;width:100%;height:auto;">
-						<a.more_results style="margin-top:8px;" target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', @data.lang:donate, " 🐈"
+						<a.more_results style="margin:8px 0 auto;" target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', @data.lang:donate, " 🐈"
 				else
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">

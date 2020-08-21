@@ -159,3 +159,9 @@ footer {
 address {
   font-style: normal;
 }
+
+input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
