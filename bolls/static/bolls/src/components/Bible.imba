@@ -327,9 +327,9 @@ export tag Bible
 		let search = document.getElementById('search_body')
 		if search
 			search:onscroll = do
-				if this:scrollTop > this:scrollHeight - this:clientHeight - 512
+				if this:scrollTop > this:scrollHeight - this:clientHeight - 512 && self:_search:counter < self:_search_verses:length
 					self:_search:counter += 20
-					Imba.commit()
+					setTimeout(&, 500) do pageSearch()
 
 	def getCookie c_name
 		window:localStorage.getItem(c_name)
@@ -544,26 +544,33 @@ export tag Bible
 
 	def pageSearch
 		# Show pageSearch box
-		clearSpace()
-		page_search:d = yes
+		unless what_to_show_in_pop_up_block
+			clearSpace()
+			page_search:d = yes
 
 		def focusInput
-			if document.getSelection():anchorNode && document:activeElement:id == 'pagesearch'
-				if document.getSelection():anchorNode:id == 'page_search'
-					return
-			const input = document.getElementById('pagesearch')
-			if input
-				input.focus()
-				input.setSelectionRange(page_search:query:length, page_search:query:length)
-			else setTimeout(&,50) do focusInput()
+			unless what_to_show_in_pop_up_block
+				if document.getSelection():anchorNode && document:activeElement:id == 'pagesearch'
+					if document.getSelection():anchorNode:id == 'page_search'
+						return
+				const input = document.getElementById('pagesearch')
+				if input
+					input.focus()
+					input.setSelectionRange(page_search:query:length, page_search:query:length)
+				else setTimeout(&,50) do focusInput()
 
 		# Check if query is not an empty string
-		unless page_search:query:length
+		unless page_search:query:length || what_to_show_in_pop_up_block
 			page_search:matches = []
 			focusInput()
 			return 0
+
 		# if the query is not an emty string lets clean it up for regex
-		let regex_compatible_query = page_search:query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
+		let regex_compatible_query
+		unless what_to_show_in_pop_up_block
+			regex_compatible_query = page_search:query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
+		else
+			regex_compatible_query = search:search_input.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
 
 		# Lets get chapter node to iterate verses for match
 		let all_articles = document.getElementsByTagName('article')
@@ -573,14 +580,21 @@ export tag Bible
 			if article:className == ''
 				chapter_articles.push(article)
 
+		let search_body = document.getElementById('search_body')
+
 		def highlightText node, lastIndex, cssclass, parallel
 			# Create range of matched text to get its position in document
 			const range = document.createRange()
-			range.setStart(node:firstChild, lastIndex - page_search:query:length)	# Start at first character of query
+			unless what_to_show_in_pop_up_block
+				range.setStart(node:firstChild, lastIndex - page_search:query:length)	# Start at first character of query
+			else
+				range.setStart(node:firstChild, lastIndex - search:search_input:length)
 			range.setEnd(node:firstChild, lastIndex)	# End at last character
 
 			def getSearchSelectionTopOffset rect_top
-				if settingsp:display
+				if parallel == 'ps'
+					return rect_top + search_body:scrollTop - search_body:offsetTop - search_body:parentNode:offsetTop
+				elif settingsp:display
 					if window:innerWidth < 600 && parallel
 						return rect_top + chapter_articles[parallel]:parentElement:scrollTop - chapter_articles[parallel]:parentElement:offsetTop
 					else
@@ -588,7 +602,9 @@ export tag Bible
 				else return rect_top + window:scrollY
 
 			def getSearchSelectionLeftOffset rect_left
-				if settingsp:display
+				if parallel == 'ps'
+					return rect_left - search_body:offsetLeft - search_body:parentNode:offsetLeft
+				elif settingsp:display
 					if window:innerWidth > 600 && parallel
 						return rect_left - chapter_articles[parallel]:parentNode:offsetLeft - chapter_articles[parallel]:offsetLeft
 					else
@@ -613,36 +629,50 @@ export tag Bible
 					selections.push(selection)
 			return selections
 
+		def getSelectionHighlightRect child, lastIndex, parallel
+			# Highlight found text
+			if page_search:current_occurence == page_search:matches:length
+				highlightText(child, lastIndex, 'current_occurence', parallel)
+			else
+				highlightText(child, lastIndex, 'another_occurences', parallel)
+
 		# Search process
 		const regex1 = RegExp(regex_compatible_query, 'gi')
 		let array1
 		page_search:matches = []
-		let parallel = 0
-		for chapter in chapter_articles
-			for child in chapter:children
-				while ((array1 = regex1.exec(child:textContent)) !== null)
-					# Save the index of found text to page_search:matches
-					# for further navigation
-					def getSelectionHighlightRect
-						# Highlight found text
-						if page_search:current_occurence == page_search:matches:length
-							highlightText(child, regex1:lastIndex, 'current_occurence', parallel)
-						else
-							highlightText(child, regex1:lastIndex, 'another_occurences', parallel)
+		unless what_to_show_in_pop_up_block
+			let parallel = 0
+			for chapter in chapter_articles
+				for child in chapter:children
+					while ((array1 = regex1.exec(child:textContent)) !== null)
+						# Save the index of found text to page_search:matches
+						# for further navigation
+						page_search:matches.push({
+							id: child:previousSibling:id
+							rects: getSelectionHighlightRect(child, regex1:lastIndex, parallel)
+						})
+				parallel++
+		else
+			for i in [1...search_body:children:length - 1]
+				let text = search_body:children[i]
+				if text:className == 'more_results'
+					break
 
-					page_search:matches.push({
-						id: child:previousSibling:id
-						rects: getSelectionHighlightRect()
-					})
-			parallel++
+				if text:firstChild
+					while ((array1 = regex1.exec(text:firstChild:textContent)) !== null)
+						page_search:matches.push({
+							rects: highlightText(text:firstChild, regex1:lastIndex, 'another_occurences', 'ps')
+						})
+
 
 		# After all scroll to results
-		if page_search:current_occurence > page_search:matches:length - 1
-			page_search:current_occurence = 0
-			if page_search:matches:length
-				pageSearch()
-		if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id, no, no)
-		focusInput()
+		unless what_to_show_in_pop_up_block
+			if page_search:current_occurence > page_search:matches:length - 1
+				page_search:current_occurence = 0
+				if page_search:matches:length
+					pageSearch()
+			if page_search:matches[page_search:current_occurence] then findVerse(page_search:matches[page_search:current_occurence]:id, no, no)
+			focusInput()
 		Imba.commit()
 
 	def changeSelectionRectClass class_name
@@ -680,7 +710,9 @@ export tag Bible
 		settings_menu_left = -300
 		search:search_div = no
 		show_history = no
-		dropFilter
+		search:is_filter = no
+		search:show_filters = no
+		search:counter = 50
 		choosen = []
 		choosenid = []
 		addcollection = no
@@ -771,6 +803,7 @@ export tag Bible
 		@show_list_of_translations = no
 
 	def getSearchText
+		# Clear the searched text to preserver the request for breaking
 		let query = search:search_input.replace(/\//g, '')
 		query = query.replace(/\\/g, '')
 		if query:length > 1 && (search:search_result_header != query || !@search:search_div)
@@ -794,17 +827,34 @@ export tag Bible
 						@search:bookid_of_results.push verse:book
 				closeSearch()
 				popUp 'search'
-				Imba.commit
+				highlightSearchResults()
+				Imba.commit()
 			catch error
+				console.log error
 				if @data.db_is_available && @data.downloaded_translations.indexOf(search:search_result_translation) != -1
 					@search_verses = await @data.getSearchedTextFromStorage(search)
 					@search:bookid_of_results = []
 					for verse in @search_verses
 						if !@search:bookid_of_results.find(do |element| return element == verse:book)
 							@search:bookid_of_results.push verse:book
-					popUp 'search'
 					closeSearch()
-					Imba.commit
+					popUp 'search'
+					highlightSearchResults()
+					Imba.commit()
+
+	def highlightSearchResults
+		page_search:matches = []
+		unless @search_verses:length then return
+		if document.getElementById('search_body'):children[0]
+			if document.getElementById('search_body'):children[0]:className == 'total_msg'
+				setTimeout(&, 750) do
+					pageSearch()
+				return
+		setTimeout(&, 16) do highlightSearchResults()
+
+	def moreSearchResults
+		search:counter += 50
+		pageSearch()
 
 	def closeSearch close
 		loading = no
@@ -824,11 +874,13 @@ export tag Bible
 		search:filter = book
 		search:show_filters = no
 		search:counter = 50
+		setTimeout(&, 16) do highlightSearchResults()
 
 	def dropFilter
 		search:is_filter = no
 		search:show_filters = no
 		search:counter = 50
+		setTimeout(&, 16) do highlightSearchResults()
 
 	def getFilteredArray
 		return @search_verses.filter(do |verse| verse:book == search:filter)
@@ -2005,7 +2057,7 @@ export tag Bible
 						"©",	<time time:datetime="2020-07-26T12:11"> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
-			<section.search_results .show_search_results=(what_to_show_in_pop_up_block)>
+			<section.search_results .show_search_results=(what_to_show_in_pop_up_block) style="{what_to_show_in_pop_up_block == "show_note" ? 'z-index: 1200;' : ''}">
 				if what_to_show_in_pop_up_block == 'show_help'
 					<article.search_hat>
 						<svg:svg.close_search :click.prevent.turnHelpBox() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
@@ -2053,7 +2105,7 @@ export tag Bible
 								<p style="padding:12px 8px"> @data.lang:nothing_else
 							for translation in translations when !compare_translations.find(do |element| return element == translation:short_name)
 									<a.book_in_list.book_in_filter dir="auto" :click.prevent.addTranslation(translation)> translation:short_name, ', ', translation:full_name
-						<p.search_results_total> @data.lang:add_translations_msg
+						<p.total_msg> @data.lang:add_translations_msg
 						<ul> if compare_translations:length
 							for tr, key in comparison_parallel
 								<compare-draggable-item[{tr: tr, key: key, lang: @data.lang, svg_paths: svg_paths}]>
@@ -2147,19 +2199,25 @@ export tag Bible
 						<svg:svg.filter_search .filter_search_hover=search:show_filters||search:is_filter :click.prevent=(do search:show_filters = !search:show_filters) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 							<svg:title> @data.lang:addfilter
 							<svg:path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
-					<article#search_body.search_body tabindex="0">
+					if @search_verses:length
+						<.filters .show=search:show_filters style="z-index:1;">
+							if settingsp:edited_version == settingsp:translation && settingsp:display
+								if search:is_filter then <a.book_in_list :click.prevent.dropFilter> @data.lang:drop_filter
+								for book in @parallel_books
+									<a.book_in_list.book_in_filter dir="auto" :click.prevent.addFilter(book:bookid)> book:name
+							else
+								if search:is_filter then <a.book_in_list :click.prevent.dropFilter> @data.lang:drop_filter
+								for book in @books when @search:bookid_of_results.find(do |element| return element == book:bookid)
+									<a.book_in_list.book_in_filter dir="auto" :click.prevent.addFilter(book:bookid)> book:name
+					<article#search_body.search_body style="position:relative;">
+						# for match in page_search:matches when match:id.charAt(0) != 'p'
+						for match in page_search:matches
+							<i>
+							for rect in match:rects
+								<div.{rect:class} style="top: {rect:top}px; left: {rect:left}px; width: {rect:width}px; height: {rect:height}px">
 						if @search_verses:length
-							<.filters .show=search:show_filters>
-								if settingsp:edited_version == settingsp:translation && settingsp:display
-									if search:is_filter then <a.book_in_list :click.prevent.dropFilter> @data.lang:drop_filter
-									for book in @parallel_books
-										<a.book_in_list.book_in_filter dir="auto" :click.prevent.addFilter(book:bookid)> book:name
-								else
-									if search:is_filter then <a.book_in_list :click.prevent.dropFilter> @data.lang:drop_filter
-									for book in @books when @search:bookid_of_results.find(do |element| return element == book:bookid)
-										<a.book_in_list.book_in_filter dir="auto" :click.prevent.addFilter(book:bookid)> book:name
 							if search:is_filter
-								<p.search_results_total> getFilteredArray:length, ' ', @data.lang:totalyresultsofsearch
+								<p.total_msg> getFilteredArray:length, ' ', @data.lang:totalyresultsofsearch
 								for verse, key in getFilteredArray
 									<a.search_item>
 										<search-text-as-html[verse].search_res_verse_text>
@@ -2174,14 +2232,14 @@ export tag Bible
 												<svg:title> @data.lang:open_in_parallel
 												<svg:path d=svg_paths:columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
 									if key > search:counter
-										<button.more_results :click.prevent=(do search:counter += 50) tabindex="0"> @data.lang:more_results
+										<button.more_results :click.prevent.moreSearchResults() tabindex="0"> @data.lang:more_results
 										break
 								<div css:padding='12px 0px' css:text-align="center">
 									@data.lang:filter_name, ' ', nameOfBook(search:filter, (settingsp:display ? settingsp:edited_version : settings:translation))
 									<br>
 									<a.more_results css:display="inline-block" css:margin-top="12px" :click.prevent.dropFilter> @data.lang:drop_filter
 							else
-								<p.search_results_total> @search_verses:length, ' ', @data.lang:totalyresultsofsearch
+								<p.total_msg> @search_verses:length, ' ', @data.lang:totalyresultsofsearch
 								for verse, key in @search_verses
 									<a.search_item>
 										<search-text-as-html[verse].search_res_verse_text>
@@ -2196,12 +2254,12 @@ export tag Bible
 												<svg:title> @data.lang:open_in_parallel
 												<svg:path d=svg_paths:columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
 									if key > search:counter
-										<button.more_results :click.prevent=(do search:counter += 50) tabindex="0" style="margin: auto; display: flex;"> @data.lang:more_results
+										<button.more_results :click.prevent.moreSearchResults() tabindex="0" style="margin: auto; display: flex;"> @data.lang:more_results
 										break
 							<.freespace>
 						else
 							<div style="display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center">
-								<p css:margin-top="32px" css:text-align="center"> @data.lang:nothing
+								<p> @data.lang:nothing
 								<p css:padding="32px 0px 8px"> @data.lang:translation, ' ', search:search_result_translation
 								<button.more_results :click.prevent.showTranslations> @data.lang:change_translation
 

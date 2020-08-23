@@ -461,14 +461,13 @@ nav input[type="text"] {
 	width: calc(32px + 6vw);
 	height: calc(32px + 6vw);
 	padding: 3vw;
-	fill: var(--accent-hover-color);
+	fill: var(--accent-color);
 	position: fixed;
 	cursor: pointer;
-	opacity: 0.5;
 }
 
 .navigation:hover {
-	opacity: 1;
+	fill: var(--accent-hover-color);
 }
 
 main h1 {
@@ -971,8 +970,7 @@ img,
 	border: 1px solid var(--btn-bg-hover);
 	border-radius: 16px;
 	padding: 12px 24px;
-	visibility: hidden;
-	z-index: 1200;
+	visibility: hidden;=
 }
 
 .search_hat {
@@ -1052,7 +1050,7 @@ html[data-transitions="true"] #daf {
 	height: calc(100% - 50px);
 }
 
-.search_results_total {
+.total_msg {
 	text-align: left;
 	padding: 8px 0;
 	font-size: 16px;
@@ -1062,6 +1060,7 @@ html[data-transitions="true"] #daf {
 .search_item {
 	color: inherit;
 	text-align: left;
+	position: relative;
 }
 
 .search_res_verse_text {

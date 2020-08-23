@@ -17,6 +17,8 @@ from bolls.forms import SignUpForm
 
 from .models import Verses, Bookmarks, History, Note
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 def index(request):
 	return render(request, 'bolls/index.html')
@@ -405,13 +407,11 @@ def api(request):
 
 
 def sw(request):
-	BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 	# sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
 	sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
 	response = HttpResponse(content=sw_file)
 	response['Content-Type'] = 'application/javascript'
-	response['Content-Disposition'] = 'attachment; filename="%s.js"' \
-		% 'sw'
+	response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'
 	return response
 
 
