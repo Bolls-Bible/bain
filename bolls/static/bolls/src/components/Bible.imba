@@ -177,6 +177,12 @@ document:onkeyup = do |e|
 		menuicons = !menuicons
 		Imba.commit()
 		window:localStorage.setItem("menuicons", menuicons)
+	elif e:code == "ArrowRight" && e:altKey
+		e.preventDefault()
+		window:history.forward()
+	elif e:code == "ArrowLeft" && e:altKey
+		e.preventDefault()
+		window:history.back()
 
 window:onpopstate = do |event|
 	if event:state
@@ -1624,7 +1630,7 @@ export tag Bible
 						Imba.commit()
 					)
 				.catch(do |error|
-					log error
+					console.error error
 					loading = no
 					@data.showNotification('error'))
 		else
@@ -1734,7 +1740,6 @@ export tag Bible
 	def onsavechangestocomparetranslations arr
 		if compare_translations.join('') == arr:_data.join('')
 			was_deleting_translation_from_compare = yes
-		log arr:_data
 		compare_translations = arr:_data
 		window:localStorage.setItem("compare_translations", JSON.stringify(arr:_data))
 
@@ -2100,7 +2105,7 @@ export tag Bible
 							<svg:line x1="0" y1="10" x2="20" y2="10">
 							<svg:line x1="10" y1="0" x2="10" y2="20">
 					<article.search_body tabindex="0">
-						<.filters .show=show_translations_for_comparison>
+						<.filters .show=show_translations_for_comparison style="z-index:1;">
 							if compare_translations:length == translations:length
 								<p style="padding:12px 8px"> @data.lang:nothing_else
 							for translation in translations when !compare_translations.find(do |element| return element == translation:short_name)
