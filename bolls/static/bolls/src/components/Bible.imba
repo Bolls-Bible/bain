@@ -32,7 +32,6 @@ let settings = {
 		align: ''
 	},
 	verse_break: no,
-	lock_drawers: no,
 	verse_picker: no,
 	transitions: yes
 }
@@ -274,7 +273,6 @@ export tag Bible
 		settings:font:align = parseInt(getCookie('align')) || settings:font:align
 		settings:verse_picker = (getCookie('verse_picker') == 'true') || settings:verse_picker
 		settings:verse_break = (getCookie('verse_break') == 'true') || settings:verse_break
-		settings:lock_drawers = (getCookie('lock_drawers') == 'true') || settings:lock_drawers
 		settings:translation = getCookie('translation') || settings:translation
 		settings:book = parseInt(getCookie('book')) || settings:book
 		settings:chapter = parseInt(getCookie('chapter')) || settings:chapter
@@ -723,6 +721,7 @@ export tag Bible
 		choosenid = []
 		addcollection = no
 		store:show_color_picker = no
+		data.show_languages = no
 		show_collections = no
 		choosen_parallel = no
 		what_to_show_in_pop_up_block = ''
@@ -1011,7 +1010,7 @@ export tag Bible
 			getText(settings:translation, books[current_index - 1]:bookid, 1)
 
 	def onmousemove e
-		if !settings:lock_drawers && window:innerWidth > 680
+		if window:innerWidth > 680
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window:innerWidth - 32
@@ -1539,10 +1538,6 @@ export tag Bible
 		settings:verse_break = !settings:verse_break
 		setCookie('verse_break', settings:verse_break)
 
-	def toggleLockDrawers
-		settings:lock_drawers = !settings:lock_drawers
-		setCookie('lock_drawers', settings:lock_drawers)
-
 	def translationFullName tr
 		translations.find(do |translation| return translation:short_name == tr):full_name
 
@@ -2025,10 +2020,6 @@ export tag Bible
 				<.nighttheme.parent_checkbox.flex :click.prevent.toggleVerseBreak() .checkbox_turned=settings:verse_break>
 					@data.lang:verse_break
 					<p.checkbox> <span>
-				if window:innerWidth > 1024
-					<.nighttheme.parent_checkbox.flex :click.prevent.toggleLockDrawers() .checkbox_turned=settings:lock_drawers>
-						@data.lang:lock_drawers
-						<p.checkbox> <span>
 				if window:navigator:onLine then <a.help href='/downloads/' target="_blank">
 					<svg:svg.helpsvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 						<svg:title> @data.lang:download

@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
 		caches.match(event.request).then((resp) => {
 			return resp || fetch(event.request).then((response) => {
 				var responseClone = response.clone();
-				if (event.request.url.includes("get-text") || event.request.url.includes("search") || event.request.destination == "font") {
+				if (event.request.url.includes("get-text/") || event.request.url.includes("search/") || event.request.destination == "font") {
 					caches.open(CACHE_NAME).then((cache) => {
 						cache.put(event.request, responseClone);
 					});
