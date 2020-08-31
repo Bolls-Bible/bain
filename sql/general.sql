@@ -9,8 +9,11 @@ SELECT * FROM bolls_verses ORDER BY BOOK, CHAPTER, VERSE;
 
 SELECT translation, count(id) FROM bolls_verses GROUP BY translation;
 SELECT book, count(chapter) FROM bolls_verses GROUP BY chapter;
+SELECT book, count(chapter) FROM bolls_verses where translation='NDL' GROUP BY chapter;
 -- SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
 SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE;
+
+-- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
 UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, with beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
@@ -19,7 +22,12 @@ select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete from bolls_verses where translation='HOM' and book = 72;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/repairedbooks.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NDL_verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/OL_verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NR06_verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NBS_verses.csv' DELIMITER '|' CSV HEADER;
+
+
 ----------
 UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
