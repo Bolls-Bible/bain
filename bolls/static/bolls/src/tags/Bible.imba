@@ -32,6 +32,8 @@ let settings =
 	verse_break: no
 	verse_picker: no
 	transitions: yes
+	name_of_book: ''
+	filtered_books: []
 
 let settingsp = {
 	display: no
@@ -39,6 +41,8 @@ let settingsp = {
 	book: 1
 	chapter: 1
 	edited_version: settings.translatoin
+	name_of_book: ''
+	filtered_books: []
 }
 let inzone = no
 let onzone = no
@@ -240,6 +244,9 @@ export tag bible-reader
 				settings.translation = window.translation
 				settings.book = window.book
 				settings.chapter = window.chapter
+				settings.name_of_book = nameOfBook(settings.book, settings.translation)
+				# # # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				# settings.filtered_books = filteredBooks('books')
 				document.title += " " + getNameOfBookFromHistory(window.translation, window.book) + ' ' + window.chapter
 				if window.verses
 					verses = window.verses
@@ -277,6 +284,7 @@ export tag bible-reader
 		settings.chapter = parseInt(getCookie('chapter')) || settings.chapter
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
+		settings.filtered_books = filteredBooks('books')
 		getText(settings.translation, settings.book, settings.chapter)
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode("build")
@@ -289,9 +297,7 @@ export tag bible-reader
 					data.user.name = userdata.name || ''
 					setCookie('username', data.user.username)
 					setCookie('name', data.user.name)
-					if typeof userdata.history == 'srting'
-						history = JSON.parse(userdata.history)
-					else history = JSON.parse(getCookie("history")) || []
+					history = JSON.parse(userdata.history) || JSON.parse(getCookie("history")) || []
 					if history.length then window.localStorage.setItem("history", JSON.stringify(history))
 				else data.user = {}
 			catch error
@@ -325,7 +331,6 @@ export tag bible-reader
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
-
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -411,12 +416,14 @@ export tag bible-reader
 			if chronorder
 				chronorder = !chronorder
 				toggleChronorder()
+			settings.name_of_book = nameOfBook(settings.book, settings.translation)
 			settings.book = book
 			settings.chapter = chapter
 			settings.translation = translation
 			setCookie('book', book)
 			setCookie('chapter', chapter)
 			setCookie('translation', translation)
+			settings.filtered_books = filteredBooks('books')
 			saveToHistory(translation, book, chapter, verse, no)
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
 			try
@@ -465,6 +472,8 @@ export tag bible-reader
 			settingsp.edited_version = translation
 			settingsp.book = book
 			settingsp.chapter = chapter
+			settingsp.name_of_book = nameOfBook(settingsp.book, settingsp.translation)
+			settingsp.filtered_books = filteredBooks('parallel_books')
 			clearSpace()
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
 			parallel_verses = []
@@ -561,7 +570,6 @@ export tag bible-reader
 		store.show_color_picker = no
 		show_collections = no
 		choosen_parallel = no
-		what_to_show_in_pop_up_block = ''
 		show_fonts = no
 		show_language_of = ''
 		was_deleting_translation_from_compare = no
@@ -577,10 +585,11 @@ export tag bible-reader
 		if document.getElementsByTagName('main')[0] && !page_search.d
 			document.getElementsByTagName('main')[0].focus()
 			window.getSelection().removeAllRanges()
-		if page_search.d
+		if page_search.d || what_to_show_in_pop_up_block
 			page_search.d = no
 			page_search.matches = []
 			page_search.rects = []
+		what_to_show_in_pop_up_block = ''
 		imba.commit()
 
 	def toggleChronorder
@@ -654,7 +663,7 @@ export tag bible-reader
 				if parallel == 'ps'
 					return rect_top + search_body.scrollTop - search_body.offsetTop - search_body.parentNode.offsetTop
 				elif settingsp.display
-					if window.innerWidth < 600 && parallel
+					if window.innerWidth < 639 && parallel
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop
 					else
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop
@@ -664,7 +673,7 @@ export tag bible-reader
 				if parallel == 'ps'
 					return rect_left - search_body.offsetLeft - search_body.parentNode.offsetLeft
 				elif settingsp.display
-					if window.innerWidth > 600 && parallel
+					if window.innerWidth > 639 && parallel
 						return rect_left - chapter_articles[parallel].parentNode.offsetLeft - chapter_articles[parallel].offsetLeft
 					else
 						return rect_left - window.innerWidth * 0.02
@@ -1675,10 +1684,6 @@ export tag bible-reader
 			settings.font.max-width -= 15
 		setCookie('max-width', settings.font.max-width)
 
-	def ongettext event
-		let e = event._data
-		getText(e.translation, e.book, e.chapter, e.verse)
-
 	def toggleDownloads
 		clearSpace()
 		popUp 'show_downloads'
@@ -1749,10 +1754,10 @@ export tag bible-reader
 		})
 
 	def onsavechangestocomparetranslations arr
-		if compare_translations.join('') == arr._data.join('')
+		if compare_translations.join('') == arr.join('')
 			was_deleting_translation_from_compare = yes
-		compare_translations = arr._data
-		window.localStorage.setItem("compare_translations", JSON.stringify(arr._data))
+		compare_translations = arr
+		window.localStorage.setItem("compare_translations", JSON.stringify(arr))
 
 	def currentLanguage
 		switch data.language
@@ -1786,7 +1791,7 @@ export tag bible-reader
 		)
 		toggleBibleMenu()
 
-	def scroll e
+	def triggerNavigationIcons e
 		const last_known_scroll_position = scrollTop
 		setTimeout(&, 100) do
 			if scrollTop < last_known_scroll_position || not scrollTop
@@ -1806,6 +1811,12 @@ export tag bible-reader
 	def isNoteEmpty
 		return store.note && store.note != '<br>'
 
+	def filterBooks
+		if settingsp.display && settingsp.edited_version == settingsp.translation
+			settingsp.filtered_books = filteredBooks('parallel_books')
+		else
+			settings.filtered_books = filteredBooks('books')
+
 	def blobcri
 		clearSpace()
 		popUp 'donate'
@@ -1813,12 +1824,14 @@ export tag bible-reader
 	css
 		height: 100vh
 		display: block
-		ofy: scroll
+		ofy: auto
 		pos: relative
+
+
 
 	def render
 		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
-		<self @scroll=scroll @mousemove=mousemove>
+		<self @scroll=triggerNavigationIcons @mousemove=mousemove>
 			<nav style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < -32 ? 'overflow:hidden' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -1834,55 +1847,55 @@ export tag bible-reader
 					<title> data.lang.chronological_order
 					<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 				if data.db_is_available
-					<svg.download_translations .hide_chron_order=show_list_of_translations @click.prevent.toggleDownloads() xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+					<svg.download_translations .hide_chron_order=show_list_of_translations @click.prevent.toggleDownloads() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 						<title> data.lang.download
 						<path d=svg_paths.download>
-				<.translations_list .show_translations_list=show_list_of_translations>
+				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
-						<a.book_in_list style="justify-content:start;" .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click.prevent.showLanguageTranslations(language.language) tabindex="0">
+						<a.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click.prevent.showLanguageTranslations(language.language) tabindex="0">
 							language.language
-							<svg.arrow_next style="margin-left:auto;" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+							<svg.arrow_next[margin-left:auto] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 							for translation in language.translations
-								<li.book_in_list .active=currentTranslation(translation.short_name) tabindex="0" style="display: flex;">
+								<li.book_in_list .active=currentTranslation(translation.short_name) tabindex="0" [display: flex]>
 									<span @click.prevent.changeTranslation(translation.short_name)> translation.full_name
 									if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
-										<svg.translation_info xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+										<svg.translation_info xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 											<title> translation.info
 											<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
-					<.freespace>
-				<.books-container dir="auto" .lower=(settingsp.display)>
-					if settingsp.edited_version == settingsp.translation && settingsp.display
-						for book in filteredBooks('parallel_books')
-							<a.book_in_list dir="auto" .active=(book.bookid == settingsp.book) @click.prevent.showChapters(book.bookid) tabindex="0"> book.name
-							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid==show_chapters_of)>
-								for i in [0 ... book.chapters]
-									<li.chapter_number .active=((i + 1) == settingsp.chapter &&book.bookid==settingsp.book ) @click.prevent.getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
-						if !filteredBooks('parallel_books').length
-							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)"
+				<.books-container dir="auto" .lower=(settingsp.display) [pb: 256px]>
+					if settingsp.display && settingsp.edited_version == settingsp.translation
+						<>
+							for book in settingsp.filtered_books
+								<a.book_in_list dir="auto" .active=(book.bookid == settingsp.book) @click.prevent.showChapters(book.bookid) tabindex="0"> book.name
+								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
+									for i in [0 ... book.chapters]
+										<li.chapter_number .active=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click.prevent.getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
+						if !settingsp.filtered_books.length
+							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 					else
-						for book in filteredBooks('books')
-							# <a.book_in_list .active=(book.bookid == settings.book) @click.prevent.log(book.bookid) tabindex="0" dir="auto"> book.name
-							<a.book_in_list dir="auto" .active=(book.bookid == settings.book) @click.prevent.showChapters(book.bookid) tabindex="0"> book.name
-							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid==show_chapters_of)>
-								for i in [0 ... book.chapters]
-									<li.chapter_number .active=((i + 1) == settings.chapter && book.bookid == settings.book) @click.prevent.getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
-						if !filteredBooks('books').length
-							<p.book_in_list style="white-space: pre;"> "(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)"
-					<.freespace>
-				<input.search bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
+						<>
+							for book in settings.filtered_books
+								<a.book_in_list dir="auto" .active=(book.bookid == settings.book) @click.prevent.showChapters(book.bookid) tabindex="0"> book.name
+								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
+									for i in [0 ... book.chapters]
+										<li.chapter_number .active=(i + 1 == settings.chapter && book.bookid == settings.book) @click.prevent.getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
+						if !settings.filtered_books.length
+							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
+				<input.search @keyup.prevent.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
 				<svg#close_book_search @click.prevent=(store.book_search = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
 			<main.main tabindex="0" .parallel_text=settingsp.display style="font-family:{settings.font.family};font-size: {settings.font.size}px; line-height:{settings.font.line-height};font-weight:{settings.font.weight};text-align: {settings.font.align};">
 				<section .parallel=settingsp.display dir="auto" style="margin: auto; max-width: {settings.font.max-width}em;">
-					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
-						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+					unless what_to_show_in_pop_up_block
+						for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
+							<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<h1[ff: {settings.font.family} fw: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> nameOfBook(settings.book, settings.translation), ' ', settings.chapter
+						<h1[ff: {settings.font.family} fw: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -1906,29 +1919,29 @@ export tag bible-reader
 							data.lang.this_translation_is_unavailable
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
-				<section.display_none.parallel .show_parallel=settingsp.display dir="auto" style="margin: auto;max-width: {settings.font.max-width}em;">
+				<section.parallel dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
-					if parallel_verses.length
-						<h1 style="font-family: {settings.font.family}; font-weight: {settings.font.weight + 200};" @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> nameOfBook(settingsp.book, settingsp.translation), ' ', settingsp.chapter
+					if parallel_verses.length > 0
+						<h1 [font-family: {settings.font.family} font-weight: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
-							for verse in parallel_verses
+							for parallel_verse in parallel_verses
 								if settings.verse_break
 									<br>
-								<a.verse id="p{verse.verse}" href="#p{verse.verse}"> '\t', verse.verse
-							<span innerHTML=verse.text
-									@click.prevent.addToChoosen(verse.pk, verse.verse, 'second')
-									style="background-image:{getHighlight(verse.pk, 'parallel_bookmarks')}">
+								<a.verse id="p{parallel_verse.verse}" href="#p{parallel_verse.verse}"> '\t', parallel_verse.verse
+								<span innerHTML=parallel_verse.text
+									@click.prevent.addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
+									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter("true")>
-								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click.prevent.nextChapter("true")>
-								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					if !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1 && !(parallel_verses.length)
+					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
 			<aside style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{settings_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
@@ -1957,8 +1970,8 @@ export tag bible-reader
 					<a[p: 12px fs: 20px].cbtn @click.prevent.decreaseFontSize title=data.lang.decrease_font_size> "B-"
 					<a[p: 8px fs: 24px].cbtn @click.prevent.increaseFontSize title=data.lang.increase_font_size> "B+"
 				<.btnbox>
-					<a.cbtn style="padding: 8px; font-size: 24px; font-weight: 100;" @click.prevent.changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
-					<a.cbtn style="padding: 8px; font-size: 24px; font-weight: 900;" @click.prevent.changeFontWeight(100) title=data.lang.increase_font_weight> "B"
+					<a.cbtn [padding: 8px font-size: 24px font-weight: 100] @click.prevent.changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
+					<a.cbtn [padding: 8px font-size: 24px font-weight: 900] @click.prevent.changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
 					<svg.cbtn @click.prevent.changeLineHeight(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 14" fill="context-fill" style="padding: 16px 0;">
 						<title> data.lang.decrease_line_height
@@ -1977,7 +1990,7 @@ export tag bible-reader
 					<svg.cbtn @click.prevent.changeAlign(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
 						<title> data.lang.align_justified
 						<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
-				if window.innerWidth > 600
+				if window.innerWidth > 639
 					<.btnbox>
 						<svg.cbtn @click.prevent.changeMaxWidth(no) xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
 							<title> data.lang.increase_max_width
@@ -2071,7 +2084,7 @@ export tag bible-reader
 						"©",	<time dateTime='2020-07-26T12:11'> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
-			<section.search_results .show_search_results=(what_to_show_in_pop_up_block) style="{what_to_show_in_pop_up_block == "show_note" ? 'z-index: 1200;' : ''}">
+			<section.search_results .show_search_results=(what_to_show_in_pop_up_block) [zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 'auto'}]>
 				if what_to_show_in_pop_up_block == 'show_help'
 					<article.search_hat>
 						<svg.close_search @click.prevent.turnHelpBox() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
@@ -2113,19 +2126,19 @@ export tag bible-reader
 							<title> data.lang.compare
 							<line x1="0" y1="10" x2="20" y2="10">
 							<line x1="10" y1="0" x2="10" y2="20">
-					<article.search_body tabindex="0">
+					<article.search_body tabindex="0" [pb: 256px scroll-behavior: auto]>
 						<[z-index: 1].filters .show=show_translations_for_comparison>
 							if compare_translations.length == translations.length
 								<p[padding: 12px 8px]> data.lang.nothing_else
 							for translation in translations when !compare_translations.find(do |element| return element == translation.short_name)
-									<a.book_in_list.book_in_filter dir="auto" @click.prevent.addTranslation(translation)> translation.short_name, ', ', translation.full_name
+								<a.book_in_list.book_in_filter dir="auto" @click.prevent.addTranslation(translation)> translation.short_name, ', ', translation.full_name
 						<p.total_msg> data.lang.add_translations_msg
-						<ul> if compare_translations.length
-							for tr in comparison_parallel
-								<compare-draggable-item bind=tr lang=data.lang>
+						if compare_translations.length
+							<ul style="display:flex;flex-direction:column;">
+								for tr in comparison_parallel
+									<compare-draggable-item bind=tr langdata=data.lang>
 						else
 							<button[m: 16px auto; d: flex].more_results @click.prevent=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
-						<.freespace>
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
 						<svg.close_search @click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">

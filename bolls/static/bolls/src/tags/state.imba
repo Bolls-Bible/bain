@@ -1,9 +1,6 @@
-import * as languages from "./languages.json"
+import languages from "./languages.json"
 import {en_lang, uk_lang, ru_lang, pt_lang, es_lang} from './langdata'
 
-let translations = []
-for language in languages
-	translations = translations.concat(language.translations)
 
 export class State
 	prop downloaded_translations
@@ -20,8 +17,11 @@ export class State
 	prop translations_current_state = {}
 	prop addBtn = no
 	prop deferredPrompt
+	prop translations = []
 
 	def constructor
+		for language in languages
+			translations = translations.concat(language.translations)
 		db_is_available = yes
 		downloaded_translations = []
 		downloading_of_this_translations = []
@@ -130,8 +130,8 @@ export class State
 			translations.map(
 				do |translation|
 					db.transaction('r', db.verses, do
-						const data = await db.verses.get({translation: translation.short_name})
-						return data.translation
+						const resd = await db.verses.get({translation: translation.short_name})
+						return resd.translation
 					).catch(do |e|
 						return null
 					)

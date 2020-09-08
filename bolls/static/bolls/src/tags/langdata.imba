@@ -87,7 +87,7 @@ export const en_lang = {
 	"download_translations": "Download translations",
 	"change_password": "Change password",
 	"donate": "Donate",
-	"use_it_in_browser": "Use it in browser",
+	"use_it_in_browser": "Use it in a browser",
 	"welcome": "Welcome to Bolls :)",
 	"welcome_msg": "This web app is for reading the Bible. The books / translations are in the left panel, other settings in the right one. Enjoy",
 	"bgthnkst": "Big thanks to",
