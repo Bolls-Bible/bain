@@ -6,7 +6,7 @@
     "check-version": "imbac --version"
   },
   "dependencies": {
-    "imba": "^2.0.0-alpha.90",
+    "imba": "^2.0.0-alpha.94",
     "imba-rollup": "^2.0.0-alpha.57",
     "smoothscroll-polyfill": "^0.4.4"
   },

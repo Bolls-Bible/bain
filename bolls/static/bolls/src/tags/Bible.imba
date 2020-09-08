@@ -1,10 +1,10 @@
 import *  as BOOKS from "./translations_books.json"
 import languages from "./languages.json"
-# import {Profile} from './Profile'
+import './Profile'
 import "./loading.imba"
-# import {Downloads} from "./downloads.imba"
+import "./downloads.imba"
 import "./rich_text_editor"
-# import {colorPicker} from "./colorPicker.imba"
+import "./colorPicker.imba"
 import "./compare-draggable-item"
 import './search-text-as-html'
 import {thanks_to} from './thanks_to'
@@ -63,6 +63,7 @@ let page_search =
 	query: ''
 	matches: []
 	current_occurence: 1
+	rects: []
 
 let addcollection = no
 let choosen_categories = []
@@ -187,11 +188,11 @@ window.onpopstate = do |event|
 		if state.profile
 			let profile = document.getElementsByClassName("Profile")
 			if !profile[0]
-				imba.mount <Profile bind=data>
+				imba.mount <profile-page bind=data>
 		elif state.downloads
 			let downloads = document.getElementsByClassName("Downloads")
 			if !downloads[0]
-				imba.mount <Downloads bind=data>
+				imba.mount <downloads-page bind=data>
 		else
 			onpopstate = yes
 			let profile = document.getElementsByClassName("Profile")
@@ -202,7 +203,7 @@ window.onpopstate = do |event|
 				downloads[0].orphanize()
 
 			const bible = document.getElementsByTagName("BIBLE-READER")
-			bible[0].unflag("display_none")
+			bible[0].className = 'display_none'
 			if state.parallel-translation && state.parallel-book && state.parallel-chapter
 				bible[0].getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
 			bible[0].getText(state.translation, state.book, state.chapter, state.verse)
@@ -228,10 +229,6 @@ export tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {}
-
-	css
-		min-height: 100vh
-		display: block
 
 	def setup
 		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
@@ -329,13 +326,11 @@ export tag bible-reader
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
 
-	def mount
-		let search = document.getElementById('search_body')
-		if search
-			search.onscroll = do
-				if this.scrollTop > this.scrollHeight - this.clientHeight - 512 && self._search.counter < self._search_verses.length
-					self._search.counter += 20
-					setTimeout(&, 500) do pageSearch()
+
+	def searchPagination e
+		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
+			search.counter += 20
+			setTimeout(&, 500) do pageSearch()
 
 	def getCookie c_name
 		window.localStorage.getItem(c_name)
@@ -512,7 +507,7 @@ export tag bible-reader
 				if settingsp.display
 					verse.parentNode.parentNode.scroll(0, verse.offsetTop - (window.innerHeight * 0.1))
 				else
-					window.scroll(0, verse.offsetTop - (window.innerHeight * 0.1))
+					scrollTo(0, verse.offsetTop - (window.innerHeight * 0.1))
 				if highlight then highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse, highlight)
 
@@ -552,7 +547,7 @@ export tag bible-reader
 		if what_to_show_in_pop_up_block == "show_note"
 			what_to_show_in_pop_up_block = ''
 			return 0
-		document.body.className = ''
+		classList.remove 'noscroll'
 		bible_menu_left = -300
 		settings_menu_left = -300
 		search.search_div = no
@@ -585,6 +580,7 @@ export tag bible-reader
 		if page_search.d
 			page_search.d = no
 			page_search.matches = []
+			page_search.rects = []
 		imba.commit()
 
 	def toggleChronorder
@@ -622,6 +618,7 @@ export tag bible-reader
 		# Check if query is not an empty string
 		unless page_search.query.length || what_to_show_in_pop_up_block
 			page_search.matches = []
+			page_search.rects = []
 			focusInput()
 			return 0
 
@@ -637,8 +634,10 @@ export tag bible-reader
 		let chapter_articles = []
 		for article in all_articles
 			# articles that does not have className contain chapters
-			if article.className == ''
-				chapter_articles.push(article)
+			if article.nextSibling
+				if article.nextSibling.className
+					if article.nextSibling.className.includes('arrows')
+						chapter_articles.push(article)
 
 		let search_body = document.getElementById('search_body')
 
@@ -659,7 +658,7 @@ export tag bible-reader
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop
 					else
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop
-				else return rect_top + window.scrollY
+				else return rect_top + scrollTop
 
 			def getSearchSelectionLeftOffset rect_left
 				if parallel == 'ps'
@@ -700,6 +699,7 @@ export tag bible-reader
 		const regex1 = RegExp(regex_compatible_query, 'gi')
 		let array1
 		page_search.matches = []
+		page_search.rects = []
 		unless what_to_show_in_pop_up_block
 			let parallel = 0
 			for chapter in chapter_articles
@@ -708,9 +708,10 @@ export tag bible-reader
 						# Save the index of found text to page_search.matches
 						# for further navigation
 						page_search.matches.push({
-							id: child.previousSibling.id
+							id: child.previousSibling.id,
 							rects: getSelectionHighlightRect(child, regex1.lastIndex, parallel)
 						})
+
 				parallel++
 		else
 			for i in [1 ... search_body.children.length - 1]
@@ -723,6 +724,10 @@ export tag bible-reader
 						page_search.matches.push({
 							rects: highlightText(text.firstChild, regex1.lastIndex, 'another_occurences', 'ps')
 						})
+
+		# Gather all rects to one array
+		for match in page_search.matches
+			page_search.rects = page_search.rects.concat match.rects
 
 		# After all scroll to results
 		unless what_to_show_in_pop_up_block
@@ -822,7 +827,8 @@ export tag bible-reader
 			search.change_translation = no
 		show_list_of_translations = no
 
-	def getSearchText
+	def getSearchText e
+		# console.log e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input.replace(/\//g, '')
 		query = query.replace(/\\/g, '')
@@ -864,9 +870,10 @@ export tag bible-reader
 
 	def highlightSearchResults
 		page_search.matches = []
+		page_search.rects = []
 		unless search_verses.length then return
 		if document.getElementById('search_body').children[0]
-			if document.getElementById('search_body').children[0].className == 'total_msg'
+			if Array.from(document.getElementById('search_body').children).find(do |element| return element.className.indexOf('total_msg') > -1)
 				setTimeout(&, 750) do
 					pageSearch()
 				return
@@ -942,7 +949,6 @@ export tag bible-reader
 		setCookie('font-name', font.name)
 
 	def showChapters bookid
-		console.log("Get fired!")
 		if bookid != show_chapters_of
 			show_chapters_of = bookid
 		else show_chapters_of = 0
@@ -1030,9 +1036,9 @@ export tag bible-reader
 				bible_menu_left = -300
 				settings_menu_left = -300
 			if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
-				document.body.className = ''
+				classList.remove 'noscroll'
 			else
-				document.body.className = 'noscroll'
+				classList.add 'noscroll'
 
 	def touchDispatcher e
 		if window.innerWidth > 680
@@ -1055,7 +1061,7 @@ export tag bible-reader
 				onzone = yes
 
 			if inzone or onzone
-				document.body.className = 'noscroll'
+				classList.add 'noscroll'
 
 			if e.type.slice(-2) == 'up' or e.type.slice(-6) == 'cancel'
 				touchend(e)
@@ -1079,7 +1085,7 @@ export tag bible-reader
 		inzone = no
 		onzone = no
 		if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
-			document.body.className = ''
+			classList.remove 'noscroll'
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -1131,18 +1137,18 @@ export tag bible-reader
 			# scroll to it, to see the full verse
 			if !settingsp.display
 				const verse = document.getElementById(id)
-				const offsetTop = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - window.scrollY
-				if offsetTop > window.innerHeight
-					window.scroll(0, window.scrollY - (window.innerHeight - offsetTop))
+				const topOffset = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - scrollTop
+				if topOffset > window.innerHeight
+					scrollTo(0, scrollTop - (window.innerHeight - topOffset))
 			else
 				let verse
 				if parallel == 'first'
 					verse = document.getElementById(id)
 				else
 					verse = document.getElementById("p{id}")
-				const offsetTop = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
-				if offsetTop > verse.parentNode.parentNode.clientHeight
-					verse.parentNode.parentNode.scroll(0, verse.parentNode.parentNode.scrollTop - (verse.parentNode.parentNode.clientHeight - offsetTop))
+				const topOffset = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
+				if topOffset > verse.parentNode.parentNode.clientHeight
+					verse.parentNode.parentNode.scroll(0, verse.parentNode.parentNode.scrollTop - (verse.parentNode.parentNode.clientHeight - topOffset))
 
 			# # Handle the first click
 			# initial setup of "Choosing" verses
@@ -1284,6 +1290,7 @@ export tag bible-reader
 					}
 				)
 		clearSpace()
+		clearSpace()
 
 	def deleteColor color_to_delete
 		highlights.splice(highlights.indexOf(color_to_delete), 1)
@@ -1341,7 +1348,7 @@ export tag bible-reader
 
 	def copyToClipboard
 		data.copyToClipboard(getShareObj())
-		clearSpace
+		clearSpace()
 
 	def byteCount s
 		window.encodeURI(s).split(/%..|./).length - 1
@@ -1392,7 +1399,7 @@ export tag bible-reader
 
 	def toProfile from_build = no
 		clearSpace()
-		flag("display_none")
+		classList.add "display_none"
 		if !from_build
 			window.history.pushState({
 					profile: yes
@@ -1401,11 +1408,11 @@ export tag bible-reader
 				"/profile/"
 			)
 		document.title = "Bolls " + " | " + data.getUserName()
-		imba.mount <Profile bind=data>
+		imba.mount <profile-page bind=data>
 
 	def toDownloads from_build
-		clearSpace
-		flag("display_none")
+		clearSpace()
+		classList.add "display_none"
 		unless from_build
 			window.history.pushState({
 					parallel: no,
@@ -1415,7 +1422,7 @@ export tag bible-reader
 				"/downloads/"
 			)
 		document.title = "Bolls " + data.lang.download
-		imba.mount <Downloads bind=data>
+		imba.mount <downloads-page bind=data>
 
 	def getNameOfBookFromHistory translation, bookid
 		let books = []
@@ -1551,7 +1558,7 @@ export tag bible-reader
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
 	def popUp what
-		document.body.className = 'noscroll'
+		classList.add 'noscroll'
 		what_to_show_in_pop_up_block = what
 		window.history.pushState(no, what)
 
@@ -1779,18 +1786,16 @@ export tag bible-reader
 		)
 		toggleBibleMenu()
 
-	def onscroll e
-		console.log e
-		const last_known_scroll_position = window.scrollY
+	def scroll e
+		const last_known_scroll_position = scrollTop
 		setTimeout(&, 100) do
-			if window.scrollY < last_known_scroll_position || not window.scrollY
+			if scrollTop < last_known_scroll_position || not scrollTop
 				menu_icons_transform = 0
-			elif window.scrollY > last_known_scroll_position
-				menu_icons_transform = 400
+			elif scrollTop > last_known_scroll_position
+				menu_icons_transform = 80
 			imba.commit()
 
-	def pageSearchKeyupManager e
-		const event = e:_event
+	def pageSearchKeyupManager event
 		if event.code == "Enter"
 			if event.shiftKey
 				prevOccurence()
@@ -1801,10 +1806,20 @@ export tag bible-reader
 	def isNoteEmpty
 		return store.note && store.note != '<br>'
 
+	def blobcri
+		clearSpace()
+		popUp 'donate'
+
+	css
+		height: 100vh
+		display: block
+		ofy: scroll
+		pos: relative
+
 	def render
-		# <self>
-		<self @scroll=onscroll @mousemove=mousemove @touch=touchDispatcher>
-			<nav style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < 0 ? 'overflow:hidden' : ''}">
+		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
+		<self @scroll=scroll @mousemove=mousemove>
+			<nav style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < -32 ? 'overflow:hidden' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click.prevent.changeEditedParallel(settings.translation) tabindex="0"> settings.translation
@@ -1864,13 +1879,10 @@ export tag bible-reader
 
 			<main.main tabindex="0" .parallel_text=settingsp.display style="font-family:{settings.font.family};font-size: {settings.font.size}px; line-height:{settings.font.line-height};font-weight:{settings.font.weight};text-align: {settings.font.align};">
 				<section .parallel=settingsp.display dir="auto" style="margin: auto; max-width: {settings.font.max-width}em;">
-					if page_search.d
-						for match in page_search.matches when match.id.charAt(0) != 'p'
-							<i>
-							for rect in match.rects
-								<div.{rect.class} style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px">
+					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
+						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<h1 style="font-family: {settings.font.family}; font-weight: {settings.font.weight + 200};" @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> nameOfBook(settings.book, settings.translation), ' ', settings.chapter
+						<h1[ff: {settings.font.family} fw: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> nameOfBook(settings.book, settings.translation), ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -1878,7 +1890,7 @@ export tag bible-reader
 								<a.verse id=verse.verse href="#{verse.verse}"> '\t', verse.verse
 								<span innerHTML=verse.text
 										@click.prevent.addToChoosen(verse.pk, verse.verse, 'first')
-										style="background-image:{getHighlight(verse.pk, 'bookmarks')}"
+										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href=prevChapterLink>
@@ -1889,17 +1901,14 @@ export tag bible-reader
 								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					if !window.navigator.onLine && data.downloaded_translations.indexOf(settings.translation) == -1 && !(verses.length)
+					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settings.translation) == -1
 						<p.in_offline>
 							data.lang.this_translation_is_unavailable
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 				<section.display_none.parallel .show_parallel=settingsp.display dir="auto" style="margin: auto;max-width: {settings.font.max-width}em;">
-					if page_search.d
-						for match in page_search.matches when match.id.charAt(0) == 'p'
-							<i>
-							for rect in match.rects
-								<div.{rect.class} style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px">
+					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
+						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
 						<h1 style="font-family: {settings.font.family}; font-weight: {settings.font.weight + 200};" @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> nameOfBook(settingsp.book, settingsp.translation), ' ', settingsp.chapter
 						<article>
@@ -1925,7 +1934,7 @@ export tag bible-reader
 			<aside style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{settings_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window.navigator.onLine
-						<svg.helpsvg @click.prevent.popUp('donate') xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+						<svg.helpsvg @click.prevent.blobcri xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 							<title> data.lang.support
 							<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					data.lang.other
@@ -1934,12 +1943,10 @@ export tag bible-reader
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
 								<.accent @click.prevent.changeAccent(accent.name) style="background-color: {settings.theme == 'dark' ? accent.light : accent.dark};">
-				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter.prevent.getSearchText> data.lang.search
+				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter.getSearchText> data.lang.search
 				<.btnbox>
-					<svg.cbtn @click.prevent.changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+					<svg.cbtn @click.prevent.changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
-						<g>
-							<rect fill="none" height="24" width="24">
 						<g>
 							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
 						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
@@ -2198,14 +2205,6 @@ export tag bible-reader
 						<img src="/static/blobcri.svg" style="max-height:512px;max-width:512px;width:100%;height:auto;">
 						<a.more_results style="margin:8px 0 auto;" target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
 				else
-					<article.search_hat>
-						<svg.close_search @click.prevent.closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
-							<title> data.lang.close
-							<path[m: auto] d=svg_paths.close>
-						<h1> search.search_result_header
-						<svg.filter_search .filter_search_hover=search.show_filters||search.is_filter @click.prevent=(do search.show_filters = !search.show_filters) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
-							<title> data.lang.addfilter
-							<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 					if search_verses.length
 						<.filters .show=search.show_filters style="z-index:1;">
 							if settingsp.edited_version == settingsp.translation && settingsp.display
@@ -2216,15 +2215,20 @@ export tag bible-reader
 								if search.is_filter then <a.book_in_list @click.prevent.dropFilter> data.lang.drop_filter
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<a.book_in_list.book_in_filter dir="auto" @click.prevent.addFilter(book.bookid)> book.name
-					<article#search_body.search_body style="position:relative;">
-						# for match in page_search.matches when match.id.charAt(0) != 'p'
-						for match in page_search.matches
-							<i>
-							for rect in match.rects
-								<div.{rect.class} style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px">
+					<article.search_hat>
+						<svg.close_search @click.prevent.closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+							<title> data.lang.close
+							<path[m: auto] d=svg_paths.close>
+						<h1> search.search_result_header
+						<svg.filter_search .filter_search_hover=search.show_filters||search.is_filter @click.prevent=(do search.show_filters = !search.show_filters) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+							<title> data.lang.addfilter
+							<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
+					<article#search_body.search_body style="position:relative;" @scroll=searchPagination>
+						for rect in page_search.rects
+							<div.{rect.class}[top: {rect.top}px left: {rect.left}px width: {rect.width}px height: {rect.height}px]>
 						if search_verses.length
 							if search.is_filter
-								<p.total_msg> getFilteredASearchVerses.length, ' ', data.lang.totalyresultsofsearch
+								<p.total_msg> page_search.rects.length, ' / ',  getFilteredASearchVerses.length, ' ', data.lang.totalyresultsofsearch
 								for verse, key in getFilteredASearchVerses
 									<a.search_item>
 										<search-text-as-html.search_res_verse_text innerHTML=verse.text>
@@ -2246,7 +2250,7 @@ export tag bible-reader
 									<br>
 									<a[d: inline-block; mt: 12px].more_results @click.prevent.dropFilter> data.lang.drop_filter
 							else
-								<p.total_msg> search_verses.length, ' ', data.lang.totalyresultsofsearch
+								<p.total_msg> page_search.rects.length, ' / ', search_verses.length, ' ', data.lang.totalyresultsofsearch
 								for verse, key in search_verses
 									<a.search_item>
 										<search-text-as-html.search_res_verse_text innerHTML=verse.text bind=verse>
@@ -2350,14 +2354,14 @@ export tag bible-reader
 					<button.cancel @click.prevent=(do show_share_box = no)> data.lang.cancel
 				else
 					if store.show_color_picker
-						if window.innerWidth < 600
+						if window.innerWidth < 640
 							<svg.close_colorPicker
 								@click.prevent=(do store.show_color_picker = !store.show_color_picker)
 								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" tabindex="0"
 							>
 								<title> data.lang.close
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-						<colorPicker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle tabindex="0">  data.lang.canvastitle
+						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle tabindex="0">  data.lang.canvastitle
 					<p> highlighted_title, ' ', choosen_parallel == "first" ? settings.translation : settingsp.translation
 					<ul.mark_grid>
 						for highlight in highlights.slice().reverse()
@@ -2415,10 +2419,10 @@ export tag bible-reader
 					for h in history.slice().reverse()
 						<div[display: flex]>
 							<a.book_in_list @click.prevent.backInHistory(h)>
-								getNameOfBookFromHistory(h.translation, h.book), ' ', h.chapter
+								getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
 								if h.verse
 									':' + h.verse
-								' ', h.translation
+								' ' + h.translation
 							<svg.open_in_parallel viewBox="0 0 400 338" @click.prevent.backInHistory(h, yes)>
 								<title> data.lang.open_in_parallel
 								<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
@@ -2435,7 +2439,6 @@ export tag bible-reader
 
 			if loading
 				<loading-animation[position: fixed; top: 50%; left: 50%;]>
-			# <loading-animation[position: fixed; top: 50%; left: 50%;]>
 
 			if settings.verse_picker
 				<section.verse_picker.filters .show=(show_verse_picker || show_parallel_verse_picker)>
