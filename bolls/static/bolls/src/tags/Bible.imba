@@ -44,6 +44,12 @@ let settingsp = {
 	name_of_book: ''
 	filtered_books: []
 }
+
+let chapter_headers = {
+	fontsize1: 2
+	fontsize2: 2
+}
+
 let inzone = no
 let onzone = no
 let bible_menu_left = -300
@@ -556,7 +562,6 @@ export tag bible-reader
 		if what_to_show_in_pop_up_block == "show_note"
 			what_to_show_in_pop_up_block = ''
 			return 0
-		classList.remove 'noscroll'
 		bible_menu_left = -300
 		settings_menu_left = -300
 		search.search_div = no
@@ -685,13 +690,14 @@ export tag bible-reader
 			for rect in rects
 				if rect.width && rect.height
 					# Save data about selection rectangles to display them later
+					console.log node
 					const selection = {
 						top: getSearchSelectionTopOffset(rect.top)
 						left: getSearchSelectionLeftOffset(rect.left)
 						height: rect.height
 						width: rect.width
 						class: cssclass
-						mathcid: node.id
+						mathcid: node.previousSibling.id
 					}
 					# Save it to and array to display it later
 					selections.push(selection)
@@ -708,7 +714,6 @@ export tag bible-reader
 		const regex1 = RegExp(regex_compatible_query, 'gi')
 		let array1
 		page_search.matches = []
-		page_search.rects = []
 		unless what_to_show_in_pop_up_block
 			let parallel = 0
 			for chapter in chapter_articles
@@ -735,8 +740,10 @@ export tag bible-reader
 						})
 
 		# Gather all rects to one array
+		page_search.rects = []
 		for match in page_search.matches
 			page_search.rects = page_search.rects.concat match.rects
+		console.log page_search.rects, page_search.matches
 
 		# After all scroll to results
 		unless what_to_show_in_pop_up_block
@@ -1036,7 +1043,7 @@ export tag bible-reader
 			getText(settings.translation, books[current_index - 1].bookid, 1)
 
 	def mousemove e
-		if window.innerWidth > 680
+		if window.innerWidth >= 640
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window.innerWidth - 32
@@ -1044,42 +1051,54 @@ export tag bible-reader
 			elif 300 < e.x < window.innerWidth - 300
 				bible_menu_left = -300
 				settings_menu_left = -300
-			if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
-				classList.remove 'noscroll'
-			else
-				classList.add 'noscroll'
 
-	def touchDispatcher e
-		if window.innerWidth > 680
-			mousemove e
-		else
-			e.dx = e.x - e.events[0].x
-			e.dy = e.y - e.events[0].y
+	# def touchDispatcher e
+	# 	if window.innerWidth >= 640
+	# 		mousemove e
+	# 	else
+	# 		e.dx = e.x - e.events[0].x
+	# 		e.dy = e.y - e.events[0].y
 
-			if e.events[0].x < 16 or e.events[0].x > window.innerWidth - 16
-				if bible_menu_left < 0 && e.dx > 0
-					bible_menu_left = e.dx - 300
-				if settings_menu_left < 0 && e.dx < 0
-					settings_menu_left = - e.dx - 300
-				inzone = yes
-			elif bible_menu_left > -300 or settings_menu_left > -300
-				if bible_menu_left > -300 && e.dx < 0
-					bible_menu_left = e.dx
-				if settings_menu_left > -300 && e.dx > 0
-					settings_menu_left = - e.dx
-				onzone = yes
+	# 		if e.events[0].x < 16 or e.events[0].x > window.innerWidth - 16
+	# 			if bible_menu_left < 0 && e.dx > 0
+	# 				bible_menu_left = e.dx - 300
+	# 			if settings_menu_left < 0 && e.dx < 0
+	# 				settings_menu_left = - e.dx - 300
+	# 			inzone = yes
+	# 		elif bible_menu_left > -300 or settings_menu_left > -300
+	# 			if bible_menu_left > -300 && e.dx < 0
+	# 				bible_menu_left = e.dx
+	# 			if settings_menu_left > -300 && e.dx > 0
+	# 				settings_menu_left = - e.dx
+	# 			onzone = yes
 
-			if inzone or onzone
-				classList.add 'noscroll'
+	# 		if e.type.slice(-2) == 'up' or e.type.slice(-6) == 'cancel'
+	# 			touchend(e)
 
-			if e.type.slice(-2) == 'up' or e.type.slice(-6) == 'cancel'
-				touchend(e)
+	def closeDrawer e
+		if e.type.slice(-2) == 'up' || e.type.slice(-6) == 'cancel'
+			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && navigator.vendor == "Google Inc."
+				e.events[0].target.click()
+			else touchend e
+			return
+
+		e.dx = e.x - e.events[0].x
+		console.log e.x, e.events[0].x
+		e.dy = e.y - e.events[0].y
+
+		if bible_menu_left > -300 or settings_menu_left > -300
+			if bible_menu_left > -300 && e.dx < 0
+				bible_menu_left = e.dx
+			if settings_menu_left > -300 && e.dx > 0
+				settings_menu_left = - e.dx
+			onzone = yes
 
 	def touchend touch
 		if bible_menu_left > -300
 			if inzone
 				touch.dx > 64 ? bible_menu_left = 0 : bible_menu_left = -300
 			else
+				console.log "WEJIKEDFNVHEDFVN", touch.dx
 				touch.dx < -64 ? bible_menu_left = -300 : bible_menu_left = 0
 		elif settings_menu_left > -300
 			if inzone
@@ -1091,10 +1110,8 @@ export tag bible-reader
 				settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
 			elif touch.dx > 32
 				settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter("true") : prevChapter()
-		inzone = no
+		# inzone = no
 		onzone = no
-		if bible_menu_left == -300 and settings_menu_left == -300 and not what_to_show_in_pop_up_block
-			classList.remove 'noscroll'
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -1378,6 +1395,7 @@ export tag bible-reader
 	def sharedText
 		const copyobj = getShareObj()
 		const text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/'
+		return text
 
 	def canMakeTweet
 		return sharedText().length < 281
@@ -1520,6 +1538,9 @@ export tag bible-reader
 
 	def toggleBibleMenu parallel
 		if bible_menu_left
+			if !settings_menu_left && window.innerWidth < 1024
+				clearSpace()
+				return
 			bible_menu_left = 0
 			settings_menu_left = -300
 			if parallel
@@ -1531,6 +1552,9 @@ export tag bible-reader
 
 	def toggleSettingsMenu
 		if settings_menu_left
+			if !bible_menu_left && window.innerWidth < 1024
+				clearSpace()
+				return
 			settings_menu_left = 0
 			bible_menu_left = -300
 		else
@@ -1567,7 +1591,6 @@ export tag bible-reader
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
 	def popUp what
-		classList.add 'noscroll'
 		what_to_show_in_pop_up_block = what
 		window.history.pushState(no, what)
 
@@ -1630,29 +1653,31 @@ export tag bible-reader
 			if was_deleting_translation_from_compare
 				toggleCompare()
 			else
-				window.fetch("/get-paralel-verses/", {
-					method: "POST",
-					cache: "no-cache",
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						translations: JSON.stringify([translation.short_name]),
-						verses: JSON.stringify(choosen_for_comparison),
-						book: compare_parallel_of_book,
-						chapter: compare_parallel_of_chapter,
-					}),
-				})
-				.then(do |response| response.json())
-				.then(do |data|
-						comparison_parallel = data.concat(comparison_parallel)
-						loading = no
-						imba.commit()
-				)
-				.catch(do |error|
-					console.error error
-					loading = no
-					data.showNotification('error'))
+				toggleCompare()
+				# ### NOT WORKING DRAFT
+				# window.fetch("/get-paralel-verses/", {
+				# 	method: "POST",
+				# 	cache: "no-cache",
+				# 	headers: {
+				# 		"Content-Type": "application/json"
+				# 	},
+				# 	body: JSON.stringify({
+				# 		translations: JSON.stringify([translation.short_name]),
+				# 		verses: JSON.stringify(choosen_for_comparison),
+				# 		book: compare_parallel_of_book,
+				# 		chapter: compare_parallel_of_chapter,
+				# 	}),
+				# })
+				# .then(do |response| response.json())
+				# .then(do |resdata|
+				# 	comparison_parallel = resdata.concat(comparison_parallel)
+				# 	loading = no
+				# 	imba.commit()
+				# )
+				# .catch(do |error|
+				# 	console.error error
+				# 	loading = no
+				# 	data.showNotification('error'))
 		else
 			compare_translations.splice(compare_translations.indexOf(compare_translations.find(do |element| return element == translation.short_name)), 1)
 			document.getElementById("compare_{translation.short_name}").style.animation = "the-element-left-us 300ms ease forwards"
@@ -1774,30 +1799,49 @@ export tag bible-reader
 	def WelcomeOk
 		welcome = no
 		setCookie('welcome', no)
-		window.history.pushState({
-				translation: settings.translation,
-				book: settings.book,
-				chapter: settings.chapter,
-				verse: 0,
-				parallel: no,
-				parallel_display: settingsp.display
-				parallel-translation: settingsp.translation,
-				parallel-book: settingsp.book,
-				parallel-chapter: settingsp.chapter,
-				parallel-verse: 0,
-			},
+		window.history.pushState(
+			{},
 			"Welcome 🤗",
 			window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/'
 		)
 		toggleBibleMenu()
 
+	def changeHeadersSizeOnScroll e
+		if e.target.id == 'firstparallel'
+			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
+			if testsize < 0.5
+				chapter_headers.fontsize1 = 0.5
+			elif e.target.scrollTop > 0
+				chapter_headers.fontsize1 = testsize
+			else chapter_headers.fontsize1 = 2
+		else
+			testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
+			if testsize < 0.5
+				chapter_headers.fontsize2 = 0.5
+			elif e.target.scrollTop > 0
+				chapter_headers.fontsize2 = testsize
+			else
+				chapter_headers.fontsize2 = 2
+
 	def triggerNavigationIcons e
+		let testsize = 2 - ((scrollTop * 4) / window.innerHeight)
+		if testsize < 0.5
+			chapter_headers.fontsize1 = 0.5
+		elif scrollTop > 0
+			chapter_headers.fontsize1 = testsize
+		else
+			chapter_headers.fontsize1 = 2
+
 		const last_known_scroll_position = scrollTop
 		setTimeout(&, 100) do
 			if scrollTop < last_known_scroll_position || not scrollTop
 				menu_icons_transform = 0
 			elif scrollTop > last_known_scroll_position
-				menu_icons_transform = 80
+				if window.innerWidth >= 1024
+					menu_icons_transform = -100
+				else
+					menu_icons_transform = 100
+
 			imba.commit()
 
 	def pageSearchKeyupManager event
@@ -1826,13 +1870,19 @@ export tag bible-reader
 		display: block
 		ofy: auto
 		pos: relative
+		transition-property@force: background-color
 
+	def rightPaddingOfReader
+		if settingsp.display || window.innerWidth < 1024
+			return 0
+		elif what_to_show_in_pop_up_block || bible_menu_left || settings_menu_left
+			return 12
 
 
 	def render
 		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
-		<self @scroll=triggerNavigationIcons @mousemove=mousemove>
-			<nav style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < -32 ? 'overflow:hidden' : ''}">
+		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden pr:{rightPaddingOfReader()}px]>
+			<nav @touch=closeDrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{bible_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{bible_menu_left < -32 ? 'overflow:hidden' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click.prevent.changeEditedParallel(settings.translation) tabindex="0"> settings.translation
@@ -1854,7 +1904,7 @@ export tag bible-reader
 					for language in languages
 						<a.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click.prevent.showLanguageTranslations(language.language) tabindex="0">
 							language.language
-							<svg.arrow_next[margin-left:auto] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
+							<svg.arrow_next[margin-left:auto] xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
@@ -1890,12 +1940,13 @@ export tag bible-reader
 					<path[m: auto] d=svg_paths.close>
 
 			<main.main tabindex="0" .parallel_text=settingsp.display style="font-family:{settings.font.family};font-size: {settings.font.size}px; line-height:{settings.font.line-height};font-weight:{settings.font.weight};text-align: {settings.font.align};">
-				<section .parallel=settingsp.display dir="auto" style="margin: auto; max-width: {settings.font.max-width}em;">
+				<section#firstparallel @scroll=changeHeadersSizeOnScroll .parallel=settingsp.display dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					unless what_to_show_in_pop_up_block
-						for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
-							<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+						<>
+							for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
+								<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<h1[ff: {settings.font.family} fw: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize1) * settings.font.size * settings.font.lineHeight}px 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -1919,11 +1970,13 @@ export tag bible-reader
 							data.lang.this_translation_is_unavailable
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
-				<section.parallel dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
-					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
-						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+				<section.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+					unless what_to_show_in_pop_up_block
+						<>
+							for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
+								<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length > 0
-						<h1 [font-family: {settings.font.family} font-weight: {settings.font.weight + 200}] @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize2) * settings.font.size * settings.font.lineHeight}px font-family: {settings.font.family} font-weight: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
 								if settings.verse_break
@@ -1934,17 +1987,17 @@ export tag bible-reader
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter("true")>
-								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
+								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click.prevent.nextChapter("true")>
-								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 5">
+								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<aside style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{settings_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
+			<aside @touch=closeDrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{settings_menu_left > - 300 && (inzone || onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window.navigator.onLine
 						<svg.helpsvg @click.prevent.blobcri xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -2377,6 +2430,15 @@ export tag bible-reader
 						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle tabindex="0">  data.lang.canvastitle
 					<p> highlighted_title, ' ', choosen_parallel == "first" ? settings.translation : settingsp.translation
 					<ul.mark_grid>
+						<li[border: none; bg: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)].color_mark @click.prevent=(do store.show_color_picker = !store.show_color_picker)>
+
+						<li[background: FireBrick].color_mark @click.prevent.changeHighlightColor("#b22222")>
+						<li[background: Chocolate].color_mark @click.prevent.changeHighlightColor("#d2691e")>
+						<li[background: GoldenRod].color_mark @click.prevent.changeHighlightColor("#daa520")>
+						<li[background: OliveDrab].color_mark @click.prevent.changeHighlightColor("#6b8e23")>
+						<li[background: RoyalBlue].color_mark @click.prevent.changeHighlightColor("#4169e1")>
+						<li[background: #984da5].color_mark @click.prevent.changeHighlightColor("#984da5")>
+
 						for highlight in highlights.slice().reverse()
 							<li[background: {highlight}].color_mark @click.prevent.changeHighlightColor(highlight)>
 								<svg.delete_color
@@ -2385,14 +2447,6 @@ export tag bible-reader
 										>
 									<title> data.lang.delete
 									<path d=svg_paths.close>
-						<li[background: FireBrick].color_mark @click.prevent.changeHighlightColor("#b22222")>
-						<li[background: Chocolate].color_mark @click.prevent.changeHighlightColor("#d2691e")>
-						<li[background: GoldenRod].color_mark @click.prevent.changeHighlightColor("#daa520")>
-						<li[background: OliveDrab].color_mark @click.prevent.changeHighlightColor("#6b8e23")>
-						<li[background: RoyalBlue].color_mark @click.prevent.changeHighlightColor("#4169e1")>
-						<li[background: #984da5].color_mark @click.prevent.changeHighlightColor("#984da5")>
-						<li[border: none; bg: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)].color_mark
-							@click.prevent=(do store.show_color_picker = !store.show_color_picker)>
 					<#addbuttons>
 						if show_delete_bookmark then <svg.close_search @click.prevent.deleteBookmarks(choosenid) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=data.lang.delete>
 							<title> data.lang.delete
@@ -2400,9 +2454,10 @@ export tag bible-reader
 						<svg.close_search @click.prevent.clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=data.lang.close>
 							<title> data.lang.close
 							<path d=svg_paths.close alt=data.lang.close>
-						<svg.save_bookmark @click.prevent=(do show_share_box = yes) xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+						<svg.save_bookmark @click.prevent=(do show_share_box = yes) viewBox="0 0 86.669921875 117.4306640625" version="1.1" xmlns="http://www.w3.org/2000/svg">
 							<title> data.lang.share
-							<path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z">
+							<g transform="matrix(1 0 0 1 -12.451230468750055 93.9453125)">
+								<path d="M 55.8105 -21.9727 C 57.9102 -21.9727 59.668 -23.7305 59.668 -25.7812 L 59.668 -75.9277 L 59.375 -83.252 L 62.6465 -79.7852 L 70.0684 -71.875 C 70.752 -71.0938 71.7773 -70.7031 72.7051 -70.7031 C 74.707 -70.7031 76.2695 -72.168 76.2695 -74.1699 C 76.2695 -75.1953 75.8301 -75.9766 75.0977 -76.709 L 58.5938 -92.627 C 57.6172 -93.6035 56.7871 -93.9453 55.8105 -93.9453 C 54.7852 -93.9453 53.9551 -93.6035 52.9785 -92.627 L 36.4746 -76.709 C 35.7422 -75.9766 35.3027 -75.1953 35.3027 -74.1699 C 35.3027 -72.168 36.7676 -70.7031 38.8184 -70.7031 C 39.7461 -70.7031 40.8203 -71.0938 41.5039 -71.875 L 48.9258 -79.7852 L 52.1973 -83.252 L 51.9043 -75.9277 L 51.9043 -25.7812 C 51.9043 -23.7305 53.7109 -21.9727 55.8105 -21.9727 Z M 27.7832 16.2598 L 83.7891 16.2598 C 93.9941 16.2598 99.1211 11.1816 99.1211 1.12305 L 99.1211 -47.6074 C 99.1211 -57.666 93.9941 -62.7441 83.7891 -62.7441 L 70.166 -62.7441 L 70.166 -54.8828 L 83.6426 -54.8828 C 88.4766 -54.8828 91.2598 -52.2461 91.2598 -47.168 L 91.2598 0.683594 C 91.2598 5.76172 88.4766 8.39844 83.6426 8.39844 L 27.8809 8.39844 C 22.998 8.39844 20.3125 5.76172 20.3125 0.683594 L 20.3125 -47.168 C 20.3125 -52.2461 22.998 -54.8828 27.8809 -54.8828 L 41.4062 -54.8828 L 41.4062 -62.7441 L 27.7832 -62.7441 C 17.5781 -62.7441 12.4512 -57.666 12.4512 -47.6074 L 12.4512 1.12305 C 12.4512 11.1816 17.5781 16.2598 27.7832 16.2598 Z">
 						<svg.save_bookmark @click.prevent.copyToClipboard() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=data.lang.copy>
 							<title> data.lang.copy
 							<path d=svg_paths.copy>
@@ -2442,13 +2497,19 @@ export tag bible-reader
 					else
 						<p[padding: 12px]> data.lang.empty_history
 
-			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 601)
-				<svg.navigation @click.prevent.toggleBibleMenu() style="left: 0; transform: translateY(-{menu_icons_transform}px);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-					<title> data.lang.change_book
-					<path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
-				<svg.navigation @click.prevent.toggleSettingsMenu() style="right: 0; transform: scaleY(0.8) translateY(-{menu_icons_transform}px);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 10">
-					<title> data.lang.other
-					<path fill-rule="evenodd" clip-rule="evenodd" d="M11.41 6H0.59C0 6 0 5.59 0 5C0 4.41 0 4 0.59 4H11.4C11.99 4 11.99 4.41 11.99 5C11.99 5.59 11.99 6 11.4 6H11.41ZM11.41 2H0.59C0 2 0 1.59 0 1C0 0.41 0 0 0.59 0H11.4C11.99 0 11.99 0.41 11.99 1C11.99 1.59 11.99 2 11.4 2H11.41ZM0.59 8H11.4C11.99 8 11.99 8.41 11.99 9C11.99 9.59 11.99 10 11.4 10H0.59C0 10 0 9.59 0 9C0 8.41 0 8 0.59 8Z">
+			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
+				<section#navigation>
+					<[l:0 transform: translateY({menu_icons_transform}%)] @click.prevent.toggleBibleMenu()>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+							<title> data.lang.change_book
+							<path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
+						<p> data.lang.change_book
+					<[r:0 transform: translateY({menu_icons_transform}%)] @click.prevent.toggleSettingsMenu()>
+						<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+							<title> data.lang.other
+							<g>#
+								<path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z">
+						<p> data.lang.other
 
 			if loading
 				<loading-animation[position: fixed; top: 50%; left: 50%;]>

@@ -238,7 +238,7 @@ export tag profile-page
 						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click.prevent.toBible>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-						<h1> data.getUserName()
+						<h1[margin: 1em 4px]> data.getUserName()
 						if window.navigator.onLine
 							<.change_password.help>
 								<svg.helpsvg @click.showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
@@ -252,7 +252,7 @@ export tag profile-page
 						for collection in collections
 							if collection
 								<p.collection @click.prevent.getSearchedBookmarks(collection)> collection
-						<div css:min-width="16px">
+						<div [min-width: 16px]>
 				else
 					<.collectionsflex css:flex-wrap="wrap">
 						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click.prevent.closeSearch>
