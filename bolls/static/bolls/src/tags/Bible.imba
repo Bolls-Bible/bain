@@ -94,7 +94,6 @@ let new_comparison_parallel = []
 let show_delete_bookmark = no
 let show_translations_for_comparison = no
 let welcome = yes
-let was_deleting_translation_from_compare = no
 let compare_translations = []
 let compare_parallel_of_chapter
 let compare_parallel_of_book
@@ -577,7 +576,6 @@ export tag bible-reader
 		choosen_parallel = no
 		show_fonts = no
 		show_language_of = ''
-		was_deleting_translation_from_compare = no
 		show_translations_for_comparison = no
 		show_parallel_verse_picker = no
 		show_verse_picker = no
@@ -690,7 +688,6 @@ export tag bible-reader
 			for rect in rects
 				if rect.width && rect.height
 					# Save data about selection rectangles to display them later
-					console.log node
 					const selection = {
 						top: getSearchSelectionTopOffset(rect.top)
 						left: getSearchSelectionLeftOffset(rect.left)
@@ -741,8 +738,10 @@ export tag bible-reader
 
 		# Gather all rects to one array
 		page_search.rects = []
+		let nskrjvnslif = []
 		for match in page_search.matches
-			page_search.rects = page_search.rects.concat match.rects
+			nskrjvnslif = nskrjvnslif.concat match.rects
+		page_search.rects = nskrjvnslif
 		console.log page_search.rects, page_search.matches
 
 		# After all scroll to results
@@ -1076,14 +1075,14 @@ export tag bible-reader
 	# 			touchend(e)
 
 	def closeDrawer e
+		console.log e
 		if e.type.slice(-2) == 'up' || e.type.slice(-6) == 'cancel'
-			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && navigator.vendor == "Google Inc."
+			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && window.navigator.vendor == "Google Inc."
 				e.events[0].target.click()
 			else touchend e
 			return
 
 		e.dx = e.x - e.events[0].x
-		console.log e.x, e.events[0].x
 		e.dy = e.y - e.events[0].y
 
 		if bible_menu_left > -300 or settings_menu_left > -300
@@ -1098,7 +1097,6 @@ export tag bible-reader
 			if inzone
 				touch.dx > 64 ? bible_menu_left = 0 : bible_menu_left = -300
 			else
-				console.log "WEJIKEDFNVHEDFVN", touch.dx
 				touch.dx < -64 ? bible_menu_left = -300 : bible_menu_left = 0
 		elif settings_menu_left > -300
 			if inzone
@@ -1613,7 +1611,6 @@ export tag bible-reader
 			clearSpace()
 			popUp 'show_compare'
 		else clearSpace()
-		was_deleting_translation_from_compare = no
 		loading = yes
 		if !window.navigator.onLine && data.db_is_available && data.downloaded_translations.indexOf(settings.translation) != -1
 			comparison_parallel = await data.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
@@ -1648,43 +1645,38 @@ export tag bible-reader
 				data.showNotification('error'))
 
 	def addTranslation translation
-		if !compare_translations.find(do |element| return element == translation.short_name)
+		if compare_translations.indexOf(translation.short_name) < 0
 			compare_translations.unshift(translation.short_name)
-			if was_deleting_translation_from_compare
-				toggleCompare()
-			else
-				toggleCompare()
-				# ### NOT WORKING DRAFT
-				# window.fetch("/get-paralel-verses/", {
-				# 	method: "POST",
-				# 	cache: "no-cache",
-				# 	headers: {
-				# 		"Content-Type": "application/json"
-				# 	},
-				# 	body: JSON.stringify({
-				# 		translations: JSON.stringify([translation.short_name]),
-				# 		verses: JSON.stringify(choosen_for_comparison),
-				# 		book: compare_parallel_of_book,
-				# 		chapter: compare_parallel_of_chapter,
-				# 	}),
-				# })
-				# .then(do |response| response.json())
-				# .then(do |resdata|
-				# 	comparison_parallel = resdata.concat(comparison_parallel)
-				# 	loading = no
-				# 	imba.commit()
-				# )
-				# .catch(do |error|
-				# 	console.error error
-				# 	loading = no
-				# 	data.showNotification('error'))
+			window.fetch("/get-paralel-verses/", {
+				method: "POST",
+				cache: "no-cache",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					translations: JSON.stringify([translation.short_name]),
+					verses: JSON.stringify(choosen_for_comparison),
+					book: compare_parallel_of_book,
+					chapter: compare_parallel_of_chapter,
+				}),
+			})
+			.then(do |response| response.json())
+			.then(do |resdata|
+				comparison_parallel = resdata.concat(comparison_parallel)
+				loading = no
+				imba.commit()
+			)
+			.catch(do |error|
+				console.error error
+				loading = no
+				data.showNotification('error'))
 		else
-			compare_translations.splice(compare_translations.indexOf(compare_translations.find(do |element| return element == translation.short_name)), 1)
+			compare_translations.splice(compare_translations.indexOf(translation.short_name), 1)
 			document.getElementById("compare_{translation.short_name}").style.animation = "the-element-left-us 300ms ease forwards"
 			setTimeout(&, 300) do
 				document.getElementById("compare_{translation.short_name}").style.animation = ""
-				document.getElementById("compare_{translation.short_name}").remove()
-				was_deleting_translation_from_compare = yes
+				comparison_parallel.splice(comparison_parallel.indexOf(comparison_parallel.find(do |prlll| return prlll[0].translation == translation.short_name)), 1)
+				imba.commit()
 		window.localStorage.setItem("compare_translations", JSON.stringify(compare_translations))
 		show_translations_for_comparison = no
 
@@ -1779,8 +1771,6 @@ export tag bible-reader
 		})
 
 	def onsavechangestocomparetranslations arr
-		if compare_translations.join('') == arr.join('')
-			was_deleting_translation_from_compare = yes
 		compare_translations = arr
 		window.localStorage.setItem("compare_translations", JSON.stringify(arr))
 
@@ -1825,8 +1815,8 @@ export tag bible-reader
 
 	def triggerNavigationIcons e
 		let testsize = 2 - ((scrollTop * 4) / window.innerHeight)
-		if testsize < 0.5
-			chapter_headers.fontsize1 = 0.5
+		if testsize * settings.font.size < 12
+			chapter_headers.fontsize1 = 12 / settings.font.size
 		elif scrollTop > 0
 			chapter_headers.fontsize1 = testsize
 		else
@@ -1837,7 +1827,7 @@ export tag bible-reader
 			if scrollTop < last_known_scroll_position || not scrollTop
 				menu_icons_transform = 0
 			elif scrollTop > last_known_scroll_position
-				if window.innerWidth >= 1024
+				if window.innerWidth > 1024
 					menu_icons_transform = -100
 				else
 					menu_icons_transform = 100
@@ -1941,10 +1931,8 @@ export tag bible-reader
 
 			<main.main tabindex="0" .parallel_text=settingsp.display style="font-family:{settings.font.family};font-size: {settings.font.size}px; line-height:{settings.font.line-height};font-weight:{settings.font.weight};text-align: {settings.font.align};">
 				<section#firstparallel @scroll=changeHeadersSizeOnScroll .parallel=settingsp.display dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
-					unless what_to_show_in_pop_up_block
-						<>
-							for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
-								<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
+						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
 						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize1) * settings.font.size * settings.font.lineHeight}px 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click.prevent.toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<article>
@@ -1971,10 +1959,8 @@ export tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 				<section.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
-					unless what_to_show_in_pop_up_block
-						<>
-							for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
-								<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
+						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length > 0
 						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize2) * settings.font.size * settings.font.lineHeight}px font-family: {settings.font.family} font-weight: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] @click.prevent.toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
@@ -2186,11 +2172,10 @@ export tag bible-reader
 							for translation in translations when !compare_translations.find(do |element| return element == translation.short_name)
 								<a.book_in_list.book_in_filter dir="auto" @click.prevent.addTranslation(translation)> translation.short_name, ', ', translation.full_name
 						<p.total_msg> data.lang.add_translations_msg
-						if compare_translations.length
-							<ul style="display:flex;flex-direction:column;">
-								for tr in comparison_parallel
-									<compare-draggable-item bind=tr langdata=data.lang>
-						else
+						<ul[d:flex fld:column]>
+							for tr in comparison_parallel
+								<compare-draggable-item data=tr id="compare_{tr[0].translation}" langdata=data.lang>
+						unless compare_translations.length
 							<button[m: 16px auto; d: flex].more_results @click.prevent=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>

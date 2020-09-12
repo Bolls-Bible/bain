@@ -104,36 +104,35 @@ tag compare-draggable-item
 
 
 	def render
-		<self id="compare_{data[0].translation}" [d:block]>
-			if data[0].text
-				<li.search_item>
-					<.search_res_verse_text>
-						for aoefv in data
-							<search-text-as-html innerHTML="{aoefv.text + ' '}">
+		if data[0].text
+			<self.search_item [d:block]>
+				<.search_res_verse_text>
+					for aoefv in data
+						<search-text-as-html innerHTML="{aoefv.text + ' '}">
 
-					<.search_res_verse_header>
-						<svg.drag_handle @touch=touchHandler xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
-							<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
-						<span> data[0].translation
-
-						<svg.open_in_parallel @click.prevent.copyToClipboardFromParallel(data) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=langdata.copy>
-							<title> langdata.copy
-							<path d=svg_paths.copy>
-
-						<svg.open_in_parallel [margin: 0 8px] viewBox="0 0 400 338" @click.prevent.backInHistory({translation: data[0].translation, book: data[0].book, chapter: data[0].chapter,verse: data[0].verse}, yes)>
-							<title> langdata.open_in_parallel
-							<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
-
-						<svg.remove_parallel.close_search @click.prevent.addTranslation({short_name: data[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=langdata.delete>
-							<title> langdata.delete
-							<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
-			else
-				<li.search_res_verse_header style="padding: 16px 0;display: flex; align-items: center;">
-					<svg.drag_handle style="margin-right: 16px;" @touch=touchHandler xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+				<.search_res_verse_header>
+					<svg.drag_handle @touch=touchHandler xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
 						<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
+					<span> data[0].translation
 
-					langdata.the_verse_is_not_available, ' ', data[0].translation, data[0].text
+					<svg.open_in_parallel @click.prevent.copyToClipboardFromParallel(data) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=langdata.copy>
+						<title> langdata.copy
+						<path d=svg_paths.copy>
 
-					<svg.remove_parallel.close_search [margin: -8px 8px 0 auto] @click.prevent.addTranslation({short_name: data[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=langdata.delete>
+					<svg.open_in_parallel [margin: 0 8px] viewBox="0 0 400 338" @click.prevent.backInHistory({translation: data[0].translation, book: data[0].book, chapter: data[0].chapter,verse: data[0].verse}, yes)>
+						<title> langdata.open_in_parallel
+						<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
+
+					<svg.remove_parallel.close_search @click.prevent.addTranslation({short_name: data[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=langdata.delete>
 						<title> langdata.delete
 						<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
+		else
+			<self.search_res_verse_header [padding: 16px 0 display: flex align-items: center]>
+				<svg.drag_handle [margin-right: 16px] @touch=touchHandler xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+					<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
+
+				langdata.the_verse_is_not_available, ' ', data[0].translation, data[0].text
+
+				<svg.remove_parallel.close_search [margin: -8px 8px 0 auto] @click.prevent.addTranslation({short_name: data[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=langdata.delete>
+					<title> langdata.delete
+					<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
