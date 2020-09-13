@@ -425,13 +425,13 @@ export tag bible-reader
 			if chronorder
 				chronorder = !chronorder
 				toggleChronorder()
-			settings.name_of_book = nameOfBook(settings.book, settings.translation)
 			settings.book = book
 			settings.chapter = chapter
 			settings.translation = translation
 			setCookie('book', book)
 			setCookie('chapter', chapter)
 			setCookie('translation', translation)
+			settings.name_of_book = nameOfBook(settings.book, settings.translation)
 			settings.filtered_books = filteredBooks('books')
 			saveToHistory(translation, book, chapter, verse, no)
 			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
@@ -568,6 +568,7 @@ export tag bible-reader
 		bible_menu_left = -300
 		settings_menu_left = -300
 		search.search_div = no
+		onzone = no
 		show_history = no
 		search.is_filter = no
 		search.show_filters = no
@@ -1923,7 +1924,7 @@ export tag bible-reader
 	def render
 		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden ofy: {mainOverflow()} pr:{rightPaddingOfReader()}px]>
-			<nav @touch=closeDrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{(bible_menu_left > - 300 && onzone) ? 'transition:none;' : ''}">
+			<nav @touch=closeDrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{onzone ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
@@ -2037,7 +2038,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<aside @touch=closeDrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{(settings_menu_left > - 300 && onzone) ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
+			<aside @touch=closeDrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window.navigator.onLine
 						<svg.helpsvg @click=blobcri xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -2049,7 +2050,7 @@ export tag bible-reader
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
 								<.accent @click=changeAccent(accent.name) style="background-color: {settings.theme == 'dark' ? accent.light : accent.dark};">
-				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter.getSearchText> data.lang.search
+				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter=getSearchText> data.lang.search
 				<.btnbox>
 					<svg.cbtn @click=changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
@@ -2133,6 +2134,7 @@ export tag bible-reader
 						<button @click=(do data.setLanguage('ukr'))> "Українська"
 						<button @click=(do data.setLanguage('ru'))> "Русский"
 						<button @click=(do data.setLanguage('eng'))> "English"
+						<button @click=(do data.setLanguage('de'))> "Deutsche"
 						<button @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button @click=(do data.setLanguage('es'))> "Español"
 				<.nighttheme.parent_checkbox.flex @click=toggleVersePicker() .checkbox_turned=settings.verse_picker>

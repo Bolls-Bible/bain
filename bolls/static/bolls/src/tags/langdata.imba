@@ -1,4 +1,4 @@
-export const en_lang = {
+export const english = {
 	"other": "Other",
 	"search": "Search",
 	"decrease_font_size": "Decrease font size",
@@ -138,7 +138,7 @@ export const en_lang = {
 	]
 }
 
-export const uk_lang = {
+export const ukrainian = {
 	"other": "Інше",
 	"search": "Пошук",
 	"decrease_font_size": "Зменшити шрифт",
@@ -278,7 +278,7 @@ export const uk_lang = {
 	]
 }
 
-export const ru_lang = {
+export const russian = {
 	"other": "Разное",
 	"search": "Поиск",
 	"decrease_font_size": "Уменшить шрифт",
@@ -418,7 +418,7 @@ export const ru_lang = {
 	]
 }
 
-export const pt_lang = {
+export const portuguese = {
 	"other": "Outro",
 	"search": "Procurar",
 	"decrease_font_size": "Diminuir o tamanho da fonte",
@@ -558,7 +558,7 @@ export const pt_lang = {
 	]
 }
 
-export const es_lang = {
+export const espanol = {
 	"other": "Otro",
 	"search": "Buscar",
 	"decrease_font_size": "Disminuir el tamaño de la fuente",
@@ -694,6 +694,147 @@ export const es_lang = {
 		[
 			"¿Dónde ver los textos destacados?",
 			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados."
+		]
+	]
+}
+
+export const german = {
+	"other": "Allgemeine",
+	"search": "Suchen",
+	"decrease_font_size": "Schriftgröße verringern",
+	"increase_font_size": "Schriftgröße vergrößern",
+	"increase_font_weight": "Schriftstärke vergröbern",
+	"decrease_font_weight": "Schriftstärke verringern",
+	"increase_line_height": "Linienhöhe erhöhen",
+	"decrease_line_height": "Linienhöhe verringern",
+	"decrease_max_width": "Schriftbreite erhöhen",
+	"increase_max_width": "Schriftbreite verringern",
+	"parallel": "Parallel lesen",
+	"usual_reading": "Normales lesen",
+	"open_in_parallel": "Parallelansicht öffnen",
+	"open": "Öffnen",
+	"drop_filter": "Bücher filtern",
+	"filter_name": "Namensfilter:",
+	"more_results": "Anderes",
+	"nothing": "Wir haben nichts gefunden. Bitte überprüfen oder vereinfachen Sie Ihre Anfrage.",
+	"nothing_else": "Sonst nichts zu sehen",
+	"translation": "Übersetzung",
+	"language": "Sprache",
+	"offline": "Sie sind offline",
+	"login": "Log in",
+	"logout": "Log out",
+	"help": "Hilfen",
+	"support": "Bitte unterstützen Sie diese App",
+	"feedback": "Feedback",
+	"signin": "Sign up",
+	"transitions": "Animationen",
+	"close": "Schließen",
+	"delete": "Lösen",
+	"deleted": "Gelöscht",
+	"delete_account": "Lösche mein Konto",
+	"copied": "Kopiert",
+	"remove_all_translations": "Entfernen alle Übersetzungen",
+	"find_in_chapter": "Finden im Kapitel",
+	"phrase_not_found": "Satzteil nicht gefunden",
+	"verse_break": "Zeilenumbruch",
+	"verse_picker": "Versauswahl",
+	"choose_verse": "Bitte wählen Sie einen Vers",
+	"compare": "Vergleichen",
+	"add_translations_msg": "Übersetzungen vergleichen",
+	"add_translation_btn": "Übersetzungen hinzufügen",
+	"the_verse_is_not_available": "Dieser Vers ist nicht in Übersetzung verfügbar:",
+	"copy": "Abschrift",
+	"addtocollection": "Zur Sammlung hinzufügen",
+	"create": "Erstellen",
+	"prev": "Vorschau",
+	"next": "Nächster",
+	"addfilter": "Filter hinzufügen",
+	"view_source": "Source code anzeigen",
+	"nighttheme": "Dunkles Theme einschalten.",
+	"lighttheme": "Licht Theme einschalten",
+	"canvastitle": "Wählen Sie eine Farbe, Verse hervorheben",
+	"totalyresultsofsearch": "Befund",
+	"thereisnobookmarks": "Sie sollten Ihre Highlights hier sehen.",
+	"history": "History",
+	"empty_history": "The history is empy",
+	"share_via": "Teilen per",
+	"cancel": "Aufheben",
+	"saveto": "Speichern unter",
+	"save": "Speichern",
+	"saved": "Gerettet",
+	"back": "Züruck",
+	"addcollection": "Fügen eine Sammlung hinzu.",
+	"newcollection": "Neue Sammlung",
+	"chronological_order": "Chronological Order",
+	"reload": "Nachfüllen",
+	"loading": "Wird geladen",
+	"change_translation": "Chronologischer Reihenfolge.",
+	"change_book": "Die Bibel",
+	"download": "Download",
+	"download_translations": "Übersetzungen herunterladen",
+	"change_password": "Passwort wechseln",
+	"donate": "Bitte spenden Sie",
+	"auto_align": "Auto align",
+	"align_justified": "Align justified",
+	"edit_account": "Konto bearbeiten",
+	"edit_username_label": "Benutzername bearbeiten",
+	"account_edited": "Konto bearbeitet",
+	"username_taken": "Dieser Benutzername ist nicht verfügbar",
+	"edit_name_label": "Name",
+	"account_deleted": "Konto gelöscht.",
+	"are_you_sure": "Sind Sie sicher?",
+	"cannot_be_undone": "Diese Aktion löscht Ihr Konto, Ihre Informationen und Lesezeichen dauerhaft. Warnung! Diese Aktion kann nicht rückgängig gemacht werden..",
+	"delete_account_label": "Bitte geben Sie Ihren Benutzernamen zur Bestätigung ein",
+	"i_understand": "Ich verstehe die Konsequenzen. Bitte löschen Sie meinen Account.",
+	"note": "Note",
+	"write_something_awesone": "Schreibe etwas Tolles!",
+	"use_it_in_browser": "Sehen es im Browser",
+	"welcome": "Willkommen bei Bolls :)",
+	"welcome_msg": "Diese App ist zum Lesen der Bibel.. Bücher und Übersetzungen befinden sich auf der linken Seite. Die Einstellungen befinden sich auf der rechten Seite.. Danke schön!",
+	"bgthnkst": "Vielen Dank an ...",
+	"this_translation_is_unavailable": "Diese Übersetzung ist nicht verfügbar. Bitte verbinden Sie sich mit dem Internet.",
+	"snapstore": "Get it from the",
+	"exhortation": "Eine Web-App zum Lesen der Bibel, bei der nur das Wort Gottes im Vordergrund steht. Sola scriptura!",
+	"faqmsg": "Hier finden Sie Antworten auf Ihre häufig gestellten Fragen",
+	"still_have_questions": "Haben Sie Fragen oder Ideen? Schreiben Sie mir und ich werde so schnell wie möglich antworten!:",
+	"install_app": "Install app",
+	"content": "Inhalt",
+	"shortcuts": "Abkürzung",
+	"shortcuts_list": [
+		"Next chapter: <b>Ctrl + Right Arrow</b>",
+		"Prev chapter: <b>Ctrl + Left Arrow</b>",
+		"Next chapter of parallel translation: <b>Ctrl + Alt + Right Arrow</b>",
+		"Prev chapter of parallel translation: <b>Ctrl + Alt + Left Arrow</b>",
+		"Back to reading: <b>Esc</b>",
+		"Hide menu icons: <b>Ctrl + Alt + H</b>",
+		"Full screen: <b>f11</b>"
+	],
+	"error": "Fehler!. Bitte versuchen Sie es später noch einmal.",
+	"ycdtitnw": "Sie können diese App auf folgende Arten unterstützen::",
+	"ugch": "Bitte benutze Chrome!",
+	"SUPPORT": [
+		"Just share it -=> bolls.life",
+		"Write a feedback.",
+		"Submit an idea)",
+		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Translate its interface to a new language. </a>",
+		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
+	],
+	"HB": [
+		[
+			"Where to find the necessary translation?",
+			"On the desktop, hover your mouse under mostleft edge of window or press the book icon at the up, on mobile phone swipe to right from the left edge of the screen and you will see the books menu, where just click on the translation abbreviation up and you will see all available translations. IF you lack some absent here translation, write me and I will add it."
+		],
+		[
+			"How to download a translation?",
+			"As you guess, this web app is available offline and you can download a translation to use it in offline. To do that go to left menu, find a cloud icon in the top and press it (it is visible if your browser has access to storage and does not have any restrictions in settings). Then you will see the list of available for downloading translations. Just press a cloud icon against the translation you want to download, and after a few seconds it will be downloaded."
+		],
+		[
+			"Why register?",
+			"To save there your bookmarks, and get them available via your browser across all platforms."
+		],
+		[
+			"Where to see highlighted texts?",
+			"On the desktop, hover your mouse under mostright edge of window or press the menu icon at the up, on mobile phone swipe to left from the right edge of the screen and you will see the menu, where just click on your username below and you will see all youe highlightes."
 		]
 	]
 }

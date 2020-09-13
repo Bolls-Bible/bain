@@ -1,5 +1,5 @@
 import languages from "./languages.json"
-import {en_lang, uk_lang, ru_lang, pt_lang, es_lang} from './langdata'
+import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
 
 
 export class State
@@ -67,7 +67,7 @@ export class State
 					if !window.translation
 						setCookie('translation', 'DNB')
 				when 'de'
-					language = 'eng'
+					language = 'de'
 					document.lastChild.lang = "en"
 					if !window.translation
 						setCookie('translation', 'MB')
@@ -463,11 +463,12 @@ export class State
 	def setLanguage language
 		lang = language
 		switch language
-			when 'ukr' then lang = uk_lang
-			when 'ru' then lang = ru_lang
-			when 'pt' then lang = pt_lang
-			when 'es' then lang = es_lang
-			else lang = en_lang
+			when 'ukr' then lang = ukrainian
+			when 'ru' then lang = russian
+			when 'pt' then lang = portuguese
+			when 'es' then lang = espanol
+			when 'de' then lang = german
+			else lang = english
 		setCookie('language', language)
 
 	def fallbackCopyTextToClipboard text
