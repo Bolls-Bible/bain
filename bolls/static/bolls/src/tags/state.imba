@@ -71,6 +71,21 @@ export class State
 					document.lastChild.lang = "en"
 					if !window.translation
 						setCookie('translation', 'MB')
+				when 'nl'
+					language = 'eng'
+					document.lastChild.lang = "en"
+					if !window.translation
+						setCookie('translation', 'NLD')
+				when 'fr'
+					language = 'eng'
+					document.lastChild.lang = "en"
+					if !window.translation
+						setCookie('translation', 'NBS')
+				when 'it'
+					language = 'eng'
+					document.lastChild.lang = "en"
+					if !window.translation
+						setCookie('translation', 'NR06')
 				when 'he'
 					language = 'eng'
 					document.lastChild.lang = "en"

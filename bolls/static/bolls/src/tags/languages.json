@@ -164,6 +164,12 @@
 				"full_name": "Novo Testamento Judaico",
 				"info": "",
 				"updated": 1591781197652
+			},
+			{
+				"short_name": "OL",
+				"full_name": "O Livro",
+				"info": "",
+				"updated": 1591781197652
 			}
 		]
 	},
@@ -197,12 +203,34 @@
 		]
 	},
 	{
+		"language": "🇳🇱 Nederland Netherlands",
+		"translations": [
+			{
+				"short_name": "NLD",
+				"full_name": "De Heilige Schrift, Petrus Canisiusvertaling, 1939",
+				"info": "https://nl.wikipedia.org/wiki/Petrus_Canisiusvertaling",
+				"updated": 1591292348391
+			}
+		]
+	},
+	{
 		"language": "🇳🇴 Norsk Norwegian",
 		"translations": [
 			{
 				"short_name": "DNB",
 				"full_name": "Det Norsk Bibelselskap (1930)",
 				"info": "https://nn.wikipedia.org/wiki/Det_Norske_Bibelselskap",
+				"updated": 1591292348391
+			}
+		]
+	},
+	{
+		"language": "🇫🇷 Français French",
+		"translations": [
+			{
+				"short_name": "NBS",
+				"full_name": "Nouvelle Bible Segond, 2002",
+				"info": "https://fr.wikipedia.org/wiki/Bible_Segond",
 				"updated": 1591292348391
 			}
 		]
@@ -259,12 +287,18 @@
 		]
 	},
 	{
-		"language": "🇮🇹 Latin Latine",
+		"language": "🇮🇹 Latin / Italian",
 		"translations": [
 			{
 				"short_name": "VULG",
 				"full_name": "Biblia Sacra juxta Vulgatam Clementinam",
 				"info": "https://en.wikipedia.org/wiki/Vulgate",
+				"updated": 1591185595149
+			},
+			{
+				"short_name": "NR06",
+				"full_name": "Nuova Riveduta, 2006",
+				"info": "",
 				"updated": 1591185595149
 			}
 		]

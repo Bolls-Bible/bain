@@ -235,48 +235,48 @@ export tag profile-page
 			<header.profile_hat>
 				if !query
 					<.collectionsflex style="flex-wrap: wrap; z-index: 100000;">
-						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click.prevent.toBible>
+						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=toBible>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						<h1[margin: 1em 4px]> data.getUserName()
 						if window.navigator.onLine
 							<.change_password.help>
-								<svg.helpsvg @click.showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+								<svg.helpsvg @click=showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
 									<title> data.lang.edit_account
 									<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
 								<.languages css:right="{window:innerWidth > 960 ? (window:innerWidth - 886) / 2 : 36}px" .show_languages=(show_options_of == 'account_actions')>
 									if data.user.is_password_usable then <a href="/accounts/password_change/"><button> data.lang.change_password
-									<button @click.prevent.showDeleteForm()> data.lang.delete_account
-									<button @click.prevent.showEditForm()> data.lang.edit_account
+									<button @click=showDeleteForm()> data.lang.delete_account
+									<button @click=showEditForm()> data.lang.edit_account
 					<.collectionsflex css:flex-wrap="wrap">
 						for collection in collections
 							if collection
-								<p.collection @click.prevent.getSearchedBookmarks(collection)> collection
+								<p.collection @click=getSearchedBookmarks(collection)> collection
 						<div [min-width: 16px]>
 				else
 					<.collectionsflex css:flex-wrap="wrap">
-						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click.prevent.closeSearch>
+						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=closeSearch>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						<h1> query
 			for bookmark in (query ? bookmarks : loaded_bookmarks)
 				<article.bookmark_in_list [border-color: {bookmark.color}]>
-					<p.bookmark_text innerHTML=bookmark.text.join(" ") @click.prevent.goToBookmark(bookmark) dir="auto">
+					<p.bookmark_text innerHTML=bookmark.text.join(" ") @click=goToBookmark(bookmark) dir="auto">
 					if bookmark.collection
 						<p.bookmark_collections>
 							for collection in bookmark.collection.split(' | ')
-								<p.collection @click.prevent.getSearchedBookmarks(collection)> collection
+								<p.collection @click=getSearchedBookmarks(collection)> collection
 					if bookmark.note
 						<p.profile_note.EditingArea[overflow: auto;] innerHTML=bookmark.note dir="auto">
 					<p.dataflex>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
-						<svg._options @click.prevent.showOptions(bookmark.title) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+						<svg._options @click=showOptions(bookmark.title) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 							<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
 						<.languages[right: {window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(bookmark.title == show_options_of)>
-							<button @click.prevent.deleteBookmark(bookmark)> data.lang.delete
-							<button @click.prevent.goToBookmark(bookmark)> data.lang.open
-							<button @click.prevent.copyToClipboard(bookmark)> data.lang.copy
+							<button @click=deleteBookmark(bookmark)> data.lang.delete
+							<button @click=goToBookmark(bookmark)> data.lang.open
+							<button @click=copyToClipboard(bookmark)> data.lang.copy
 				<hr.hr>
 			if loading && ((limits_of_range.loaded == limits_of_range.to) || limits_of_range.loaded == 0)
 				<loading-animation[padding: 128px 0]>
@@ -291,7 +291,7 @@ export tag profile-page
 						<form action="/delete-my-account/">
 							<header.search_hat>
 								<h1 style="margin:auto;"> data.lang.are_you_sure
-								<svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+								<svg.close_search :click=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 									<title> data.lang.close
 									<path d=svg_paths.close css:margin="auto">
 							<p style="margin-bottom:16px;"> data.lang.cannot_be_undone
@@ -305,7 +305,7 @@ export tag profile-page
 						<article#edit_account>
 							<header.search_hat>
 								<h1 style="margin:auto;"> data.lang.edit_account
-								<svg.close_search :click.prevent=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+								<svg.close_search :click=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 									<title> data.lang.close
 									<path d=svg_paths.close css:margin="auto">
 							<label> data.lang.edit_username_label
@@ -315,9 +315,9 @@ export tag profile-page
 							<label> data.lang.edit_name_label
 							<input.search bind=storage.name maxlength=30 style="margin:8px 0;border-radius:4px;">
 							if editAccountFormIsValid()
-								<button.change_language :click.prevent.editAccount()> data.lang.edit_account
+								<button.change_language :click.editAccount()> data.lang.edit_account
 							else
-								<button.change_language disabled :click.prevent.editAccount()> data.lang.edit_account
+								<button.change_language disabled :click.editAccount()> data.lang.edit_account
 
 			if !window.navigator.onLine
 				<div style="position: fixed;bottom: 16px;left: 16px;color: var(--text-color);background: var(--background-color);padding: 8px;border-radius: 8px;text-align: center;border: 1px solid var(--btn-bg-hover);z-index: 1000">
