@@ -1,36 +1,14 @@
 {
-  "name": "bolls-bible",
-  "description": "Bolls Bible",
-  "keywords": [
-    "bolls"
-  ],
-  "author": "Bohuslav Pavlyshynec",
-  "bugs": "https://github.com/Bohooslav/bolls/issues",
-  "version": "1.0.0",
-  "engines": {
-    "node": ">=6.0.0"
-  },
   "scripts": {
-    "start": "imba src/server.imba",
-    "dev": "webpack-dev-server --hot --content-base dist/",
-    "build": "webpack --mode=production",
-    "watch": "webpack --mode=development --watch --progress --colors --display-modules"
+    "build": "imba-rollup",
+    "start": "imba-rollup --watch --serve --hmr",
+    "dev": "imba-rollup --watch --serve --hmr",
+    "check-version": "imbac --version"
   },
-  "files": [],
-  "directories": {},
-  "homepage": "https://bolls.life",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Bohooslav/bolls.git"
-  },
-  "license": "MIT",
   "dependencies": {
-    "exports-loader": "^1.1.0",
-    "imba": "^1.5.2",
-    "imports-loader": "^0.8.0",
-    "smoothscroll-polyfill": "^0.4.4",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
-  }
+    "imba": "^2.0.0-alpha.95",
+    "imba-rollup": "^2.0.0-alpha.57",
+    "smoothscroll-polyfill": "^0.4.4"
+  },
+  "devDependencies": {}
 }

@@ -1,0 +1,10 @@
+tag search-text-as-html
+	def click event
+		if event.ctrlKey
+			window.open("/{data.translation}/{data.book}/{data.chapter}/{data.verse}", '_blank')
+		else
+			let bible = document.getElementsByTagName("bible-reader")
+			bible[0].getText(data.translation, data.book, data.chapter, data.verse)
+
+	def render
+		<self @click=click>

@@ -12902,6 +12902,1639 @@
 			"name": "Revelation",
 			"chapters": 22
 		}
+	],
+	"OL": [
+		{
+			"bookid": 1,
+			"chronorder": 1,
+			"name": "Génesis",
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"chronorder": 3,
+			"name": "Êxodo",
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"chronorder": 4,
+			"name": "Levítico",
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"chronorder": 5,
+			"name": "Números",
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"chronorder": 6,
+			"name": "Deuteronómio",
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"chronorder": 7,
+			"name": "Josué",
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"chronorder": 8,
+			"name": "Juízes",
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"chronorder": 9,
+			"name": "Rute",
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"chronorder": 10,
+			"name": "1 Samuel",
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"chronorder": 11,
+			"name": "2 Samuel",
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"chronorder": 15,
+			"name": "1 Reis",
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"chronorder": 28,
+			"name": "2 Reis",
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"chronorder": 12,
+			"name": "1 Crónicas",
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"chronorder": 16,
+			"name": "2 Crónicas",
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"chronorder": 37,
+			"name": "Esdras",
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"chronorder": 38,
+			"name": "Neemias",
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"chronorder": 36,
+			"name": "Ester",
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"chronorder": 2,
+			"name": "Job",
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"chronorder": 13,
+			"name": "Salmos",
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"chronorder": 17,
+			"name": "Provérbios",
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"chronorder": 18,
+			"name": "Eclesiastes",
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"chronorder": 14,
+			"name": "Cântico de Salomão",
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"chronorder": 25,
+			"name": "Isaías",
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"chronorder": 29,
+			"name": "Jeremias",
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"chronorder": 30,
+			"name": "Lamentações",
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"chronorder": 32,
+			"name": "Ezequiel",
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"chronorder": 33,
+			"name": "Daniel",
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"chronorder": 23,
+			"name": "Oséias",
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"chronorder": 20,
+			"name": "Joel",
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"chronorder": 21,
+			"name": "Amós",
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"chronorder": 31,
+			"name": "Obadias",
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"chronorder": 19,
+			"name": "Jonas",
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"chronorder": 22,
+			"name": "Miqueias",
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"chronorder": 24,
+			"name": "Naum",
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"chronorder": 27,
+			"name": "Habacuque",
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"chronorder": 26,
+			"name": "Sofonias",
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"chronorder": 34,
+			"name": "Ageu",
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"chronorder": 35,
+			"name": "Zacarias",
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"chronorder": 39,
+			"name": "Malaquias",
+			"chapters": 4
+		},
+		{
+			"bookid": 40,
+			"chronorder": 40,
+			"name": "Mateus",
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"chronorder": 58,
+			"name": "Marcos",
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"chronorder": 52,
+			"name": "Lucas",
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"chronorder": 66,
+			"name": "João",
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"chronorder": 54,
+			"name": "Atos",
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"chronorder": 46,
+			"name": "Romanos",
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"chronorder": 44,
+			"name": "1 Coríntios",
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"chronorder": 45,
+			"name": "2 Coríntios",
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"chronorder": 41,
+			"name": "Gálatas",
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"chronorder": 47,
+			"name": "Efésios",
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"chronorder": 49,
+			"name": "Filipenses",
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"chronorder": 50,
+			"name": "Colossenses",
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"chronorder": 42,
+			"name": "1 Tessalonicenses",
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"chronorder": 43,
+			"name": "2 Tessalonicences",
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"chronorder": 55,
+			"name": "1 Timóteo",
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"chronorder": 59,
+			"name": "2 Timóteo",
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"chronorder": 57,
+			"name": "Tito",
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"chronorder": 51,
+			"name": "Filémon",
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"chronorder": 53,
+			"name": "Hebreus",
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"chronorder": 48,
+			"name": "Tiago",
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"chronorder": 56,
+			"name": "1 Pedro",
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"chronorder": 60,
+			"name": "2 Pedro",
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"chronorder": 61,
+			"name": "1 João",
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"chronorder": 62,
+			"name": "2 João",
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"chronorder": 63,
+			"name": "3 João",
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"chronorder": 64,
+			"name": "Judas",
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"chronorder": 65,
+			"name": "Apocalipse",
+			"chapters": 22
+		}
+	],
+	"NBS": [
+		{
+			"bookid": 1,
+			"chronorder": 1,
+			"name": "Genèse",
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"chronorder": 3,
+			"name": "Exode",
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"chronorder": 4,
+			"name": "Lévitique",
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"chronorder": 5,
+			"name": "Nombres",
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"chronorder": 6,
+			"name": "Deutéronome",
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"chronorder": 7,
+			"name": "Josué",
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"chronorder": 8,
+			"name": "Juges",
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"chronorder": 9,
+			"name": "Ruth",
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"chronorder": 10,
+			"name": "Premier livre de Samuel",
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"chronorder": 11,
+			"name": "Second livre de Samuel",
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"chronorder": 15,
+			"name": "Premier livre des Rois",
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"chronorder": 28,
+			"name": "Second livre des Rois",
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"chronorder": 12,
+			"name": "Premier livre des Chroniques",
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"chronorder": 16,
+			"name": "Second livre des Chroniques",
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"chronorder": 37,
+			"name": "Esdras",
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"chronorder": 38,
+			"name": "Néhémie",
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"chronorder": 36,
+			"name": "Esther",
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"chronorder": 2,
+			"name": "Job",
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"chronorder": 13,
+			"name": "Psaumes",
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"chronorder": 17,
+			"name": "Proverbes",
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"chronorder": 18,
+			"name": "Ecclésiaste ou Qohéleth",
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"chronorder": 14,
+			"name": "Cantique des cantiques",
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"chronorder": 25,
+			"name": "Esaïe",
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"chronorder": 29,
+			"name": "Jérémie",
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"chronorder": 30,
+			"name": "Lamentations",
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"chronorder": 32,
+			"name": "Ezéchiel",
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"chronorder": 33,
+			"name": "Daniel",
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"chronorder": 23,
+			"name": "Osée",
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"chronorder": 20,
+			"name": "Joël",
+			"chapters": 4
+		},
+		{
+			"bookid": 30,
+			"chronorder": 21,
+			"name": "Amos",
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"chronorder": 31,
+			"name": "Abdias",
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"chronorder": 19,
+			"name": "Jonas",
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"chronorder": 22,
+			"name": "Michée",
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"chronorder": 24,
+			"name": "Nahum",
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"chronorder": 27,
+			"name": "Habacuc",
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"chronorder": 26,
+			"name": "Sophonie",
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"chronorder": 34,
+			"name": "Aggée",
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"chronorder": 35,
+			"name": "Zacharie",
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"chronorder": 39,
+			"name": "Malachie",
+			"chapters": 3
+		},
+		{
+			"bookid": 40,
+			"chronorder": 40,
+			"name": "Selon Matthieu",
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"chronorder": 58,
+			"name": "Selon Marc",
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"chronorder": 52,
+			"name": "Selon Luc",
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"chronorder": 66,
+			"name": "Selon Jean",
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"chronorder": 54,
+			"name": "Actes des Apôtres",
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"chronorder": 46,
+			"name": "Aux Romains",
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"chronorder": 44,
+			"name": "Première aux Corinthiens",
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"chronorder": 45,
+			"name": "Seconde aux Corinthiens",
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"chronorder": 41,
+			"name": "Aux Galates",
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"chronorder": 47,
+			"name": "Aux Ephésiens",
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"chronorder": 49,
+			"name": "Aux Philippiens",
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"chronorder": 50,
+			"name": "Aux Colossiens",
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"chronorder": 42,
+			"name": "Première aux Thessaloniciens",
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"chronorder": 43,
+			"name": "Seconde aux Thessaloniciens",
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"chronorder": 55,
+			"name": "Première à Timothée",
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"chronorder": 59,
+			"name": "Seconde à Timothée",
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"chronorder": 57,
+			"name": "A Tite",
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"chronorder": 51,
+			"name": "A Philémon",
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"chronorder": 53,
+			"name": "Aux Hébreux",
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"chronorder": 48,
+			"name": "De Jacques",
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"chronorder": 56,
+			"name": "Première de Pierre",
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"chronorder": 60,
+			"name": "Seconde de Pierre",
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"chronorder": 61,
+			"name": "Première de Jean",
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"chronorder": 62,
+			"name": "Deuxième de Jean",
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"chronorder": 63,
+			"name": "Troisième de Jean",
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"chronorder": 64,
+			"name": "De Jude",
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"chronorder": 65,
+			"name": "Apocalypse de Jean",
+			"chapters": 22
+		}
+	],
+	"NLD": [
+		{
+			"bookid": 1,
+			"chronorder": 1,
+			"name": "Genesis",
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"chronorder": 3,
+			"name": "Exodus",
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"chronorder": 4,
+			"name": "Leviticus",
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"chronorder": 5,
+			"name": "Numeri",
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"chronorder": 6,
+			"name": "Deuteronomium",
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"chronorder": 7,
+			"name": "Jozua",
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"chronorder": 8,
+			"name": "Rechters",
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"chronorder": 9,
+			"name": "Ruth",
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"chronorder": 10,
+			"name": "1 Samuel",
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"chronorder": 11,
+			"name": "2 Samuel",
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"chronorder": 15,
+			"name": "1 Koningen",
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"chronorder": 28,
+			"name": "2 Koningen",
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"chronorder": 12,
+			"name": "1 Kronieken",
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"chronorder": 16,
+			"name": "2 Kronieken",
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"chronorder": 37,
+			"name": "Ezra",
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"chronorder": 38,
+			"name": "Nehemia",
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"chronorder": 36,
+			"name": "Ester",
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"chronorder": 2,
+			"name": "Job",
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"chronorder": 13,
+			"name": "Psalmen",
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"chronorder": 17,
+			"name": "Spreuken",
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"chronorder": 18,
+			"name": "Prediker",
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"chronorder": 14,
+			"name": "Hooglied",
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"chronorder": 25,
+			"name": "Jesaja",
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"chronorder": 29,
+			"name": "Jeremia",
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"chronorder": 30,
+			"name": "Klaagliederen",
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"chronorder": 32,
+			"name": "Ezechiel",
+			"chapters": 48
+		},
+		{
+			"bookid": 28,
+			"chronorder": 23,
+			"name": "Hosea",
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"chronorder": 20,
+			"name": "Joel",
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"chronorder": 21,
+			"name": "Amos",
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"chronorder": 31,
+			"name": "Obadja",
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"chronorder": 19,
+			"name": "Jonas",
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"chronorder": 22,
+			"name": "Micha",
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"chronorder": 24,
+			"name": "Nahum",
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"chronorder": 27,
+			"name": "Habakuk",
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"chronorder": 26,
+			"name": "Sefanja",
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"chronorder": 34,
+			"name": "Haggai",
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"chronorder": 35,
+			"name": "Zacharias",
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"chronorder": 39,
+			"name": "Maleachi",
+			"chapters": 4
+		},
+		{
+			"bookid": 68,
+			"chronorder": 68,
+			"name": "Tobit",
+			"chapters": 14
+		},
+		{
+			"bookid": 69,
+			"chronorder": 69,
+			"name": "Judit",
+			"chapters": 16
+		},
+		{
+			"bookid": 70,
+			"chronorder": 70,
+			"name": "Wijsheid",
+			"chapters": 19
+		},
+		{
+			"bookid": 71,
+			"chronorder": 71,
+			"name": "Jezussirach",
+			"chapters": 51
+		},
+		{
+			"bookid": 73,
+			"chronorder": 73,
+			"name": "Baruch",
+			"chapters": 6
+		},
+		{
+			"bookid": 74,
+			"chronorder": 74,
+			"name": "1 Makkabeeen",
+			"chapters": 16
+		},
+		{
+			"bookid": 75,
+			"chronorder": 75,
+			"name": "2 Makkabeeen",
+			"chapters": 15
+		},
+		{
+			"bookid": 27,
+			"chronorder": 33,
+			"name": "Daniel",
+			"chapters": 14
+		},
+		{
+			"bookid": 40,
+			"chronorder": 40,
+			"name": "Matteus",
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"chronorder": 58,
+			"name": "Marcus",
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"chronorder": 52,
+			"name": "Lucas",
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"chronorder": 66,
+			"name": "Johannes",
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"chronorder": 54,
+			"name": "Handelingen",
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"chronorder": 46,
+			"name": "Romeinen",
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"chronorder": 44,
+			"name": "1 Korintiers",
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"chronorder": 45,
+			"name": "2 Korintiers",
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"chronorder": 41,
+			"name": "Galaten",
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"chronorder": 47,
+			"name": "Efesiers",
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"chronorder": 49,
+			"name": "Filippenzen",
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"chronorder": 50,
+			"name": "Kolossenzen",
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"chronorder": 42,
+			"name": "1 Tessalonicenzen",
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"chronorder": 43,
+			"name": "2 Tessalonicenzen",
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"chronorder": 55,
+			"name": "1 Timoteus",
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"chronorder": 59,
+			"name": "2 Timoteus",
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"chronorder": 57,
+			"name": "Titus",
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"chronorder": 51,
+			"name": "Filemon",
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"chronorder": 53,
+			"name": "Hebreeen",
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"chronorder": 48,
+			"name": "Jacobus",
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"chronorder": 56,
+			"name": "1 Petrus",
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"chronorder": 60,
+			"name": "2 Petrus",
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"chronorder": 61,
+			"name": "1 Johannes",
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"chronorder": 62,
+			"name": "2 Johannes",
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"chronorder": 63,
+			"name": "3 Johannes",
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"chronorder": 64,
+			"name": "Judas",
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"chronorder": 65,
+			"name": "Apokalyps",
+			"chapters": 22
+		}
+	],
+	"NR06": [
+		{
+			"bookid": 1,
+			"chronorder": 1,
+			"name": "Genesi",
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"chronorder": 3,
+			"name": "Esodo",
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"chronorder": 4,
+			"name": "Levitico",
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"chronorder": 5,
+			"name": "Numeri",
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"chronorder": 6,
+			"name": "Deuteronomio",
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"chronorder": 7,
+			"name": "Giosuè",
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"chronorder": 8,
+			"name": "Giudici",
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"chronorder": 9,
+			"name": "Rut",
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"chronorder": 10,
+			"name": "1Samuele",
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"chronorder": 11,
+			"name": "2Samuele",
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"chronorder": 15,
+			"name": "1Re",
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"chronorder": 28,
+			"name": "2Re",
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"chronorder": 12,
+			"name": "1Cronache",
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"chronorder": 16,
+			"name": "2Cronache",
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"chronorder": 37,
+			"name": "Esdra",
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"chronorder": 38,
+			"name": "Neemia",
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"chronorder": 36,
+			"name": "Ester",
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"chronorder": 2,
+			"name": "Giobbe",
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"chronorder": 13,
+			"name": "Salmi",
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"chronorder": 17,
+			"name": "Proverbi",
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"chronorder": 18,
+			"name": "Ecclesiaste",
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"chronorder": 14,
+			"name": "Cantico",
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"chronorder": 25,
+			"name": "Isaia",
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"chronorder": 29,
+			"name": "Geremia",
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"chronorder": 30,
+			"name": "Lamentazioni",
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"chronorder": 32,
+			"name": "Ezechiele",
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"chronorder": 33,
+			"name": "Daniele",
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"chronorder": 23,
+			"name": "Osea",
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"chronorder": 20,
+			"name": "Gioele",
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"chronorder": 21,
+			"name": "Amos",
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"chronorder": 31,
+			"name": "Abdia",
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"chronorder": 19,
+			"name": "Giona",
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"chronorder": 22,
+			"name": "Michea",
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"chronorder": 24,
+			"name": "Naum",
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"chronorder": 27,
+			"name": "Abacuc",
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"chronorder": 26,
+			"name": "Sofonia",
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"chronorder": 34,
+			"name": "Aggeo",
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"chronorder": 35,
+			"name": "Zaccaria",
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"chronorder": 39,
+			"name": "Malachia",
+			"chapters": 4
+		},
+		{
+			"bookid": 40,
+			"chronorder": 40,
+			"name": "Matteo",
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"chronorder": 58,
+			"name": "Marco",
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"chronorder": 52,
+			"name": "Luca",
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"chronorder": 66,
+			"name": "Giovanni",
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"chronorder": 54,
+			"name": "Atti",
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"chronorder": 46,
+			"name": "Romani",
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"chronorder": 44,
+			"name": "1Corinzi",
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"chronorder": 45,
+			"name": "2Corinzi",
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"chronorder": 41,
+			"name": "Galati",
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"chronorder": 47,
+			"name": "Efesini",
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"chronorder": 49,
+			"name": "Filippesi",
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"chronorder": 50,
+			"name": "Colossesi",
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"chronorder": 42,
+			"name": "1Tessalonicesi",
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"chronorder": 43,
+			"name": "2Tessalonicesi",
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"chronorder": 55,
+			"name": "1Timoteo",
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"chronorder": 59,
+			"name": "2Timoteo",
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"chronorder": 57,
+			"name": "Tito",
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"chronorder": 51,
+			"name": "Filemone",
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"chronorder": 53,
+			"name": "Ebrei",
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"chronorder": 48,
+			"name": "Giacomo",
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"chronorder": 56,
+			"name": "1Pietro",
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"chronorder": 60,
+			"name": "2Pietro",
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"chronorder": 61,
+			"name": "1Giovanni",
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"chronorder": 62,
+			"name": "2Giovanni",
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"chronorder": 63,
+			"name": "3Giovanni",
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"chronorder": 64,
+			"name": "Giuda",
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"chronorder": 65,
+			"name": "Apocalisse",
+			"chapters": 22
+		}
 	]
-
 }

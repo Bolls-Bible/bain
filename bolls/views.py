@@ -407,8 +407,8 @@ def api(request):
 
 
 def sw(request):
-	# sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
-	sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
+	# sw_file = open(BASE_DIR + '/bolls/static/bolls/public/sw.js', 'rb')
+	sw_file = open(BASE_DIR + '/static/bolls/public/sw.js', 'rb')
 	response = HttpResponse(content=sw_file)
 	response['Content-Type'] = 'application/javascript'
 	response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'

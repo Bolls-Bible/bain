@@ -4,8 +4,8 @@
 <html id="html" data-light="dark" data-theme='dark' data-transitions="true">
 
 <head>
-	<script async rel="preconnect" src="https://www.googletagmanager.com/gtag/js?id=UA-162017974-1"></script>
-	<script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script>
+	<!-- <script async rel="preconnect" src="https://www.googletagmanager.com/gtag/js?id=UA-162017974-1"></script> -->
+	<!-- <script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script> -->
 	<meta charset="UTF-8">
 	<title>Bolls Bible</title>
 	<script>
@@ -27,10 +27,10 @@
 	window.translation = false;
 {% endif %}
 	</script>
-	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
-	<script src="{% static 'bolls/dist/index.js' %}" async></script>
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/mobile_index.css' %}" media="(max-width: 600px)">
+	<script src="{% static 'bolls/public/dexie.min.js' %}"></script>
+	<script src="{% static 'bolls/public/app.imba.js' %}" async></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/public/index.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/public/mobile_index.css' %}" media="(max-width: 600px)">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
 	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
