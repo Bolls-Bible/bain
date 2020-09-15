@@ -10,10 +10,7 @@ import './search-text-as-html'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
 
-let isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1
-let isLinux = navigator.platform.slice(0, 5).toLowerCase() == 'linux'
-
-let isLinuxChrome = window.chrome && isLinux && not isAndroid
+let isDesktopChrome = (window.chrome || window.navigator.userAgent == 'Chrome') && navigator.userAgent.toLowerCase().indexOf("android") == -1
 
 let translations = []
 for language in languages
@@ -38,6 +35,7 @@ let settings =
 	transitions: yes
 	name_of_book: ''
 	filtered_books: []
+	parallel_synch: yes
 
 let settingsp = {
 	display: no
@@ -165,7 +163,7 @@ document.onkeyup = do |e|
 	const bible = document.getElementsByTagName("BIBLE-READER")
 	if bible[0]
 		const bibletag = bible[0]
-		if document.getElementById("search") != document.activeElement && !document.activeElement.className.includes('EditingArea') && document.getSelection() == ''
+		if document.getElementById("search") != document.activeElement && !document.activeElement.className.includes('EditingArea') && document.getSelection().isCollapsed
 			if e.code == "ArrowRight" && e.altKey && e.ctrlKey
 				bibletag.nextChapter('true')
 			elif e.code == "ArrowLeft" && e.altKey && e.ctrlKey
@@ -288,6 +286,7 @@ export tag bible-reader
 		settings.font.align = parseInt(getCookie('align')) || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
+		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
 		settings.translation = getCookie('translation') || settings.translation
 		settings.book = parseInt(getCookie('book')) || settings.book
 		settings.chapter = parseInt(getCookie('chapter')) || settings.chapter
@@ -448,6 +447,8 @@ export tag bible-reader
 				loading = no
 				console.error('Error: ', error)
 				data.showNotification('error')
+			if settings.parallel_synch && settingsp.display
+				getParallelText settingsp.translation, book, chapter, verse
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
 			else setTimeout(&, 100) do window.scroll(0,0)
 		else clearSpace()
@@ -497,6 +498,8 @@ export tag bible-reader
 			catch error
 				console.error('Error: ', error)
 				data.showNotification('error')
+			if settings.parallel_synch && settingsp.display
+				getText settings.translation, book, chapter, verse
 			if data.user.username
 				url = "/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/'
 				parallel_bookmarks = []
@@ -592,11 +595,11 @@ export tag bible-reader
 			window.history.back()
 		if document.getElementsByTagName('main')[0] && !page_search.d
 			document.getElementsByTagName('main')[0].focus()
-			window.getSelection().removeAllRanges()
 		if page_search.d || what_to_show_in_pop_up_block
 			page_search.d = no
 			page_search.matches = []
 			page_search.rects = []
+		window.getSelection().removeAllRanges()
 		what_to_show_in_pop_up_block = ''
 		imba.commit()
 
@@ -1090,9 +1093,9 @@ export tag bible-reader
 
 	def closeDrawer e
 		if e.type.slice(-2) == 'up' || e.type.slice(-6) == 'cancel'
-			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && isLinuxChrome
+			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && isDesktopChrome
 				clickTheTarget e.events[0].target
-
+				onzone = no
 			else touchend e
 			return
 
@@ -1117,7 +1120,7 @@ export tag bible-reader
 			# 	touch.dx < -64 ? settings_menu_left = 0 : settings_menu_left = -300
 			# else
 			touch.dx > 64 ? settings_menu_left = -300 : settings_menu_left = 0
-		# elif document.getSelection() == '' && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
+		# elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
 		# 	if touch.dx < -32
 		# 		settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
 		# 	elif touch.dx > 32
@@ -1130,9 +1133,9 @@ export tag bible-reader
 			touch.dy = touch.y - touch.events[0].y
 			touch.dx = touch.x - touch.events[0].x
 
-			if touch.dx == 0 && touch.dx == 0 && isLinuxChrome
+			if touch.dx == 0 && touch.dx == 0 && isDesktopChrome
 				clickTheTarget touch.events[0].target
-			elif document.getSelection() == '' && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
+			elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
 				if window.innerWidth > 600
 					if touch.dx < -32
 						settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter("true") : nextChapter()
@@ -1186,10 +1189,10 @@ export tag bible-reader
 					store.note += vrs.note
 
 	def addToChoosen pk, id, parallel
-		if !settings_menu_left || !bible_menu_left
+		if !settings_menu_left || !bible_menu_left || not document.getSelection().isCollapsed
 			return clearSpace()
 		store.highlight_color = getRandomColor()
-		if document.getSelection() == ''
+		if document.getSelection().isCollapsed
 			# # If the verse is in area under bottom section
 			# scroll to it, to see the full verse
 			if !settingsp.display
@@ -1614,6 +1617,10 @@ export tag bible-reader
 		settings.verse_picker = !settings.verse_picker
 		setCookie('verse_picker', settings.verse_picker)
 
+	def toggleParallelSynch
+		settings.parallel_synch = !settings.parallel_synch
+		setCookie('parallel_synch', settings.parallel_synch)
+
 	def toggleVerseBreak
 		settings.verse_break = !settings.verse_break
 		setCookie('verse_break', settings.verse_break)
@@ -1812,6 +1819,7 @@ export tag bible-reader
 			when 'ukr' then "Українська"
 			when 'ru' then "Русский"
 			when 'pt' then "Portuguese"
+			when 'de' then "Deutsche"
 			when 'es' then "Español"
 			else "English"
 
@@ -1820,7 +1828,7 @@ export tag bible-reader
 		show_verse_picker = no
 
 	def welcomeOk
-		welcome = no
+		welcome = 'false'
 		setCookie('welcome', no)
 		window.history.pushState(
 			{},
@@ -1840,8 +1848,8 @@ export tag bible-reader
 				chapter_headers.fontsize1 = 2
 		else
 			testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
-			if testsize < 0.5
-				chapter_headers.fontsize2 = 0.5
+			if testsize * settings.font.size < 12
+				chapter_headers.fontsize2 = 12 / settings.font.size
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize2 = testsize
 			else
@@ -1920,6 +1928,18 @@ export tag bible-reader
 		else
 			return 'auto'
 
+	def goToVerse id
+		if settings.parallel_synch
+			if id.toString().charAt(0) == 'p'
+				findVerse id, 0, no
+				findVerse id.toString().slice(1, id.length), 0, no
+			else
+				findVerse ('p' + id), 0, no
+				findVerse id, 0, no
+		else
+			findVerse id, 0, no
+		hideVersePicker()
+
 
 	def render
 		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
@@ -1929,21 +1949,20 @@ export tag bible-reader
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
 						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation) tabindex="0"> settingsp.translation
-					if settingsp.edited_version == settingsp.translation
+				<header[d:flex jc:space-between cursor:pointer]>
+					<@click=toggleChronorder>
+						<svg.chronological_order .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" title=data.lang.chronological_order>
+							<title> data.lang.chronological_order
+							<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
+					if settingsp.edited_version == settingsp.translation && settingsp.display
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settingsp.edited_version
 					else
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settings.translation
-				else
-					<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settings.translation
-				<@click=toggleChronorder>
-					<svg.chronological_order .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" title=data.lang.chronological_order>
-						<title> data.lang.chronological_order
-						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
-				if data.db_is_available
-					<@click=toggleDownloads>
-						<svg.download_translations .hide_chron_order=show_list_of_translations xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-							<title> data.lang.download
-							<path d=svg_paths.download>
+					if data.db_is_available
+						<@click=toggleDownloads>
+							<svg.download_translations .hide_chron_order=show_list_of_translations xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<title> data.lang.download
+								<path d=svg_paths.download>
 				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
 						<a.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
@@ -1984,8 +2003,8 @@ export tag bible-reader
 						<title> data.lang.delete
 						<path[m: auto] d=svg_paths.close>
 
-			<main.main tabindex="0" @touch=slideChapter .parallel_text=settingsp.display style="font-family:{settings.font.family};font-size: {settings.font.size}px; line-height:{settings.font.line-height};font-weight:{settings.font.weight};text-align: {settings.font.align};">
-				<section#firstparallel @scroll=changeHeadersSizeOnScroll .parallel=settingsp.display dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
+			<main.main tabindex="0" @touch=slideChapter .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+				<section#firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
@@ -1994,17 +2013,17 @@ export tag bible-reader
 							for verse in verses
 								if settings.verse_break
 									<br>
-								<a.verse id=verse.verse href="#{verse.verse}"> '\t', verse.verse
+								<a.verse id=verse.verse @click=goToVerse(verse.verse)> '\t', verse.verse
 								<span innerHTML=verse.text
 										@click=addToChoosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 						<.arrows>
-							<a.arrow @click=prevChapter() title=data.lang.prev href=prevChapterLink>
+							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							<a.arrow @click=nextChapter() title=data.lang.next href=nextChapterLink>
+							<a.arrow @click.prevent.nextChapter() title=data.lang.next href="{nextChapterLink()}">
 								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2022,7 +2041,7 @@ export tag bible-reader
 							for parallel_verse in parallel_verses
 								if settings.verse_break
 									<br>
-								<a.verse id="p{parallel_verse.verse}" href="#p{parallel_verse.verse}"> '\t', parallel_verse.verse
+								<a.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\t', parallel_verse.verse
 								<span innerHTML=parallel_verse.text
 									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
@@ -2041,7 +2060,7 @@ export tag bible-reader
 			<aside @touch=closeDrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window.navigator.onLine
-						<svg.helpsvg @click=blobcri xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+						<@click=blobcri> <svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 							<title> data.lang.support
 							<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					data.lang.other
@@ -2052,14 +2071,16 @@ export tag bible-reader
 								<.accent @click=changeAccent(accent.name) style="background-color: {settings.theme == 'dark' ? accent.light : accent.dark};">
 				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter=getSearchText> data.lang.search
 				<.btnbox>
-					<svg.cbtn @click=changeTheme("dark") style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
-						<title> data.lang.nighttheme
-						<g>
-							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
-						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg[p: 8px].cbtn @click=changeTheme("light") xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-						<title> data.lang.lighttheme
-						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
+					<.cbtn @click=changeTheme('dark')>
+						<svg style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
+							<title> data.lang.nighttheme
+							<g>
+								<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
+							<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
+					<.cbtn @click=changeTheme('light')>
+						<svg[p: 8px] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+							<title> data.lang.lighttheme
+							<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
 				<.btnbox>
 					<a[p: 12px fs: 20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
 					<a[p: 8px fs: 24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
@@ -2067,30 +2088,34 @@ export tag bible-reader
 					<a.cbtn [padding: 8px font-size: 24px font-weight: 100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
 					<a.cbtn [padding: 8px font-size: 24px font-weight: 900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
-					<svg.cbtn @click=changeLineHeight(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 14" fill="context-fill" style="padding: 16px 0;">
-						<title> data.lang.decrease_line_height
-						<rect x="0" y="0" width="28" height="2">
-						<rect x="0" y="6" width="38" height="2">
-						<rect x="0" y="12" width="18" height="2">
-					<svg.cbtn @click=changeLineHeight(yes) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 24" fill="context-fill" style="padding: 10px 0;">
-						<title> data.lang.increase_line_height
-						<rect x="0" y="0" width="28" height="2">
-						<rect x="0" y="11" width="38" height="2">
-						<rect x="0" y="22" width="18" height="2">
+					<.cbtn @click.changeLineHeight(no)>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 14" fill="context-fill" style="padding: 16px 0;">
+							<title> data.lang.decrease_line_height
+							<rect x="0" y="0" width="28" height="2">
+							<rect x="0" y="6" width="38" height="2">
+							<rect x="0" y="12" width="18" height="2">
+					<.cbtn @click.changeLineHeight(yes)>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 24" fill="context-fill" style="padding: 10px 0;">
+							<title> data.lang.increase_line_height
+							<rect x="0" y="0" width="28" height="2">
+							<rect x="0" y="11" width="38" height="2">
+							<rect x="0" y="22" width="18" height="2">
 				<.btnbox>
-					<svg.cbtn @click=changeAlign(yes)  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
-						<title> data.lang.auto_align
-						<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
-					<svg.cbtn @click=changeAlign(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
-						<title> data.lang.align_justified
-						<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
+					<.cbtn @click=changeAlign(yes)>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+							<title> data.lang.auto_align
+							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
+					<.cbtn @click=changeAlign(no)>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+							<title> data.lang.align_justified
+							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
 				if window.innerWidth > 639
 					<.btnbox>
-						<svg.cbtn @click=changeMaxWidth(no) xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
+						<.cbtn @click=changeMaxWidth(no)> <svg xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
 							<title> data.lang.increase_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z">
 							<path d="M38.5,7 L32.75,1.25 L34,6.58831647e-15 L42,8 L41.375,8.625 L34,16 L32.75,14.75 L38.5,9 L24,9 L24,7 L38.5,7 Z" transform="translate(33.000000, 8.000000) scale(-1, 1) translate(-33.000000, -8.000000)">
-						<svg.cbtn @click=changeMaxWidth(yes) xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
+						<.cbtn @click=changeMaxWidth(yes)> <svg xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
 							<title> data.lang.decrease_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
@@ -2137,6 +2162,9 @@ export tag bible-reader
 						<button @click=(do data.setLanguage('de'))> "Deutsche"
 						<button @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button @click=(do data.setLanguage('es'))> "Español"
+				<.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
+					data.lang.parallel_synch
+					<p.checkbox> <span>
 				<.nighttheme.parent_checkbox.flex @click=toggleVersePicker() .checkbox_turned=settings.verse_picker>
 					data.lang.verse_picker
 					<p.checkbox> <span>
@@ -2165,13 +2193,13 @@ export tag bible-reader
 					data.lang.support
 				<footer>
 					<p.footer_links>
-						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
-						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
+						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
+						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
@@ -2221,14 +2249,14 @@ export tag bible-reader
 							<title> data.lang.compare
 							<line x1="0" y1="10" x2="20" y2="10">
 							<line x1="10" y1="0" x2="10" y2="20">
-					<article.search_body tabindex="0" [pb: 256px scroll-behavior: auto]>
-						<[z-index: 1].filters .show=show_translations_for_comparison>
+						<[z-index: 1100].filters .show=show_translations_for_comparison>
 							if compare_translations.length == translations.length
 								<p[padding: 12px 8px]> data.lang.nothing_else
 							for translation in translations when !compare_translations.find(do |element| return element == translation.short_name)
 								<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
+					<article.search_body tabindex="0" [pb: 256px scroll-behavior: auto]>
 						<p.total_msg> data.lang.add_translations_msg
-						<ul[d:flex fld:column]>
+						<ul.comparison_box>
 							for tr in comparison_parallel
 								<compare-draggable-item data=tr id="compare_{tr[0].translation}" langdata=data.lang>
 						unless compare_translations.length
@@ -2565,13 +2593,13 @@ export tag bible-reader
 					<[m: 0].list_of_chapters.show_list_of_chapters>
 						if show_verse_picker
 							for i in [0 ... verses.length]
-								<a.chapter_number @click=hideVersePicker() href="#{i + 1}"> i + 1
+								<a.chapter_number @click=goToVerse(i + 1)> i + 1
 						elif show_parallel_verse_picker
 							for j in [0 ... parallel_verses.length]
-								<a.chapter_number @click=hideVersePicker() href="#p{j + 1}"> j + 1
+								<a.chapter_number @click=goToVerse('p' + (j + 1))> j + 1
 
 			if welcome != 'false'
-				<section#welcome.history.filters .show_history=welcome>
+				<section#welcome.history.filters [right: 3vw top: auto bottom: 2% visibility: visible transform: none]>
 					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
 					<p> data.lang.welcome_msg, <span.emojify> ' 😉'
 					<button @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
