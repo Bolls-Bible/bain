@@ -122,7 +122,7 @@ export tag profile-page
 		imba.commit()
 
 	def toBible
-		window.history.back()
+		data.showBible()
 		remove()
 
 	def getMoreBookmarks
@@ -248,17 +248,17 @@ export tag profile-page
 									if data.user.is_password_usable then <a href="/accounts/password_change/"><button> data.lang.change_password
 									<button @click=showDeleteForm()> data.lang.delete_account
 									<button @click=showEditForm()> data.lang.edit_account
-					<.collectionsflex css:flex-wrap="wrap">
+					<.collectionsflex [flex-wrap: wrap]>
 						for collection in collections
 							if collection
 								<p.collection @click=getSearchedBookmarks(collection)> collection
 						<div [min-width: 16px]>
 				else
-					<.collectionsflex css:flex-wrap="wrap">
+					<.collectionsflex [flex-wrap: wrap]>
 						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=closeSearch>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-						<h1> query
+						<h1[margin: 1em 4px]> query
 			for bookmark in (query ? bookmarks : loaded_bookmarks)
 				<article.bookmark_in_list [border-color: {bookmark.color}]>
 					<p.bookmark_text innerHTML=bookmark.text.join(" ") @click=goToBookmark(bookmark) dir="auto">

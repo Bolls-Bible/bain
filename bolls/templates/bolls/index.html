@@ -38,9 +38,9 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
 	<link rel="manifest" href="{% static 'site.webmanifest' %}">
-	{% if translation %}
+{% if translation and not verse %}
 	<link rel="canonical" href="https://bolls.life/{{translation}}/{{book}}/{{chapter}}/">
-	{% endif %}
+{% endif %}
 	<meta property="og:site_name" content="Bolls Bible">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=5,initial-scale=1">
