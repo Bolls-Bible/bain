@@ -226,15 +226,14 @@ export tag profile-page
 	css
 		h: 100vh
 		ofy: auto
-		padding: 0 calc(50% - 470px)
-		display: flex
-		flex-direction: column
+		padding: 0 calc(50% - 470px) 256px
+		d: block
 
 	def render
 		<self @scroll=scroll>
 			<header.profile_hat>
 				if !query
-					<.collectionsflex style="flex-wrap: wrap; z-index: 100000;">
+					<.collectionsflex style="z-index: 100000;">
 						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=toBible>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
@@ -254,7 +253,7 @@ export tag profile-page
 								<p.collection @click=getSearchedBookmarks(collection)> collection
 						<div [min-width: 16px]>
 				else
-					<.collectionsflex [flex-wrap: wrap]>
+					<.collectionsflex>
 						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=closeSearch>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
