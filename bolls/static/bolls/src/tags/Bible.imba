@@ -10,8 +10,6 @@ import './search-text-as-html'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
 
-let isDesktopChrome = (window.chrome || window.navigator.userAgent == 'Chrome') && navigator.userAgent.toLowerCase().indexOf("android") == -1
-
 const inner_height = window.innerHeight
 let iOS_keaboard_height = 0
 
@@ -99,6 +97,7 @@ let new_comparison_parallel = []
 let show_delete_bookmark = no
 let show_translations_for_comparison = no
 let welcome = yes
+let slidetouch = null
 let compare_translations = []
 let compare_parallel_of_chapter
 let compare_parallel_of_book
@@ -166,7 +165,7 @@ document.onkeyup = do |e|
 	const bible = document.getElementsByTagName("BIBLE-READER")
 	if bible[0]
 		const bibletag = bible[0]
-		if document.getElementById("search") != document.activeElement && !document.activeElement.className.includes('EditingArea') && document.getSelection().isCollapsed
+		if document.activeElement.tagName == 'INPUT' && document.activeElement.contentEditable != 'true' && document.getSelection().isCollapsed
 			if e.code == "ArrowRight" && e.altKey && e.ctrlKey
 				bibletag.nextChapter('true')
 			elif e.code == "ArrowLeft" && e.altKey && e.ctrlKey
@@ -1069,88 +1068,6 @@ export tag bible-reader
 				bible_menu_left = -300
 				settings_menu_left = -300
 
-	# def touchDispatcher e
-	# 	if window.innerWidth >= 640
-	# 		mousemove e
-	# 	else
-	# 		e.dx = e.x - e.events[0].x
-	# 		e.dy = e.y - e.events[0].y
-
-	# 		if e.events[0].x < 16 or e.events[0].x > window.innerWidth - 16
-	# 			if bible_menu_left < 0 && e.dx > 0
-	# 				bible_menu_left = e.dx - 300
-	# 			if settings_menu_left < 0 && e.dx < 0
-	# 				settings_menu_left = - e.dx - 300
-	# 			inzone = yes
-	# 		elif bible_menu_left > -300 or settings_menu_left > -300
-	# 			if bible_menu_left > -300 && e.dx < 0
-	# 				bible_menu_left = e.dx
-	# 			if settings_menu_left > -300 && e.dx > 0
-	# 				settings_menu_left = - e.dx
-	# 			onzone = yes
-
-	# 		if e.type.slice(-2) == 'up' or e.type.slice(-6) == 'cancel'
-	# 			touchend(e)
-
-	def clickTheTarget target
-		if target.click
-			target.click()
-		else clickTheTarget(target.parentNode)
-
-	def closeDrawer e
-		if e.type.slice(-2) == 'up' || e.type.slice(-6) == 'cancel'
-			if e.events[0].x == e.events[e.events.length - 1].x && e.events[0].y == e.events[e.events.length - 1].y && isDesktopChrome
-				clickTheTarget e.events[0].target
-				onzone = no
-			else touchend e
-		else
-			e.dx = e.x - e.events[0].x
-			# e.dy = e.y - e.events[0].y
-
-			if bible_menu_left > -300 && e.dx < 0
-				bible_menu_left = e.dx
-			if settings_menu_left > -300 && e.dx > 0
-				settings_menu_left = - e.dx
-			onzone = yes
-
-	def touchend touch
-		if bible_menu_left > -300
-			# # if inzone
-			# 	touch.dx > 64 ? bible_menu_left = 0 : bible_menu_left = -300
-			# else
-			touch.dx < -64 ? bible_menu_left = -300 : bible_menu_left = 0
-		elif settings_menu_left > -300
-			# if inzone
-			# 	touch.dx < -64 ? settings_menu_left = 0 : settings_menu_left = -300
-			# else
-			touch.dx > 64 ? settings_menu_left = -300 : settings_menu_left = 0
-		# elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
-		# 	if touch.dx < -32
-		# 		settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
-		# 	elif touch.dx > 32
-		# 		settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter("true") : prevChapter()
-		# inzone = no
-		onzone = no
-
-	def slideChapter touch
-		if touch.type.slice(-2) == 'up' || touch.type.slice(-6) == 'cancel'
-			touch.dy = touch.y - touch.events[0].y
-			touch.dx = touch.x - touch.events[0].x
-
-			if touch.dx == 0 && touch.dx == 0 && isDesktopChrome
-				clickTheTarget touch.events[0].target
-			elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
-				if window.innerWidth > 600
-					if touch.dx < -32
-						settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter("true") : nextChapter()
-					elif touch.dx > 32
-						settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter("true") : prevChapter()
-				else
-					if touch.dx < -32
-						settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
-					elif touch.dx > 32
-						settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter("true") : prevChapter()
-
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
 			let img = 'linear-gradient(to right'
@@ -1945,10 +1862,53 @@ export tag bible-reader
 		hideVersePicker()
 
 
+	def slidestart touch
+		slidetouch = touch.changedTouches[0]
+
+	def slideend touch
+		touch = touch.changedTouches[0]
+
+		touch.dy = slidetouch.clientY - touch.clientY
+		touch.dx = slidetouch.clientX - touch.clientX
+
+		if document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
+			if window.innerWidth > 600
+				if touch.dx < -32
+					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter("true") : prevChapter()
+				elif touch.dx > 32
+					settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter("true") : nextChapter()
+			else
+				if touch.dx < -32
+					settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter("true") : prevChapter()
+				elif touch.dx > 32
+					settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
+
+		slidetouch = null
+
+
+	def closingdrawer e
+		e.dx = e.changedTouches[0].clientX - slidetouch.clientX
+
+		if bible_menu_left > -300 && e.dx < 0
+			bible_menu_left = e.dx
+		if settings_menu_left > -300 && e.dx > 0
+			settings_menu_left = - e.dx
+		onzone = yes
+
+
+	def closedrawersend touch
+		touch.dx = touch.changedTouches[0].clientX - slidetouch.clientX
+
+		if bible_menu_left > -300
+			touch.dx < -64 ? bible_menu_left = -300 : bible_menu_left = 0
+		elif settings_menu_left > -300
+			touch.dx > 64 ? settings_menu_left = -300 : settings_menu_left = 0
+		onzone = no
+
+
 	def render
-		# <self @scroll=scroll @mousemove=mousemove @touch=touchDispatcher>
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden ofy: {mainOverflow()} pr:{rightPaddingOfReader()}px]>
-			<nav @touch=closeDrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{onzone ? 'transition:none;' : ''}">
+			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{onzone ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
@@ -2007,7 +1967,7 @@ export tag bible-reader
 						<title> data.lang.delete
 						<path[m: auto] d=svg_paths.close>
 
-			<main.main tabindex="0" @touch=slideChapter .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+			<main.main tabindex="0" @touchstart=slidestart @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section#firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p'
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2017,7 +1977,7 @@ export tag bible-reader
 							for verse in verses
 								if settings.verse_break
 									<br>
-								<a.verse id=verse.verse @click=goToVerse(verse.verse)> '\t', verse.verse
+								<span.verse id=verse.verse @click=goToVerse(verse.verse)> '\t', verse.verse
 								<span innerHTML=verse.text
 										@click=addToChoosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
@@ -2045,7 +2005,7 @@ export tag bible-reader
 							for parallel_verse in parallel_verses
 								if settings.verse_break
 									<br>
-								<a.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\t', parallel_verse.verse
+								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\t', parallel_verse.verse
 								<span innerHTML=parallel_verse.text
 									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
@@ -2061,7 +2021,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<aside @touch=closeDrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
+			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
 				<p.settings_header#animated-heart>
 					if window.navigator.onLine
 						<@click=blobcri> <svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -11,8 +11,6 @@ tag editing-area
 		height: 100%
 
 	def mount
-		contentEditable = yes
-
 		if data.note
 			innerHTML = data.note
 		else
@@ -32,6 +30,7 @@ tag editing-area
 		data.note = innerHTML
 
 	def handlekeydown event
+		# This enables major keybidings
 		if event.ctrlKey == yes
 			switch event.code
 				when 'KeyI'
@@ -96,7 +95,7 @@ tag editing-area
 		return no
 
 	def render
-		<self @keydown=handlekeydown @input=handleinput @paste=handlepaste>
+		<self @keydown=handlekeydown @input=handleinput @paste=handlepaste contentEditable='true'>
 
 export tag rich-text-editor
 	def exec command, value = null

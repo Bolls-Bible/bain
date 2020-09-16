@@ -20,8 +20,8 @@ export class State
 	prop translations = []
 
 	def constructor
-		for language in languages
-			translations = translations.concat(language.translations)
+		for lngg in languages
+			translations = translations.concat(lngg.translations)
 		db_is_available = yes
 		downloaded_translations = []
 		downloading_of_this_translations = []
@@ -61,16 +61,16 @@ export class State
 					document.lastChild.lang = "pt"
 					if !window.translation
 						setCookie('translation', 'ARA')
-				when 'no'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'DNB')
 				when 'de'
 					language = 'de'
 					document.lastChild.lang = "en"
 					if !window.translation
 						setCookie('translation', 'MB')
+				when 'no'
+					language = 'eng'
+					document.lastChild.lang = "en"
+					if !window.translation
+						setCookie('translation', 'DNB')
 				when 'nl'
 					language = 'eng'
 					document.lastChild.lang = "en"
@@ -460,8 +460,7 @@ export class State
 			console.error(e)
 		)
 
-	def setLanguage language
-		lang = language
+	def setLanguage lngg
 		switch language
 			when 'ukr' then lang = ukrainian
 			when 'ru' then lang = russian
