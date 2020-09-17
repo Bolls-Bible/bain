@@ -189,10 +189,10 @@ document.onkeyup = do |e|
 		imba.commit()
 		window.localStorage.setItem("menuicons", menuicons)
 	elif e.code == "ArrowRight" && e.altKey
-		eDefault()
+		e.preventDefault()
 		window.history.forward()
 	elif e.code == "ArrowLeft" && e.altKey
-		eDefault()
+		e.preventDefault()
 		window.history.back()
 
 window.onpopstate = do |event|
@@ -1885,7 +1885,6 @@ export tag bible-reader
 
 		slidetouch = null
 
-
 	def closingdrawer e
 		e.dx = e.changedTouches[0].clientX - slidetouch.clientX
 
@@ -1894,7 +1893,6 @@ export tag bible-reader
 		if settings_menu_left > -300 && e.dx > 0
 			settings_menu_left = - e.dx
 		onzone = yes
-
 
 	def closedrawersend touch
 		touch.dx = touch.changedTouches[0].clientX - slidetouch.clientX
@@ -1977,7 +1975,7 @@ export tag bible-reader
 							for verse in verses
 								if settings.verse_break
 									<br>
-								<span.verse id=verse.verse @click=goToVerse(verse.verse)> '\t', verse.verse
+								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse, ' '
 								<span innerHTML=verse.text
 										@click=addToChoosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
@@ -2005,7 +2003,7 @@ export tag bible-reader
 							for parallel_verse in parallel_verses
 								if settings.verse_break
 									<br>
-								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\t', parallel_verse.verse
+								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse, ' '
 								<span innerHTML=parallel_verse.text
 									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
