@@ -63,7 +63,7 @@ html[data-theme="redlight"] {
 }
 
 html[data-transitions="true"] * {
-	transition: all 300ms ease 0s;
+	transition: all 300ms cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
 	transition-delay: 0ms;
 }
 
@@ -161,8 +161,8 @@ input {
 html[data-transitions="true"] .list_of_chapters,
 html[data-transitions="true"] .bookmark_in_list,
 html[data-transitions="true"] .close_colorPicker {
-	-webkit-animation: text-came 300ms ease;
-	animation: text-came 300ms ease;
+	-webkit-animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+	animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 html[data-transitions="true"] .collection,
@@ -178,19 +178,12 @@ html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] color-picker,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] main section article {
-	-webkit-animation: text-came 300ms ease forwards;
-	animation: text-came 300ms ease forwards;
+	-webkit-animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+	animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 }
 
 button {
 	border: none;
-}
-
-nav {
-	border-right: 1px solid var(--btn-bg);
-	padding: 32px 0;
-	z-index: 999;
-	transition-property: left !important;
 }
 
 .download_translations {
@@ -248,8 +241,8 @@ nav {
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
 html[data-transitions="true"] .help:hover .helpsvg {
-	-webkit-animation: shake 300ms ease forwards;
-	animation: shake 300ms ease forwards;
+	-webkit-animation: shake 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+	animation: shake 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 }
 
 html[data-transitions="true"] #animated-heart:hover .helpsvg {
@@ -260,7 +253,7 @@ html[data-transitions="true"] #animated-heart:hover .helpsvg {
 
 body {
 	transition-duration: 0s !important;
-	height: 100vh;
+	overflow: hidden;
 }
 
 .noscroll {
@@ -270,7 +263,7 @@ body {
 
 .chronological_order {
 	fill: var(--text-color);
-	width: 54px;
+	width: 64px;
 	height: 38px;
 	display: block;
 	padding: 8px 16px;
@@ -362,6 +355,7 @@ body {
 	cursor: pointer;
 	width: 100%;
 	fill: var(--text-color);
+	font: inherit;
 }
 
 .list_of_chapters {
@@ -408,7 +402,7 @@ body {
 }
 
 .freespace {
-	min-height: 64px;
+	min-height: 128px;
 }
 
 .main {
@@ -572,7 +566,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 	bottom: -256px;
 	width: 100%;
 	background: var(--background-color);
-	border-top: 2px solid var(--btn-bg);
+	border-top: 1px solid var(--btn-bg);
 	visibility: hidden;
 	text-align: center;
 	padding: 16px 0;
@@ -721,9 +715,14 @@ html[data-transitions="true"] .helpFAQ a:hover {
 aside {
 	border-left: 1px solid var(--btn-bg);
 	padding: 32px 12px;
-	z-index: 4;
 	overflow-y: auto;
 	transition-property: right !important;
+}
+
+nav {
+	border-right: 1px solid var(--btn-bg);
+	padding: 32px 0;
+	transition-property: left !important;
 }
 
 nav,
@@ -821,12 +820,6 @@ aside {
 	text-align: center;
 }
 
-.cbtn svg {
-	width: auto;
-	height: 100%;
-	fill: var(--text-color);
-	color: var(--text-color);
-}
 
 .cbtn:hover {
 	fill: var(--accent-hover-color);
@@ -1045,8 +1038,8 @@ img,
 
 html[data-transitions="true"] .show_search_results,
 html[data-transitions="true"] #daf {
-	-webkit-animation: showing_search_results 300ms ease 0ms alternate;
-	animation: showing_search_results 300ms ease 0ms alternate;
+	-webkit-animation: showing_search_results 300ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms alternate;
+	animation: showing_search_results 300ms cubic-bezier(0.215, 0.61, 0.355, 1) 0ms alternate;
 }
 
 .close_search {
