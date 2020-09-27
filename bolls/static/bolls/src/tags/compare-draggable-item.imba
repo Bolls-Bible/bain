@@ -110,7 +110,7 @@ tag compare-draggable-item
 				<li.search_item [d:block]>
 					<.search_res_verse_text>
 						for aoefv in data
-							<search-text-as-html innerHTML="{aoefv.text + ' '}">
+							<search-text-as-html data=aoefv innerHTML="{aoefv.text + ' '}">
 
 					<.search_res_verse_header>
 						<svg.drag_handle @touch=touchHandler xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">

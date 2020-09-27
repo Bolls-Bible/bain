@@ -1,5 +1,5 @@
 tag search-text-as-html
-	def click event
+	def goToVerse event
 		if event.ctrlKey
 			window.open("/{data.translation}/{data.book}/{data.chapter}/{data.verse}", '_blank')
 		else
@@ -7,4 +7,4 @@ tag search-text-as-html
 			bible[0].getText(data.translation, data.book, data.chapter, data.verse)
 
 	def render
-		<self @click=click>
+		<self @click=goToVerse>

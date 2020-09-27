@@ -259,7 +259,7 @@ export tag bible-reader
 				document.title += " " + getNameOfBookFromHistory(window.translation, window.book) + ' ' + window.chapter
 				if window.verses
 					verses = window.verses
-					getBookmarks("/get-bookmarks/" + window.translation + '/' + window.book + '/' + window.chapter + '/')
+					getBookmarks("/get-bookmarks/" + window.translation + '/' + window.book + '/' + window.chapter + '/', 'bookmarks')
 				if window.verse
 					document.title += ':' + window.verse
 					findVerse(window.verse, window.endverse)
@@ -393,13 +393,26 @@ export tag bible-reader
 		let res = await window.fetch(url)
 		return res.json()
 
-	def getBookmarks url
-		bookmarks = []
+	def getBookmarks url, type
+		this[type] = []
 		try
-			bookmarks = await loadData(url)
+			this[type] = await loadData(url)
 		catch error
 			if data.db_is_available
-				bookmarks = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
+				if type == 'bookmarks'
+					this[type] = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
+				else
+					this[type] = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+
+		if type == 'bookmarks'
+			for verse in verses
+				verse.highlight = getHighlight(verse.pk, type)
+		else
+			for verse in parallel_verses
+				verse.highlight = getHighlight(verse.pk, type)
+
+
+		# console.log vrss == verses
 		imba.commit()
 
 	def getText translation, book, chapter, verse
@@ -454,7 +467,7 @@ export tag bible-reader
 				data.showNotification('error')
 			if settings.parallel_synch && settingsp.display
 				getParallelText settingsp.translation, book, chapter, verse
-			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/')
+			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 			else setTimeout(&, 100) do window.scroll(0,0)
 		else clearSpace()
 		if verse
@@ -506,17 +519,7 @@ export tag bible-reader
 			if settings.parallel_synch && settingsp.display
 				getText settings.translation, book, chapter, verse
 			if data.user.username
-				url = "/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/'
-				parallel_bookmarks = []
-				try
-					parallel_bookmarks = await loadData(url)
-					imba.commit()
-				catch error
-					if data.db_is_available
-						let verseids = []
-						for verse in parallel_verses
-							verseids.push(verse.pk)
-						parallel_bookmarks = await data.getChapterBookmarksFromStorage(verseids)
+				getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
 			imba.commit()
 			setCookie('parallel_display', settingsp.display)
 			saveToHistory translation, book, chapter, 0, yes
@@ -1908,6 +1911,7 @@ export tag bible-reader
 		ofy: auto
 		pos: relative
 		transition-property@force: none
+		-webkit-overflow-scrolling@force: touch
 
 
 	def render
@@ -1981,7 +1985,7 @@ export tag bible-reader
 								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse
 								<span innerHTML=verse.text
 										@click=addToChoosen(verse.pk, verse.verse, 'first')
-										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
+										[background-image: {verse.highlight}]
 									>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
@@ -2009,7 +2013,7 @@ export tag bible-reader
 								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse
 								<span innerHTML=parallel_verse.text
 									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
-									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
+									[background-image: {parallel_verse.highlight}]>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
@@ -2325,7 +2329,7 @@ export tag bible-reader
 						<>
 							for verse, key in getFilteredASearchVerses()
 								<a.search_item>
-									<search-text-as-html.search_res_verse_text innerHTML=verse.text>
+									<search-text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
 									<.search_res_verse_header>
 										<span> nameOfBook(verse.book, (settingsp.display ? settingsp.edited_version : settings.translation)), ' '
 										<span> verse.chapter, ':'
