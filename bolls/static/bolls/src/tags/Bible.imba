@@ -247,6 +247,9 @@ export tag bible-reader
 		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
 		if window.translation
 			if translations.find(do |element| return element.short_name == window.translation)
+				if window.location.pathname.indexOf('international')
+					console.log("HERE WE GO")
+					window.translation = getCookie('translation') || settings.translation
 				setCookie('translation', window.translation)
 				setCookie('book', window.book)
 				setCookie('chapter', window.chapter)
@@ -403,16 +406,6 @@ export tag bible-reader
 					this[type] = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
 				else
 					this[type] = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
-
-		if type == 'bookmarks'
-			for verse in verses
-				verse.highlight = getHighlight(verse.pk, type)
-		else
-			for verse in parallel_verses
-				verse.highlight = getHighlight(verse.pk, type)
-
-
-		# console.log vrss == verses
 		imba.commit()
 
 	def getText translation, book, chapter, verse
@@ -534,9 +527,9 @@ export tag bible-reader
 			const verse = document.getElementById(id)
 			if verse
 				if settingsp.display
-					verse.parentNode.parentNode.scroll(0, verse.offsetTop - (window.innerHeight * 0.1))
+					verse.parentNode.parentNode.scroll({left:0, top: verse.offsetTop - (window.innerHeight * 0.05), behavior: 'smooth'})
 				else
-					scrollTo(0, verse.offsetTop - (window.innerHeight * 0.1))
+					scrollTo(0, verse.offsetTop - (window.innerHeight * 0.05))
 				if highlight then highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse, highlight)
 
@@ -1911,7 +1904,7 @@ export tag bible-reader
 		ofy: auto
 		pos: relative
 		transition-property@force: none
-		-webkit-overflow-scrolling@force: touch
+		-webkit-overflow-scrolling@force: auto
 
 
 	def render
@@ -1985,7 +1978,7 @@ export tag bible-reader
 								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse
 								<span innerHTML=verse.text
 										@click=addToChoosen(verse.pk, verse.verse, 'first')
-										[background-image: {verse.highlight}]
+										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
@@ -2013,7 +2006,7 @@ export tag bible-reader
 								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse
 								<span innerHTML=parallel_verse.text
 									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
-									[background-image: {parallel_verse.highlight}]>
+									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
@@ -2389,6 +2382,10 @@ export tag bible-reader
 							<svg.share_btn xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=data.lang.copy fill="var(--text-color)">
 								<title> data.lang.copy
 								<path d=svg_paths.copy>
+						<.share_box @click=(do data.internationalShareCopying(getShareObj()) && clearSpace())>
+							<svg.share_btn xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="var(--text-color)">
+								<title> data.lang.copy
+								<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z">
 						if canShareViaTelegram() then <.share_box @click=shareTelegram()>
 							<svg.share_btn xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" style="background: linear-gradient(#37aee2, #1e96c8); border-radius: 50%;" alt="Telegram">
 								<title> "Telegram"

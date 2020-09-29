@@ -38,6 +38,10 @@ urlpatterns = [
 		views.linkToVerse),
 	path('<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/',
 		views.linkToVerses),
+	path('international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/',
+		views.linkToVerse),
+	path('international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/',
+		views.linkToVerses),
 ]
 handler404 = views.handler404
 handler500 = views.handler500

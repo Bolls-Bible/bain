@@ -511,6 +511,11 @@ export class State
 		copyTextToClipboard(text)
 		showNotification('copied')
 
+	def internationalShareCopying copyobj
+		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life/international" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
+		copyTextToClipboard(text)
+		showNotification('copied')
+
 	def versePart verses
 		verses.length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return a - b)[verses.length - 1]) : (verses.sort(do |a, b| return a - b)[0])
 
