@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "~=3.1.0"
+psycopg2 = "*"
+social-auth-app-django = "*"
+
+[requires]
+python_version = "3.9"

@@ -42,3 +42,6 @@ README.md
 .vscode
 
 LICENSE
+
+Pipfile
+Pipfile.lock
