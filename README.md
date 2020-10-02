@@ -17,14 +17,14 @@ cd bain/
 * set up local enviroment
 
 ``` bash
-virtualenv env
-source env/bin/activate
+pipenv
+pipenv shell
 ```
 
 * install reqirements using pip
 
 ``` bash
-pip install -r requirements.txt
+pipenv install -r requirements.txt
 ```
 
 * run server (I am using 0 host for better debugging. You are free to use whatever you want)
@@ -64,12 +64,6 @@ After that you should be able to debug it.
 * npm run build
 * collectstatic
 * deploy
-
-I use the next command to make a deployment. For it, you need to have installed gcloud app and be logged in my account (haha). Do not use it. It will not be successful. It is for myself.
-
-``` bash
-cd ~/bain/bolls/static/bolls/ && npm run build && source ~/env/bin/activate && cd ~/bain && python manage.py collectstatic && cd ~/bain &&gcloud app deploy
-```
 
 And do not forget to clean expired sessions sometimes
 
