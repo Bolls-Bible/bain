@@ -461,14 +461,14 @@ export class State
 		)
 
 	def setLanguage lngg
-		switch language
+		switch lngg
 			when 'ukr' then lang = ukrainian
 			when 'ru' then lang = russian
 			when 'pt' then lang = portuguese
 			when 'es' then lang = espanol
 			when 'de' then lang = german
 			else lang = english
-		setCookie('language', language)
+		setCookie('language', lngg)
 
 	def fallbackCopyTextToClipboard text
 		let textArea = document.createElement("textarea")

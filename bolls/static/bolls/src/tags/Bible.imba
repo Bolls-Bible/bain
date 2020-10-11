@@ -1816,7 +1816,6 @@ export tag bible-reader
 				prevOccurence()
 			else
 				nextOccurence()
-		else pageSearch event
 
 	def isNoteEmpty
 		return store.note && store.note != '<br>'
@@ -2545,7 +2544,7 @@ export tag bible-reader
 
 			if page_search.d
 				<section#page_search style="background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'}">
-					<input#pagesearch.search bind=page_search.query @input.pageSearchKeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang.search>
+					<input#pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang.search>
 					<button.arrow @click=prevOccurence() title=data.lang.prev style="border-radius: 0;">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5" style="transform: rotate(180deg);">
 							<title> data.lang.prev

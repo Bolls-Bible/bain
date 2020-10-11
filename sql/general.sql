@@ -2,7 +2,7 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bi
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/LUT.csv' DELIMITER '	' CSV HEADER;
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/meng.csv' DELIMITER '|' CSV HEADER;
 
-INSERT into bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
+INSERT inTO bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
 
 
 SELECT * FROM bolls_verses ORDER BY BOOK, CHAPTER, VERSE;
@@ -15,13 +15,13 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 -- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
-UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, with beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
-select * from bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, WITH beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+SELECT * FROM bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 
 
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
-delete from bolls_verses where translation='HOM' and book = 72;
+delete FROM bolls_verses where translation='HOM' and book = 72;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NDL_verses.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/OL_verses.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NR06_verses.csv' DELIMITER '|' CSV HEADER;
@@ -43,11 +43,12 @@ psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432  
 
 \copy bolls_bookmarks(id,color,note,user_id,verse_id,date) FROM '/home/b/Downloads/bolls_bookmarks.csv' DELIMITER ',' CSV HEADER;
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/test.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/verses.csv' DELIMITER '|' CSV HEADER;
 
 
-\copy (Select * From bolls_verses where translation='DNB') To '/home/b/Bibles/dnb.csv' With CSV DELIMITER '|';
-\copy (select calculate_translation_hashes()) To '/home/b/hashes.csv' With CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_verses) TO '/home/bohuslav/verses.csv' WITH CSV DELIMITER '|';
+\copy (SELECT calculate_translation_hashes()) TO '/home/b/hashes.csv' WITH CSV DELIMITER '|';
 
 
 -- Fix broken sequences
@@ -61,11 +62,11 @@ BEGIN
 END;
 $body$  LANGUAGE 'plpgsql';
 
-select table_name || '_' || column_name || '_seq', reset_sequence(table_name, column_name) from information_schema.columns where column_default like 'nextval%';
+SELECT table_name || '_' || column_name || '_seq', reset_sequence(table_name, column_name) FROM information_schema.columns where column_default like 'nextval%';
 
 
 
-select * from bolls_verses where id = 1523961 or id = 1526351 or id = 1524145 or id = 1506556 or id = 1508819 or id = 1522125 or id = 1523633 or id = 1508764 or id = 1520680 or id = 1520080 or id = 1506559 or id = 1523873 or id = 1525284 or id = 1506560 or id = 1511896 or id = 1524268 or id = 1525921 or id = 1506561 or id = 1525764 or id = 1520581 or id = 1520580 or id = 1525136 or id = 1508946 or id = 1509867 or id = 1509868 or id = 1520923 or id = 1522135;
+SELECT * FROM bolls_verses where id = 1523961 or id = 1526351 or id = 1524145 or id = 1506556 or id = 1508819 or id = 1522125 or id = 1523633 or id = 1508764 or id = 1520680 or id = 1520080 or id = 1506559 or id = 1523873 or id = 1525284 or id = 1506560 or id = 1511896 or id = 1524268 or id = 1525921 or id = 1506561 or id = 1525764 or id = 1520581 or id = 1520580 or id = 1525136 or id = 1508946 or id = 1509867 or id = 1509868 or id = 1520923 or id = 1522135;
 
 UPDATE bolls_verses SET translation = ('DELETED') where translation = 'PDT';
 
