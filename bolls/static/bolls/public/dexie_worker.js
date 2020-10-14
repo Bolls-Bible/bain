@@ -25,11 +25,11 @@ function downloadTranslation(url) {
 		.then(data => {
 			db.transaction("rw", db.verses, () => {
 				db.verses.bulkPut(data)
-					.then(() =>
-						postMessage(['downloaded', url.substring(17, url.length - 1)])
+					.then(() => {
+						postMessage(['downloaded', url.substring(21, url.length - 5)])}
 					);
 			}).catch((e) => {
-				throw (url.substring(17, url.length - 1));
+				throw (url.substring(21, url.length - 5));
 			}
 			)
 		})

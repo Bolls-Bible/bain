@@ -7,7 +7,7 @@
 	<script>window.dataLayer = window.dataLayer || [];function gtag() {dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'UA-162017974-1');</script>
 	<meta charset="UTF-8">
 	<title>Bolls Bible API</title>
-	<link rel="stylesheet" type="text/css" href="/static/bolls/dist/api.css">
+	<link rel="stylesheet" type="text/css" href="/static/bolls/public/api.css">
 	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
@@ -98,11 +98,11 @@
 		</ul>
 		<h2>Get a translation</h2>
 		<p>You can get full translation just quering in hte next manner:</p>
-		<pre>https://bolls.life/get-translation/&lt;slug:translation&gt;/</pre>
+		<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre>
 		<p>The result of it will be an array of all verses, that belongs to the given translation. For example you can try
 			the next link:</p>
 		<pre><a target="_blank"
-			href="https://bolls.life/get-translation/YLT/">https://bolls.life/get-translation/YLT/</a></pre>
+			href="https://bolls.life/static/translations/YLT.json">https://bolls.life/static/translations/YLT.json</a></pre>
 		<p>The structure of nodes in this array will be like in the nodes of search query</p>
 		<h2>Compare versions</h2>
 		<p>You can make a request for peculiar verses in peculiar translations. For example if you wanna see some exact verse or verses in different translation to compare them you can use this api. The request should POST, and you should pass in the body an object with some fields</p>

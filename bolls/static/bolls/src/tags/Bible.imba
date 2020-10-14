@@ -247,7 +247,7 @@ export tag bible-reader
 		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
 		if window.translation
 			if translations.find(do |element| return element.short_name == window.translation)
-				if window.location.pathname.indexOf('international')
+				if window.location.pathname.indexOf('international') > -1
 					console.log("HERE WE GO")
 					window.translation = getCookie('translation') || settings.translation
 				setCookie('translation', window.translation)

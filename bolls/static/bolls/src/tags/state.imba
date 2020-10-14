@@ -237,7 +237,7 @@ export class State
 		if (downloaded_translations.indexOf(translation) < 0 && window.navigator.onLine)
 			downloading_of_this_translations.push(translation)
 			let begtime = Date.now()
-			let url = '/get-translation/' + translation + '/'
+			let url = '/static/translations/' + translation + '.json'
 
 			def resolveDownload translation
 				db_is_available = yes
