@@ -10,6 +10,25 @@ import './search-text-as-html'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
 
+
+let agent = window.navigator.userAgent;
+let isWebkit = (agent.indexOf("AppleWebKit") > 0);
+let isIPad = (agent.indexOf("iPad") > 0);
+let isIOS = (agent.indexOf("iPhone") > 0 || agent.indexOf("iPod") > 0)
+let isAndroid = (agent.indexOf("Android")  > 0)
+let isNewBlackBerry = (agent.indexOf("AppleWebKit") > 0 && agent.indexOf("BlackBerry") > 0)
+let isWebOS = (agent.indexOf("webOS") > 0);
+let isWindowsMobile = (agent.indexOf("IEMobile") > 0)
+let isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000))
+let isUnknownMobile = (isWebkit && isSmallScreen)
+let isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile)
+let isTablet = (isIPad || (isMobile && !isSmallScreen))
+
+let MOBILE_PLATFORM = no
+
+if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
+	MOBILE_PLATFORM = yes
+
 const inner_height = window.innerHeight
 let iOS_keaboard_height = 0
 
@@ -197,26 +216,26 @@ document.onkeyup = do |e|
 
 window.onpopstate = do |event|
 	if event.state
+		const bible = document.getElementsByTagName("BIBLE-READER")
 		let state = event.state
 		if state.profile
-			let profile = document.getElementsByClassName("Profile")
+			let profile = document.getElementsByTagName("PROFILE-PAGE")
 			if !profile[0]
-				imba.mount <profile-page bind=data>
+				bible[0].toProfile!
 		elif state.downloads
-			let downloads = document.getElementsByClassName("Downloads")
+			let downloads = document.getElementsByTagName("DOWNLOADS-PAGE")
 			if !downloads[0]
-				imba.mount <downloads-page bind=data>
+				bible[0].toDownloads!
 		else
 			onpopstate = yes
-			let profile = document.getElementsByClassName("Profile")
+			let profile = document.getElementsByTagName("PROFILE-PAGE")
 			if profile[0]
-				profile[0].orphanize()
-			let downloads = document.getElementsByClassName("Downloads")
+				profile[0].remove()
+			let downloads = document.getElementsByTagName("DOWNLOADS-PAGE")
 			if downloads[0]
-				downloads[0].orphanize()
+				downloads[0].remove()
 
 			const bible = document.getElementsByTagName("BIBLE-READER")
-			bible[0].className = 'display_none'
 			if state.parallel-translation && state.parallel-book && state.parallel-chapter
 				bible[0].getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
 			bible[0].getText(state.translation, state.book, state.chapter, state.verse)
@@ -257,8 +276,6 @@ export tag bible-reader
 				settings.book = window.book
 				settings.chapter = window.chapter
 				settings.name_of_book = nameOfBook(settings.book, settings.translation)
-				# # # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-				# settings.filtered_books = filteredBooks('books')
 				document.title += " " + getNameOfBookFromHistory(window.translation, window.book) + ' ' + window.chapter
 				if window.verses
 					verses = window.verses
@@ -313,7 +330,10 @@ export tag bible-reader
 					data.user.name = userdata.name || ''
 					setCookie('username', data.user.username)
 					setCookie('name', data.user.name)
-					history = JSON.parse(userdata.history) || JSON.parse(getCookie("history")) || []
+					try
+						history = JSON.parse(userdata.history)
+					catch error
+						history = JSON.parse(getCookie("history")) || []
 					if history.length then window.localStorage.setItem("history", JSON.stringify(history))
 				else data.user = {}
 			catch error
@@ -857,7 +877,6 @@ export tag bible-reader
 		show_list_of_translations = no
 
 	def getSearchText e
-		# console.log e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input.replace(/\//g, '')
 		query = query.replace(/\\/g, '')
@@ -1494,7 +1513,7 @@ export tag bible-reader
 
 	def toggleBibleMenu parallel
 		if bible_menu_left
-			if !settings_menu_left && window.innerWidth < 1024
+			if !settings_menu_left && MOBILE_PLATFORM
 				clearSpace()
 				return
 			bible_menu_left = 0
@@ -1508,7 +1527,7 @@ export tag bible-reader
 
 	def toggleSettingsMenu
 		if settings_menu_left
-			if !bible_menu_left && window.innerWidth < 1024
+			if !bible_menu_left && MOBILE_PLATFORM
 				clearSpace()
 				return
 			settings_menu_left = 0
@@ -1826,15 +1845,13 @@ export tag bible-reader
 		else
 			settings.filtered_books = filteredBooks('books')
 
-	def blobcri
-		clearSpace()
-		popUp 'donate'
-
 	def rightPaddingOfReader
-		if settingsp.display || window.innerWidth < 1024
-			return 0
-		elif what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
-			return 12
+		const isowerflowed = this.children[1]?.clientHeight > this.clientHeight
+		if isowerflowed
+			if MOBILE_PLATFORM
+				return 0
+			elif what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
+				return 12
 		else return 0
 
 	def mainOverflow
@@ -1905,6 +1922,14 @@ export tag bible-reader
 		transition-property@force: none
 		-webkit-overflow-scrolling@force: auto
 
+	def getHeaderHeight header
+		let spaces = 0
+		for char in header
+			if char == ' '
+				spaces++
+		return spaces
+
+
 
 	def render
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden ofy: {mainOverflow()} pr:{rightPaddingOfReader()}px]>
@@ -1927,7 +1952,7 @@ export tag bible-reader
 							<path d=svg_paths.download>
 				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
-						<button.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
+						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
 							language.language
 							<svg.arrow_next[margin-left:auto] xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 								<title> data.lang.open
@@ -1944,7 +1969,7 @@ export tag bible-reader
 					if settingsp.display && settingsp.edited_version == settingsp.translation
 						<>
 							for book in settingsp.filtered_books
-								<button.book_in_list dir="auto" .active=(book.bookid == settingsp.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .active=(book.bookid == settingsp.book) @click=showChapters(book.bookid) tabindex="0"> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
 										<li.chapter_number .active=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
@@ -1953,7 +1978,7 @@ export tag bible-reader
 					else
 						<>
 							for book in settings.filtered_books
-								<button.book_in_list dir="auto" .active=(book.bookid == settings.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .active=(book.bookid == settings.book) @click=showChapters(book.bookid) tabindex="0"> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
 										<li.chapter_number .active=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
@@ -1969,7 +1994,8 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize1) * settings.font.size * settings.font.lineHeight}px 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<header[position: sticky t:0 h:{2 * settings.font.size * (getHeaderHeight(settings.name_of_book + ' ' + settings.chapter))}px zi:1 b:$background-color m: 1em 0]>
+							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -1997,7 +2023,8 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length > 0
-						<h1[margin: 32px 0 {(3 - chapter_headers.fontsize2) * settings.font.size * settings.font.lineHeight}px font-family: {settings.font.family} font-weight: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+						<header[position: sticky t:0 h:{2 * settings.font.size * (getHeaderHeight(settingsp.name_of_book + ' ' + settingsp.chapter))}px zi:1 b:$background-color m: 1em 0]>
+							<h1[lh:1 font-family: {settings.font.family} font-weight: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
 								if settings.verse_break
@@ -2019,11 +2046,14 @@ export tag bible-reader
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
-				<p.settings_header#animated-heart>
-					if window.navigator.onLine
-						<@click=blobcri> <svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-							<title> data.lang.support
-							<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
+				<p.settings_header>
+					if data.getUserName()
+						<svg.helpsvg version="1.0" @click=toProfile(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+							<title> data.getUserName()
+							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
+								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
+								<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
+
 					data.lang.other
 					<.current_accent .enlarge_current_accent=show_accents>
 						<.visible_accent @click=(do show_accents = !show_accents)>
@@ -2287,13 +2317,6 @@ export tag bible-reader
 					unless isNoteEmpty()
 						<p#note_placeholder> data.lang.write_something_awesone
 					<rich-text-editor bind=store dir="auto">
-				elif what_to_show_in_pop_up_block == "donate"
-					<article#heart_donate>
-						<svg.close_search @click=clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0" style="margin:0 auto auto 0;">
-							<title> data.lang.close
-							<path[m: auto] d=svg_paths.close>
-						<img src="/static/blobcri.svg" style="max-height:512px;max-width:512px;width:100%;height:auto;">
-						<a.more_results style="margin:8px 0 auto;" target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
 				else
 					if search_verses.length
 						<.filters .show=search.show_filters style="z-index:1;">

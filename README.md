@@ -60,10 +60,10 @@ After that you should be able to debug it.
 
 ### Checklist before any deploy
 
-* sw
+* update sw.js
 * npm run build
-* collectstatic
-* deploy
+* python manage.py collectstatic
+* gcloud app deploy
 
 And do not forget to clean expired sessions sometimes
 

@@ -40,7 +40,7 @@ export class State
 		if getCookie('language')
 			setLanguage(getCookie('language'))
 		else
-			switch window.navigator.language.slice(0, 2)
+			switch window.navigator.language.toLowerCase().slice(0, 2)
 				when 'uk'
 					language = 'ukr'
 					document.lastChild.lang = "uk"
