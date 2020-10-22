@@ -341,6 +341,7 @@ export tag bible-reader
 				data.showNotification('error')
 		if window.location.pathname == '/profile/' then toProfile yes
 		elif window.location.pathname == '/downloads/'then toDownloads yes
+		focus()
 		if window.message
 			data.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
@@ -366,6 +367,7 @@ export tag bible-reader
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
+
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -473,7 +475,6 @@ export tag bible-reader
 					verses = await loadData(url)
 				loading = no
 				if verse > 0 then show_verse_picker = no else show_verse_picker = yes
-				imba.commit()
 			catch error
 				loading = no
 				console.error('Error: ', error)
@@ -506,6 +507,7 @@ export tag bible-reader
 				)
 			onpopstate = no
 			if chronorder
+
 				chronorder = !chronorder
 				toggleChronorder
 			switchTranslation translation, yes
@@ -614,8 +616,8 @@ export tag bible-reader
 		if profile[0]
 			profile[0]._tag.orphanize()
 			window.history.back()
-		if document.getElementsByTagName('main')[0] && !page_search.d
-			document.getElementsByTagName('main')[0].firstChild.focus()
+		if !page_search.d
+			focus()
 		if page_search.d || what_to_show_in_pop_up_block
 			page_search.d = no
 			page_search.matches = []
@@ -1079,7 +1081,7 @@ export tag bible-reader
 			getText(settings.translation, books[current_index - 1].bookid, 1)
 
 	def mousemove e
-		if window.innerWidth >= 640
+		unless MOBILE_PLATFORM
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window.innerWidth - 32
@@ -1805,8 +1807,7 @@ export tag bible-reader
 						menu_icons_transform = -100
 					else
 						menu_icons_transform = 100
-
-				imba.commit()
+		imba.commit()
 
 	def triggerNavigationIcons
 		let testsize = 2 - ((scrollTop * 4) / window.innerHeight)
@@ -1922,14 +1923,6 @@ export tag bible-reader
 		transition-property@force: none
 		-webkit-overflow-scrolling@force: auto
 
-	def getHeaderHeight header
-		let spaces = 0
-		for char in header
-			if char == ' '
-				spaces++
-		return spaces
-
-
 
 	def render
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden ofy: {mainOverflow()} pr:{rightPaddingOfReader()}px]>
@@ -1994,8 +1987,9 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<header[position: sticky t:0 h:{2 * settings.font.size * (getHeaderHeight(settings.name_of_book + ' ' + settings.chapter))}px zi:1 b:$background-color m: 1em 0]>
-							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu() title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
+							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<p[m:1em 0 p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -2022,9 +2016,11 @@ export tag bible-reader
 				<section#secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
-					if parallel_verses.length > 0
-						<header[position: sticky t:0 h:{2 * settings.font.size * (getHeaderHeight(settingsp.name_of_book + ' ' + settingsp.chapter))}px zi:1 b:$background-color m: 1em 0]>
-							<h1[lh:1 font-family: {settings.font.family} font-weight: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes) title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+					# parallel_verses.length
+					if parallel_verses.length
+						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
+							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settings.name_of_book, ' ', settings.chapter
+						<p[m:1em 0 p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
 								if settings.verse_break

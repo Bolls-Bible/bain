@@ -17,6 +17,10 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, WITH beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+SELECT * FROM bolls_verses where
+
+
+UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la casa hirieron con ceguera desde el menor hasta el mayor,  de manera que se fatigaban buscando la puerta') where translation = 'RV1960' and book = 1 and chapter = 19 and verse = 11;
 
 
 -----------

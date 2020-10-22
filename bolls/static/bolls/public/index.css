@@ -159,6 +159,7 @@ input {
 
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] .list_of_chapters,
+html[data-transitions="true"] main section h1,
 html[data-transitions="true"] .bookmark_in_list,
 html[data-transitions="true"] .close_colorPicker {
 	-webkit-animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -176,7 +177,6 @@ html[data-transitions="true"] img,
 html[data-transitions="true"] #page_search,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] color-picker,
-html[data-transitions="true"] main section h1,
 html[data-transitions="true"] main section article {
 	-webkit-animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 	animation: text-came 300ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
@@ -387,6 +387,7 @@ body {
 	color: var(--text-color);
 	margin: auto;
 	word-break: break-word;
+	touch-action: auto !important;
 }
 
 .main article {
@@ -505,10 +506,18 @@ main header h1 {
 	text-align: center;
 	margin: 1em 0;
 	padding: 0 4px;
-    position: sticky;
+	position: sticky;
 	background-color: var(--background-color);
-    top: 0px;
-    line-height: 1;
+	top: 0px;
+	line-height: 1;
+}
+
+main header {
+	position: sticky;
+	top:0;
+	z-index:1;
+	background-color: var(--background-color);
+	margin: 1em 0;
 }
 
 .main h1:hover {
@@ -1658,7 +1667,6 @@ address a:hover {
 .comparison_box {
 	display: flex;
 	flex-direction: column;
-	padding-bottom: 256px;
 }
 
 .DRAGGING * {
