@@ -38,7 +38,7 @@ for language in languages
 
 let settings =
 	theme: 'dark'
-	accent: 'gold'
+	accent: 'blue'
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -305,7 +305,7 @@ export tag bible-reader
 		settings.font.weight = parseInt(getCookie('font-weight')) || settings.font.weight
 		settings.font.line-height = parseFloat(getCookie('line-height')) || settings.font.line-height
 		settings.font.max-width = parseInt(getCookie('max-width')) || settings.font.max-width
-		settings.font.align = parseInt(getCookie('align')) || settings.font.align
+		settings.font.align = getCookie('align') || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
@@ -431,6 +431,12 @@ export tag bible-reader
 		imba.commit()
 
 	def getText translation, book, chapter, verse
+		let changeParallel = yes
+		unless theChapterExistInThisTranslation translation, book, chapter
+			book = settings.book
+			chapter = settings.chapter
+			changeParallel = no
+
 		if !(translation == settings.translation && book == settings.book && chapter == settings.chapter) || !verses.length
 			loading = yes
 			switchTranslation translation
@@ -479,7 +485,7 @@ export tag bible-reader
 				loading = no
 				console.error('Error: ', error)
 				data.showNotification('error')
-			if settings.parallel_synch && settingsp.display
+			if settings.parallel_synch && settingsp.display && changeParallel
 				getParallelText settingsp.translation, book, chapter, verse
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 			else setTimeout(&, 100) do window.scroll(0,0)
@@ -488,6 +494,12 @@ export tag bible-reader
 			findVerse(verse)
 
 	def getParallelText translation, book, chapter, verse
+		let changeParallel = yes
+		unless theChapterExistInThisTranslation translation, book, chapter
+			book = settingsp.book
+			chapter = settingsp.chapter
+			changeParallel = no
+
 		if !(translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter) || !parallel_verses.length || !settingsp.display
 			if !onpopstate && verses
 				window.history.pushState({
@@ -507,7 +519,6 @@ export tag bible-reader
 				)
 			onpopstate = no
 			if chronorder
-
 				chronorder = !chronorder
 				toggleChronorder
 			switchTranslation translation, yes
@@ -531,7 +542,7 @@ export tag bible-reader
 			catch error
 				console.error('Error: ', error)
 				data.showNotification('error')
-			if settings.parallel_synch && settingsp.display
+			if settings.parallel_synch && settingsp.display && changeParallel
 				getText settings.translation, book, chapter, verse
 			if data.user.username
 				getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
@@ -543,6 +554,13 @@ export tag bible-reader
 			setCookie('parallel_chapter', chapter)
 			if verse
 				findVerse("p{verse}")
+
+	def theChapterExistInThisTranslation translation, book, chapter
+		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
+		if theBook
+			if theBook.chapters >= chapter
+				return yes
+		return no
 
 	def findVerse id, endverse, highlight = yes
 		setTimeout(&,250) do
@@ -1741,10 +1759,10 @@ export tag bible-reader
 			copyobj.text.push(t.text)
 			copyobj.verse.push(t.verse)
 		copyobj.title = getHighlightedRow(copyobj.translation, copyobj.book, copyobj.chapter, copyobj.verse)
-		data.copyToClipboard(copyobj)
+		data.shareCopying(copyobj)
 
 	def copyToClipboardFromSerach obj
-		data.copyToClipboard({
+		data.shareCopying({
 			text: [obj.text],
 			translation: obj.translation,
 			book: obj.book,
@@ -1790,7 +1808,7 @@ export tag bible-reader
 			else
 				chapter_headers.fontsize1 = 2
 		else
-			testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
+			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
 				chapter_headers.fontsize2 = 12 / settings.font.size
 			elif e.target.scrollTop > 0
@@ -1988,8 +2006,8 @@ export tag bible-reader
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
 						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
-							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
-						<p[m:1em 0 p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
+							<h1[lh:1 m: 2em 0 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
 								if settings.verse_break
@@ -2016,11 +2034,10 @@ export tag bible-reader
 				<section#secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
-					# parallel_verses.length
 					if parallel_verses.length
 						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
-							<h1[lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settings.name_of_book, ' ', settings.chapter
-						<p[m:1em 0 p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
+							<h1[lh:1 m: 2em 0 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
 								if settings.verse_break
@@ -2041,7 +2058,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}{settings_menu_left < 0 ? 'overflow:hidden' : ''}">
+			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}">
 				<p.settings_header>
 					if data.getUserName()
 						<svg.helpsvg version="1.0" @click=toProfile(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">

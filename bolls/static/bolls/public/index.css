@@ -447,7 +447,11 @@ nav input[type="text"] {
 	fill: var(--accent-color);
 }
 
-#navigation svg:hover {
+#navigation div:hover {
+	color: var(--accent-hover-color);
+}
+
+#navigation div:hover svg {
 	fill: var(--accent-hover-color);
 }
 
