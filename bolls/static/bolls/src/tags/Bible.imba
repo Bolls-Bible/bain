@@ -38,7 +38,7 @@ for language in languages
 
 let settings =
 	theme: 'dark'
-	accent: 'blue'
+	accent: 'gold'
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -72,7 +72,6 @@ let chapter_headers = {
 	fontsize2: 2
 }
 
-# let inzone = no
 let onzone = no
 let bible_menu_left = -300
 let settings_menu_left = -300
@@ -942,7 +941,7 @@ export tag bible-reader
 		unless search_verses.length then return
 		if document.getElementById('search_body').children[0]
 			if Array.from(document.getElementById('search_body').children).find(do |element| return element.className.indexOf('total_msg') > -1)
-				setTimeout(&, 750) do
+				setTimeout(&, 1000) do
 					pageSearch()
 				return
 		setTimeout(&, 16) do highlightSearchResults()
@@ -2005,8 +2004,8 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
-							<h1[lh:1 m: 2em 0 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+						<header[h: 0 mt:2em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
@@ -2035,8 +2034,8 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
-						<header[h: 0 visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
-							<h1[lh:1 m: 2em 0 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+						<header[h: 0 mt:2em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
@@ -2275,7 +2274,7 @@ export tag bible-reader
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 					<article.search_body tabindex="0">
 						for language in languages
-							<a.book_in_list dir="auto" style="justify-content: start; padding: 12px 8px 12px 0px;" .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language) tabindex="0">
+							<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language) tabindex="0">
 								language.language
 								<svg[ml: auto].arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.open

@@ -8,6 +8,5 @@
   "dependencies": {
     "imba": "^2.0.0-alpha.96",
     "imba-rollup": "^2.0.0-alpha.57"
-  },
-  "devDependencies": {}
+  }
 }

@@ -4,8 +4,8 @@
 		"output": {
 			"file": "./public/app.imba.js",
 			"format": "esm",
-        	"name": "bundle",
-        	"sourcemap": true
+			"name": "bundle",
+			"sourcemap": true
 		}
 	}]
 }
