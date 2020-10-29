@@ -1149,7 +1149,9 @@ export tag bible-reader
 					store.note += vrs.note
 
 	def addToChoosen pk, id, parallel
-		if !settings_menu_left || !bible_menu_left || not document.getSelection().isCollapsed
+		unless document.getSelection().isCollapsed
+			return
+		if !settings_menu_left || !bible_menu_left
 			return clearSpace()
 		store.highlight_color = getRandomColor()
 		if document.getSelection().isCollapsed
