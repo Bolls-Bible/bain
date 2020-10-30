@@ -479,9 +479,11 @@ export tag bible-reader
 				else
 					verses = await loadData(url)
 				loading = no
+				imba.commit()
 				if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 			catch error
 				loading = no
+				imba.commit()
 				console.error('Error: ', error)
 				data.showNotification('error')
 			if settings.parallel_synch && settingsp.display && changeParallel
