@@ -1111,11 +1111,7 @@ export tag bible-reader
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
-			let img = 'linear-gradient(to right'
-			for i in [0 .. 96]
-				img += ', ' + (i % 2 ? 'rgba(0,0,0,0)' : store.highlight_color) + ' ' + i + '% ' + (i + 8) + '%'
-				i+=4
-			return img += ')'
+			return 'repeating-linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0) 4px, ' + store.highlight_color + ' 4px, ' + store.highlight_color + ' 8px)'
 		else
 			let highlight = self[bookmarks].find(do |element| return element.verse == verse)
 			if highlight
@@ -1998,8 +1994,8 @@ export tag bible-reader
 										<li.chapter_number .active=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-				<input.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
-				<svg#close_book_search @click=(store.book_search = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
+				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
@@ -2008,7 +2004,7 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<header[h: 0 mt:2em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
+						<header[h: 0 mt:4em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu()>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
@@ -2038,7 +2034,7 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
-						<header[h: 0 mt:2em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
+						<header[h: 0 mt:4em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] @click=toggleBibleMenu(yes)>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em visibility:{what_to_show_in_pop_up_block ? 'hidden' : 'visible'}] title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>

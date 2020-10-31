@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "imba-rollup",
+    "bbuild": "babel ./public/app.imba.js -d public",
     "start": "imba-rollup --watch --serve --hmr",
     "dev": "imba-rollup --watch --serve --hmr",
     "check-version": "imbac --version"
@@ -8,5 +9,16 @@
   "dependencies": {
     "imba": "^2.0.0-alpha.96",
     "imba-rollup": "^2.0.0-alpha.57"
-  }
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "not IE_Mob 11",
+    "maintained node versions"
+  ]
 }

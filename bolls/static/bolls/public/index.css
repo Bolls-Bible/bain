@@ -78,7 +78,6 @@ html[data-transitions="false"] * {
 	margin: 0;
 	padding: 0;
 	scroll-behavior: smooth;
-	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: transparent;
 }
 
@@ -116,7 +115,6 @@ body {
 	background: var(--background-color);
 	color: var(--text-color);
 	overflow: hidden;
-	-webkit-overflow-scrolling: auto !important;
 }
 
 ul li {
@@ -267,6 +265,7 @@ body {
 	opacity: 0;
 	visibility: hidden;
 	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 .show_translations_list {
@@ -312,6 +311,7 @@ body {
 .books-container {
 	height: calc(100% - 76px);
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 0 8px 32px;
 	touch-action: pan-y;
 }
@@ -590,6 +590,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 .mark_grid {
 	display: block;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	white-space: nowrap;
 	padding: 16px 2vw;
 	min-width: 320px;
@@ -710,6 +711,7 @@ aside {
 	border-left: 1px solid var(--btn-bg);
 	padding: 32px 12px;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	transition-property: right !important;
 }
 
@@ -908,6 +910,7 @@ img,
 .collectionsflex {
 	display: flex;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 8px;
 	white-space: nowrap;
 }
@@ -1093,6 +1096,7 @@ html[data-transitions="true"] #daf {
 
 .search_body {
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	height: calc(100% - 50px);
 }
 
@@ -1155,6 +1159,7 @@ html[data-transitions="true"] #daf {
 	padding: 8px 16px 8px 8px;
 	background: var(--background-color);
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	border-radius: 16px;
 	border: 1px solid var(--btn-bg);
 	opacity: 0;
@@ -1187,6 +1192,7 @@ html[data-light="light"] #daf article {
 .parallel {
 	height: 100%;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	overflow-x: visible;
 	touch-action: pan-y;
 	width: 50%;
@@ -1301,6 +1307,7 @@ html[data-light="light"] #daf article {
 .show_parallel {
 	display: inline-block;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 
 .bookmark_in_list {
@@ -1413,6 +1420,7 @@ html[data-transitions="true"] .show_history {
 
 .historylist {
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	max-height: calc(97vh - 82px);
 }
 
