@@ -461,6 +461,7 @@ export class State
 		)
 
 	def setLanguage lngg
+		language = lngg
 		switch lngg
 			when 'ukr' then lang = ukrainian
 			when 'ru' then lang = russian

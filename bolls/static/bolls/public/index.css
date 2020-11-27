@@ -67,6 +67,11 @@ html[data-transitions="true"] * {
 	transition-delay: 0ms;
 }
 
+
+html[data-pukaka="yes"] * {
+	transition-property: none !important;
+}
+
 html[data-transitions="false"] * {
 	transition: none;
 }

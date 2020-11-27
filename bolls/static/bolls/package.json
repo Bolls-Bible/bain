@@ -7,13 +7,13 @@
     "check-version": "imbac --version"
   },
   "dependencies": {
-    "imba": "^2.0.0-alpha.96",
-    "imba-rollup": "^2.0.0-alpha.57"
+    "imba": "^2.0.0-alpha.100",
+    "imba-rollup": "^2.0.0-alpha.100"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1"
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7"
   },
   "browserslist": [
     "defaults",

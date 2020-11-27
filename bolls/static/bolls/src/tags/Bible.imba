@@ -81,6 +81,7 @@ let choosenid = []
 let highlights = []
 let show_collections = no
 let show_history = no
+let main_overflow = no
 let choosen_parallel = no
 let store =
 	newcollection: ''
@@ -268,6 +269,7 @@ export tag bible-reader
 				if window.location.pathname.indexOf('international') > -1
 					console.log("HERE WE GO")
 					window.translation = getCookie('translation') || settings.translation
+					window.verses = []
 				setCookie('translation', window.translation)
 				setCookie('book', window.book)
 				setCookie('chapter', window.chapter)
@@ -615,6 +617,7 @@ export tag bible-reader
 		search.search_div = no
 		onzone = no
 		show_history = no
+		main_overflow = no
 		search.filter = no
 		search.show_filters = no
 		search.counter = 50
@@ -987,10 +990,15 @@ export tag bible-reader
 
 	def changeTheme theme
 		let html = document.querySelector('#html')
+		html.dataset.pukaka = 'yes'
+
 		settings.theme = theme
 		html.dataset.theme = settings.accent + settings.theme
 		html.dataset.light = settings.theme
 		setCookie('theme', theme)
+
+		imba.commit!.then do html.dataset.pukaka = 'no'
+
 
 	def changeAccent accent
 		let html = document.querySelector('#html')
@@ -1108,6 +1116,12 @@ export tag bible-reader
 			elif 300 < e.x < window.innerWidth - 300
 				bible_menu_left = -300
 				settings_menu_left = -300
+
+		setTimeout(&, 350) do
+			if what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
+				main_overflow = yes
+			else
+				main_overflow = no
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -1779,7 +1793,7 @@ export tag bible-reader
 			when 'ukr' then "Українська"
 			when 'ru' then "Русский"
 			when 'pt' then "Portuguese"
-			when 'de' then "Deutsche"
+			when 'de' then "Deutsch"
 			when 'es' then "Español"
 			else "English"
 
@@ -1863,21 +1877,6 @@ export tag bible-reader
 		else
 			settings.filtered_books = filteredBooks('books')
 
-	def rightPaddingOfReader
-		const isowerflowed = this.children[1]?.clientHeight > this.clientHeight
-		if isowerflowed
-			if MOBILE_PLATFORM
-				return 0
-			elif what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
-				return 12
-		else return 0
-
-	def mainOverflow
-		if what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
-			return 'hidden'
-		else
-			return 'auto'
-
 	def goToVerse id
 		if settings.parallel_synch
 			if id.toString().charAt(0) == 'p'
@@ -1942,7 +1941,7 @@ export tag bible-reader
 
 
 	def render
-		<self @scroll=triggerNavigationIcons @mousemove=mousemove [ofx: hidden ofy: {mainOverflow()} pr:{rightPaddingOfReader()}px]>
+		<self @scroll=triggerNavigationIcons @mousemove=mousemove>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{onzone ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2151,12 +2150,12 @@ export tag bible-reader
 					data.lang.find_in_chapter
 				<.nighttheme.flex @click=(do data.show_languages = !data.show_languages)>
 					data.lang.language
-					<button.change_language> currentLanguage()
+					<button.change_language> currentLanguage!
 					<.languages .show_languages=data.show_languages>
 						<button @click=(do data.setLanguage('ukr'))> "Українська"
 						<button @click=(do data.setLanguage('ru'))> "Русский"
 						<button @click=(do data.setLanguage('eng'))> "English"
-						<button @click=(do data.setLanguage('de'))> "Deutsche"
+						<button @click=(do data.setLanguage('de'))> "Deutsch"
 						<button @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button @click=(do data.setLanguage('es'))> "Español"
 				<.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
