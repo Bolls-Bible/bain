@@ -1,11 +1,17 @@
-html[data-theme='dark'] {
-  --background-color: rgb(4, 6, 11);
+html[data-theme="dark"] {
+  --background-color: rgb(4, 6, 12);
   --text-color: rgb(255, 238, 238);
+  --btn-bg-hover: rgba(138, 138, 255, 0.4);
+  --btn-bg: hsla(240, 100%, 77%, 0.1);
+  --a-background: rgb(65, 118, 144);
 }
 
-html[data-theme='light'] {
+html[data-theme="light"] {
   --background-color: rgb(255, 238, 238);
-  --text-color: rgb(4, 6, 11);
+  --text-color: rgb(4, 6, 12);
+  --btn-bg-hover: rgba(68, 119, 255, 0.1);
+  --btn-bg: rgba(68, 119, 255, 0.25);
+  --a-background: rgb(65, 118, 144);
 }
 
 * {
@@ -17,7 +23,6 @@ html[data-theme='light'] {
   transition: all 0.3s ease 0s;
   scroll-behavior: smooth;
   font-size: 14px;
-  color: #88a;
 }
 
 ::-webkit-scrollbar {
@@ -46,7 +51,8 @@ html[data-theme='light'] {
   outline: none !important;
 }
 
-#container, body {
+#container,
+body {
   font-family: "Inter", sans-serif;
   font-size: 14px;
   background: var(--background-color);
@@ -55,14 +61,16 @@ html[data-theme='light'] {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 12px;
+  padding: 64px 12px;
 }
 
 #header {
   display: none !important;
 }
 
-h1, h1 a, h1 a:visited {
+h1,
+h1 a,
+h1 a:visited {
   font-size: 24px;
   color: var(--text-color);
   font-weight: bold;
@@ -71,23 +79,21 @@ h1, h1 a, h1 a:visited {
 #content {
   padding: 0 !important;
   display: block;
-  max-width: 360px;
+  max-width: 520px;
   min-width: 296px;
 }
 
+.errorlist,
 .errormessage {
-  margin-bottom: 16px;
+  margin: 16px 0;
   color: indianred;
   font-size: 18px;
 }
 
-ul, li {
+ul,
+li {
   list-style: none !important;
   list-style-type: none !important;
-}
-
-.errorlist li {
-  color: indianred;
 }
 
 br {
@@ -101,59 +107,78 @@ form {
 }
 
 label {
-  font-size: 18px !important;
-  margin-top: 16px;
+  margin-top: 32px;
   color: inherit;
+  font-weight: bold;
+  opacity: 0.65;
+  font-size: 12px;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
-  background: rgba(136, 136, 255, 0.133);
-  border: 1px solid rgba(138, 138, 255, 0.267);
+.helptext {
+  color: inherit;
+  opacity: 0.65;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(138, 138, 255, 0.267);
   color: var(--text-color);
-  padding: 8px 8px;
+  padding: 8px 0 4px;
+  font-size: 18px;
+  line-height: 24px;
   margin-bottom: 4px;
 }
 
-input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-  background: var(--background-color);
-  border: 1px solid rgba(136, 136, 255, 0.533);
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover {
+  border-bottom-color: var(--text-color);
 }
 
-input, .with {
-  border-radius: 4px;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-bottom-color: var(--a-background);
 }
 
-.with, #login_after_reset, input[type="submit"] {
-  background: var(--background-color);
-  color: var(--text-color);
+.with,
+#login_after_reset,
+input[type="submit"] {
+  background-color: var(--a-background);
+  color: #fee;
   cursor: pointer;
-  padding: 8px 8px;
+  border-radius: 12px;
+  padding: 16px 8px;
   margin-left: auto;
-  font-size: 16px;
-  border: solid;
-  border-width: 2px;
-  border-color: var(--text-color);
   margin-top: 16px;
+  border: none;
   width: 100%;
-  font-weight: bold;
   display: block;
   text-align: center;
+  font-weight: normal;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1.15;
 }
 
-.with:hover, #login_after_reset, input[type="submit"]:hover {
-  transform: translateY(-2px);
-  -webkit-transform: translateY(-2px);
-  -moz-transform: translateY(-2px);
-  -ms-transform: translateY(-2px);
-  -o-transform: translateY(-2px);
-  background: var(--background-color);
+.with:hover,
+#login_after_reset,
+input[type="submit"]:hover {
+  opacity: 0.8;
 }
 
 .with {
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--btn-bg);
+  width: 50%;
+  color: var(--a-background);
+  margin: 0;
 }
 
 .with svg {
@@ -164,11 +189,11 @@ input, .with {
 hr {
   margin: 16px 32px;
   color: rgba(138, 138, 255, 0.267);
+  opacity: 0;
 }
 
 a {
-  font-size: 13px;
-  color: var(--text-color) !important;
+  color: var(--text-color);
 }
 
 .tomain {
@@ -176,13 +201,18 @@ a {
   text-decoration: 3px underline;
 }
 
-.help, p.help, form p.help, div.help, form div.help, div.help li {
+.help,
+p.help,
+form p.help,
+div.help,
+form div.help,
+div.help li {
   font-size: 14px;
   color: inherit;
 }
 
 input {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }

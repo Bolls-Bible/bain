@@ -362,6 +362,10 @@ def saveHistory(request):
             obj.save()
         except History.DoesNotExist:
             user.history_set.create(history=received_json_data["history"])
+
+        except History.MultipleObjectsReturned:
+            user.history_set.all().delete()
+            user.history_set.create(history=received_json_data["history"])
         return JsonResponse({"response": "200"}, safe=False)
     else:
         return JsonResponse({"response": "200"}, safe=False)

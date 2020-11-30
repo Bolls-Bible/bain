@@ -1,6 +1,5 @@
 import {State} from './tags/state'
 import './tags/Bible'
-
 let Data = new State()
 
 imba.mount <bible-reader bind=Data>

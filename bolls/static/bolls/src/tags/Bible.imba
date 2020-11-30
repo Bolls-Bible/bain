@@ -180,7 +180,7 @@ const accents = [
 ]
 
 document.onkeyup = do |e|
-	var e = e || window.event
+	e = e || window.event
 	const bible = document.getElementsByTagName("BIBLE-READER")
 	if bible[0]
 		const bibletag = bible[0]
@@ -336,7 +336,10 @@ export tag bible-reader
 					catch error
 						history = JSON.parse(getCookie("history")) || []
 					if history.length then window.localStorage.setItem("history", JSON.stringify(history))
-				else data.user = {}
+				else
+					window.localStorage.removeItem('username')
+					window.localStorage.removeItem('name')
+					data.user = {}
 			catch error
 				console.error('Error: ', error)
 				data.showNotification('error')
@@ -396,6 +399,8 @@ export tag bible-reader
 			history.splice(history.indexOf(history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation)), 1)
 		history.push({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
 		window.localStorage.setItem("history", JSON.stringify(history))
+
+		console.log data.user
 
 		if data.user.username && window.navigator.onLine
 			window.fetch("/save-history/", {
@@ -1613,7 +1618,8 @@ export tag bible-reader
 			popUp 'show_note'
 
 	def toggleCompare
-		let book, chapter
+		let book
+		let chapter
 		if choosen.length then choosen_for_comparison = choosen
 		if choosen_parallel == 'second'
 			compare_parallel_of_chapter = settingsp.chapter

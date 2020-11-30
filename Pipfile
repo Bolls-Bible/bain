@@ -27,6 +27,7 @@ sqlparse = "==0.3.1"
 urllib3 = "==1.25.10"
 Django = "==3.1.2"
 PyJWT = "==1.7.1"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.9"

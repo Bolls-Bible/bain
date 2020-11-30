@@ -1,4 +1,6 @@
 {
+  "name": "bolls_bible_frontend",
+  "version": "2.0.30",
   "scripts": {
     "build": "imba-rollup",
     "bbuild": "babel ./public/app.imba.js -d public",
@@ -13,12 +15,7 @@
   "devDependencies": {
     "@babel/cli": "^7.12.8",
     "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7"
-  },
-  "browserslist": [
-    "defaults",
-    "not IE 11",
-    "not IE_Mob 11",
-    "maintained node versions"
-  ]
+    "@babel/preset-env": "^7.12.7",
+    "@rollup/plugin-babel": "^5.2.2"
+  }
 }

@@ -138,7 +138,7 @@ USE_TZ = True
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
-ADMINS = [('Boguslav', 'bpavlisinec@gmail.com')]
+ADMINS = [('Bohuslav', 'bpavlisinec@gmail.com')]
 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
