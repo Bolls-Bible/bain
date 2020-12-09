@@ -400,8 +400,6 @@ export tag bible-reader
 		history.push({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
 		window.localStorage.setItem("history", JSON.stringify(history))
 
-		console.log data.user
-
 		if data.user.username && window.navigator.onLine
 			window.fetch("/save-history/", {
 				method: "POST",

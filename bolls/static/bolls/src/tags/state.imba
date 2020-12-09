@@ -12,12 +12,12 @@ export class State
 	prop language
 	prop lang
 	prop notifications = []
-	prop lastPushedNotificationWasAt
 	prop user = {}
 	prop translations_current_state = {}
 	prop addBtn = no
 	prop deferredPrompt
 	prop translations = []
+	prop timeoutID = undefined
 
 	def constructor
 		for lngg in languages
@@ -521,16 +521,30 @@ export class State
 		verses.length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return a - b)[verses.length - 1]) : (verses.sort(do |a, b| return a - b)[0])
 
 	def showNotification ntfctn
+		if typeof timeoutID === 'number'
+			window.clearTimeout(timeoutID)
+		let ntfc = {
+			id: Math.round(Math.random() * 4294967296)
+		}
+
 		if lang[ntfctn]
-			notifications.push(lang[ntfctn])
-		else notifications.push(ntfctn)
+			ntfc.title = lang[ntfctn]
+		else
+			ntfc.title = ntfctn
+
+		notifications.push ntfc
+
+		setTimeout(&, 4000) do
+			hideNotification(ntfc)
+		timeoutID = setTimeout(&, 4500) do
+			notifications = []
+			imba.commit()
+
+	def hideNotification ntfctn
+		notifications.find(|el| return el == ntfctn).className = 'hide-notification'
 		imba.commit()
 
-		lastPushedNotificationWasAt = Date.now()
-		setTimeout(&, 5000) do
-			if Date.now() - lastPushedNotificationWasAt > 2000
-				notifications = []
-				imba.commit()
+
 
 	def requestDeleteBookmark pks
 		if window.navigator.onLine

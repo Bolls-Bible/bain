@@ -1656,31 +1656,6 @@ address a:hover {
 	padding: 0;
 }
 
-@keyframes show-notification {
-	0% {
-		top: 64px;
-		transform: scale(1.6);
-	}
-
-	32% {
-		top: -96px;
-		transform: none;
-	}
-
-	75% {
-		top: -96px;
-		transform: none;
-		opacity: 1;
-	}
-
-	100% {
-		top: -64px;
-		transform: scale(0.75);
-		opacity: 0;
-		visibility: hidden;
-	}
-}
-
 .comparison_box {
 	display: flex;
 	flex-direction: column;
