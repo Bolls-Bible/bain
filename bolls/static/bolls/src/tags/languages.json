@@ -33,6 +33,12 @@
 				"updated": 1591185595149
 			},
 			{
+				"short_name": "TLV",
+				"full_name": "Tree of Life Version",
+				"info": "https://www.tlvbiblesociety.org/tree-of-life-version",
+				"updated": 1591185595149
+			},
+			{
 				"short_name": "NASB",
 				"full_name": "New American Standard Bible (1995)",
 				"info": "https://wikipedia.org/wiki/New_American_Standard_Bible",
@@ -199,6 +205,17 @@
 				"full_name": "Luther (1912)",
 				"info": "https://wikipedia.org/wiki/Luther_Bible",
 				"updated": 1591185595149
+			}
+		]
+	},
+	{
+		"language": "🇮🇳 தமிழ் Tamil",
+		"translations": [
+			{
+				"short_name": "TBSI",
+				"full_name": "Tamil Older Version Bible",
+				"info": "https://en.wikipedia.org/wiki/Bible_translations_into_Tamil",
+				"updated": 1591292348391
 			}
 		]
 	},

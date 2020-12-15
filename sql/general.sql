@@ -17,7 +17,6 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, WITH beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
-SELECT * FROM bolls_verses where
 
 
 UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la casa hirieron con ceguera desde el menor hasta el mayor,  de manera que se fatigaban buscando la puerta') where translation = 'RV1960' and book = 1 and chapter = 19 and verse = 11;
@@ -47,7 +46,9 @@ psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432  
 
 \copy bolls_bookmarks(id,color,note,user_id,verse_id,date) FROM '/home/b/Downloads/bolls_bookmarks.csv' DELIMITER ',' CSV HEADER;
 
-\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bibles/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TLV.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TBSI.csv' DELIMITER '|' CSV HEADER;
 
 
 \copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';
@@ -67,7 +68,7 @@ END;
 $body$  LANGUAGE 'plpgsql';
 
 SELECT table_name || '_' || column_name || '_seq', reset_sequence(table_name, column_name) FROM information_schema.columns where column_default like 'nextval%';
-
+-- END
 
 
 SELECT * FROM bolls_verses where id = 1523961 or id = 1526351 or id = 1524145 or id = 1506556 or id = 1508819 or id = 1522125 or id = 1523633 or id = 1508764 or id = 1520680 or id = 1520080 or id = 1506559 or id = 1523873 or id = 1525284 or id = 1506560 or id = 1511896 or id = 1524268 or id = 1525921 or id = 1506561 or id = 1525764 or id = 1520581 or id = 1520580 or id = 1525136 or id = 1508946 or id = 1509867 or id = 1509868 or id = 1520923 or id = 1522135;
