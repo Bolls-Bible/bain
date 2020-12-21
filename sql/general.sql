@@ -49,6 +49,7 @@ psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432  
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bibles/verses.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TLV.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TBSI.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/NKJV.csv' DELIMITER '|' CSV HEADER;
 
 
 \copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';

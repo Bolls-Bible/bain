@@ -14,7 +14,7 @@ git clone https://github.com/Bohooslav/bain.git
 cd bain/
 ```
 
-* set up local enviroment
+* set up local enviroment. This is a very important step. For now I work with python 3.7 because of gcloud works only on that + it is more stable for now.
 
 ``` bash
 pipenv

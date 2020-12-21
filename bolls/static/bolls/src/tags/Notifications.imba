@@ -13,6 +13,7 @@ export tag Notifications
 		justify-content: center
 		height: 0
 		z-index: 1600
+		cursor: pointer
 
 	css p
 		color: var(--background-color)

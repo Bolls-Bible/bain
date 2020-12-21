@@ -15,9 +15,15 @@
 				"updated": 1591185595149
 			},
 			{
+				"short_name": "NKJV",
+				"full_name": "New King James Version, 1982",
+				"info": "https://wikipedia.org/wiki/New_King_James_Version",
+				"updated": 1591185595149
+			},
+			{
 				"short_name": "WEB",
 				"full_name": "World English Bible",
-				"info": "https://en.wikipedia.org/wiki/World_English_Bible",
+				"info": "https://wikipedia.org/wiki/World_English_Bible",
 				"updated": 1591185595149
 			},
 			{
@@ -29,7 +35,7 @@
 			{
 				"short_name": "CJB",
 				"full_name": "The Complete Jewish Bible (1998)",
-				"info": "https://en.wikipedia.org/wiki/Messianic_Bible_translations#Complete_Jewish_Bible_(CJB)",
+				"info": "https://wikipedia.org/wiki/Messianic_Bible_translations#Complete_Jewish_Bible_(CJB)",
 				"updated": 1591185595149
 			},
 			{

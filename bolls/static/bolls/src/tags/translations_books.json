@@ -15332,5 +15332,403 @@
 			"chronorder": 65,
 			"chapters": 22
 		}
+	],
+	"NKJV": [
+		{
+			"bookid": 1,
+			"name": "The First Book of Moses Called GENESIS",
+			"chronorder": 1,
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"name": "The Second Book of Moses Called EXODUS",
+			"chronorder": 3,
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"name": "The Third Book of Moses Called LEVITICUS",
+			"chronorder": 4,
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"name": "The Fourth Book of Moses Called NUMBERS",
+			"chronorder": 5,
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"name": "The Fifth Book of Moses Called DEUTERONOMY",
+			"chronorder": 6,
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"name": "The Book of JOSHUA",
+			"chronorder": 7,
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"name": "The Book of JUDGES",
+			"chronorder": 8,
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"name": "The Book of RUTH",
+			"chronorder": 9,
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"name": "The First Book of SAMUEL",
+			"chronorder": 10,
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"name": "The Second Book of SAMUEL",
+			"chronorder": 11,
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"name": "The First Book of the KINGS",
+			"chronorder": 15,
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"name": "The Second Book of the KINGS",
+			"chronorder": 28,
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"name": "The First Book of the CHRONICLES",
+			"chronorder": 12,
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"name": "The Second Book of the CHRONICLES",
+			"chronorder": 16,
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"name": "The Book of EZRA",
+			"chronorder": 37,
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"name": "The Book of NEHEMIAH",
+			"chronorder": 38,
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"name": "The Book of ESTHER",
+			"chronorder": 36,
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"name": "The Book of JOB",
+			"chronorder": 2,
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"name": "The Book of PSALMS",
+			"chronorder": 13,
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"name": "The Book of PROVERBS",
+			"chronorder": 17,
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"name": "The Book of ECCLESIASTES",
+			"chronorder": 18,
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"name": "The SONG OF SOLOMON",
+			"chronorder": 14,
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"name": "The Book of ISAIAH",
+			"chronorder": 25,
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"name": "The Book of JEREMIAH",
+			"chronorder": 29,
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"name": "The Book of LAMENTATIONS",
+			"chronorder": 30,
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"name": "The Book of EZEKIEL",
+			"chronorder": 32,
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"name": "The Book of DANIEL",
+			"chronorder": 33,
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"name": "The Book of HOSEA",
+			"chronorder": 23,
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"name": "The Book of JOEL",
+			"chronorder": 20,
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"name": "The Book of AMOS",
+			"chronorder": 21,
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"name": "The Book of OBADIAH",
+			"chronorder": 31,
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"name": "The Book of JONAH",
+			"chronorder": 19,
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"name": "The Book of MICAH",
+			"chronorder": 22,
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"name": "The Book of NAHUM",
+			"chronorder": 24,
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"name": "The Book of HABAKKUK",
+			"chronorder": 27,
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"name": "The Book of ZEPHANIAH",
+			"chronorder": 26,
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"name": "The Book of HAGGAI",
+			"chronorder": 34,
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"name": "The Book of ZECHARIAH",
+			"chronorder": 35,
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"name": "The Book of MALACHI",
+			"chronorder": 39,
+			"chapters": 4
+		},
+		{
+			"bookid": 40,
+			"name": "The Gospel According to MATTHEW",
+			"chronorder": 40,
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"name": "The Gospel According to MARK",
+			"chronorder": 58,
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"name": "The Gospel According to LUKE",
+			"chronorder": 52,
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"name": "The Gospel According to JOHN",
+			"chronorder": 66,
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"name": "THE ACTS of the Apostles",
+			"chronorder": 54,
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"name": "The Epistle of Paul the Apostle to the ROMANS",
+			"chronorder": 46,
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"name": "The First Epistle of Paul the Apostle to the CORINTHIANS",
+			"chronorder": 44,
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"name": "The Second Epistle of Paul the Apostle to the CORINTHIANS",
+			"chronorder": 45,
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"name": "The Epistle of Paul the Apostle to the GALATIANS",
+			"chronorder": 41,
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"name": "The Epistle of Paul the Apostle to the EPHESIANS",
+			"chronorder": 47,
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"name": "The Epistle of Paul the Apostle to the PHILIPPIANS",
+			"chronorder": 49,
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"name": "The Epistle of Paul the Apostle to the COLOSSIANS",
+			"chronorder": 50,
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"name": "The First Epistle of Paul the Apostle to the THESSALONIANS",
+			"chronorder": 42,
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"name": "The Second Epistle of Paul the Apostle to the THESSALONIANS",
+			"chronorder": 43,
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"name": "The First Epistle of Paul the Apostle to TIMOTHY",
+			"chronorder": 55,
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"name": "The Second Epistle of Paul the Apostle to TIMOTHY",
+			"chronorder": 59,
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"name": "The Epistle of Paul the Apostle to TITUS",
+			"chronorder": 57,
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"name": "The Epistle of Paul the Apostle to PHILEMON",
+			"chronorder": 51,
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"name": "The Epistle to the HEBREWS",
+			"chronorder": 53,
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"name": "The Epistle of JAMES",
+			"chronorder": 48,
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"name": "The First Epistle of PETER",
+			"chronorder": 56,
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"name": "The Second Epistle of PETER",
+			"chronorder": 60,
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"name": "The First Epistle of JOHN",
+			"chronorder": 61,
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"name": "The Second Epistle of JOHN",
+			"chronorder": 62,
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"name": "The Third Epistle of JOHN",
+			"chronorder": 63,
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"name": "The Epistle of JUDE",
+			"chronorder": 64,
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"name": "THE REVELATION of Jesus Christ",
+			"chronorder": 65,
+			"chapters": 22
+		}
 	]
 }

@@ -372,7 +372,6 @@ export tag bible-reader
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
 
-
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
 			search.counter += 20
@@ -1935,6 +1934,9 @@ export tag bible-reader
 			touch.dx > 64 ? settings_menu_left = -300 : settings_menu_left = 0
 		onzone = no
 
+	def install
+		data.deferredPrompt.prompt()
+
 	css
 		height: 100vh
 		display: block
@@ -2174,12 +2176,18 @@ export tag bible-reader
 				<.nighttheme.parent_checkbox.flex @click=toggleVerseBreak() .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
 					<p.checkbox> <span>
-				if window.navigator.onLine then <a.help href='/downloads/' target="_blank">
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-						<title> data.lang.download
-						<path d="M0 0h24v24H0z" fill="none">
-						<path d=svg_paths.download>
-					data.lang.download
+
+				if window.navigator.onLine
+					if data.db_is_available
+						<.help @click=toggleDownloads>
+							<svg.helpsvg @click=toggleDownloads xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+								<title> data.lang.download_translations
+								<path d="M0 0h24v24H0z" fill="none">
+								<path d=svg_paths.download>
+							data.lang.download_translations
+					<a.help href='/downloads/' target="_blank" @click=install>
+						<img.helpsvg[rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
+						data.lang.install_app
 				<a.help @click=turnHelpBox()>
 					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
