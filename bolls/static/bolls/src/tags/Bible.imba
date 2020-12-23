@@ -73,6 +73,7 @@ let chapter_headers = {
 }
 
 let onzone = no
+let inzone = no
 let bible_menu_left = -300
 let settings_menu_left = -300
 let menu_icons_transform = 0
@@ -618,6 +619,7 @@ export tag bible-reader
 		settings_menu_left = -300
 		search.search_div = no
 		onzone = no
+		inzone = no
 		show_history = no
 		main_overflow = no
 		search.filter = no
@@ -1000,7 +1002,6 @@ export tag bible-reader
 		setCookie('theme', theme)
 
 		imba.commit!.then do html.dataset.pukaka = 'no'
-
 
 	def changeAccent accent
 		let html = document.querySelector('#html')
@@ -1896,13 +1897,26 @@ export tag bible-reader
 	def slidestart touch
 		slidetouch = touch.changedTouches[0]
 
+		if slidetouch.clientX < 16 or slidetouch.clientX > window.innerWidth - 16
+			inzone = yes
+
 	def slideend touch
 		touch = touch.changedTouches[0]
 
 		touch.dy = slidetouch.clientY - touch.clientY
 		touch.dx = slidetouch.clientX - touch.clientX
 
-		if document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
+		if bible_menu_left > -300
+			if inzone
+				touch.dx < -64 ? bible_menu_left = 0 : bible_menu_left = -300
+			else
+				touch.dx > 64 ? bible_menu_left = -300 : bible_menu_left = 0
+		elif settings_menu_left > -300
+			if inzone
+				touch.dx > 64 ? settings_menu_left = 0 : settings_menu_left = -300
+			else
+				touch.dx < -64 ? settings_menu_left = -300 : settings_menu_left = 0
+		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
 			if window.innerWidth > 600
 				if touch.dx < -32
 					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter("true") : prevChapter()
@@ -1915,6 +1929,8 @@ export tag bible-reader
 					settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
 
 		slidetouch = null
+		inzone = no
+
 
 	def closingdrawer e
 		e.dx = e.changedTouches[0].clientX - slidetouch.clientX
@@ -1925,6 +1941,15 @@ export tag bible-reader
 			settings_menu_left = - e.dx
 		onzone = yes
 
+	def openingdrawer e
+		if inzone
+			e.dx = e.changedTouches[0].clientX - slidetouch.clientX
+
+			if bible_menu_left < 0 && e.dx > 0
+				bible_menu_left = e.dx - 300
+			if settings_menu_left < 0 && e.dx < 0
+				settings_menu_left = - e.dx - 300
+
 	def closedrawersend touch
 		touch.dx = touch.changedTouches[0].clientX - slidetouch.clientX
 
@@ -1933,6 +1958,7 @@ export tag bible-reader
 		elif settings_menu_left > -300
 			touch.dx > 64 ? settings_menu_left = -300 : settings_menu_left = 0
 		onzone = no
+
 
 	def install
 		data.deferredPrompt.prompt()
@@ -1948,7 +1974,7 @@ export tag bible-reader
 
 	def render
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove>
-			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{onzone ? 'transition:none;' : ''}">
+			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
@@ -2004,7 +2030,7 @@ export tag bible-reader
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
-			<main.main tabindex="0" @touchstart=slidestart @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+			<main.main tabindex="0" @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section#firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2062,7 +2088,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{onzone ? 'transition:none;' : ''}">
+			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				<p.settings_header>
 					if data.getUserName()
 						<svg.helpsvg version="1.0" @click=toProfile(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">

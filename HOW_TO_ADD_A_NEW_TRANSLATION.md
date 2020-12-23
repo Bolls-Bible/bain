@@ -12,10 +12,14 @@ Also you need to format the books and make it a JavaScript array. Examples you m
 ### Add it to the app.
 
 After formating the text and books you may add it to the app. First of all copy the verses to the database with the next command:
+
 ```sql
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/path_to_the_file/verses.csv' DELIMITER '|' CSV HEADER;
 ```
+
 Also paste the books array with the abbreviation of the translation as a name. This abbreviation should be the same as the first collumn of the `translation` collumn in the database that is described above.
+
+After that go to `[host:port]/get-translation/{abbreviation of the new translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Example you may find in that folder.  Otherwise the user will not be able to download it.
 
 ### Test it.
 
