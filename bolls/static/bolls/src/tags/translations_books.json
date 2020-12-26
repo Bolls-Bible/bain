@@ -15730,5 +15730,403 @@
 			"chronorder": 65,
 			"chapters": 22
 		}
+	],
+	"SUV": [
+		{
+			"bookid": 1,
+			"name": "Mwanzo",
+			"chronorder": 1,
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"name": "Kutoka",
+			"chronorder": 3,
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"name": "Walawi",
+			"chronorder": 4,
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"name": "Hesabu",
+			"chronorder": 5,
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"name": "Kumbukumbu la Sheria",
+			"chronorder": 6,
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"name": "Yoshua",
+			"chronorder": 7,
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"name": "Waamuzi",
+			"chronorder": 8,
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"name": "Ruthu",
+			"chronorder": 9,
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"name": "1 Samueli",
+			"chronorder": 10,
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"name": "2 Samueli",
+			"chronorder": 11,
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"name": "1 Wafalme",
+			"chronorder": 15,
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"name": "2 Wafalme",
+			"chronorder": 28,
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"name": "1 Mambo ya Nyakati",
+			"chronorder": 12,
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"name": "2 Mambo ya Nyakati",
+			"chronorder": 16,
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"name": "Ezra",
+			"chronorder": 37,
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"name": "Nehemia",
+			"chronorder": 38,
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"name": "Esta",
+			"chronorder": 36,
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"name": "Yobu",
+			"chronorder": 2,
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"name": "Zaburi",
+			"chronorder": 13,
+			"chapters": 150
+		},
+		{
+			"bookid": 20,
+			"name": "Methali",
+			"chronorder": 17,
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"name": "Mhubiri",
+			"chronorder": 18,
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"name": "Wimbo Ulio Bora",
+			"chronorder": 14,
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"name": "Isaya",
+			"chronorder": 25,
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"name": "Yeremia",
+			"chronorder": 29,
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"name": "Maombolezo",
+			"chronorder": 30,
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"name": "Ezekieli",
+			"chronorder": 32,
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"name": "Danieli",
+			"chronorder": 33,
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"name": "Hosea",
+			"chronorder": 23,
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"name": "Yoeli",
+			"chronorder": 20,
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"name": "Amosi",
+			"chronorder": 21,
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"name": "Obadia",
+			"chronorder": 31,
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"name": "Yona",
+			"chronorder": 19,
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"name": "Mika",
+			"chronorder": 22,
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"name": "Nahumu",
+			"chronorder": 24,
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"name": "Habakuki",
+			"chronorder": 27,
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"name": "Sefania",
+			"chronorder": 26,
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"name": "Hagai",
+			"chronorder": 34,
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"name": "Zekaria",
+			"chronorder": 35,
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"name": "Malaki",
+			"chronorder": 39,
+			"chapters": 4
+		},
+		{
+			"bookid": 40,
+			"name": "Mathayo",
+			"chronorder": 40,
+			"chapters": 28
+		},
+		{
+			"bookid": 41,
+			"name": "Marko",
+			"chronorder": 58,
+			"chapters": 16
+		},
+		{
+			"bookid": 42,
+			"name": "Luka",
+			"chronorder": 52,
+			"chapters": 24
+		},
+		{
+			"bookid": 43,
+			"name": "Yohane",
+			"chronorder": 66,
+			"chapters": 21
+		},
+		{
+			"bookid": 44,
+			"name": "Matendo",
+			"chronorder": 54,
+			"chapters": 28
+		},
+		{
+			"bookid": 45,
+			"name": "Waroma",
+			"chronorder": 46,
+			"chapters": 16
+		},
+		{
+			"bookid": 46,
+			"name": "1 Wakorintho",
+			"chronorder": 44,
+			"chapters": 16
+		},
+		{
+			"bookid": 47,
+			"name": "2 Wakorintho",
+			"chronorder": 45,
+			"chapters": 13
+		},
+		{
+			"bookid": 48,
+			"name": "Wagalatia",
+			"chronorder": 41,
+			"chapters": 6
+		},
+		{
+			"bookid": 49,
+			"name": "Waefeso",
+			"chronorder": 47,
+			"chapters": 6
+		},
+		{
+			"bookid": 50,
+			"name": "Wafilipi",
+			"chronorder": 49,
+			"chapters": 4
+		},
+		{
+			"bookid": 51,
+			"name": "Wakolosai",
+			"chronorder": 50,
+			"chapters": 4
+		},
+		{
+			"bookid": 52,
+			"name": "1 Wathesalonike",
+			"chronorder": 42,
+			"chapters": 5
+		},
+		{
+			"bookid": 53,
+			"name": "2 Wathesalonike",
+			"chronorder": 43,
+			"chapters": 3
+		},
+		{
+			"bookid": 54,
+			"name": "1 Timotheo",
+			"chronorder": 55,
+			"chapters": 6
+		},
+		{
+			"bookid": 55,
+			"name": "2 Timotheo",
+			"chronorder": 59,
+			"chapters": 4
+		},
+		{
+			"bookid": 56,
+			"name": "Tito",
+			"chronorder": 57,
+			"chapters": 3
+		},
+		{
+			"bookid": 57,
+			"name": "Filemoni",
+			"chronorder": 51,
+			"chapters": 1
+		},
+		{
+			"bookid": 58,
+			"name": "Waebrania",
+			"chronorder": 53,
+			"chapters": 13
+		},
+		{
+			"bookid": 59,
+			"name": "Yakobo",
+			"chronorder": 48,
+			"chapters": 5
+		},
+		{
+			"bookid": 60,
+			"name": "1 Petro",
+			"chronorder": 56,
+			"chapters": 5
+		},
+		{
+			"bookid": 61,
+			"name": "2 Petro",
+			"chronorder": 60,
+			"chapters": 3
+		},
+		{
+			"bookid": 62,
+			"name": "1 Yohane",
+			"chronorder": 61,
+			"chapters": 5
+		},
+		{
+			"bookid": 63,
+			"name": "2 Yohane",
+			"chronorder": 62,
+			"chapters": 1
+		},
+		{
+			"bookid": 64,
+			"name": "3 Yohane",
+			"chronorder": 63,
+			"chapters": 1
+		},
+		{
+			"bookid": 65,
+			"name": "Yuda",
+			"chronorder": 64,
+			"chapters": 1
+		},
+		{
+			"bookid": 66,
+			"name": "Ufunuo",
+			"chronorder": 65,
+			"chapters": 22
+		}
 	]
 }

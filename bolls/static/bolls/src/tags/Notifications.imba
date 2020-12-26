@@ -32,7 +32,7 @@ export tag Notifications
 	css @keyframes
 		show-notification
 			0%
-				top: 64px
+				top: 0px
 				transform: scale(1.6)
 
 			100%
@@ -46,7 +46,7 @@ export tag Notifications
 				opacity: 1
 
 			100%
-				top: -64px
+				top: 0px
 				transform: scale(0.75)
 				opacity: 0
 				visibility: hidden

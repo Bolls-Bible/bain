@@ -259,6 +259,17 @@
 		]
 	},
 	{
+		"language": "🇰🇪 Swahili Kiswahili",
+		"translations": [
+			{
+				"short_name": "SUV",
+				"full_name": "Swahili Union Version, 1997",
+				"info": "",
+				"updated": 1591185595149
+			}
+		]
+	},
+	{
 		"language": "🇨🇳 Chinese 中文",
 		"translations": [
 			{

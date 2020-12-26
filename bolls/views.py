@@ -74,12 +74,12 @@ def search(request, translation, piece):
             translation=translation, text__icontains=piece).order_by('book', 'chapter', 'verse')
 
     if len(results_of_exec_search) < 256:
-        rank_threshold = 1 - math.exp(-0.001 * (len(piece) + 2) ** (2))
+        rank_threshold = 1 - math.exp(-0.003 * (len(piece) + 2) ** (2))
 
         vector = SearchVector('text')
         query = SearchQuery(piece)
         results_of_rank = Verses.objects.annotate(rank=SearchRank(
-            vector, query)).filter(translation=translation, rank__gt=(rank_threshold*0.5)).order_by('-rank')
+            vector, query)).filter(translation=translation, rank__gt=(rank_threshold * 0.5)).order_by('-rank')
 
         results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
             'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')

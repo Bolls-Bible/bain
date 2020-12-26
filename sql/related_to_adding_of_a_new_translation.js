@@ -398,12 +398,16 @@ const ylt = [
 		}
 ]
 
+let books = [
+	// Here should be that books
+];
+
 for (index in ylt) {
 	let book = ylt[index]
 
   books.find((el) => {return el.bookid == book.bookid}).chronorder = book.chronorder
 }
-console.log(books)
+// console.log(books)
 
 
 // After that you need to assign proper chapters number to every book
@@ -412,6 +416,10 @@ console.log(books)
 // SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
 
 // After you got that chapters format them into array, similar to others and run the next code.
+
+const chapters = [
+	// Here should be that chapters
+];
 
 for (index in chapters) {
 	let chapter = chapters[index]

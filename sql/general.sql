@@ -25,10 +25,7 @@ UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la c
 -----------
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='HOM' and book = 72;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NDL_verses.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/OL_verses.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NR06_verses.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NBS_verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/SUV.csv' DELIMITER '|' CSV HEADER;
 
 
 ----------
@@ -47,9 +44,7 @@ psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432  
 \copy bolls_bookmarks(id,color,note,user_id,verse_id,date) FROM '/home/b/Downloads/bolls_bookmarks.csv' DELIMITER ',' CSV HEADER;
 
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bibles/verses.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TLV.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/TBSI.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/NKJV.csv' DELIMITER '|' CSV HEADER;
+
 
 
 \copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';
