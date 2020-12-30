@@ -540,6 +540,8 @@ export class State
 			notifications = []
 			imba.commit()
 
+		imba.commit()
+
 	def hideNotification ntfctn
 		notifications.find(|el| return el == ntfctn).className = 'hide-notification'
 		imba.commit()

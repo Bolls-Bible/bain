@@ -103,6 +103,7 @@ let choosen_categories = []
 let onpopstate = no
 let loading = no
 let menuicons = yes
+let fixdrawers = no
 let show_fonts = no
 let show_accents = no
 let show_verse_picker = no
@@ -208,12 +209,20 @@ document.onkeyup = do |e|
 		menuicons = !menuicons
 		imba.commit()
 		window.localStorage.setItem("menuicons", menuicons)
+	elif e.code == "KeyY" && e.ctrlKey
+		fixdrawers = !fixdrawers
+		imba.commit()
+		window.localStorage.setItem("fixdrawers", fixdrawers)
 	elif e.code == "ArrowRight" && e.altKey
 		e.preventDefault()
 		window.history.forward()
 	elif e.code == "ArrowLeft" && e.altKey
 		e.preventDefault()
 		window.history.back()
+
+document.onfocus = do
+	for item in document.getElementsByTagName('BIBLE-READER')
+		item.focus!
 
 window.onpopstate = do |event|
 	if event.state
@@ -353,6 +362,7 @@ export tag bible-reader
 			toggleChronorder()
 		highlights = JSON.parse(getCookie("highlights")) || []
 		menuicons = !(getCookie('menuicons') == 'false')
+		fixdrawers = !(getCookie('fixdrawers') == 'false')
 		compare_translations.push(settings.translation)
 		compare_translations.push(settingsp.translation)
 		if JSON.parse(getCookie("compare_translations")) then compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
@@ -1001,7 +1011,8 @@ export tag bible-reader
 		html.dataset.light = settings.theme
 		setCookie('theme', theme)
 
-		imba.commit!.then do html.dataset.pukaka = 'no'
+		setTimeout(&, 75) do
+			imba.commit!.then do html.dataset.pukaka = 'no'
 
 	def changeAccent accent
 		let html = document.querySelector('#html')
@@ -1111,7 +1122,7 @@ export tag bible-reader
 			getText(settings.translation, books[current_index - 1].bookid, 1)
 
 	def mousemove e
-		unless MOBILE_PLATFORM
+		if  not MOBILE_PLATFORM and not fixdrawers
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window.innerWidth - 32
