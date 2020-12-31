@@ -579,6 +579,9 @@ export tag bible-reader
 		return no
 
 	def findVerse id, endverse, highlight = yes
+		if id == -1 && verses.length > 0
+			id = Math.round(Math.random() * (verses.length - 1) + 1)
+
 		setTimeout(&,250) do
 			const verse = document.getElementById(id)
 			if verse
@@ -1904,6 +1907,13 @@ export tag bible-reader
 			findVerse id, 0, no
 		hideVersePicker()
 
+	def randomVerse
+		const random_book = books[Math.round(Math.random() * books.length) - 1]
+		const random_chapter = Math.round(Math.random() * (random_book.chapters - 1) + 1)
+		getText settings.translation, random_book.bookid, random_chapter, -1
+
+
+
 
 	def slidestart touch
 		slidetouch = touch.changedTouches[0]
@@ -1999,9 +2009,10 @@ export tag bible-reader
 					else
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settings.translation
 					if data.db_is_available
-						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
 							<title> data.lang.download
-							<path d=svg_paths.download>
+							<g transform="matrix(1.5 0 0 1.5 0 128)">
+								<path d=svg_paths.download>
 				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
 						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
@@ -2217,25 +2228,30 @@ export tag bible-reader
 				if window.navigator.onLine
 					if data.db_is_available
 						<.help @click=toggleDownloads>
-							<svg.helpsvg @click=toggleDownloads xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+							<svg.helpsvg @click=toggleDownloads viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
 								<title> data.lang.download_translations
-								<path d="M0 0h24v24H0z" fill="none">
-								<path d=svg_paths.download>
+								<g transform="matrix(1.5 0 0 1.5 0 128)">
+									<path d=svg_paths.download>
 							data.lang.download_translations
 					<a.help href='/downloads/' target="_blank" @click=install>
 						<img.helpsvg[rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
-				<a.help @click=turnHelpBox()>
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+				<a.help @click=turnHelpBox>
+					<svg.helpsvg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
 					data.lang.help
 				<a#animated-heart.help @click=turnSupport()>
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
 						<title> data.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					data.lang.support
+				<.help @click=randomVerse>
+					<svg.helpsvg viewBox="0 0 25 25" role="img" aria-hidden="true" width="24px" height="24px">
+						<path fill="none" d="M0 0h25v25H0z">
+						<path d="M17.5 4h-10A3.5 3.5 0 004 7.5v10A3.5 3.5 0 007.5 21h10a3.5 3.5 0 003.5-3.5v-10A3.5 3.5 0 0017.5 4zm-10 1H12v4.414A5.537 5.537 0 0010.973 7.6 2.556 2.556 0 009.1 6.869a2.5 2.5 0 00-1.814.794 2.614 2.614 0 00.2 3.684A3.954 3.954 0 008.671 12H5V7.5A2.5 2.5 0 017.5 5zm4.271 6.846a11.361 11.361 0 01-3.6-1.231 1.613 1.613 0 01-.146-2.271 1.5 1.5 0 011.094-.476h.021a1.7 1.7 0 011.158.464 11.4 11.4 0 011.472 3.514zM5 17.5V13h6.64c-.653 1.149-2.117 3.2-4.4 3.568a.5.5 0 10.158.987A7.165 7.165 0 0012 14.318V20H7.5A2.5 2.5 0 015 17.5zM17.5 20H13v-5.7a7.053 7.053 0 004.6 3.259.542.542 0 00.074.005.5.5 0 00.072-.995c-2.194-.325-3.632-2.253-4.377-3.567H20v4.5A2.5 2.5 0 0117.5 20zm2.5-8h-3.735a4.1 4.1 0 001.251-.678 2.614 2.614 0 00.2-3.684 2.5 2.5 0 00-1.816-.793 2.634 2.634 0 00-1.872.732A5.537 5.537 0 0013 9.389V5h4.5A2.5 2.5 0 0120 7.5zm-6.77-.179a11.405 11.405 0 011.479-3.513 1.694 1.694 0 011.158-.464h.021a1.5 1.5 0 011.094.476 1.613 1.613 0 01-.146 2.271 11.366 11.366 0 01-3.606 1.23z">
+					data.lang.random
 				<footer>
 					<p.footer_links>
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
@@ -2341,10 +2357,10 @@ export tag bible-reader
 													<title> data.lang.delete
 													<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 											else
-												<svg.remove_parallel.close_search @click=(do data.downloadTranslation(tr.short_name)) xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+												<svg.remove_parallel.close_search @click=(do data.downloadTranslation(tr.short_name)) viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
 													<title> data.lang.download
-													<path d="M0 0h24v24H0z" fill="none">
-													<path d=svg_paths.download>
+													<g transform="matrix(1.5 0 0 1.5 0 128)">
+														<path d=svg_paths.download>
 						<.freespace>
 				elif what_to_show_in_pop_up_block == 'show_support'
 					<article.search_hat>
