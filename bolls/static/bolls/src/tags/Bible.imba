@@ -362,7 +362,7 @@ export tag bible-reader
 			toggleChronorder()
 		highlights = JSON.parse(getCookie("highlights")) || []
 		menuicons = !(getCookie('menuicons') == 'false')
-		fixdrawers = !(getCookie('fixdrawers') == 'false')
+		fixdrawers = getCookie('fixdrawers') == 'true'
 		compare_translations.push(settings.translation)
 		compare_translations.push(settingsp.translation)
 		if JSON.parse(getCookie("compare_translations")) then compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
