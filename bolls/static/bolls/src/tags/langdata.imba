@@ -73,6 +73,14 @@ export const english = {
 	"find_in_chapter": "Find in chapter",
 	"help": "Help",
 	"history": "History",
+	"ios_install": "To install the app on iOS follow the next steps",
+	"ioі_install_steps": [
+		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
+		'Then press the share button at the middle bottom.',
+		'Scroll down and find the "Add to Home Screen" action.',
+		'Press "Add" to submit.',
+		'Enjoy!',
+	]
 	"i_understand": "I understand the consequences, delete my account",
 	"increase_font_size": "Increase font size",
 	"increase_font_weight": "Increase font weight",
@@ -215,6 +223,14 @@ export const ukrainian = {
 	"find_in_chapter": "Шукати в главі",
 	"help": "Допомога",
 	"history": "Історія",
+	"ios_install": "Щоб встановити додаток на iOS слідуйте за наступними інструкціями",
+	"ioі_install_steps": [
+		'Відкрийте Safari і перейдіть до <a href="https://bolls.life"> bolls.life.',
+		'Потім натисніть кнопку Поділитися посередині внизу Safari.',
+		'Гортайте донизу поки не знайдете "Додати до Домашнього Екрану" кнопку. Натисніть її.',
+		'Натисніть "Додати".',
+		'Насолоджуйтесь!',
+	]
 	"i_understand": "Я розумію наслідки, видаляю мій обліковий запис",
 	"increase_font_size": "Збільшити шрифт",
 	"increase_font_weight": "Збільшити товщину шрифту",
@@ -357,6 +373,14 @@ export const russian = {
 	"find_in_chapter": "Искать во главе",
 	"help": "Помощь",
 	"history": "История",
+	"ios_install": "Чтобы установить приложение на iOS следуйте этим инструкциям",
+	"ioі_install_steps": [
+		'Откройте Safari и перейдите к <a href="https://bolls.life"> bolls.life.',
+		'Нажмите на исонку Поделится посередине в самом низу.',
+		'Прокрутите к низу пока не увидите "Доюавить к Домашнему Экрану" кнопку. Нажмите её',
+		'Потом нажмите "Добавить".',
+		'Наслаждайтесь!',
+	]
 	"i_understand": "Я понимаю последствия, удалите мой аккаунт",
 	"increase_font_size": "Увеличить шрифт",
 	"increase_font_weight": "Увеличить толщину шрифта",
@@ -499,6 +523,14 @@ export const portuguese = {
 	"find_in_chapter": "Localizar no capítulo",
 	"help": "Ajuda",
 	"history": "Historía",
+	"ios_install": "Para instalar o aplicativo no iOS, siga as próximas etapas",
+	"ioі_install_steps": [
+		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
+		'Then press the share button at the middle bottom.',
+		'Scroll down and find the "Add to Home Screen" action.',
+		'Press "Add" to submit.',
+		'Enjoy!',
+	]
 	"i_understand": "Entendo as consequências, excluo minha conta",
 	"increase_font_size": "Aumentar o tamanho da fonte",
 	"increase_font_weight": "Aumentar o peso da fonte",
@@ -641,6 +673,14 @@ export const espanol = {
 	"find_in_chapter": "Encuentra en el capítulo",
 	"help": "Ayuda",
 	"history": "Historial",
+	"ios_install": "Para instalar la aplicación en iOS siga los siguientes pasos",
+	"ioі_install_steps": [
+		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
+		'Then press the share button at the middle bottom.',
+		'Scroll down and find the "Add to Home Screen" action.',
+		'Press "Add" to submit.',
+		'Enjoy!',
+	]
 	"i_understand": "Yo entiendo las consecuencias, borra mi cuenta",
 	"increase_font_size": "Aumentar el tamaño de la fuente",
 	"increase_font_weight": "Aumentar el peso de la fuente",
@@ -784,6 +824,14 @@ export const german = {
 	"find_in_chapter": "Finden im Kapitel",
 	"help": "Hilfen",
 	"history": "History",
+	"ios_install": "Befolgen Sie die nächsten Schritte, um die App unter iOS zu installieren",
+	"ioі_install_steps": [
+		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
+		'Then press the share button at the middle bottom.',
+		'Scroll down and find the "Add to Home Screen" action.',
+		'Press "Add" to submit.',
+		'Enjoy!',
+	]
 	"i_understand": "Ich verstehe die Konsequenzen. Bitte löschen Sie meinen Account.",
 	"increase_font_size": "Schriftgröße vergrößern",
 	"increase_font_weight": "Schriftstärke vergröbern",
