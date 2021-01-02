@@ -6,6 +6,7 @@ export const thanks_to = [
 	"Alexander Alemayhu, patron"
 	"Павлишинець Едуард, contributor"
 	"Eric Tirado, contributor"
-	"Володимир Стільник, advocate"
+	"Dmytro Majewski, donator"
 	"Vladimir Pandovski, donator"
+	"Володимир Стільник, advocate"
 ]

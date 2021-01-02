@@ -656,11 +656,13 @@ html[data-transitions="true"] .helpFAQ a:hover {
   height: 50px;
   padding: 12px 0;
   fill: var(--text-color);
+  stroke: var(--text-color);
   cursor: pointer;
 }
 
 .save_bookmark:hover {
   fill: goldenrod;
+  stroke: goldenrod;
 }
 
 .share_box {
