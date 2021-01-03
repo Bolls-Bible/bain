@@ -494,6 +494,7 @@ export tag bible-reader
 				else
 					verses = await loadData(url)
 				loading = no
+				window.scroll(0,0)
 				imba.commit()
 				if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 			catch error
@@ -1995,13 +1996,13 @@ export tag bible-reader
 
 	def render
 		<self @scroll=triggerNavigationIcons @mousemove=mousemove>
-			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px;{boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
+			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
 						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation) tabindex="0"> settingsp.translation
 				<header[d:flex jc:space-between cursor:pointer]>
-					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" title=data.lang.chronological_order>
+					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=data.lang.chronological_order>
 						<title> data.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 					if settingsp.edited_version == settingsp.translation && settingsp.display
@@ -2009,7 +2010,7 @@ export tag bible-reader
 					else
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settings.translation
 					if data.db_is_available
-						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
+						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625">
 							<title> data.lang.download
 							<g transform="matrix(1.5 0 0 1.5 0 128)">
 								<path d=svg_paths.download>
@@ -2017,7 +2018,7 @@ export tag bible-reader
 					for language in languages
 						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
 							language.language
-							<svg.arrow_next[margin-left:auto] xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+							<svg.arrow_next[margin-left:auto] width="8" height="5" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
@@ -2025,7 +2026,7 @@ export tag bible-reader
 								<li.book_in_list .active=currentTranslation(translation.short_name) tabindex="0" [display: flex]>
 									<span @click=changeTranslation(translation.short_name)> translation.full_name
 									if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
-										<svg.translation_info xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<svg.translation_info viewBox="0 0 24 24">
 											<title> translation.info
 											<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
 				<.books-container dir="auto" .lower=(settingsp.display) [pb: 256px]>
@@ -2048,7 +2049,7 @@ export tag bible-reader
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
-				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20" tabindex="0">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
@@ -2071,11 +2072,11 @@ export tag bible-reader
 									>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
-								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_prev width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click.prevent.nextChapter() title=data.lang.next href="{nextChapterLink()}">
-								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_next width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settings.translation) == -1
@@ -2100,11 +2101,11 @@ export tag bible-reader
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
-								<svg.arrow_prev xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_prev width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click=nextChapter("true")>
-								<svg.arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_next width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
@@ -2113,7 +2114,7 @@ export tag bible-reader
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{settings_menu_left}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				<p.settings_header>
 					if data.getUserName()
-						<svg.helpsvg version="1.0" @click=toProfile(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+						<svg.helpsvg @click=toProfile(no) viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
 							<title> data.getUserName()
 							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
 								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
@@ -2124,15 +2125,15 @@ export tag bible-reader
 						<.visible_accent @click=(do show_accents = !show_accents)>
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
-								<.accent @click=changeAccent(accent.name) style="background-color: {settings.theme == 'dark' ? accent.light : accent.dark};">
+								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
 				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter=getSearchText> data.lang.search
 				<.btnbox>
-					<svg.cbtn @click=changeTheme('dark') style="padding: 8px;" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
+					<svg.cbtn[p:8px] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
 						<g>
 							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
 						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg.cbtn @click=changeTheme('light') [p: 8px] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+					<svg.cbtn @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
 						<title> data.lang.lighttheme
 						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
 				<.btnbox>
@@ -2142,43 +2143,41 @@ export tag bible-reader
 					<a.cbtn [padding: 8px font-size: 24px font-weight: 100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
 					<a.cbtn [padding: 8px font-size: 24px font-weight: 900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
-					<svg.cbtn @click.changeLineHeight(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 14" fill="context-fill" style="padding: 16px 0;">
+					<svg.cbtn @click.changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [padding: 16px 0]>
 						<title> data.lang.decrease_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="6" width="38" height="2">
 						<rect x="0" y="12" width="18" height="2">
-					<svg.cbtn @click.changeLineHeight(yes) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 24" fill="context-fill" style="padding: 10px 0;">
+					<svg.cbtn @click.changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [padding: 10px 0]>
 						<title> data.lang.increase_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="11" width="38" height="2">
 						<rect x="0" y="22" width="18" height="2">
 				if window.chrome
 					<.btnbox>
-						<svg.cbtn @click=changeAlign(yes) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+						<svg.cbtn @click=changeAlign(yes) viewBox="0 0 20 20" [padding: 10px 0]>
 							<title> data.lang.auto_align
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
-						<svg.cbtn @click=changeAlign(no) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" style="padding: 10px 0;">
+						<svg.cbtn @click=changeAlign(no) viewBox="0 0 20 20" [padding: 10px 0]>
 							<title> data.lang.align_justified
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
 				if window.innerWidth > 639
 					<.btnbox>
-						<svg.cbtn @click=changeMaxWidth(no) xmlns="http://www.w3.org/2000/svg" width="42" height="16" viewBox="0 0 42 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
+						<svg.cbtn @click=changeMaxWidth(no) width="42" height="16" viewBox="0 0 42 16" fill="context-fill" [padding: calc(42px - 28px) 0]>
 							<title> data.lang.increase_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z">
 							<path d="M38.5,7 L32.75,1.25 L34,6.58831647e-15 L42,8 L41.375,8.625 L34,16 L32.75,14.75 L38.5,9 L24,9 L24,7 L38.5,7 Z" transform="translate(33.000000, 8.000000) scale(-1, 1) translate(-33.000000, -8.000000)">
-						<svg.cbtn @click=changeMaxWidth(yes) xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="context-fill" style="padding: calc(42px - 28px) 0;">
+						<svg.cbtn @click=changeMaxWidth(yes) width="44" height="16" viewBox="0 0 44 16" fill="context-fill" [padding: calc(42px - 28px) 0]>
 							<title> data.lang.decrease_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
 				<.btnbox>
-					<svg.cbtn @click=toggleParallelMode(no) style="padding: 8px;" xmlns:cc="http://creativecommons.org/ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0, 0, 400,338.0281690140845" height="338.0281690140845" width="400">
+					<svg.cbtn @click=toggleParallelMode(no) [padding: 8px] viewBox="0, 0, 400,338.0281690140845" height="338.0281690140845" width="400">
 						<title> data.lang.usual_reading
-						<g>
-							<path style="stroke-width:1.81818" fill-rule="evenodd" stroke="none"
-								d="m 35.947276,15.059555 c -7.969093,0.761817 -16.59819,3.661819 -16.59819,5.578181 0,0.283637 -0.409086,0.516365 -0.909082,0.516365 -0.498182,0 -1.332726,0.650909 -1.85455,1.445454 -0.52,0.794546 -2.256363,2.158182 -3.856362,3.030909 -4.2854562,2.334545 -5.9854559,4.496363 -7.5981831,9.663636 -0.7927271,2.536365 -1.6272721,4.750909 -1.8581814,4.921819 -0.2290909,0.170909 -1.0600003,2.521818 -1.845455,5.225455 L 0,50.355918 v 118.650912 118.6509 l 1.4272725,4.91455 c 0.7854547,2.70182 1.6163641,5.05454 1.845455,5.22545 0.2309093,0.17092 1.0654543,2.38546 1.8581814,4.92182 1.6127272,5.16727 3.3127269,7.32727 7.5981831,9.66364 1.599999,0.87273 3.336362,2.23636 3.856362,3.03091 0.521824,0.79455 1.356368,1.44363 1.85455,1.44363 0.499996,0 0.909082,0.23273 0.909082,0.51818 0,0.97456 6.109095,3.84182 10.278187,4.82546 7.178184,1.69455 80.296367,1.94181 87.632717,0.29818 6.04365,-1.35454 8.16365,-2.48181 9.22729,-4.90545 0.40182,-0.91091 0.87272,-1.79637 1.04909,-1.96545 5.33636,-5.1291 5.29091,-24.29273 -0.0654,-26.33274 -0.29454,-0.11268 -0.53818,-0.5109 -0.53818,-0.88363 0,-1.30001 -2.77637,-4.72909 -4.30182,-5.31454 -5.89454,-2.25456 -9.98909,-2.51091 -40.25999,-2.51091 -36.860011,0 -34.947285,0.51454 -36.567285,-9.83638 -0.858181,-5.48544 -0.858181,-198.0018 0,-203.48908 1.62,-10.350906 -0.292726,-9.83636 36.567285,-9.83636 30.2709,0 34.36545,-0.254546 40.25999,-2.51091 1.52545,-0.583635 4.30182,-4.012727 4.30182,-5.312726 0,-0.374547 0.24364,-0.772729 0.53818,-0.885456 5.35637,-2.039999 5.40182,-21.203635 0.0654,-26.332727 -0.17637,-0.16909 -0.64727,-1.052727 -1.04909,-1.965455 -1.05091,-2.392726 -3.17092,-3.545454 -8.92,-4.845453 -5.51091,-1.245455 -69.73091,-1.65091 -81.620004,-0.512728 m 246.100004,0.529091 c -5.69091,1.21091 -7.93818,2.427273 -8.91455,4.82909 -0.37092,0.912728 -1.60181,3.692727 -2.73818,6.18 -4.27454,9.361819 0.24,27.027274 7.32909,28.67091 8.94545,2.072727 10.5,2.156364 40.21636,2.156364 36.34,0 34.19273,-0.589092 35.82364,9.83636 0.85818,5.48728 0.85818,198.00364 0,203.48908 -1.63091,10.42547 0.51636,9.83638 -35.82364,9.83638 -29.71636,0 -31.27091,0.0837 -40.21636,2.15817 -7.08909,1.64183 -11.60363,19.30728 -7.32909,28.67092 1.13637,2.48545 2.36726,5.26727 2.73818,6.17818 2.17818,5.35635 7.25091,5.97636 48.9909,5.98727 47.96183,0.0107 53.39273,-0.65818 60.00001,-7.4 1.30545,-1.33091 3.97273,-3.35819 5.92728,-4.50364 5.00908,-2.93635 5.34181,-3.44363 7.8509,-12.03272 1.23454,-4.22727 2.63637,-8.98183 3.11636,-10.56727 1.30909,-4.32001 1.30909,-235.821822 0,-240.14364 -0.47999,-1.585454 -1.88182,-6.34 -3.11636,-10.565454 -2.50909,-8.589091 -2.84182,-9.098182 -7.8509,-12.032728 -1.95455,-1.147272 -4.62183,-3.172727 -5.92728,-4.505454 -6.62546,-6.76 -12.08,-7.425455 -60.30728,-7.36 -30.57272,0.04 -35.33817,0.174546 -39.76908,1.118182 M 87.376365,80.17046 c -4.607268,1.17637 -8.121822,2.99091 -9.203631,4.75273 -0.276368,0.44909 -2.036365,1.68182 -3.910922,2.74 -5.672718,3.20364 -7.954534,10.04727 -6.37817,19.13091 0.736355,4.23455 3.161809,9.6491 4.325448,9.6491 0.303645,0 2.779999,1.52726 5.505457,3.39272 8.17091,5.59636 101.970903,6.05455 126.714543,5.66182 l 107.36546,-0.32001 5.72727,-2.60363 c 7.41637,-3.3709 9.73092,-5.63091 13.21091,-12.89273 3.39091,-7.07272 3.38727,-7.00363 0.48909,-13.67818 -2.98545,-6.87273 -6.95454,-10.82363 -14.29273,-14.22363 l -5.09272,-2.36 -108.00001,-0.24 C 184.65273,78.95774 91.839996,79.03228 87.376365,80.17046 m -2.554545,68.22365 c -16.609096,1.92908 -23.163632,22.64726 -11.147273,35.23271 6.041822,6.3291 5.400003,6.20546 34.032723,6.47819 33.53273,0.32 214.32191,2.93417 217.311,-3.40764 0.68001,-1.44182 4.32537,-7.49055 5.54355,-9.29964 3.30727,-4.90545 3.30727,-11.87637 0,-16.78181 -1.21818,-1.8091 -2.77273,-4.47091 -3.45272,-5.91273 -2.89273,-6.13636 -94.60182,-6.93273 -125.25091,-6.82 -12.34183,0.0454 -115.007284,0.27454 -117.03637,0.51092 m 2.616365,65.16725 c -3.589093,0.91638 -5.980003,2.05274 -9.718185,4.61274 -2.727272,1.86726 -5.207265,3.39454 -5.51091,3.39454 -1.163639,0 -3.589093,5.41455 -4.325448,9.65091 -1.576364,9.08363 0.705452,15.92727 6.37817,19.12909 1.874557,1.05818 3.634554,2.29091 3.910922,2.74 3.005453,4.89818 101.847266,6.2 126.289086,5.81273 l 107.39819,-0.31818 5.08,-2.35455 c 7.32544,-3.39454 11.29817,-7.34909 14.28181,-14.22 2.89818,-6.67272 2.90182,-6.60364 -0.48909,-13.67637 -3.47999,-7.26545 -5.79454,-9.52181 -13.22182,-12.89999 l -5.74,-2.6091 -107.96909,-0.24 c -19.0691,-0.22 -111.976369,-0.14363 -116.363635,0.97818">
-					<svg.cbtn @click=toggleParallelMode(yes) style="padding: 8px;" viewBox="0 0 400 338">
+						<path[stroke-width:1.81818] fill-rule="evenodd" stroke="none" d="m 35.947276,15.059555 c -7.969093,0.761817 -16.59819,3.661819 -16.59819,5.578181 0,0.283637 -0.409086,0.516365 -0.909082,0.516365 -0.498182,0 -1.332726,0.650909 -1.85455,1.445454 -0.52,0.794546 -2.256363,2.158182 -3.856362,3.030909 -4.2854562,2.334545 -5.9854559,4.496363 -7.5981831,9.663636 -0.7927271,2.536365 -1.6272721,4.750909 -1.8581814,4.921819 -0.2290909,0.170909 -1.0600003,2.521818 -1.845455,5.225455 L 0,50.355918 v 118.650912 118.6509 l 1.4272725,4.91455 c 0.7854547,2.70182 1.6163641,5.05454 1.845455,5.22545 0.2309093,0.17092 1.0654543,2.38546 1.8581814,4.92182 1.6127272,5.16727 3.3127269,7.32727 7.5981831,9.66364 1.599999,0.87273 3.336362,2.23636 3.856362,3.03091 0.521824,0.79455 1.356368,1.44363 1.85455,1.44363 0.499996,0 0.909082,0.23273 0.909082,0.51818 0,0.97456 6.109095,3.84182 10.278187,4.82546 7.178184,1.69455 80.296367,1.94181 87.632717,0.29818 6.04365,-1.35454 8.16365,-2.48181 9.22729,-4.90545 0.40182,-0.91091 0.87272,-1.79637 1.04909,-1.96545 5.33636,-5.1291 5.29091,-24.29273 -0.0654,-26.33274 -0.29454,-0.11268 -0.53818,-0.5109 -0.53818,-0.88363 0,-1.30001 -2.77637,-4.72909 -4.30182,-5.31454 -5.89454,-2.25456 -9.98909,-2.51091 -40.25999,-2.51091 -36.860011,0 -34.947285,0.51454 -36.567285,-9.83638 -0.858181,-5.48544 -0.858181,-198.0018 0,-203.48908 1.62,-10.350906 -0.292726,-9.83636 36.567285,-9.83636 30.2709,0 34.36545,-0.254546 40.25999,-2.51091 1.52545,-0.583635 4.30182,-4.012727 4.30182,-5.312726 0,-0.374547 0.24364,-0.772729 0.53818,-0.885456 5.35637,-2.039999 5.40182,-21.203635 0.0654,-26.332727 -0.17637,-0.16909 -0.64727,-1.052727 -1.04909,-1.965455 -1.05091,-2.392726 -3.17092,-3.545454 -8.92,-4.845453 -5.51091,-1.245455 -69.73091,-1.65091 -81.620004,-0.512728 m 246.100004,0.529091 c -5.69091,1.21091 -7.93818,2.427273 -8.91455,4.82909 -0.37092,0.912728 -1.60181,3.692727 -2.73818,6.18 -4.27454,9.361819 0.24,27.027274 7.32909,28.67091 8.94545,2.072727 10.5,2.156364 40.21636,2.156364 36.34,0 34.19273,-0.589092 35.82364,9.83636 0.85818,5.48728 0.85818,198.00364 0,203.48908 -1.63091,10.42547 0.51636,9.83638 -35.82364,9.83638 -29.71636,0 -31.27091,0.0837 -40.21636,2.15817 -7.08909,1.64183 -11.60363,19.30728 -7.32909,28.67092 1.13637,2.48545 2.36726,5.26727 2.73818,6.17818 2.17818,5.35635 7.25091,5.97636 48.9909,5.98727 47.96183,0.0107 53.39273,-0.65818 60.00001,-7.4 1.30545,-1.33091 3.97273,-3.35819 5.92728,-4.50364 5.00908,-2.93635 5.34181,-3.44363 7.8509,-12.03272 1.23454,-4.22727 2.63637,-8.98183 3.11636,-10.56727 1.30909,-4.32001 1.30909,-235.821822 0,-240.14364 -0.47999,-1.585454 -1.88182,-6.34 -3.11636,-10.565454 -2.50909,-8.589091 -2.84182,-9.098182 -7.8509,-12.032728 -1.95455,-1.147272 -4.62183,-3.172727 -5.92728,-4.505454 -6.62546,-6.76 -12.08,-7.425455 -60.30728,-7.36 -30.57272,0.04 -35.33817,0.174546 -39.76908,1.118182 M 87.376365,80.17046 c -4.607268,1.17637 -8.121822,2.99091 -9.203631,4.75273 -0.276368,0.44909 -2.036365,1.68182 -3.910922,2.74 -5.672718,3.20364 -7.954534,10.04727 -6.37817,19.13091 0.736355,4.23455 3.161809,9.6491 4.325448,9.6491 0.303645,0 2.779999,1.52726 5.505457,3.39272 8.17091,5.59636 101.970903,6.05455 126.714543,5.66182 l 107.36546,-0.32001 5.72727,-2.60363 c 7.41637,-3.3709 9.73092,-5.63091 13.21091,-12.89273 3.39091,-7.07272 3.38727,-7.00363 0.48909,-13.67818 -2.98545,-6.87273 -6.95454,-10.82363 -14.29273,-14.22363 l -5.09272,-2.36 -108.00001,-0.24 C 184.65273,78.95774 91.839996,79.03228 87.376365,80.17046 m -2.554545,68.22365 c -16.609096,1.92908 -23.163632,22.64726 -11.147273,35.23271 6.041822,6.3291 5.400003,6.20546 34.032723,6.47819 33.53273,0.32 214.32191,2.93417 217.311,-3.40764 0.68001,-1.44182 4.32537,-7.49055 5.54355,-9.29964 3.30727,-4.90545 3.30727,-11.87637 0,-16.78181 -1.21818,-1.8091 -2.77273,-4.47091 -3.45272,-5.91273 -2.89273,-6.13636 -94.60182,-6.93273 -125.25091,-6.82 -12.34183,0.0454 -115.007284,0.27454 -117.03637,0.51092 m 2.616365,65.16725 c -3.589093,0.91638 -5.980003,2.05274 -9.718185,4.61274 -2.727272,1.86726 -5.207265,3.39454 -5.51091,3.39454 -1.163639,0 -3.589093,5.41455 -4.325448,9.65091 -1.576364,9.08363 0.705452,15.92727 6.37817,19.12909 1.874557,1.05818 3.634554,2.29091 3.910922,2.74 3.005453,4.89818 101.847266,6.2 126.289086,5.81273 l 107.39819,-0.31818 5.08,-2.35455 c 7.32544,-3.39454 11.29817,-7.34909 14.28181,-14.22 2.89818,-6.67272 2.90182,-6.60364 -0.48909,-13.67637 -3.47999,-7.26545 -5.79454,-9.52181 -13.22182,-12.89999 l -5.74,-2.6091 -107.96909,-0.24 c -19.0691,-0.22 -111.976369,-0.14363 -116.363635,0.97818">
+					<svg.cbtn @click=toggleParallelMode(yes) [padding: 8px] viewBox="0 0 400 338">
 						<title> data.lang.parallel
-						<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
+						<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 				<.nighttheme @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
 					settings.font.name
@@ -2193,13 +2192,13 @@ export tag bible-reader
 						<a.prof_btn href="/accounts/login/"> data.lang.login
 						<a.prof_btn.signin href="/signup/"> data.lang.signin
 				<.help @click=turnHistory>
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+					<svg.helpsvg width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.history
 						<path d="M0 0h24v24H0z" fill="none">
 						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
 					data.lang.history
 				<.help @click=pageSearch()>
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+					<svg.helpsvg viewBox="0 0 24 24" width="24px" height="24px">
 						<title> data.lang.find_in_chapter
 						<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
 					data.lang.find_in_chapter
@@ -2229,7 +2228,7 @@ export tag bible-reader
 				if window.navigator.onLine
 					if data.db_is_available
 						<.help @click=toggleDownloads>
-							<svg.helpsvg @click=toggleDownloads viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
+							<svg.helpsvg @click=toggleDownloads viewBox="0 0 212.646728515625 159.98291015625">
 								<title> data.lang.download_translations
 								<g transform="matrix(1.5 0 0 1.5 0 128)">
 									<path d=svg_paths.download>
@@ -2238,13 +2237,13 @@ export tag bible-reader
 						<img.helpsvg[rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
 				<a.help @click=turnHelpBox>
-					<svg.helpsvg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
 					data.lang.help
 				<a#animated-heart.help @click=turnSupport()>
-					<svg.helpsvg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
+					<svg.helpsvg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
 						<title> data.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
 					data.lang.support
@@ -2272,18 +2271,18 @@ export tag bible-reader
 			<section.search_results .show_search_results=(what_to_show_in_pop_up_block) [zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 'auto'}]>
 				if what_to_show_in_pop_up_block == 'show_help'
 					<article.search_hat>
-						<svg.close_search @click=turnHelpBox() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=turnHelpBox() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.help
 						<a href="mailto:bpavlisinec@gmail.com">
-							<svg.filter_search xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+							<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
 								<title> data.lang.help
 								<g>
 									<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
 									<path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
 					<article.helpFAQ.search_body tabindex="0">
-						<p style="color: var(--accent-hover-color); font-size: 0.9em;"> data.lang.faqmsg
+						<p[color: $accent-hover-color font-size: 0.9em]> data.lang.faqmsg
 						<h3> data.lang.content
 						<ul>
 							for q in data.lang.HB
@@ -2303,11 +2302,11 @@ export tag bible-reader
 							<a href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
 				elif what_to_show_in_pop_up_block == 'show_compare'
 					<article.search_hat>
-						<svg.close_search @click=clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> highlighted_title
-						<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=data.lang.addcollection style="stroke: var(--text-color);">
+						<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke: $text-color]>
 							<title> data.lang.compare
 							<line x1="0" y1="10" x2="20" y2="10">
 							<line x1="10" y1="0" x2="10" y2="20">
@@ -2325,52 +2324,52 @@ export tag bible-reader
 							<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
-						<svg.close_search @click=clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.download_translations
 						if data.deleting_of_all_transllations
-							<svg.close_search.animated_downloading xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+							<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
 								<title> data.lang.loading
-								<path d=svg_paths.loading style="marker:none" color="#000" overflow="visible" fill="var(--text-color)">
+								<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
 						else
-							<svg.close_search @click=(do data.clearVersesTable()) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=data.lang.delete>
+							<svg.close_search @click=(do data.clearVersesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
 								<title> data.lang.remove_all_translations
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 					<article.search_body tabindex="0">
 						for language in languages
 							<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language) tabindex="0">
 								language.language
-								<svg[ml: auto].arrow_next xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+								<svg[ml: auto].arrow_next width="8" height="5" viewBox="0 0 8 5">
 									<title> data.lang.open
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 								for tr in language.translations
 									if window.navigator.onLine || data.downloaded_translations().indexOf(tr.short_name) != -1
 										<a.search_res_verse_header>
-											<.search_res_verse_text style="margin-right: auto;text-align: left;"> tr.short_name, ', ', tr.full_name
+											<.search_res_verse_text [margin-right: auto text-align: left]> tr.short_name, ', ', tr.full_name
 											if data.downloading_of_this_translations.find(do |translation| return translation == tr.short_name)
-												<svg.remove_parallel.close_search.animated_downloading xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+												<svg.remove_parallel.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
 													<title> data.lang.loading
-													<path d=svg_paths.loading style="marker:none" color="#000" overflow="visible" fill="var(--text-color)">
+													<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
 											elif data.downloaded_translations.indexOf(tr.short_name) != -1
-												<svg.remove_parallel.close_search @click=(do data.deleteTranslation(tr.short_name)) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=data.lang.delete>
+												<svg.remove_parallel.close_search @click=(do data.deleteTranslation(tr.short_name)) viewBox="0 0 12 16" alt=data.lang.delete>
 													<title> data.lang.delete
 													<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 											else
-												<svg.remove_parallel.close_search @click=(do data.downloadTranslation(tr.short_name)) viewBox="0 0 212.646728515625 159.98291015625" version="1.1" xmlns="http://www.w3.org/2000/svg">
+												<svg.remove_parallel.close_search @click=(do data.downloadTranslation(tr.short_name)) viewBox="0 0 212.646728515625 159.98291015625">
 													<title> data.lang.download
 													<g transform="matrix(1.5 0 0 1.5 0 128)">
 														<path d=svg_paths.download>
 						<.freespace>
 				elif what_to_show_in_pop_up_block == 'show_support'
 					<article.search_hat>
-						<svg.close_search @click=turnSupport() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=turnSupport() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.support
 						<a href="mailto:bpavlisinec@gmail.com">
-							<svg.filter_search xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+							<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
 								<title> data.lang.help
 								<g>
 										<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
@@ -2384,11 +2383,11 @@ export tag bible-reader
 							<li> <span innerHTML=text>
 				elif what_to_show_in_pop_up_block == "show_note"
 					<article.search_hat>
-						<svg.close_search @click=makeNote() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=makeNote() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.note
-						<svg.save_bookmark style="width: 26px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
+						<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
 							<title> data.lang.create
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 					unless isNoteEmpty()
@@ -2396,7 +2395,7 @@ export tag bible-reader
 					<rich-text-editor bind=store dir="auto">
 				else
 					if search_verses.length
-						<.filters .show=search.show_filters style="z-index:1;">
+						<.filters .show=search.show_filters [z-index:1]>
 							if settingsp.edited_version == settingsp.translation && settingsp.display
 								if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
 								<>
@@ -2407,14 +2406,14 @@ export tag bible-reader
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
 					<article.search_hat>
-						<svg.close_search @click=closeSearch(true) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=closeSearch(true) viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> search.search_result_header
-						<svg.filter_search .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg.filter_search .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.addfilter
 							<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
-					<article#search_body.search_body style="position:relative;" @scroll=searchPagination>
+					<article#search_body.search_body [position:relative] @scroll=searchPagination>
 						for rect in page_search.rects
 							<div.{rect.class}[top: {rect.top}px left: {rect.left}px width: {rect.width}px height: {rect.height}px]>
 						<p.total_msg> page_search.rects.length, ' / ',  getFilteredASearchVerses().length, ' ', data.lang.totalyresultsofsearch
@@ -2426,18 +2425,18 @@ export tag bible-reader
 										<span> nameOfBook(verse.book, (settingsp.display ? settingsp.edited_version : settings.translation)), ' '
 										<span> verse.chapter, ':'
 										<span> verse.verse
-										<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=data.lang.copy>
+										<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) viewBox="0 0 561 561" alt=data.lang.copy>
 											<title> data.lang.copy
 											<path d=svg_paths.copy>
-										<svg.open_in_parallel style="margin-left: 4px;" viewBox="0 0 400 338" @click=backInHistory({translation: search.translation, book: verse.book, chapter: verse.chapter,verse: verse.verse}, yes)>
+										<svg.open_in_parallel [margin-left: 4px] viewBox="0 0 400 338" @click=backInHistory({translation: search.translation, book: verse.book, chapter: verse.chapter,verse: verse.verse}, yes)>
 											<title> data.lang.open_in_parallel
-											<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
+											<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 							if search.filter then <div[p: 12px 0px; text-align: center]>
 								data.lang.filter_name, ' ', nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
 								<br>
 								<button[d: inline-block; mt: 12px].more_results @click=dropFilter> data.lang.drop_filter
 						unless search_verses.length
-							<div[display:flex;flex-direction:column;height:100%;justify-content:center;align-items:center]>
+							<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
 								<p> data.lang.nothing
 								<p[padding: 32px 0px 8px]> data.lang.translation, ' ', search.search_result_translation
 								<button.more_results @click=showTranslations> data.lang.change_translation
@@ -2446,14 +2445,14 @@ export tag bible-reader
 			<section.hide .without_padding=(show_collections || show_share_box) .choosen_verses=choosenid.length>
 				if show_collections
 					<.collectionshat>
-						<svg.svgBack xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=turnCollections>
+						<svg.svgBack viewBox="0 0 20 20" @click=turnCollections>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						if addcollection
 							<p.saveto> data.lang.newcollection
 						else
 							<p.saveto> data.lang.saveto
-							<svg.svgAdd @click=addCollection xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=data.lang.addcollection>
+							<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=data.lang.addcollection>
 								<title> data.lang.addcollection
 								<line x1="0" y1="10" x2="20" y2="10">
 								<line x1="10" y1="0" x2="10" y2="20">
@@ -2478,52 +2477,46 @@ export tag bible-reader
 						<p.saveto> data.lang.share_via
 					<.mark_grid>
 						<.share_box @click=(do data.shareCopying(getShareObj()) && clearSpace())>
-							<svg.share_btn xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=data.lang.copy fill="var(--text-color)">
+							<svg.share_btn viewBox="0 0 561 561" alt=data.lang.copy fill="var(--text-color)">
 								<title> data.lang.copy
 								<path d=svg_paths.copy>
 						<.share_box @click=(do data.internationalShareCopying(getShareObj()) && clearSpace())>
-							<svg.share_btn xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="var(--text-color)">
+							<svg.share_btn height="24" viewBox="0 0 24 24" width="24" fill="var(--text-color)">
 								<title> data.lang.copy
 								<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z">
 						if canShareViaTelegram() then <.share_box @click=shareTelegram()>
-							<svg.share_btn xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" style="background: linear-gradient(#37aee2, #1e96c8); border-radius: 50%;" alt="Telegram">
+							<svg.share_btn viewBox="0 0 240 240" [background: linear-gradient(#37aee2, #1e96c8); border-radius: 50%] alt="Telegram">
 								<title> "Telegram"
 								<g transform="matrix(3.468208 0 0 3.468208 0 -.00001)">
 									<path d="M14.4 34.3l23.3-9.6c2.3-1 10.1-4.2 10.1-4.2s3.6-1.4 3.3 2c-.1 1.4-.9 6.3-1.7 11.6l-2.5 15.7s-.2 2.3-1.9 2.7-4.5-1.4-5-1.8c-.4-.3-7.5-4.8-10.1-7-.7-.6-1.5-1.8.1-3.2 3.6-3.3 7.9-7.4 10.5-10 1.2-1.2 2.4-4-2.6-.6l-14.1 9.5s-1.6 1-4.6.1-6.5-2.1-6.5-2.1-2.4-1.5 1.7-3.1z" fill="#fff">
 						if canMakeTweet() then <.share_box @click=makeTweet()>
 							<svg.share_btn viewBox="0 0 24 24" alt="Twitter">
 								<title> "Twitter"
-								<g>
-									<path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z" fill="#1da1f2">
+								<path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z" fill="#1da1f2">
 						<.share_box @click=shareViaFB()>
-							<svg.share_btn version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="border-radius: 23%;enable-background:new 0 0 64 64;" xml:space="preserve" alt="Facebook">
+							<svg.share_btn x="0px" y="0px" viewBox="0 0 64 64" [border-radius: 23% enable-background:new 0 0 64 64] alt="Facebook">
 								<title> "Facebook"
 								<path fill="#3D5A98" d="M60.5,64c2,0,3.5-1.6,3.5-3.5V3.5c0-2-1.6-3.5-3.5-3.5H3.5C1.6,0,0,1.6,0,3.5v56.9  c0,2,1.6,3.5,3.5,3.5H60.5z">
 								<path fill="#FFFFFF" d="M44.2,64V39.2h8.3l1.2-9.7h-9.6v-6.2c0-2.8,0.8-4.7,4.8-4.7l5.1,0V10c-0.9-0.1-3.9-0.4-7.5-0.4  c-7.4,0-12.4,4.5-12.4,12.8v7.1h-8.3v9.7h8.3V64H44.2z">
 						<.share_box @click=shareViaWhatsApp()>
-							<svg.share_btn version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.303 512.303" style="enable-background:new 0 0 512.303 512.303;" xml:space="preserve" alt="WhatsApp">
+							<svg.share_btn x="0px" y="0px" viewBox="0 0 512.303 512.303" [enable-background:new 0 0 512.303 512.303] alt="WhatsApp">
 								<title> "WhatsApp"
-								<path style="fill:#4CAF50;" d="M256.014,0.134C114.629,0.164,0.038,114.804,0.068,256.189c0.01,48.957,14.059,96.884,40.479,138.1 L0.718,497.628c-2.121,5.496,0.615,11.671,6.111,13.792c1.229,0.474,2.534,0.717,3.851,0.715c1.222,0.006,2.435-0.203,3.584-0.619 l106.667-38.08c120.012,74.745,277.894,38.048,352.638-81.965s38.048-277.894-81.965-352.638 C350.922,13.495,303.943,0.087,256.014,0.134z">
-								<path style="fill:#FAFAFA;" d="M378.062,299.889c0,0-26.133-12.8-42.496-21.333c-18.517-9.536-40.277,8.32-50.517,18.475 c-15.937-6.122-30.493-15.362-42.816-27.179c-11.819-12.321-21.059-26.877-27.179-42.816c10.155-10.261,27.968-32,18.475-50.517 c-8.427-16.384-21.333-42.496-21.333-42.517c-1.811-3.594-5.49-5.863-9.515-5.867h-21.333c-31.068,5.366-53.657,32.474-53.333,64 c0,33.493,40.085,97.835,67.115,124.885s91.371,67.115,124.885,67.115c31.526,0.324,58.634-22.266,64-53.333v-21.333 C384.018,305.401,381.71,301.686,378.062,299.889z">
+								<path[fill:#4CAF50] d="M256.014,0.134C114.629,0.164,0.038,114.804,0.068,256.189c0.01,48.957,14.059,96.884,40.479,138.1 L0.718,497.628c-2.121,5.496,0.615,11.671,6.111,13.792c1.229,0.474,2.534,0.717,3.851,0.715c1.222,0.006,2.435-0.203,3.584-0.619 l106.667-38.08c120.012,74.745,277.894,38.048,352.638-81.965s38.048-277.894-81.965-352.638 C350.922,13.495,303.943,0.087,256.014,0.134z">
+								<path[fill:#FAFAFA] d="M378.062,299.889c0,0-26.133-12.8-42.496-21.333c-18.517-9.536-40.277,8.32-50.517,18.475 c-15.937-6.122-30.493-15.362-42.816-27.179c-11.819-12.321-21.059-26.877-27.179-42.816c10.155-10.261,27.968-32,18.475-50.517 c-8.427-16.384-21.333-42.496-21.333-42.517c-1.811-3.594-5.49-5.863-9.515-5.867h-21.333c-31.068,5.366-53.657,32.474-53.333,64 c0,33.493,40.085,97.835,67.115,124.885s91.371,67.115,124.885,67.115c31.526,0.324,58.634-22.266,64-53.333v-21.333 C384.018,305.401,381.71,301.686,378.062,299.889z">
 						<.share_box @click=shareViaVK()>
-							<svg.share_btn xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="445" height="445" viewBox="0 0 445 445" xml:space="preserve">
+							<svg.share_btn width="445" height="445" viewBox="0 0 445 445">
 								<title> "Vkontakte"
-								<g id="icon" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-2.4722222222222285 -2.4722222222222285) scale(4.94 4.94)">
-									<path d="M 31.2 0 c 25.2 0 2.4 0 27.6 0 S 90 6 90 31.2 s 0 2.4 0 27.6 S 84 90 58.8 90 s -2.4 0 -27.6 0 S 0 84 0 58.8 s 0 -13.528 0 -27.6 C 0 6 6 0 31.2 0 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,129,184); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
-									<path d="M 73.703 31.006 c 0.417 -1.391 0 -2.412 -1.985 -2.412 h -6.563 c -1.669 0 -2.438 0.883 -2.855 1.856 c 0 0 -3.337 8.134 -8.065 13.418 c -1.53 1.53 -2.225 2.016 -3.059 2.016 c -0.417 0 -1.021 -0.487 -1.021 -1.877 V 31.006 c 0 -1.669 -0.484 -2.412 -1.875 -2.412 H 37.969 c -1.043 0 -1.67 0.774 -1.67 1.508 c 0 1.582 2.364 1.947 2.607 6.396 v 9.664 c 0 2.119 -0.383 2.503 -1.217 2.503 c -2.225 0 -7.636 -8.171 -10.846 -17.52 c -0.629 -1.817 -1.26 -2.551 -2.937 -2.551 h -6.563 c -1.875 0 -2.25 0.883 -2.25 1.856 c 0 1.738 2.225 10.359 10.359 21.761 c 5.423 7.787 13.063 12.008 20.016 12.008 c 4.171 0 4.688 -0.938 4.688 -2.552 v -5.885 c 0 -1.875 0.395 -2.249 1.716 -2.249 c 0.973 0 2.642 0.487 6.535 4.241 c 4.45 4.45 5.183 6.446 7.686 6.446 h 6.563 c 1.875 0 2.813 -0.938 2.272 -2.788 c -0.592 -1.844 -2.716 -4.519 -5.535 -7.691 c -1.53 -1.808 -3.824 -3.754 -4.519 -4.728 c -0.973 -1.251 -0.695 -1.808 0 -2.92 C 64.874 46.093 72.869 34.83 73.703 31.006 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
+								<g id="icon" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1] transform="translate(-2.4722222222222285 -2.4722222222222285) scale(4.94 4.94)">
+									<path d="M 31.2 0 c 25.2 0 2.4 0 27.6 0 S 90 6 90 31.2 s 0 2.4 0 27.6 S 84 90 58.8 90 s -2.4 0 -27.6 0 S 0 84 0 58.8 s 0 -13.528 0 -27.6 C 0 6 6 0 31.2 0 z" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,129,184); fill-rule: nonzero; opacity: 1] transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
+									<path d="M 73.703 31.006 c 0.417 -1.391 0 -2.412 -1.985 -2.412 h -6.563 c -1.669 0 -2.438 0.883 -2.855 1.856 c 0 0 -3.337 8.134 -8.065 13.418 c -1.53 1.53 -2.225 2.016 -3.059 2.016 c -0.417 0 -1.021 -0.487 -1.021 -1.877 V 31.006 c 0 -1.669 -0.484 -2.412 -1.875 -2.412 H 37.969 c -1.043 0 -1.67 0.774 -1.67 1.508 c 0 1.582 2.364 1.947 2.607 6.396 v 9.664 c 0 2.119 -0.383 2.503 -1.217 2.503 c -2.225 0 -7.636 -8.171 -10.846 -17.52 c -0.629 -1.817 -1.26 -2.551 -2.937 -2.551 h -6.563 c -1.875 0 -2.25 0.883 -2.25 1.856 c 0 1.738 2.225 10.359 10.359 21.761 c 5.423 7.787 13.063 12.008 20.016 12.008 c 4.171 0 4.688 -0.938 4.688 -2.552 v -5.885 c 0 -1.875 0.395 -2.249 1.716 -2.249 c 0.973 0 2.642 0.487 6.535 4.241 c 4.45 4.45 5.183 6.446 7.686 6.446 h 6.563 c 1.875 0 2.813 -0.938 2.272 -2.788 c -0.592 -1.844 -2.716 -4.519 -5.535 -7.691 c -1.53 -1.808 -3.824 -3.754 -4.519 -4.728 c -0.973 -1.251 -0.695 -1.808 0 -2.92 C 64.874 46.093 72.869 34.83 73.703 31.006 z" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1] transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
 						<.share_box @click=shareViaViber()>
-							<svg.share_btn version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 455.731 455.731" style="border-radius: 23%;enable-background:new 0 0 455.731 455.731;" xml:space="preserve">
+							<svg.share_btn viewBox='0 0 72 72' [border-radius: 23%]>
+								<rect x="0" y="0" [fill:#7D3DAF] width="455.731" height="455.731">
 								<title> "Viber"
-								<g>
-									<rect x="0" y="0" style="fill:#7D3DAF;" width="455.731" height="455.731">
-									<g>
-										<path style="fill:#FFFFFF;" d="M371.996,146.901l-0.09-0.36c-7.28-29.43-40.1-61.01-70.24-67.58l-0.34-0.07 c-48.75-9.3-98.18-9.3-146.92,0l-0.35,0.07c-30.13,6.57-62.95,38.15-70.24,67.58l-0.08,0.36c-9,41.1-9,82.78,0,123.88l0.08,0.36 c6.979,28.174,37.355,58.303,66.37,66.589v32.852c0,11.89,14.49,17.73,22.73,9.15l33.285-34.599 c7.219,0.404,14.442,0.629,21.665,0.629c24.54,0,49.09-2.32,73.46-6.97l0.34-0.07c30.14-6.57,62.96-38.15,70.24-67.58l0.09-0.36 C380.996,229.681,380.996,188.001,371.996,146.901z M345.656,264.821c-4.86,19.2-29.78,43.07-49.58,47.48 c-25.921,4.929-52.047,7.036-78.147,6.313c-0.519-0.014-1.018,0.187-1.38,0.559c-3.704,3.802-24.303,24.948-24.303,24.948 l-25.85,26.53c-1.89,1.97-5.21,0.63-5.21-2.09v-54.422c0-0.899-0.642-1.663-1.525-1.836c-0.005-0.001-0.01-0.002-0.015-0.003 c-19.8-4.41-44.71-28.28-49.58-47.48c-8.1-37.15-8.1-74.81,0-111.96c4.87-19.2,29.78-43.07,49.58-47.48 c45.27-8.61,91.17-8.61,136.43,0c19.81,4.41,44.72,28.28,49.58,47.48C353.765,190.011,353.765,227.671,345.656,264.821z">
-										<path style="fill:#FFFFFF;" d="M270.937,289.942c-3.044-0.924-5.945-1.545-8.639-2.663
-										c-27.916-11.582-53.608-26.524-73.959-49.429c-11.573-13.025-20.631-27.73-28.288-43.292c-3.631-7.38-6.691-15.049-9.81-22.668 c-2.844-6.948,1.345-14.126,5.756-19.361c4.139-4.913,9.465-8.673,15.233-11.444c4.502-2.163,8.943-0.916,12.231,2.9 c7.108,8.25,13.637,16.922,18.924,26.485c3.251,5.882,2.359,13.072-3.533,17.075c-1.432,0.973-2.737,2.115-4.071,3.214 c-1.17,0.963-2.271,1.936-3.073,3.24c-1.466,2.386-1.536,5.2-0.592,7.794c7.266,19.968,19.513,35.495,39.611,43.858 c3.216,1.338,6.446,2.896,10.151,2.464c6.205-0.725,8.214-7.531,12.562-11.087c4.25-3.475,9.681-3.521,14.259-0.624 c4.579,2.898,9.018,6.009,13.43,9.153c4.331,3.086,8.643,6.105,12.638,9.623c3.841,3.383,5.164,7.821,3.001,12.412 c-3.96,8.408-9.722,15.403-18.034,19.868C276.387,288.719,273.584,289.127,270.937,289.942 C267.893,289.017,273.584,289.127,270.937,289.942z">
-										<path style="fill:#FFFFFF;" d="M227.942,131.471c36.515,1.023,66.506,25.256,72.933,61.356c1.095,6.151,1.485,12.44,1.972,18.683 c0.205,2.626-1.282,5.121-4.116,5.155c-2.927,0.035-4.244-2.414-4.434-5.039c-0.376-5.196-0.637-10.415-1.353-15.568 c-3.78-27.201-25.47-49.705-52.545-54.534c-4.074-0.727-8.244-0.918-12.371-1.351c-2.609-0.274-6.026-0.432-6.604-3.675 c-0.485-2.719,1.81-4.884,4.399-5.023C226.527,131.436,227.235,131.468,227.942,131.471 C264.457,132.494,227.235,131.468,227.942,131.471z">
-										<path style="fill:#FFFFFF;" d="M283.434,203.407c-0.06,0.456-0.092,1.528-0.359,2.538c-0.969,3.666-6.527,4.125-7.807,0.425 c-0.379-1.098-0.436-2.347-0.438-3.529c-0.013-7.734-1.694-15.46-5.594-22.189c-4.009-6.916-10.134-12.73-17.318-16.248 c-4.344-2.127-9.042-3.449-13.803-4.237c-2.081-0.344-4.184-0.553-6.275-0.844c-2.534-0.352-3.887-1.967-3.767-4.464 c0.112-2.34,1.822-4.023,4.372-3.879c8.38,0.476,16.474,2.287,23.924,6.232c15.15,8.023,23.804,20.687,26.33,37.597 c0.114,0.766,0.298,1.525,0.356,2.294C283.198,199.002,283.288,200.903,283.434,203.407 C283.374,203.863,283.288,200.903,283.434,203.407z">
-										<path style="fill:#FFFFFF;" d="M260.722,202.523c-3.055,0.055-4.69-1.636-5.005-4.437c-0.219-1.953-0.392-3.932-0.858-5.832 c-0.918-3.742-2.907-7.21-6.055-9.503c-1.486-1.083-3.17-1.872-4.934-2.381c-2.241-0.647-4.568-0.469-6.804-1.017 c-2.428-0.595-3.771-2.561-3.389-4.839c0.347-2.073,2.364-3.691,4.629-3.527c14.157,1.022,24.275,8.341,25.719,25.007 c0.102,1.176,0.222,2.419-0.039,3.544C263.539,201.464,262.113,202.429,260.722,202.523
-										C257.667,202.578,262.113,202.429,260.722,202.523z">
+								<g fill="#FFF" [transform: translateY(-20%) translateX(-25%) scale(1.5)]>
+									<path d="M45.775 39.367c-.732-.589-1.514-1.118-2.284-1.658-1.535-1.078-2.94-1.162-4.085.573-.644.974-1.544 1.017-2.486.59-2.596-1.178-4.601-2.992-5.775-5.63-.52-1.168-.513-2.215.702-3.04.644-.437 1.292-.954 1.24-1.908-.067-1.244-3.088-5.402-4.281-5.84-.494-.182-.985-.17-1.488-.002-2.797.94-3.955 3.241-2.846 5.965 3.31 8.127 9.136 13.784 17.155 17.237.457.197.965.275 1.222.346 1.826.018 3.964-1.74 4.582-3.486.595-1.68-.662-2.346-1.656-3.147zm-8.991-16.08c5.862.9 8.566 3.688 9.312 9.593.07.545-.134 1.366.644 1.381.814.016.618-.793.625-1.339.068-5.56-4.78-10.716-10.412-10.906-.425.061-1.304-.293-1.359.66-.036.641.704.536 1.19.61z">
+									<path d="M37.93 24.905c-.564-.068-1.308-.333-1.44.45-.137.82.692.737 1.225.856 3.621.81 4.882 2.127 5.478 5.719.087.524-.086 1.339.804 1.203.66-.1.421-.799.476-1.207.03-3.448-2.925-6.586-6.543-7.02z">
+									<path d="M38.263 27.725c-.377.01-.746.05-.884.452-.208.601.229.745.674.816 1.485.239 2.267 1.114 2.415 2.596.04.402.295.727.684.682.538-.065.587-.544.57-.998.027-1.665-1.854-3.588-3.46-3.548z">
 					<button.cancel @click=(do show_share_box = no)> data.lang.cancel
 				else
 					if store.show_color_picker
@@ -2555,39 +2548,39 @@ export tag bible-reader
 									<title> data.lang.delete
 									<path d=svg_paths.close>
 					<#addbuttons>
-						if show_delete_bookmark then <svg.close_search @click=deleteBookmarks(choosenid) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" alt=data.lang.delete>
+						if show_delete_bookmark then <svg.close_search @click=deleteBookmarks(choosenid) viewBox="0 0 12 16" alt=data.lang.delete>
 							<title> data.lang.delete
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-						<svg.close_search @click=clearSpace() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=data.lang.close>
+						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" alt=data.lang.close>
 							<title> data.lang.close
 							<path d=svg_paths.close alt=data.lang.close>
-						<svg.save_bookmark @click=(do show_share_box = yes) viewBox="0 0 86.669921875 117.4306640625" version="1.1" xmlns="http://www.w3.org/2000/svg">
+						<svg.save_bookmark @click=(do show_share_box = yes) viewBox="0 0 86.669921875 117.4306640625">
 							<title> data.lang.share
 							<g transform="matrix(1 0 0 1 -12.451230468750055 93.9453125)">
 								<path d="M 55.8105 -21.9727 C 57.9102 -21.9727 59.668 -23.7305 59.668 -25.7812 L 59.668 -75.9277 L 59.375 -83.252 L 62.6465 -79.7852 L 70.0684 -71.875 C 70.752 -71.0938 71.7773 -70.7031 72.7051 -70.7031 C 74.707 -70.7031 76.2695 -72.168 76.2695 -74.1699 C 76.2695 -75.1953 75.8301 -75.9766 75.0977 -76.709 L 58.5938 -92.627 C 57.6172 -93.6035 56.7871 -93.9453 55.8105 -93.9453 C 54.7852 -93.9453 53.9551 -93.6035 52.9785 -92.627 L 36.4746 -76.709 C 35.7422 -75.9766 35.3027 -75.1953 35.3027 -74.1699 C 35.3027 -72.168 36.7676 -70.7031 38.8184 -70.7031 C 39.7461 -70.7031 40.8203 -71.0938 41.5039 -71.875 L 48.9258 -79.7852 L 52.1973 -83.252 L 51.9043 -75.9277 L 51.9043 -25.7812 C 51.9043 -23.7305 53.7109 -21.9727 55.8105 -21.9727 Z M 27.7832 16.2598 L 83.7891 16.2598 C 93.9941 16.2598 99.1211 11.1816 99.1211 1.12305 L 99.1211 -47.6074 C 99.1211 -57.666 93.9941 -62.7441 83.7891 -62.7441 L 70.166 -62.7441 L 70.166 -54.8828 L 83.6426 -54.8828 C 88.4766 -54.8828 91.2598 -52.2461 91.2598 -47.168 L 91.2598 0.683594 C 91.2598 5.76172 88.4766 8.39844 83.6426 8.39844 L 27.8809 8.39844 C 22.998 8.39844 20.3125 5.76172 20.3125 0.683594 L 20.3125 -47.168 C 20.3125 -52.2461 22.998 -54.8828 27.8809 -54.8828 L 41.4062 -54.8828 L 41.4062 -62.7441 L 27.7832 -62.7441 C 17.5781 -62.7441 12.4512 -57.666 12.4512 -47.6074 L 12.4512 1.12305 C 12.4512 11.1816 17.5781 16.2598 27.7832 16.2598 Z">
-						<svg.save_bookmark @click=copyToClipboard() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 561 561" alt=data.lang.copy>
+						<svg.save_bookmark @click=copyToClipboard() viewBox="0 0 561 561" alt=data.lang.copy>
 							<title> data.lang.copy
 							<path d=svg_paths.copy>
 						<svg.save_bookmark @click=toggleCompare() viewBox='0 0 400 400'>
 							<title> data.lang.compare
-							<path d="m 158.87835,59.714254 c -22.24553,22.942199 -40.6885,42.183936 -40.98426,42.758776 -0.8318,1.61252 -0.20661,2.77591 3.5444,6.59866 5.52042,5.6227 1.07326,9.0169 37.637,-28.724885 17.50924,-18.073765 32.15208,-32.92934 32.53977,-33.012765 2.11329,-0.454845 1.99262,-9.787147 1.99262,154.63098 0,162.70162 0.0852,155.59667 -1.92404,155.16124 -0.4175,-0.0891 -31.30684,-31.67221 -68.64371,-70.1831 -82.516734,-85.113 -79.762069,-82.23881 -79.523922,-82.9759 0.156562,-0.48685 7.785466,-0.64342 40.516819,-0.82856 33.282953,-0.18856 40.451433,-0.33827 41.056163,-0.85598 0.99477,-0.85141 1.07891,-10.82255 0.10651,-12.19963 -1.01499,-1.43197 -104.747791,-1.64339 -106.131194,-0.216 -1.408859,1.45366 -1.422172,108.27345 -0.01065,109.72598 1.061864,1.09597 10.873494,1.39767 11.873689,0.36572 0.405788,-0.41828 0.535724,-10.38028 0.551701,-41.94167 0.01065,-31.23452 0.150173,-41.70737 0.55383,-42.67534 l 0.533593,-1.28109 78.641191,81.10851 c 43.25264,44.609 79.6823,82.26506 80.95505,83.67874 1.27157,1.41482 2.51534,2.57136 2.7635,2.57136 3.82365,0.0993 6.74023,0.19783 10.78264,0.32569 l 2.48223,-2.72678 c 9.56539,-10.51282 158.34672,-163.337 159.13762,-163.46273 1.69462,-0.2697 1.72007,0.33714 1.72678,42.53708 0.007,40.52683 0.0212,41.4788 0.86376,41.94164 1.22845,0.67884 10.78936,0.61599 11.45949,-0.0754 0.94791,-0.97828 0.75087,-109.32029 -0.20024,-110.13513 -0.61027,-0.52227 -9.49349,-0.64912 -53.0551,-0.75425 l -52.32298,-0.128 -0.77536,0.97824 c -1.17177,1.47768 -1.14409,11.36197 0.032,12.46251 0.74235,0.69256 4.25002,0.75654 41.35204,0.75654 22.29752,0 40.6652,0.12915 40.81803,0.28686 0.75194,0.77597 -5.99106,7.88549 -73.9736,77.99435 -74.8598,77.20005 -74.60834,76.94635 -75.706,76.51207 -0.65608,-0.25942 -1.04162,-309.073405 -0.38768,-310.829927 0.51549,-1.385101 3.29625,1.278819 28.18793,26.998083 44.2328,45.702694 38.02575,40.757704 43.65905,34.786424 4.03624,-4.27873 4.21348,-4.55415 3.74602,-5.85812 -0.56235,-1.56794 -81.63283,-85.027265 -82.59319,-85.027265 -0.5123,0 -16.36846,16.023541 -41.27664,41.713088" style="stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;paint-order:normal" fill-rule="evenodd">
-						<svg.save_bookmark .filled=isNoteEmpty() @click=makeNote() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" alt=data.lang.note>
+							<path d="m 158.87835,59.714254 c -22.24553,22.942199 -40.6885,42.183936 -40.98426,42.758776 -0.8318,1.61252 -0.20661,2.77591 3.5444,6.59866 5.52042,5.6227 1.07326,9.0169 37.637,-28.724885 17.50924,-18.073765 32.15208,-32.92934 32.53977,-33.012765 2.11329,-0.454845 1.99262,-9.787147 1.99262,154.63098 0,162.70162 0.0852,155.59667 -1.92404,155.16124 -0.4175,-0.0891 -31.30684,-31.67221 -68.64371,-70.1831 -82.516734,-85.113 -79.762069,-82.23881 -79.523922,-82.9759 0.156562,-0.48685 7.785466,-0.64342 40.516819,-0.82856 33.282953,-0.18856 40.451433,-0.33827 41.056163,-0.85598 0.99477,-0.85141 1.07891,-10.82255 0.10651,-12.19963 -1.01499,-1.43197 -104.747791,-1.64339 -106.131194,-0.216 -1.408859,1.45366 -1.422172,108.27345 -0.01065,109.72598 1.061864,1.09597 10.873494,1.39767 11.873689,0.36572 0.405788,-0.41828 0.535724,-10.38028 0.551701,-41.94167 0.01065,-31.23452 0.150173,-41.70737 0.55383,-42.67534 l 0.533593,-1.28109 78.641191,81.10851 c 43.25264,44.609 79.6823,82.26506 80.95505,83.67874 1.27157,1.41482 2.51534,2.57136 2.7635,2.57136 3.82365,0.0993 6.74023,0.19783 10.78264,0.32569 l 2.48223,-2.72678 c 9.56539,-10.51282 158.34672,-163.337 159.13762,-163.46273 1.69462,-0.2697 1.72007,0.33714 1.72678,42.53708 0.007,40.52683 0.0212,41.4788 0.86376,41.94164 1.22845,0.67884 10.78936,0.61599 11.45949,-0.0754 0.94791,-0.97828 0.75087,-109.32029 -0.20024,-110.13513 -0.61027,-0.52227 -9.49349,-0.64912 -53.0551,-0.75425 l -52.32298,-0.128 -0.77536,0.97824 c -1.17177,1.47768 -1.14409,11.36197 0.032,12.46251 0.74235,0.69256 4.25002,0.75654 41.35204,0.75654 22.29752,0 40.6652,0.12915 40.81803,0.28686 0.75194,0.77597 -5.99106,7.88549 -73.9736,77.99435 -74.8598,77.20005 -74.60834,76.94635 -75.706,76.51207 -0.65608,-0.25942 -1.04162,-309.073405 -0.38768,-310.829927 0.51549,-1.385101 3.29625,1.278819 28.18793,26.998083 44.2328,45.702694 38.02575,40.757704 43.65905,34.786424 4.03624,-4.27873 4.21348,-4.55415 3.74602,-5.85812 -0.56235,-1.56794 -81.63283,-85.027265 -82.59319,-85.027265 -0.5123,0 -16.36846,16.023541 -41.27664,41.713088" [stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;paint-order:normal] fill-rule="evenodd">
+						<svg.save_bookmark .filled=isNoteEmpty() @click=makeNote() viewBox="0 0 24 24" fill="black" alt=data.lang.note>
 							<title> data.lang.note
 							<path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
-						<svg.save_bookmark .filled=choosen_categories.length @click=turnCollections() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=data.lang.addtocollection>
+						<svg.save_bookmark .filled=choosen_categories.length @click=turnCollections() viewBox="0 0 20 20" alt=data.lang.addtocollection>
 							<title> data.lang.addtocollection
 							<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-						<svg.save_bookmark style="width: 26px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
+						<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
 							<title> data.lang.create
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 
 			<section.history.filters .show_history=show_history>
 				<[m: 0].nighttheme.flex>
-					<svg[m: 0 8px].close_search @click=turnHistory() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+					<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<h1[margin: 0 0 0 8px]> data.lang.history
-					<svg[margin-left: auto; padding: 0; margin: 0 12px 0 16px; width: 32px;].close_search @click=clearHistory() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" alt=data.lang.delete>
+					<svg[margin-left: auto; padding: 0; margin: 0 12px 0 16px; width: 32px;].close_search @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
 						<title> data.lang.delete
 						<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
 				<article.historylist>
@@ -2600,19 +2593,19 @@ export tag bible-reader
 								' ' + h.translation
 							<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
 								<title> data.lang.open_in_parallel
-								<path d=svg_paths.columnssvg style="fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187">
+								<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
 					else
 						<p[padding: 12px]> data.lang.empty_history
 
 			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
 				<section#navigation>
 					<[l:0 transform: translateY({menu_icons_transform}%)] @click=toggleBibleMenu()>
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+						<svg viewBox="0 0 16 16">
 							<title> data.lang.change_book
 							<path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
 						<p> data.lang.change_book
 					<[r:0 transform: translateY({menu_icons_transform}%)] @click=toggleSettingsMenu()>
-						<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+						<svg enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
 							<title> data.lang.other
 							<g>#
 								<path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z">
@@ -2625,7 +2618,7 @@ export tag bible-reader
 				<section.verse_picker.filters [z-index: 100] .show=(show_verse_picker || show_parallel_verse_picker)>
 					<.flex>
 						<h1[margin: 0 auto;font-size: 1.3em; line-height: 1;]> data.lang.choose_verse
-						<svg[m: 0 8px].close_search @click=hideVersePicker() xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+						<svg[m: 0 8px].close_search @click=hideVersePicker() viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<[m: 0].list_of_chapters.show_list_of_chapters>
@@ -2643,14 +2636,14 @@ export tag bible-reader
 					<button @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
 
 			if page_search.d
-				<section#page_search style="background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'}">
-					<input#pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeyupManager style="border-top-right-radius: 0;border-bottom-right-radius: 0;" placeholder=data.lang.search>
-					<button.arrow @click=prevOccurence() title=data.lang.prev style="border-radius: 0;">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5" style="transform: rotate(180deg);">
+				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'}]>
+					<input#pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeyupManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.search>
+					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
+						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>
 							<title> data.lang.prev
 							<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					<button.arrow @click=nextOccurence() title=data.lang.next style="border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px;">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="10" viewBox="0 0 8 5">
+					<button.arrow @click=nextOccurence() title=data.lang.next [border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px]>
+						<svg width="16" height="10" viewBox="0 0 8 5">
 							<title> data.lang.next
 							<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					if page_search.matches.length
@@ -2660,6 +2653,6 @@ export tag bible-reader
 						<title> data.lang.delete
 						<path[m:auto] d=svg_paths.close>
 
-					<svg.close_search [ml: auto] @click=clearSpace xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+					<svg.close_search [ml: auto] @click=clearSpace viewBox="0 0 20 20" tabindex="0">
 						<title> data.lang.close
 						<path[m: auto] d=svg_paths.close>

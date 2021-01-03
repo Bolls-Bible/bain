@@ -236,17 +236,17 @@ export tag profile-page
 		<self @scroll=scroll>
 			<header.profile_hat>
 				if !query
-					<.collectionsflex style="z-index: 100000;">
-						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=toBible>
+					<.collectionsflex[z-index: 100000]>
+						<svg.svgBack.backInProfile viewBox="0 0 20 20" @click=toBible>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						<h1[margin: 1em 4px]> data.getUserName()
 						if window.navigator.onLine
 							<.change_password.help>
-								<svg.helpsvg @click=showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18px" height="18px">
+								<svg.helpsvg @click=showOptions('account_actions') viewBox="0 0 24 24" width="18px" height="18px">
 									<title> data.lang.edit_account
 									<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
-								<.languages css:right="{window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px" .show_languages=(show_options_of == 'account_actions')>
+								<.languages[right:{window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(show_options_of == 'account_actions')>
 									if data.user.is_password_usable then <a href="/accounts/password_change/"><button> data.lang.change_password
 									<button @click=showDeleteForm()> data.lang.delete_account
 									<button @click=showEditForm()> data.lang.edit_account
@@ -257,7 +257,7 @@ export tag profile-page
 						<div [min-width: 16px]>
 				else
 					<.collectionsflex>
-						<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click=closeSearch>
+						<svg.svgBack.backInProfile viewBox="0 0 20 20" @click=closeSearch>
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						<h1[margin: 1em 4px]> query
@@ -273,7 +273,7 @@ export tag profile-page
 					<p.dataflex>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
-						<svg._options @click=showOptions(bookmark.title) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+						<svg._options @click=showOptions(bookmark.title) viewBox="0 0 20 20">
 							<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
 						<.languages[right: {window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(bookmark.title == show_options_of)>
 							<button @click=deleteBookmark(bookmark)> data.lang.delete
@@ -287,18 +287,18 @@ export tag profile-page
 			if !loaded_bookmarks.length && !collections.length
 				<p[text-align: center]> data.lang.thereisnobookmarks
 
-			<div#daf style="visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}">
+			<div#daf[visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}]>
 				<section.search_results .show_search_results=(show_options_of == "delete_form" || show_options_of == "edit_form")>
 					if show_options_of == "delete_form"
 						<form action="/delete-my-account/">
 							<header.search_hat>
-								<h1 style="margin:auto;"> data.lang.are_you_sure
-								<svg.close_search :click=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+								<h1[margin:auto]> data.lang.are_you_sure
+								<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
 									<title> data.lang.close
-									<path d=svg_paths.close css:margin="auto">
-							<p style="margin-bottom:16px;"> data.lang.cannot_be_undone
+									<path d=svg_paths.close [margin:auto]>
+							<p[margin-bottom:16px]> data.lang.cannot_be_undone
 							<label> data.lang.delete_account_label
-							<input.search bind=storage.username style="margin:8px 0;border-radius:4px;">
+							<input.search bind=storage.username [margin: 8px 0 border-radius:4px]>
 							if storage.username == data.user.username
 								<button.change_language> data.lang.i_understand
 							else
@@ -306,25 +306,25 @@ export tag profile-page
 					else
 						<article#edit_account>
 							<header.search_hat>
-								<h1 style="margin:auto;"> data.lang.edit_account
-								<svg.close_search :click=(do show_options_of = '') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0">
+								<h1[margin:auto]> data.lang.edit_account
+								<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
 									<title> data.lang.close
 									<path d=svg_paths.close css:margin="auto">
 							<label> data.lang.edit_username_label
-							<input.search bind=storage.username .invalid=taken_usernames.includes(storage.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 style="margin:8px 0;border-radius:4px;">
+							<input.search bind=storage.username .invalid=taken_usernames.includes(storage.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
 							if taken_usernames.includes(storage.username)
 								<p.errormessage> data.lang.username_taken
 							<label> data.lang.edit_name_label
-							<input.search bind=storage.name maxlength=30 style="margin:8px 0;border-radius:4px;">
+							<input.search bind=storage.name maxlength=30 [margin: 8px 0 border-radius:4px]>
 							if editAccountFormIsValid()
 								<button.change_language :click.editAccount()> data.lang.edit_account
 							else
 								<button.change_language disabled :click.editAccount()> data.lang.edit_account
 
 			if !window.navigator.onLine
-				<div style="position: fixed;bottom: 16px;left: 16px;color: var(--text-color);background: var(--background-color);padding: 8px;border-radius: 8px;text-align: center;border: 1px solid var(--btn-bg-hover);z-index: 1000">
+				<div[pposition: fixed bottom: 16px left: 16px color: var(--text-color) background: var(--background-color) padding: 8px border-radius: 8px text-align: center border: 1px solid var(--btn-bg-hover) z-index: 1000]>
 					data.lang.offline
-					<svg css:transform="translateY(0.2em)" fill="var(--text-color)" xmlns="http://www.w3.org/2000/svg" width="1.25em" height="1.26em" viewBox="0 0 24 24">
+					<svg[transform: translateY(0.2em) fill: $text-color] width="1.25em" height="1.26em" viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z">
 						<path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.32 0-2.55.14-3.69.38L18.43 13.5 23.64 7zM3.41 1.31L2 2.72l2.05 2.05C1.91 5.76.59 6.82.36 7L12 21.5l3.91-4.87 3.32 3.32 1.41-1.41L3.41 1.31z">
 					<a.reload @click=(do window:location.reload(true))> data.lang.reload
