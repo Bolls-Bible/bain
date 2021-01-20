@@ -12,6 +12,13 @@ html[data-light="light"] {
   --btn-bg-hover: rgba(68, 119, 255, 0.1);
 }
 
+html[data-sepia="yes"] {
+  --background-color: #EBDCB8;
+  --text-color: #2E2724;
+  --btn-bg: #E2CC98;
+  --btn-bg-hover: #E6D3A7;
+}
+
 html[data-theme="bluedark"] {
   --accent-color: rgb(128, 128, 255);
   --accent-hover-color: rgba(150, 182, 243, 0.996);

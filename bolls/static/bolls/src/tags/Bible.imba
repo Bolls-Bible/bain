@@ -38,7 +38,8 @@ for language in languages
 
 let settings =
 	theme: 'dark'
-	accent: 'gold'
+	accent: 'blue'
+	sepia: no
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -298,9 +299,9 @@ export tag bible-reader
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
-			let html = document.querySelector('#html')
-			html.dataset.theme = settings.accent + settings.theme
-			html.dataset.light = settings.theme
+			changeTheme(settings.theme)
+			if getCookie('sepia') == 'true'
+				toggleSepia!
 		else
 			let html = document.querySelector('#html')
 			html.dataset.light = settings.theme
@@ -1010,10 +1011,30 @@ export tag bible-reader
 		let html = document.querySelector('#html')
 		html.dataset.pukaka = 'yes'
 
+		if settings.sepia
+			toggleSepia!
+
 		settings.theme = theme
 		html.dataset.theme = settings.accent + settings.theme
 		html.dataset.light = settings.theme
 		setCookie('theme', theme)
+
+		setTimeout(&, 75) do
+			imba.commit!.then do html.dataset.pukaka = 'no'
+
+	def toggleSepia
+		let html = document.querySelector('#html')
+		html.dataset.pukaka = 'yes'
+
+		settings.sepia = not settings.sepia
+		if settings.sepia
+			html.dataset.theme = settings.accent + 'light'
+			html.dataset.light = 'light'
+		else
+			html.dataset.theme = settings.accent + settings.theme
+			html.dataset.light = settings.theme
+		html.dataset.sepia = settings.sepia ? 'yes' : no
+		setCookie('sepia', settings.sepia)
 
 		setTimeout(&, 75) do
 			imba.commit!.then do html.dataset.pukaka = 'no'
@@ -1631,8 +1652,6 @@ export tag bible-reader
 			popUp 'show_note'
 
 	def toggleCompare
-		let book
-		let chapter
 		if choosen.length then choosen_for_comparison = choosen
 		if choosen_parallel == 'second'
 			compare_parallel_of_chapter = settingsp.chapter
@@ -1640,6 +1659,8 @@ export tag bible-reader
 		else
 			compare_parallel_of_chapter = settings.chapter
 			compare_parallel_of_book = settings.book
+		if compare_translations.indexOf(settings.translation) == -1
+			compare_translations.unshift(settings.translation)
 		if what_to_show_in_pop_up_block == "show_compare"
 			clearSpace()
 			popUp 'show_compare'
@@ -2128,12 +2149,15 @@ export tag bible-reader
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
 				<input#search.search bind=search.search_input type='text' placeholder=data.lang.search aria-label=data.lang.search @keyup.enter=getSearchText> data.lang.search
 				<.btnbox>
-					<svg.cbtn[p:8px] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
+					<svg.cbtn[p:8px w:33.333%] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
 						<g>
 							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
 						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg.cbtn @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
+					<svg.cbtn[w:33.333%] @click=toggleSepia viewBox="0 0 8 8">
+						<title> 'sepia'
+						<svg:circle cy=4 cx=4 r=2 fill='#DEBB68'>
+					<svg.cbtn[w:33.333%] @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
 						<title> data.lang.lighttheme
 						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
 				<.btnbox>
