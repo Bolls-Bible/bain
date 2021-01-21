@@ -407,6 +407,14 @@ for (index in ylt) {
 
   books.find((el) => {return el.bookid == book.bookid}).chronorder = book.chronorder
 }
+
+// In a case when the ylt array doesn't contain some apocrifal books -- assign to the chronorder bookid of the book
+for (index in books) {
+	if (books[index].chronorder == undefined) {
+		books[index].chronorder = books[index].bookid
+	}
+}
+
 // console.log(books)
 
 

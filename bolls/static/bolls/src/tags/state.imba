@@ -27,6 +27,8 @@ export class State
 		downloading_of_this_translations = []
 		deleting_of_all_transllations = no
 		show_languages = no
+
+		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
 		db = Dexie.new('versesdb')
 		db.version(2).stores({
 			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
@@ -35,10 +37,15 @@ export class State
 			return tx.table("bookmarks").toCollection().modify (do |bookmark|
 				bookmark.collections = bookmark.notes
 				delete bookmark.notes))
+
+		# To know as fast as possible if the user possibly is logged in.
 		user.username = getCookie('username') || ''
 		user.name = getCookie('name') || ''
+
+		# If the user defined his language -- use it.
 		if getCookie('language')
 			setLanguage(getCookie('language'))
+		# Otherwise, set the default language and translation in dependence with his browser navigator settings.
 		else
 			switch window.navigator.language.toLowerCase().slice(0, 2)
 				when 'uk'
@@ -63,44 +70,25 @@ export class State
 						setCookie('translation', 'ARA')
 				when 'de'
 					language = 'de'
-					document.lastChild.lang = "en"
+					document.lastChild.lang = "de"
 					if !window.translation
 						setCookie('translation', 'MB')
 				when 'no'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'DNB')
+					setDefaultTranslation 'DNB'
 				when 'nl'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'NLD')
+					setDefaultTranslation 'NLD'
 				when 'fr'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'NBS')
+					setDefaultTranslation 'NBS'
 				when 'it'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'NR06')
+					setDefaultTranslation 'NR06'
 				when 'he'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'WLCC')
+					setDefaultTranslation 'WLCC'
 				when 'zh'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'CUV')
+					setDefaultTranslation 'CUV'
 				when 'pl'
-					language = 'eng'
-					document.lastChild.lang = "en"
-					if !window.translation
-						setCookie('translation', 'BW')
+					setDefaultTranslation 'BW'
+				when 'ja'
+					setDefaultTranslation 'NJB'
 				else
 					language = 'eng'
 					document.lastChild.lang = "en"
@@ -108,6 +96,7 @@ export class State
 		checkDownloadedTranslations()
 		checkSavedBookmarks()
 
+		# Update obsole translations if such exist.
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
 		window.addEventListener('beforeinstallprompt', do |e|
@@ -116,6 +105,12 @@ export class State
 			addBtn = yes
 			imba.commit()
 		)
+
+	def setDefaultTranslation translation
+		language = 'eng'
+		document.lastChild.lang = "en"
+		if !window.translation
+			setCookie('translation', translation)
 
 
 	def get_cookie name
