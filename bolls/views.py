@@ -69,30 +69,51 @@ def getText(request, translation, book, chapter):
 
 def search(request, translation, piece):
     results_of_exec_search = []
+    piece = piece.strip()
     if len(piece) > 2:
-        results_of_exec_search = Verses.objects.filter(
-            translation=translation, text__icontains=piece).order_by('book', 'chapter', 'verse')
+        query_set = []
 
-    if len(results_of_exec_search) < 256:
-        rank_threshold = 1 - math.exp(-0.003 * (len(piece) + 2) ** (2))
+        for word in piece.split():
+            query_set.append("Q(translation=\"" + translation + "\", text__icontains=\"" + word + "\")")
 
-        vector = SearchVector('text')
-        query = SearchQuery(piece)
-        results_of_rank = Verses.objects.annotate(rank=SearchRank(
-            vector, query)).filter(translation=translation, rank__gt=(rank_threshold * 0.5)).order_by('-rank')
+        query = ' & '.join(query_set)
+        queryres = Verses.objects.filter(eval(query))
 
-        results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
-            'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
-        results_of_search = list(results_of_similarity) + \
-            list(set(results_of_rank) - set(results_of_similarity))
+        results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
 
-        results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
 
-        if len(results_of_exec_search) > 0:
-            results_of_search = list(results_of_exec_search) + \
-                list(set(results_of_search) - set(results_of_exec_search))
+        if len(results_of_exec_search) < 256:
+            rank_threshold = 1 - math.exp(-0.003 * (len(piece) + 2) ** (2))
+
+            vector = SearchVector('text')
+            query = SearchQuery(piece)
+            results_of_rank = Verses.objects.annotate(rank=SearchRank(
+                vector, query)).filter(translation=translation, rank__gt=(rank_threshold * 0.5)).order_by('-rank')
+
+            results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
+                'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
+            results_of_search = list(results_of_similarity) + \
+                list(set(results_of_rank) - set(results_of_similarity))
+
+            results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+
+            if len(results_of_exec_search) > 0:
+                results_of_search = list(results_of_exec_search) + \
+                    list(set(results_of_search) - set(results_of_exec_search))
+        else:
+            results_of_search = results_of_exec_search
     else:
-        results_of_search = results_of_exec_search
+        results_of_search = [
+            {
+                "pk": -1,
+                "translation": translation,
+                "book": 'BOOKLESS',
+                "chapter": 'NO RESULTS',
+                "verse": "WHY?",
+                "text": "Because your query is not longer than 2 characters! And don't forget to trim it)"
+            }
+        ]
+
 
     d = []
     for obj in results_of_search:
@@ -258,16 +279,20 @@ def getSearchedProfileBookmarks(request, query):
 
 
 def getCategories(request):
-    user = request.user
-    all_objects = user.bookmarks_set.values('collection').annotate(
-        dcount=Count('collection')).order_by('-date')
-    fresh_collections = [b for b in all_objects]
-    collections = []
-    for collections_dict in fresh_collections:
-        for collection in collections_dict['collection'].split(' | '):
-            if not collection in collections and len(collection):
-                collections.append(collection)
-    return JsonResponse({"data": collections}, safe=False)
+    if request.user.is_authenticated:
+        user = request.user
+        all_objects = user.bookmarks_set.values('collection').annotate(
+            dcount=Count('collection')).order_by('-date')
+        fresh_collections = [b for b in all_objects]
+        collections = []
+        for collections_dict in fresh_collections:
+            for collection in collections_dict['collection'].split(' | '):
+                if not collection in collections and len(collection):
+                    collections.append(collection)
+        return JsonResponse({"data": collections}, safe=False)
+    response = HttpsResponse()
+    response.status_code = 401
+    return response
 
 
 @csrf_exempt

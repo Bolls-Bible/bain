@@ -29,7 +29,7 @@ export class State
 		show_languages = no
 
 		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
-		db = Dexie.new('versesdb')
+		db = new Dexie('versesdb')
 		db.version(2).stores({
 			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
 			bookmarks: '&verse, *collections'
@@ -245,7 +245,7 @@ export class State
 				imba.commit()
 
 			if window.Worker
-				let dexieWorker = Worker.new('/static/bolls/public/dexie_worker.js')
+				let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
 
 				dexieWorker.postMessage(url)
 
@@ -295,7 +295,7 @@ export class State
 				downloadTranslation(translation)
 
 		if window.Worker
-			let dexieWorker = Worker.new('/static/bolls/public/dexie_worker.js')
+			let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
 
 			dexieWorker.postMessage(translation)
 
@@ -416,8 +416,8 @@ export class State
 				return []
 
 		if window.Worker
-			return Promise.new(do |resolveSearch|
-				let dexieWorker = Worker.new('/static/bolls/public/dexie_worker.js')
+			return new Promise(do |resolveSearch|
+				let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
 
 				dexieWorker.postMessage(search)
 

@@ -82,7 +82,7 @@ tag editing-area
 			let regEx
 
 			for x in [0 ... specialCharacters.length]
-				regEx = RegExp.new(specialCharacters[x], 'g')
+				regEx = new RegExp(specialCharacters[x], 'g')
 				string = string.replace(regEx, normalCharacters[x])
 			return string
 

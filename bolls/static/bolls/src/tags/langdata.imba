@@ -36,6 +36,7 @@ export const english = {
 	"auto_align": "Auto align",
 	"back": "Back",
 	"bgthnkst": "Big thanks to",
+	"bible_search": "Search in Bible",
 	"cancel": "Cancel",
 	"cannot_be_undone": "This action cannot be undone. This will permanently delete your account and bookmarks.",
 	"canvastitle": "Pick a color to highlight choosen verses",
@@ -123,7 +124,8 @@ export const english = {
 		"Prev chapter of parallel translation: <b>Ctrl + Alt + Left Arrow</b>",
 		"Back to reading: <b>Esc</b>",
 		"Hide menu icons: <b>Ctrl + Alt + H</b>",
-		"Full screen: <b>f11</b>"
+		"Full screen: <b>f11</b>",
+		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Sign up",
 	"snapstore": "Get it from the",
@@ -186,6 +188,7 @@ export const ukrainian = {
 	"auto_align": "Автоматичне вирівнювання",
 	"back": "Назад",
 	"bgthnkst": "Велика вдячність цим людям",
+	"bible_search": "Шукати в Біблії",
 	"cancel": "Відмінити",
 	"cannot_be_undone": "Цю дію не можна скасувати. Це назавжди видалить ваш обліковий запис і закладки.",
 	"canvastitle": "Натицькайте колір",
@@ -273,7 +276,8 @@ export const ukrainian = {
 		"Попередня глава паралельного перекладу: <b>Ctrl + Alt + Ліва Стрілка</b>",
 		"Повернутися до читання: <b>Esc</b>",
 		"Сховати іконки меню: <b>Ctrl + Alt + H</b>",
-		"Повноекранний режим: <b>f11</b>"
+		"Повноекранний режим: <b>f11</b>",
+		"Не висовувати бокові панелі при наводженні курсору на край: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Зареєструватися",
 	"snapstore": "Завантажити з",
@@ -336,6 +340,7 @@ export const russian = {
 	"auto_align": "Автоматическое выравнивание",
 	"back": "Назад",
 	"bgthnkst": "Большая благодарность таким людям",
+	"bible_search": "Искать в Библии",
 	"cancel": "Отменить",
 	"cannot_be_undone": "Это действие не может быть отменено. Это навсегда удалит ваш аккаунт и закладки.",
 	"canvastitle": "Выберите цвет",
@@ -345,7 +350,7 @@ export const russian = {
 	"choose_verse": "Выберите стих",
 	"chronological_order": "Хронологический порядок",
 	"close": "Закрыть",
-	"compare": "Савнить",
+	"compare": "Сравнить",
 	"content": "Содержание",
 	"copied": "Скопировано",
 	"copy": "Копировать",
@@ -404,7 +409,7 @@ export const russian = {
 	"open_in_parallel": "Открыть в паралели",
 	"other": "Разное",
 	"parallel": "Паралельное чтение",
-	"parallel_synch": "Синхорнизация паралелей",
+	"parallel_synch": "Синхронизация параллельных переводов",
 	"phrase_not_found": "Фраза не найдена",
 	"prev": "Предыдущая глава",
 	"random": "Случайный стих",
@@ -423,9 +428,10 @@ export const russian = {
 		"Пдедыдущая глава паралельного перевода: <b>Ctrl + Alt + Левая Стрелка</b>",
 		"Вернутся к чтению: E<b>sc</b>",
 		"Спрятать иконки меню: <b>Ctrl + Alt + H</b>",
-		"Полноэкранный режим: <b>f11</b>"
+		"Полноэкранный режим: <b>f11</b>",
+		"Не показывать боковых панелей при наводе курсора на край: <b>Ctrl + Alt + Y</b>"
 	],
-	"signin": "Зарегестрироватся",
+	"signin": "Зарегистрироваться",
 	"snapstore": "Получить через",
 	"still_have_questions": "Все еще есть вопросы или идеи? Напиши мне, и я отвечу, как только смогу:",
 	"support": "Поддержать приложение",
@@ -486,6 +492,7 @@ export const portuguese = {
 	"auto_align": "Alinhamento automático",
 	"back": "De volta",
 	"bgthnkst": "Muito obrigado a",
+	"bible_search": "Pesquisa na Bíblia",
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Essa ação não pode ser desfeita. Isso excluirá permanentemente sua conta e favoritos.",
 	"canvastitle": "Escolha uma cor para destacar os versos escolhidos",
@@ -573,7 +580,8 @@ export const portuguese = {
 		"Capítulo anterior da tradução paralela: <b>Ctrl + Alt + Seta Esquerda</b>",
 		"Voltar para a leitura: <b>Esc</b>",
 		"Ocultar ícones do menu: <b>Ctrl + Alt + H</b>",
-		"Tela cheia: <b>f11</b>"
+		"Tela cheia: <b>f11</b>",
+		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Inscrever-se",
 	"snapstore": "Obtê-lo a partir do",
@@ -636,6 +644,7 @@ export const espanol = {
 	"auto_align": "Alineación automática",
 	"back": "Volver",
 	"bgthnkst": "Muchas gracias a",
+	"bible_search": "Suche in der Bibel Biblia",
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Esta acción no puede deshacerse. Esto borrará permanentemente tu cuenta y señaladores.",
 	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",
@@ -723,7 +732,8 @@ export const espanol = {
 		"Capítulo anterior de la traducción paralela:  <b>Ctrl + Alt + Flecha Izquierda</b>",
 		"Volver a la lectura: <b>Esc</b>",
 		"Ocultar íconos del menú: <b>Ctrl + Alt + H</b>",
-		"Pantalla completa: <b>f11</b>"
+		"Pantalla completa: <b>f11</b>",
+		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Registrarse",
 	"snapstore": "Obténlo de",
@@ -786,6 +796,7 @@ export const german = {
 	"auto_align": "Auto align",
 	"back": "Züruck",
 	"bgthnkst": "Vielen Dank an ...",
+	"bible_search": "Suche in der Bibel",
 	"cancel": "Aufheben",
 	"cannot_be_undone": "Diese Aktion löscht Ihr Konto, Ihre Informationen und Lesezeichen dauerhaft. Warnung! Diese Aktion kann nicht rückgängig gemacht werden..",
 	"canvastitle": "Wählen Sie eine Farbe, Verse hervorheben",
@@ -874,7 +885,8 @@ export const german = {
 		"Prev chapter of parallel translation: <b>Ctrl + Alt + Left Arrow</b>",
 		"Back to reading: <b>Esc</b>",
 		"Hide menu icons: <b>Ctrl + Alt + H</b>",
-		"Full screen: <b>f11</b>"
+		"Full screen: <b>f11</b>",
+		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Sign up",
 	"snapstore": "Hol es dir bei",

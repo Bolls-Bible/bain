@@ -69,7 +69,7 @@ export tag profile-page
 			text: []
 		}
 		for item, key in bookmarksdata
-			newItem.date = Date.new(item.date)
+			newItem.date = new Date(item.date)
 			newItem.color = item.color
 			newItem.collection = item.collection
 			newItem.note = item.note

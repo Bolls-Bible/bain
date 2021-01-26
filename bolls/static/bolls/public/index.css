@@ -13,10 +13,10 @@ html[data-light="light"] {
 }
 
 html[data-sepia="yes"] {
-  --background-color: #EBDCB8;
-  --text-color: #2E2724;
-  --btn-bg: #E2CC98;
-  --btn-bg-hover: #E6D3A7;
+  --background-color: rgb(235, 219, 183);
+  --text-color: rgb(46, 39, 36);
+  --btn-bg: rgb(226, 204, 152);
+  --btn-bg-hover: rgb(230, 211, 167);
 }
 
 html[data-theme="bluedark"] {
@@ -240,6 +240,10 @@ html[data-transitions="true"] .help:hover .helpsvg {
 body {
   transition-duration: 0s !important;
   overflow: hidden;
+}
+
+.fixscroll {
+  overflow: hidden !important;
 }
 
 .noscroll {
@@ -514,7 +518,7 @@ h1 {
 
 h1,
 span {
-  transition-property: color !important;
+  transition-property: color, background;
   white-space: break-spaces;
 }
 
@@ -532,7 +536,6 @@ main header h1 {
 main header {
   position: sticky;
   top: 0;
-  z-index: 1;
   background-color: var(--background-color);
   margin: 1em 0;
 }
@@ -548,7 +551,7 @@ footer a,
 .main span {
   cursor: pointer;
   background-repeat: no-repeat;
-  background-size: 100% 0.2em;
+  background-size: 100% 0.25em;
   background-position: 0px 110%;
 }
 
@@ -798,7 +801,7 @@ aside {
 }
 
 .show_accents {
-  margin-top: 0;
+  margin-top: 2px;
   visibility: visible;
   opacity: 1;
   transform: scale(1);
@@ -1108,6 +1111,7 @@ html[data-transitions="true"] #daf {
   height: 50px;
   padding: 12px 0;
   cursor: pointer;
+  margin-left:8px;
 }
 
 .filter_search_hover {
@@ -1239,6 +1243,7 @@ html[data-light="light"] #daf article {
 
 .checkbox {
   width: 50px;
+  min-width: 50px;
   height: 30px;
   border: 2px solid var(--text-color);
   border-radius: 40px;
