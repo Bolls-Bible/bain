@@ -947,16 +947,19 @@ export tag bible-reader
 			$generalsearch.focus!
 
 
-
-
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input.replace(/\//g, '')
 		query = query.replace(/\\/g, '')
+		query = query.trim!
+
+		# If the query is long enough and it is different from the previous query -- do the search again.
 		if query.length > 1 && (search.search_result_header != query || !search.search_div)
 			clearSpace!
 			popUp 'search'
+			search.search_result_header = ''
 			loading = yes
+
 			let url
 			if settingsp.edited_version == settingsp.translation && settingsp.display
 				search.translation = settingsp.edited_version
@@ -966,6 +969,7 @@ export tag bible-reader
 				search.translation = settings.translation
 				url = '/search/' + settings.translation + '/' + query + '/'
 				search.search_result_translation = settings.translation
+
 			search_verses = {}
 			try
 				search_verses = await loadData(url)
@@ -1038,6 +1042,8 @@ export tag bible-reader
 			return search_verses.filter(do |verse| verse.book == search.filter)
 		else
 			return search_verses
+
+
 
 	def changeTheme theme
 		let html = document.querySelector('#html')
@@ -2065,7 +2071,7 @@ export tag bible-reader
 		-webkit-overflow-scrolling@force: auto
 
 	css .height_auto
-		height: auto
+		max-height: 76px
 
 
 	def render

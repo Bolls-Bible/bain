@@ -27,8 +27,10 @@
   .search_results {
     right: 0;
     height: 100%;
+    max-height: 100%;
     width: 100%;
     border: none;
+    border-radius: none;
     padding: 12px;
     -webkit-animation: hiding_search_results 300ms ease 0ms both;
     animation: hiding_search_results 300ms ease 0ms both;
