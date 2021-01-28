@@ -939,12 +939,17 @@ export tag bible-reader
 		show_list_of_translations = no
 
 
+	def focusElement id
+		setTimeout(&,250) do
+			const theel = document.getElementById(id)
+			if theel
+				theel.focus!
+			else focusElement id
 
 	def turnGeneralSearch
 		clearSpace!
 		popUp 'search'
-		setTimeout(&, 500) do
-			$generalsearch.focus!
+		focusElement "generalsearch"
 
 
 	def getSearchText e
@@ -956,6 +961,7 @@ export tag bible-reader
 		# If the query is long enough and it is different from the previous query -- do the search again.
 		if query.length > 1 && (search.search_result_header != query || !search.search_div)
 			clearSpace!
+			document.getElementById("generalsearch").blur!
 			popUp 'search'
 			search.search_result_header = ''
 			loading = yes
@@ -1248,9 +1254,9 @@ export tag bible-reader
 			# scroll to it, to see the full verse
 			if !settingsp.display
 				const verse = document.getElementById(id)
-				const topoffset = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - scrollTop
-				if topoffset > window.innerHeight
-					scrollTo(0, scrollTop - (window.innerHeight - topOffset))
+				const top_offset_of_verse = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - scrollTop
+				if top_offset_of_verse > window.innerHeight
+					scrollTo(0, scrollTop - (window.innerHeight - top_offset_of_verse))
 			else
 				let verse
 				if parallel == 'first'
@@ -1596,8 +1602,7 @@ export tag bible-reader
 
 	def addCollection
 		addcollection = yes
-		setTimeout(&,500) do
-			document.getElementById('newcollectioninput').focus()
+		focusElement 'newcollectioninput'
 
 	def addNewCollection collection
 		if choosen_categories.find(do |element| return element == collection)
@@ -2500,7 +2505,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:256px] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:256px] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
 
 						<svg.close_search [w:24px m:auto 8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search

@@ -32,7 +32,7 @@ export tag Notifications
 	css @keyframes
 		show-notification
 			0%
-				top: 0px
+				top: 32px
 				transform: scale(1.6)
 
 			100%
