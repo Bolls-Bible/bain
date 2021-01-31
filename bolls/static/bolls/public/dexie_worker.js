@@ -32,7 +32,9 @@ function downloadTranslation(url) {
 				throw (url.substring(21, url.length - 5));
 			}
 			)
-		})
+		}).catch((e) => {
+				throw (url.substring(21, url.length - 5));
+			}
 }
 
 function deleteTranslation(translation) {

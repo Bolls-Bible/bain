@@ -1,4 +1,4 @@
-var CACHE_NAME = "v2.0.44";
+var CACHE_NAME = "v2.0.47";
 var urlsToCache = [
 	'/',
 	'/static/bolls/public/app.imba.js',

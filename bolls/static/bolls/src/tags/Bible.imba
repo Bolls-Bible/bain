@@ -2501,17 +2501,17 @@ export tag bible-reader
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
 					<article.search_hat>
-						<svg.close_search @click=closeSearch(true) viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20" tabindex="0">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:256px] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
 
-						<svg.close_search [w:24px m:auto 8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
+						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search
 							<path d=svg_paths.search>
 						if search_verses.length
-							<svg.filter_search .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20" tabindex="0">
+							<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20" tabindex="0">
 								<title> data.lang.addfilter
 								<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 

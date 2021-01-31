@@ -241,7 +241,7 @@ export class State
 				downloading_of_this_translations.splice(downloading_of_this_translations.indexOf(translation), 1)
 				translations_current_state[translation] = Date.now()
 				setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
-				console.log("Translation is saved. Time: ", (Date.now() - begtime) / 1000, "s")
+				console.log("Translation ", translation, " is saved. Time: ", (Date.now() - begtime) / 1000, "s")
 				imba.commit()
 
 			if window.Worker
