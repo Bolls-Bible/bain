@@ -2103,7 +2103,7 @@ export tag bible-reader
 					for language in languages
 						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
 							language.language
-							<svg.arrow_next[margin-left:auto min-width:8px] width="8" height="5" viewBox="0 0 8 5">
+							<svg.arrow_next[margin-left:auto min-width:8px] width="16" height="10" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
@@ -2145,7 +2145,17 @@ export tag bible-reader
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
 						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu()>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em] title=translationFullName(settings.translation)> settings.name_of_book, ' ', settings.chapter
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
+								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{chapter_headers.fontsize1}em max-width:{chapter_headers.fontsize1}em] title=data.lang.prev href="{prevChapterLink()}">
+									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.prev
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								settings.name_of_book, ' ', settings.chapter
+
+								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{chapter_headers.fontsize1}em max-width:{chapter_headers.fontsize1}em] title=data.lang.next href="{nextChapterLink()}">
+									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.next
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
@@ -2158,11 +2168,11 @@ export tag bible-reader
 									>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
-								<svg.arrow_prev width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click.prevent.nextChapter() title=data.lang.next href="{nextChapterLink()}">
-								<svg.arrow_next width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settings.translation) == -1
@@ -2175,7 +2185,9 @@ export tag bible-reader
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
 						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu(yes)>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)> settingsp.name_of_book, ' ', settingsp.chapter
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
+								settingsp.name_of_book, ' ', settingsp.chapter
+
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
@@ -2187,11 +2199,11 @@ export tag bible-reader
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
-								<svg.arrow_prev width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click=nextChapter("true")>
-								<svg.arrow_next width="8" height="5" viewBox="0 0 8 5">
+								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
@@ -2435,7 +2447,7 @@ export tag bible-reader
 						for language in languages
 							<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language) tabindex="0">
 								language.language
-								<svg[ml: auto].arrow_next width="8" height="5" viewBox="0 0 8 5">
+								<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.open
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>

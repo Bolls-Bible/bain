@@ -22,10 +22,11 @@ SELECT * FROM bolls_verses where translation = 'YLT' and book = 9 and chapter = 
 UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la casa hirieron con ceguera desde el menor hasta el mayor,  de manera que se fatigaban buscando la puerta') where translation = 'RV1960' and book = 1 and chapter = 19 and verse = 11;
 
 
------------
+----------- INSERTING OF THE TEXT TO THE DB
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/POV.csv' DELIMITER '|' CSV HEADER;
+
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='HOM' and book = 72;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/CSL.csv' DELIMITER '|' CSV HEADER;
 
 
 ----------

@@ -712,6 +712,11 @@ html[data-transitions="true"] .helpFAQ a:hover {
   cursor: pointer;
 }
 
+.arrow svg {
+  max-height: 100%;
+  max-width: 100%;
+}
+
 .arrow:hover {
   background-color: var(--btn-bg-hover);
   border-radius: 50%;
@@ -720,11 +725,11 @@ html[data-transitions="true"] .helpFAQ a:hover {
 }
 
 .arrow_next {
-  transform: rotate(-90deg) scale(2);
+  transform: rotate(-90deg);
 }
 
 .arrow_prev {
-  transform: rotate(90deg) scale(2);
+  transform: rotate(90deg);
 }
 
 aside {

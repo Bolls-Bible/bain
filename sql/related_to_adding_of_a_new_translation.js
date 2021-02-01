@@ -413,6 +413,7 @@ for (index in books) {
 	if (books[index].chronorder == undefined) {
 		books[index].chronorder = books[index].bookid
 	}
+	books[index].name = books[index].name.trim();
 }
 
 // console.log(books)

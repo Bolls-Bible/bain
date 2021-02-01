@@ -233,6 +233,17 @@
 		]
 	},
 	{
+		"language": "🇮🇷 Farsi فارسی",
+		"translations": [
+			{
+				"short_name": "POV",
+				"full_name": "Persian Old Version",
+				"info": "https://en.wikipedia.org/wiki/Bible_translations_into_Persian#Persian_Old_Version_(POV)",
+				"updated": 1591292348391
+			}
+		]
+	},
+	{
 		"language": "🇮🇳 தமிழ் Tamil",
 		"translations": [
 			{
