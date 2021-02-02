@@ -83,7 +83,6 @@ let choosenid = []
 let highlights = []
 let show_collections = no
 let show_history = no
-let main_overflow = no
 let choosen_parallel = no
 let store =
 	newcollection: ''
@@ -106,6 +105,7 @@ let loading = no
 let menuicons = yes
 let fixdrawers = no
 let show_fonts = no
+let max_header_font = 0
 let show_accents = no
 let show_verse_picker = no
 let show_parallel_verse_picker = no
@@ -647,7 +647,6 @@ export tag bible-reader
 		onzone = no
 		inzone = no
 		show_history = no
-		main_overflow = no
 		search.filter = no
 		search.show_filters = no
 		search.counter = 50
@@ -1191,7 +1190,7 @@ export tag bible-reader
 			getText(settings.translation, books[current_index - 1].bookid, 1)
 
 	def mousemove e
-		if  not MOBILE_PLATFORM and not fixdrawers
+		if not MOBILE_PLATFORM and not fixdrawers
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window.innerWidth - 32
@@ -1200,11 +1199,10 @@ export tag bible-reader
 				bible_menu_left = -300
 				settings_menu_left = -300
 
-		setTimeout(&, 350) do
-			if what_to_show_in_pop_up_block || bible_menu_left > -300 || settings_menu_left > -300 || show_history
-				main_overflow = yes
-			else
-				main_overflow = no
+		if e.y < 32 && not MOBILE_PLATFORM
+			max_header_font = 1.2
+		else
+			max_header_font = 0
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -2145,14 +2143,14 @@ export tag bible-reader
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
 						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu()>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize1}em d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
-								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{chapter_headers.fontsize1}em max-width:{chapter_headers.fontsize1}em] title=data.lang.prev href="{prevChapterLink()}">
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
+								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:max({max_header_font}em, {chapter_headers.fontsize1}em) max-width:max({max_header_font}em, {chapter_headers.fontsize1}em)] title=data.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settings.name_of_book, ' ', settings.chapter
 
-								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{chapter_headers.fontsize1}em max-width:{chapter_headers.fontsize1}em] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:max({max_header_font}em, {chapter_headers.fontsize1}em) max-width:max({max_header_font}em, {chapter_headers.fontsize1}em)] title=data.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
