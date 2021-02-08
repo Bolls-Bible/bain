@@ -23,7 +23,7 @@ UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la c
 
 
 ----------- INSERTING OF THE TEXT TO THE DB
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/POV.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/UTT.csv' DELIMITER '|' CSV HEADER;
 
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='HOM' and book = 72;

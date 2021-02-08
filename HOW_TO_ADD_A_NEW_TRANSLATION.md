@@ -6,7 +6,11 @@ I prefer sqlite modules from MyBible app. I have a `myBible_concordance.sql` fil
 
 ### Format it.
 
-I download selite module from there, run the code from `myBible_concordance.sql` and export the `verses` and `books` table to csv files. csv format is handy for working with data. Then I format the `verses.csv` table, I delete some unneded tags from there, convert some of that tags ... Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br.` &c to get the text neater. Also add before all a new collumn `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c.
+I download selite module from there, run the code from `myBible_concordance.sql` and export the `verses` and `books` table to csv files. csv format is handy for working with data. Then I format the `verses.csv` table, I delete some unneded tags from there, convert some of that tags ...
+
+Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br.` &c to get the text neater. I would say also that you should use some text to make it looks better. Usually I get the text from MyBible modules and there are some patters. The `<J>` tags are ancapsulating <i>Jesus words</i>. I delete it. There are `<t>` tags. Delete them. But the closing `</t>` tags change to new line tag `</br>`. There are many tags that I simply delete with regex. But you may find a new use for them.
+
+Also add before all a new collumn `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c.
 
 Also you need to format the books and make it a JavaScript array. Examples you may find in the `translations_books.json`. Be careful. Every book should have appropriate `bookid`, `chapters`, `chronorder` according to `name`. To make easier and more precise configuration of these fields I have created `related_to_adding_of_a_new_translation.js` file with code that may help to add appropriate fields to the appropriate book. Comments about that inside.
 

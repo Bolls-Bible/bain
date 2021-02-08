@@ -390,7 +390,7 @@ body {
 }
 
 .pressed svg {
-  transform: rotate(0deg) scale(2);
+  transform: rotate(0deg);
 }
 
 .freespace {
@@ -909,10 +909,7 @@ img,
 
 .languages button {
   background-color: transparent;
-  background-image: linear-gradient(
-    rgba(0, 0, 0, 0),
-    rgba(66, 117, 255, 0.043)
-  );
+  background: var(--btn-bg-hover);
   color: var(--text-color);
   cursor: pointer;
   padding: 8px 16px;
@@ -924,7 +921,7 @@ img,
 }
 
 .languages button:hover {
-  box-shadow: inset 0px 0px 48px var(--btn-bg-hover);
+    background: var(--btn-bg);
 }
 
 .font_icon {
@@ -1337,7 +1334,7 @@ html[data-light="light"] #daf article {
 }
 
 .change_password .show_languages {
-  transform: translateY(64px);
+  transform: translateY(82px);
 }
 
 .display_none {

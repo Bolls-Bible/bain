@@ -142,10 +142,6 @@ const fonts = [
 		code: "'Roboto Slab', sans-serif"
 	},
 	{
-		name: "System UI",
-		code: "system-ui"
-	}
-	{
 		name: "Sans Serif",
 		code: "sans, sans-serif"
 	},
@@ -153,7 +149,14 @@ const fonts = [
 		name: "Monospace",
 		code: "monospace"
 	},
+	{
+		name: "Deutsch Gothic",
+		code: "Deutsch Gothic, sans-serif"
+	},
 ]
+
+const font_svgs = []
+
 const accents = [
 	{
 		name: "green",
@@ -2598,8 +2601,8 @@ export tag bible-reader
 								<path d=svg_paths.copy>
 						<.share_box @click=(do data.internationalShareCopying(getShareObj()) && clearSpace())>
 							<svg.share_btn height="24" viewBox="0 0 24 24" width="24" fill="var(--text-color)">
-								<title> data.lang.copy
-								<path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z">
+								<title> data.lang.copy_international
+								<path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z">
 						if canShareViaTelegram() then <.share_box @click=shareTelegram()>
 							<svg.share_btn viewBox="0 0 240 240" [background: linear-gradient(#37aee2, #1e96c8); border-radius: 50%] alt="Telegram">
 								<title> "Telegram"
@@ -2670,10 +2673,10 @@ export tag bible-reader
 						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" alt=data.lang.close>
 							<title> data.lang.close
 							<path d=svg_paths.close alt=data.lang.close>
-						<svg.save_bookmark @click=(do show_share_box = yes) viewBox="0 0 86.669921875 117.4306640625">
+						<svg.save_bookmark [stroke:none] @click=(do show_share_box = yes) xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
 							<title> data.lang.share
-							<g transform="matrix(1 0 0 1 -12.451230468750055 93.9453125)">
-								<path d="M 55.8105 -21.9727 C 57.9102 -21.9727 59.668 -23.7305 59.668 -25.7812 L 59.668 -75.9277 L 59.375 -83.252 L 62.6465 -79.7852 L 70.0684 -71.875 C 70.752 -71.0938 71.7773 -70.7031 72.7051 -70.7031 C 74.707 -70.7031 76.2695 -72.168 76.2695 -74.1699 C 76.2695 -75.1953 75.8301 -75.9766 75.0977 -76.709 L 58.5938 -92.627 C 57.6172 -93.6035 56.7871 -93.9453 55.8105 -93.9453 C 54.7852 -93.9453 53.9551 -93.6035 52.9785 -92.627 L 36.4746 -76.709 C 35.7422 -75.9766 35.3027 -75.1953 35.3027 -74.1699 C 35.3027 -72.168 36.7676 -70.7031 38.8184 -70.7031 C 39.7461 -70.7031 40.8203 -71.0938 41.5039 -71.875 L 48.9258 -79.7852 L 52.1973 -83.252 L 51.9043 -75.9277 L 51.9043 -25.7812 C 51.9043 -23.7305 53.7109 -21.9727 55.8105 -21.9727 Z M 27.7832 16.2598 L 83.7891 16.2598 C 93.9941 16.2598 99.1211 11.1816 99.1211 1.12305 L 99.1211 -47.6074 C 99.1211 -57.666 93.9941 -62.7441 83.7891 -62.7441 L 70.166 -62.7441 L 70.166 -54.8828 L 83.6426 -54.8828 C 88.4766 -54.8828 91.2598 -52.2461 91.2598 -47.168 L 91.2598 0.683594 C 91.2598 5.76172 88.4766 8.39844 83.6426 8.39844 L 27.8809 8.39844 C 22.998 8.39844 20.3125 5.76172 20.3125 0.683594 L 20.3125 -47.168 C 20.3125 -52.2461 22.998 -54.8828 27.8809 -54.8828 L 41.4062 -54.8828 L 41.4062 -62.7441 L 27.7832 -62.7441 C 17.5781 -62.7441 12.4512 -57.666 12.4512 -47.6074 L 12.4512 1.12305 C 12.4512 11.1816 17.5781 16.2598 27.7832 16.2598 Z">
+							<path d="M0 0h24v24H0V0z" fill="none">
+							<path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z">
 						<svg.save_bookmark @click=copyToClipboard() viewBox="0 0 561 561" alt=data.lang.copy>
 							<title> data.lang.copy
 							<path d=svg_paths.copy>

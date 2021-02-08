@@ -246,7 +246,7 @@ export tag profile-page
 								<svg.helpsvg @click=showOptions('account_actions') viewBox="0 0 24 24" width="18px" height="18px">
 									<title> data.lang.edit_account
 									<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
-								<.languages[right:{window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(show_options_of == 'account_actions')>
+								<.languages[pos:fixed right:{window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(show_options_of == 'account_actions')>
 									if data.user.is_password_usable then <a href="/accounts/password_change/"><button> data.lang.change_password
 									<button @click=showDeleteForm()> data.lang.delete_account
 									<button @click=showEditForm()> data.lang.edit_account
