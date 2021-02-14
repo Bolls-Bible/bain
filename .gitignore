@@ -162,3 +162,5 @@ migrations/
 
 # Sphinx documentation
 docs/_build/
+
+old_bolls/

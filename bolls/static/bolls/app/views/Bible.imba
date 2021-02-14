@@ -10,6 +10,7 @@ import './search-text-as-html'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
 
+let html = document.documentElement
 
 let agent = window.navigator.userAgent;
 let isWebkit = (agent.indexOf("AppleWebKit") > 0);
@@ -310,13 +311,11 @@ export tag bible-reader
 			if getCookie('sepia') == 'true'
 				toggleSepia!
 		else
-			let html = document.querySelector('#html')
 			html.dataset.light = settings.theme
 			html.dataset.theme = settings.accent + settings.theme
 			toggleSepia!
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
-			let html = document.querySelector('#html')
 			html.dataset.transitions = "false"
 		welcome = getCookie('welcome') || welcome
 		settings.font.size = parseInt(getCookie('font')) || settings.font.size
@@ -1054,7 +1053,6 @@ export tag bible-reader
 
 
 	def changeTheme theme
-		let html = document.querySelector('#html')
 		html.dataset.pukaka = 'yes'
 
 		if settings.sepia
@@ -1069,7 +1067,6 @@ export tag bible-reader
 			imba.commit!.then do html.dataset.pukaka = 'no'
 
 	def toggleSepia
-		let html = document.querySelector('#html')
 		html.dataset.pukaka = 'yes'
 
 		settings.sepia = not settings.sepia
@@ -1086,7 +1083,6 @@ export tag bible-reader
 			imba.commit!.then do html.dataset.pukaka = 'no'
 
 	def changeAccent accent
-		let html = document.querySelector('#html')
 		settings.accent = accent
 		html.dataset.theme = settings.accent + settings.theme
 		setCookie('accent', accent)
@@ -1103,10 +1099,9 @@ export tag bible-reader
 	def increaseFontSize
 		if settings.font.size < 64 && window.innerWidth > 480
 			settings.font.size = settings.font.size + 2
-			setCookie('font', settings.font.size)
 		elif settings.font.size < 40
 			settings.font.size = settings.font.size + 2
-			setCookie('font', settings.font.size)
+		setCookie('font', settings.font.size)
 
 	def setFontFamily font
 		settings.font.family = font.code
@@ -1671,7 +1666,6 @@ export tag bible-reader
 	def toggleTransitions
 		settings.transitions = !settings.transitions
 		setCookie('transitions', settings.transitions)
-		let html = document.querySelector('#html')
 		html.dataset.transitions = settings.transitions
 
 	def toggleVersePicker
@@ -1815,39 +1809,58 @@ export tag bible-reader
 	def boxShadow grade
 		settings.theme == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
 
-	# Update it and replace with score search
-	def featherSearch feather, haystack
-		feather = feather.toLowerCase()
-		haystack = haystack.toLowerCase()
-		let haystackLength = haystack.length
-		let featherLength = feather.length
 
-		if featherLength > haystackLength
-			return no
 
-		if featherLength is haystackLength
-			return feather is haystack
+	def cleanString s
+		if s
+			return s.toLowerCase().replace(/[^0-9a-zа-яіїєёґ\s]+/g, "")
+		else return ''
 
-		let featherLetter = 0
-		while featherLetter < featherLength
-			let haystackLetter = 0
-			let match = no
-			var featherLetterCode = feather.charCodeAt(featherLetter++)
+	// Compute a search relevance score for an item.
+	def scoreSearch item
+		let thename = cleanString(item)
+		let search_query = cleanString(store.book_search)
+		let score = 0
+		let p = 0 # Position within the `item`
+		# Look through each character of the search string, stopping at the end(s)...
 
-			while haystackLetter < haystackLength
-				if haystack.charCodeAt(haystackLetter++) is featherLetterCode
-					break match = yes
+		for i in [0 ... search_query.length]
+			# Figure out if the current letter is found in the rest of the `item`.
+			const index = thename.indexOf(search_query[i], p)
+			# If not, stop here.
+			if index < 0
+				break
+			#  If it is, add to the score...
+			score++
+			#  ... and skip the position within `item` forward.
+			p = index
 
-			continue if match
-			return no
-		return yes
+		return score
+
 
 	def filteredBooks books
-		let filtered = []
-		for book in self[books]
-			if featherSearch(store.book_search, book.name)
-				filtered.push(book)
-		return filtered
+		let result = []
+
+		if store.book_search.length
+			let filtered_books = []
+
+			for book in self[books]
+				const score = scoreSearch(book.name)
+				if score > 0
+					filtered_books.push({
+						book: book
+						score: score
+					})
+
+			filtered_books = filtered_books.sort(do |a, b| b.score - a.score)
+
+			for item in filtered_books
+				result.push item.book
+		else
+			result = self[books]
+
+		return result
+
 
 	def copyToClipboardFromParallel tr
 		let copyobj = {
@@ -2134,7 +2147,7 @@ export tag bible-reader
 										<li.chapter_number .active=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-				<input$bookssearch.search @keydown.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
+				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
 				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20" tabindex="0">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
@@ -2518,7 +2531,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
 
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search

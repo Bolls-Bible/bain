@@ -1,21 +1,20 @@
 {
-  "name": "bolls_bible_frontend",
-  "version": "2.0.30",
+  "name": "bolls",
   "scripts": {
-    "build": "imba-rollup",
-    "bbuild": "babel ./public/app.imba.js -d public",
-    "start": "imba-rollup --watch --serve --hmr",
-    "dev": "imba-rollup --watch --serve --hmr",
-    "check-version": "imbac --version"
+    "start": "imba build --platform browser --no-hashing -w ./app/index.html",
+    "build": "imba build ./app/index.html --no-hashing"
   },
   "dependencies": {
-    "imba": "^2.0.0-alpha.100",
-    "imba-rollup": "^2.0.0-alpha.100"
+    "express": "^4.17.1",
+    "imba": "^2.0.0-alpha.124"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@rollup/plugin-babel": "^5.2.2"
-  }
+    "@types/node": "^14.14.27"
+  },
+  "repository": "Bohooslav/bolls",
+  "description": "Frontend for Bolls Bible app",
+  "version": "1.0.0",
+  "homepage": "https://github.com/Bohooslav/bolls",
+  "author": "Pavlyshynets Bohuslav (https://github.com/Bohooslav)",
+  "license": "ISC"
 }

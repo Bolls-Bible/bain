@@ -1,0 +1,7 @@
+{
+    "[imba]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4,
+        "editor.autoIndent": "advanced"
+    }
+}
