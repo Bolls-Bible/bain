@@ -2,7 +2,7 @@
   "name": "bolls",
   "scripts": {
     "start": "imba build --platform browser --no-hashing -w ./app/index.html",
-    "build": "imba build ./app/index.html --no-hashing"
+    "build": "imba build --platform browser --no-hashing ./app/index.html"
   },
   "dependencies": {
     "express": "^4.17.1",

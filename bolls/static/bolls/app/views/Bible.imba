@@ -59,6 +59,25 @@ let settings =
 	filtered_books: []
 	parallel_synch: yes
 
+# Detect dark mode
+if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+	settings.theme = 'dark'
+	settings.sepia = no
+	settings.accent = 'gold'
+
+# Detect change of dark/light mode
+window.matchMedia('(prefers-color-scheme: dark)')
+.addEventListener('change', do |event|
+	const bible = document.getElementsByTagName("BIBLE-READER")
+	if bible[0]
+		if event.matches
+			settings.theme = 'dark'
+		else
+			settings.theme = 'light'
+		bible[0].changeTheme(settings.theme)
+)
+
+
 let settingsp = {
 	display: no
 	translation: 'WLCC'
@@ -155,8 +174,6 @@ const fonts = [
 		code: "Deutsch Gothic, sans-serif"
 	},
 ]
-
-const font_svgs = []
 
 const accents = [
 	{
@@ -313,7 +330,8 @@ export tag bible-reader
 		else
 			html.dataset.light = settings.theme
 			html.dataset.theme = settings.accent + settings.theme
-			toggleSepia!
+			unless settings.theme = 'dark'
+				toggleSepia!
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
