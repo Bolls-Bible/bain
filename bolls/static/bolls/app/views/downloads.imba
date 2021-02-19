@@ -6,18 +6,11 @@ export tag downloads-page
 		window.scroll(0, 0)
 		$video.autoplay = yes
 		$video.loop = yes
+		document.title = "Bolls · " + data.lang.download
 
 	def install
 		data.deferredPrompt.prompt()
 
-	def unmount
-		data.showBible()
-
-	def toBible
-		if window.history.state
-			if window.history.state.downloads
-				window.history.back()
-		remove()
 
 	def showImage e
 		window.showimage = yes
@@ -25,11 +18,11 @@ export tag downloads-page
 
 	def render
 		<self[d: block h: 100vh ofy: auto]>
-			<div[display: flex; cursor: pointer] @click.prevent.toBible tabindex="0">
-				<svg.svgBack.backInProfile xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+			<a[display: flex; c:inherit @hover:$accent-color fill:$text-color @hover:$accent-color] route-to='/'>
+				<svg.svgBack [pos:relative m:auto 16px auto 0 l:8px fill:inherit] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 					<title> data.lang.back
 					<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-				<p[margin: 24px font-weight: 500]> data.lang.back
+				<span[margin: 24px font-weight: 500]> data.lang.back
 			<header[text-align: center]>
 				<img[height: 128px width: 128px] src="/static/logoshield.png" alt="Bolls logo">
 				<h1.exhortation> data.lang.exhortation

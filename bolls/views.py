@@ -134,7 +134,7 @@ def search(request, translation, piece):
 
 
 def getDescription(verses, verse, endverse):
-    if verse < len(verses):
+    if verse <= len(verses):
         i = 0
         description = verses[verse - 1]['text']
         if endverse > 0 and endverse - verse != 0:
@@ -290,9 +290,7 @@ def getCategories(request):
                 if not collection in collections and len(collection):
                     collections.append(collection)
         return JsonResponse({"data": collections}, safe=False)
-    response = HttpsResponse()
-    response.status_code = 401
-    return response
+    return JsonResponse({"data": []}, safe=False)
 
 
 @csrf_exempt

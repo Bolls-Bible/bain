@@ -36,11 +36,9 @@ export tag profile-page
 		if window.navigator.onLine
 			getCategories()
 
-	def mount
-		data.hideBible()
 
-	def unmount
-		data.showBible()
+	def mount
+		document.title = "Bolls · " + data.getUserName()
 
 	def loadData url
 		var res = await window.fetch url
@@ -120,10 +118,6 @@ export tag profile-page
 		const resdata = await loadData(url)
 		collections = resdata.data
 		imba.commit()
-
-	def toBible
-		data.showBible()
-		remove()
 
 	def getMoreBookmarks
 		if limits_of_range.loaded == limits_of_range.to
@@ -237,9 +231,10 @@ export tag profile-page
 			<header.profile_hat>
 				if !query
 					<.collectionsflex[z-index: 100000]>
-						<svg.svgBack.backInProfile viewBox="0 0 20 20" @click=toBible>
-							<title> data.lang.back
-							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
+						<a.svgBack [pos:relative m:auto 16px auto 0 l:8px] route-to='/'>
+							<svg[w:20px min-width: 20px h:32px fill:inherit] viewBox="0 0 20 20">
+								<title> data.lang.back
+								<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 						<h1[margin: 1em 4px]> data.getUserName()
 						if window.navigator.onLine
 							<.change_password.help>

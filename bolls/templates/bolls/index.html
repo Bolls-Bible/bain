@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html data-light="dark" data-theme='dark' data-transitions="true" data-pukaka='no' data-sepia='no'>
+<html data-light="dark" data-theme='dark' data-transitions="true" data-pukaka='no' data-sepia='no' lang='en'>
 
 <head>
 	<meta charset="UTF-8">
@@ -23,14 +23,15 @@
 	{% endif %}
 {% endif %}
 	</script>
+
 	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
-
 	<script src="{% static 'bolls/dist/public/__assets__/app/client.js' %}" async></script>
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}">
 
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/mobile_index.css' %}" media="(max-width: 639px)">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
+
 	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">

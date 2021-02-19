@@ -563,15 +563,6 @@ export class State
 			deleteBookmark(pks)
 			setCookie('bookmarks-to-delete', JSON.stringify(pks))
 
-	def hideBible
-		let bible = document.getElementsByTagName("bible-reader")
-		if bible[0]
-			bible[0].classList.add("display_none")
-
-	def showBible
-		let bible = document.getElementsByTagName("bible-reader")
-		if bible[0] then bible[0].classList.remove("display_none")
-
 	def getUserName
 		if user.username
 			if user.name

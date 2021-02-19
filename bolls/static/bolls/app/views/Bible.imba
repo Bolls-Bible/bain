@@ -71,10 +71,9 @@ window.matchMedia('(prefers-color-scheme: dark)')
 	const bible = document.getElementsByTagName("BIBLE-READER")
 	if bible[0]
 		if event.matches
-			settings.theme = 'dark'
+			bible[0].changeTheme('dark')
 		else
-			settings.theme = 'light'
-		bible[0].changeTheme(settings.theme)
+			bible[0].turnSepia!
 )
 
 
@@ -120,7 +119,7 @@ let page_search =
 
 let addcollection = no
 let choosen_categories = []
-let onpopstate = no
+window.on_pops_tate = no
 let loading = no
 let menuicons = yes
 let fixdrawers = no
@@ -253,35 +252,6 @@ document.onfocus = do
 	for item in document.getElementsByTagName('BIBLE-READER')
 		item.focus!
 
-window.onpopstate = do |event|
-	const bible = document.getElementsByTagName("BIBLE-READER")
-	if event.state
-		let state = event.state
-		if state.profile
-			let profile = document.getElementsByTagName("PROFILE-PAGE")
-			if !profile[0]
-				bible[0].toProfile!
-		elif state.downloads
-			let downloads = document.getElementsByTagName("DOWNLOADS-PAGE")
-			if !downloads[0]
-				bible[0].toDownloads!
-		else
-			onpopstate = yes
-			let profile = document.getElementsByTagName("PROFILE-PAGE")
-			if profile[0]
-				profile[0].remove()
-			let downloads = document.getElementsByTagName("DOWNLOADS-PAGE")
-			if downloads[0]
-				downloads[0].remove()
-			if state.parallel-translation && state.parallel-book && state.parallel-chapter
-				bible[0].getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
-			bible[0].getText(state.translation, state.book, state.chapter, state.verse)
-			settingsp.display = state.parallel_display
-			window.localStorage.setItem('parallel_display', state.parallel_display)
-	else
-		unless window.location.hash
-			bible[0].clearSpace()
-
 export tag bible-reader
 	prop verses = []
 	prop search_verses = {}
@@ -326,12 +296,12 @@ export tag bible-reader
 			settings.accent = getCookie('accent') || settings.accent
 			changeTheme(settings.theme)
 			if getCookie('sepia') == 'true'
-				toggleSepia!
+				turnSepia!
 		else
 			html.dataset.light = settings.theme
 			html.dataset.theme = settings.accent + settings.theme
 			unless settings.theme = 'dark'
-				toggleSepia!
+				turnSepia!
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
@@ -379,8 +349,6 @@ export tag bible-reader
 			catch err
 				console.error('Error: ', err)
 				data.showNotification('error')
-		if window.location.pathname == '/profile/' then toProfile yes
-		elif window.location.pathname == '/downloads/'then toDownloads yes
 		if window.message
 			data.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
@@ -407,6 +375,19 @@ export tag bible-reader
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
+
+
+	def routed params, state
+		# onpopstate = yes
+		# if params.path.length > 1
+		# 	if state.parallel-translation && state.parallel-book && state.parallel-chapter
+		# 		getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
+		# 	getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
+
+		# 	settingsp.display = state.parallel_display
+		# 	window.localStorage.setItem('parallel_display', state.parallel_display)
+		clearSpace!
+
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -481,7 +462,7 @@ export tag bible-reader
 		if !(translation == settings.translation && book == settings.book && chapter == settings.chapter) || !verses.length
 			loading = yes
 			switchTranslation translation
-			if !onpopstate && (verses.length || !window.navigator.onLine)
+			if !window.on_pops_tate && (verses.length || !window.navigator.onLine)
 				window.history.pushState({
 						translation: translation,
 						book: book,
@@ -497,7 +478,19 @@ export tag bible-reader
 					0,
 					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
-			onpopstate = no
+				# router.go("/{translation}/{book}/{chapter}/", {
+				# 		translation: translation,
+				# 		book: book,
+				# 		chapter: chapter,
+				# 		verse: verse,
+				# 		parallel: no,
+				# 		parallel_display: settingsp.display
+				# 		parallel-translation: settingsp.translation,
+				# 		parallel-book: settingsp.book,
+				# 		parallel-chapter: settingsp.chapter,
+				# 		parallel-verse: 0,
+				# 	})
+			window.on_pops_tate = no
 			clearSpace()
 			document.title = "Bolls Bible " + " " + nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name
 			if chronorder
@@ -530,14 +523,14 @@ export tag bible-reader
 				console.error('Error: ', error)
 				data.showNotification('error')
 			if settings.parallel_synch && settingsp.display && changeParallel
-				getParallelText settingsp.translation, book, chapter, verse
+				getParallelText settingsp.translation, book, chapter, verse, yes
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 			else setTimeout(&, 100) do window.scroll(0,0)
-		else clearSpace()
 		if verse
 			findVerse(verse)
+		clearSpace!
 
-	def getParallelText translation, book, chapter, verse
+	def getParallelText translation, book, chapter, verse, caller
 		let changeParallel = yes
 		const does_the_chapter_exist_in_this_translation = theChapterExistInThisTranslation(translation, book, chapter)
 		unless does_the_chapter_exist_in_this_translation
@@ -546,23 +539,23 @@ export tag bible-reader
 			changeParallel = no
 
 		if !(translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter) || !parallel_verses.length || !settingsp.display
-			if !onpopstate && verses
-				window.history.pushState({
-						translation: settings.translation,
-						book: settings.book,
-						chapter: settings.chapter,
-						verse: settings.verse,
-						parallel: yes,
-						parallel_display: settingsp.display
-						parallel-translation: translation,
-						parallel-book: book,
-						parallel-chapter: chapter,
-						parallel-verse: verse,
-					},
-					0,
-					null
-				)
-			onpopstate = no
+			# if !window.on_pops_tate && verses
+			# 	window.history.pushState({
+			# 			translation: settings.translation,
+			# 			book: settings.book,
+			# 			chapter: settings.chapter,
+			# 			verse: settings.verse,
+			# 			parallel: yes,
+			# 			parallel_display: settingsp.display
+			# 			parallel-translation: translation,
+			# 			parallel-book: book,
+			# 			parallel-chapter: chapter,
+			# 			parallel-verse: verse,
+			# 		},
+			# 		0,
+			# 		null
+			# 	)
+			# window.on_pops_tate = no
 			if chronorder
 				chronorder = !chronorder
 				toggleChronorder!
@@ -581,13 +574,13 @@ export tag bible-reader
 					parallel_verses = await data.getChapterFromDB(translation, book, chapter, verse)
 				else
 					parallel_verses = await loadData(url)
-				if !onpopstate && verses && !verse && settingsp.display
+				if !window.on_pops_tate && verses && !verse && settingsp.display
 					show_parallel_verse_picker = true
 				imba.commit()
 			catch error
 				console.error('Error: ', error)
 				data.showNotification('error')
-			if settings.parallel_synch && settingsp.display && changeParallel
+			if settings.parallel_synch && settingsp.display && changeParallel && not caller
 				getText settings.translation, book, chapter, verse
 			if data.user.username
 				getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
@@ -1073,28 +1066,28 @@ export tag bible-reader
 	def changeTheme theme
 		html.dataset.pukaka = 'yes'
 
-		if settings.sepia
-			toggleSepia!
-
+		settings.sepia = no
 		settings.theme = theme
 		html.dataset.theme = settings.accent + settings.theme
 		html.dataset.light = settings.theme
+		html.dataset.sepia = no
+
 		setCookie('theme', theme)
+		setCookie('sepia', settings.sepia)
 
 		setTimeout(&, 75) do
 			imba.commit!.then do html.dataset.pukaka = 'no'
 
-	def toggleSepia
+	def turnSepia
 		html.dataset.pukaka = 'yes'
 
-		settings.sepia = not settings.sepia
-		if settings.sepia
-			html.dataset.theme = settings.accent + 'light'
-			html.dataset.light = 'light'
-		else
-			html.dataset.theme = settings.accent + settings.theme
-			html.dataset.light = settings.theme
-		html.dataset.sepia = settings.sepia ? 'yes' : no
+		settings.sepia = yes
+		settings.theme = 'light'
+
+		html.dataset.theme = settings.accent + settings.theme
+		html.dataset.light = settings.theme
+		html.dataset.sepia = 'yes'
+
 		setCookie('sepia', settings.sepia)
 
 		setTimeout(&, 75) do
@@ -1257,7 +1250,7 @@ export tag bible-reader
 				if store.note.indexOf(vrs.note) < 0
 					store.note += vrs.note
 
-	def addToChoosen pk, id, parallel
+	def addToChosen pk, id, parallel
 		unless document.getSelection().isCollapsed
 			return
 		if !settings_menu_left || !bible_menu_left
@@ -1288,10 +1281,7 @@ export tag bible-reader
 				choosenid.push(pk)
 				choosen.push(id)
 				pushCollectionIfExist(pk)
-				window.history.pushState(
-					no,
-					"Highlight",
-					window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
+				router.go(window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
 
 			# Check if the user choosed a verse in the same parallel scope
 			elif choosen_parallel == parallel
@@ -1531,35 +1521,6 @@ export tag bible-reader
 		window.open("viber://forward?text={window.encodeURIComponent(sharedText())}", '_blank')
 		clearSpace()
 
-
-
-	def toProfile from_build = no
-		clearSpace()
-		classList.add "display_none"
-		if !from_build
-			window.history.pushState({
-					profile: yes
-				},
-				"profile",
-				"/profile/"
-			)
-		document.title = "Bolls " + " | " + data.getUserName()
-		imba.mount <profile-page bind=data>
-
-	def toDownloads from_build
-		clearSpace()
-		classList.add "display_none"
-		unless from_build
-			window.history.pushState({
-					parallel: no,
-					downloads: yes
-				},
-				"downloads",
-				"/downloads/"
-			)
-		document.title = "Bolls " + data.lang.download
-		imba.mount <downloads-page bind=data>
-
 	def getNameOfBookFromHistory translation, bookid
 		let books = []
 		books = BOOKS[translation]
@@ -1704,6 +1665,7 @@ export tag bible-reader
 	def popUp what
 		what_to_show_in_pop_up_block = what
 		window.history.pushState(no, what)
+		router.go("/{settings.translation}/{settings.book}/{settings.chapter}/0/")
 
 	def makeNote
 		if what_to_show_in_pop_up_block
@@ -1925,7 +1887,7 @@ export tag bible-reader
 		welcome = 'false'
 		setCookie('welcome', no)
 		window.history.pushState(
-			{},
+			no,
 			"Welcome 🤗",
 			window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/'
 		)
@@ -2110,9 +2072,11 @@ export tag bible-reader
 	css .height_auto
 		max-height: 76px
 
+	def hideReader
+		return window.location.pathname.indexOf('profile') > -1 || window.location.pathname.indexOf('downloads') > -1
 
 	def render
-		<self @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
+		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2133,14 +2097,14 @@ export tag bible-reader
 								<path d=svg_paths.download>
 				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
-						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .active=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
+						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
 							language.language
 							<svg.arrow_next[margin-left:auto min-width:8px] width="16" height="10" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 							for translation in language.translations
-								<li.book_in_list .active=currentTranslation(translation.short_name) tabindex="0" [display: flex]>
+								<li.book_in_list .selected=currentTranslation(translation.short_name) tabindex="0" [display: flex]>
 									<span @click=changeTranslation(translation.short_name)> translation.full_name
 									if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
 										<svg.translation_info viewBox="0 0 24 24">
@@ -2150,19 +2114,19 @@ export tag bible-reader
 					if settingsp.display && settingsp.edited_version == settingsp.translation
 						<>
 							for book in settingsp.filtered_books
-								<p.book_in_list dir="auto" .active=(book.bookid == settingsp.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid) tabindex="0"> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
-										<li.chapter_number .active=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
+										<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
 						if !settingsp.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 					else
 						<>
 							for book in settings.filtered_books
-								<p.book_in_list dir="auto" .active=(book.bookid == settings.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid) tabindex="0"> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
-										<li.chapter_number .active=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
+										<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
@@ -2195,7 +2159,7 @@ export tag bible-reader
 									<br>
 								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse
 								<span innerHTML=verse.text
-										@click=addToChoosen(verse.pk, verse.verse, 'first')
+										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 						<.arrows>
@@ -2227,7 +2191,7 @@ export tag bible-reader
 									<br>
 								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse
 								<span innerHTML=parallel_verse.text
-									@click=addToChoosen(parallel_verse.pk, parallel_verse.verse, 'second')
+									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
@@ -2245,11 +2209,12 @@ export tag bible-reader
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{MOBILE_PLATFORM ? settings_menu_left : settings_menu_left ? settings_menu_left : settings_menu_left + 12}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				<p.settings_header>
 					if data.getUserName()
-						<svg.helpsvg @click=toProfile(no) viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
-							<title> data.getUserName()
-							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
-								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
-								<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
+						<a.helpsvg route-to.exact='/profile/$'>
+							<svg.helpsvg viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+								<title> data.getUserName()
+								<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
+									<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
+									<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
 
 					data.lang.other
 					<.current_accent .enlarge_current_accent=show_accents>
@@ -2268,7 +2233,7 @@ export tag bible-reader
 						<g>
 							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
 						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg.cbtn[w:33.333%] @click=toggleSepia viewBox="0 0 8 8">
+					<svg.cbtn[w:33.333%] @click=turnSepia viewBox="0 0 8 8">
 						<title> 'sepia'
 						<rect x=1 y=2 width=6 height=4 rx=1 fill='#DEBB68'>
 					<svg.cbtn[w:33.333%] @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
@@ -2324,7 +2289,7 @@ export tag bible-reader
 							<button[ff: {font.code}] @click=setFontFamily(font)> font.name
 				<.profile_in_settings>
 					if data.getUserName()
-						<a.username @click=toProfile(no)> data.getUserName()
+						<a.username route-to.exact='/profile/$'> data.getUserName()
 						<a.prof_btn href="/accounts/logout/"> data.lang.logout
 					else
 						<a.prof_btn href="/accounts/login/"> data.lang.login
