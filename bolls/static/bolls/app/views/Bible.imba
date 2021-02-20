@@ -40,7 +40,7 @@ for language in languages
 let settings =
 	theme: 'light'
 	accent: 'blue'
-	sepia: no
+	sepia: yes
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -298,10 +298,11 @@ export tag bible-reader
 			if getCookie('sepia') == 'true'
 				turnSepia!
 		else
-			html.dataset.light = settings.theme
-			html.dataset.theme = settings.accent + settings.theme
-			unless settings.theme = 'dark'
+			if settings.theme == 'dark'
+				changeTheme(settings.theme)
+			else
 				turnSepia!
+
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
@@ -2176,6 +2177,8 @@ export tag bible-reader
 							data.lang.this_translation_is_unavailable
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
+					elif not loading
+						<p.in_offline> data.lang.unexisten_chapter
 				<section#secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2337,7 +2340,7 @@ export tag bible-reader
 									<path d=svg_paths.download>
 							data.lang.download_translations
 					<a.help href='/downloads/' target="_blank" @click=install>
-						<img.helpsvg[rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
+						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
 				<a.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">

@@ -134,7 +134,7 @@ def search(request, translation, piece):
 
 
 def getDescription(verses, verse, endverse):
-    if verse <= len(verses):
+    if verse <= len(verses) and len(verses) > 0:
         i = 0
         description = verses[verse - 1]['text']
         if endverse > 0 and endverse - verse != 0:

@@ -142,6 +142,7 @@ export const english = {
 	"use_it_in_browser": "Use it in a browser",
 	"username_taken": "Username is not available",
 	"usual_reading": "Usual reading",
+	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Verse wrap",
 	"verse_picker": "Verse picker",
 	"view_source": "View the source code",
@@ -295,6 +296,7 @@ export const ukrainian = {
 	"use_it_in_browser": "Користуватися у браузері",
 	"username_taken": "Ім'я користувача не доступне",
 	"usual_reading": "Звичайне читання",
+	"unexisten_chapter": "Ця глава неіснує"
 	"verse_break": "Перенос віршів",
 	"verse_picker": "Вибір вірша",
 	"view_source": "Дивитися джерельний код",
@@ -448,6 +450,7 @@ export const russian = {
 	"use_it_in_browser": "Пользовать в браузере",
 	"username_taken": "Имя пользователя не доступно",
 	"usual_reading": "Обычное чтение",
+	"unexisten_chapter": "Такой главы не существует"
 	"verse_break": "Перенос стихов",
 	"verse_picker": "Выбор стиха",
 	"view_source": "Смотреть исходный код",
@@ -601,6 +604,7 @@ export const portuguese = {
 	"use_it_in_browser": "Use-o no navegador",
 	"username_taken": "Nome de usuário não está disponível",
 	"usual_reading": "Leitura habitual",
+	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Embrulhar verso",
 	"verse_picker": "Seletor de versículo",
 	"view_source": "Veja o código fonte",
@@ -754,6 +758,7 @@ export const espanol = {
 	"use_it_in_browser": "Úselo en el navegador",
 	"username_taken": "nombre de usuario no esta disponible",
 	"usual_reading": "Lectura habitual",
+	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Envolver verso",
 	"verse_picker": "Selector de versículo",
 	"view_source": "Ver el código fuente",
@@ -908,6 +913,7 @@ export const german = {
 	"use_it_in_browser": "Sehen es im Browser",
 	"username_taken": "Dieser Benutzername ist nicht verfügbar",
 	"usual_reading": "Normales lesen",
+	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Zeilenumbruch",
 	"verse_picker": "Versauswahl",
 	"view_source": "Source code anzeigen",
