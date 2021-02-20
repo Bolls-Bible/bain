@@ -86,9 +86,6 @@ typings/
 # gatsby files
 .cache/
 
-# vuepress build output
-.vuepress/dist
-
 # Serverless directories
 .serverless/
 
@@ -127,7 +124,6 @@ eggs/
 lib/
 lib64/
 parts/
-sdist/
 var/
 *.egg-info/
 .installed.cfg
@@ -162,5 +158,3 @@ migrations/
 
 # Sphinx documentation
 docs/_build/
-
-old_bolls/
