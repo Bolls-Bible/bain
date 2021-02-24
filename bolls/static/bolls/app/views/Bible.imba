@@ -1797,7 +1797,7 @@ export tag bible-reader
 			return s.toLowerCase().replace(/[^0-9a-zа-яіїєёґ\s]+/g, "")
 		else return ''
 
-	// Compute a search relevance score for an item.
+	# Compute a search relevance score for an item.
 	def scoreSearch item
 		let thename = cleanString(item)
 		let search_query = cleanString(store.book_search)
@@ -2081,16 +2081,16 @@ export tag bible-reader
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
-						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation) tabindex="0"> settings.translation
-						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation) tabindex="0"> settingsp.translation
+						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
+						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation)> settingsp.translation
 				<header[d:flex jc:space-between cursor:pointer]>
 					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=data.lang.chronological_order>
 						<title> data.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 					if settingsp.edited_version == settingsp.translation && settingsp.display
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settingsp.edited_version
+						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)> settingsp.edited_version
 					else
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations) tabindex="0"> settings.translation
+						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)> settings.translation
 					if data.db_is_available
 						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625">
 							<title> data.lang.download
@@ -2098,14 +2098,14 @@ export tag bible-reader
 								<path d=svg_paths.download>
 				<.translations_list .show_translations_list=show_list_of_translations [pb: {show_list_of_translations ? '256px' : 0}]>
 					for language in languages
-						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language) tabindex="0">
+						<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
 							language.language
 							<svg.arrow_next[margin-left:auto min-width:8px] width="16" height="10" viewBox="0 0 8 5">
 								<title> data.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 							for translation in language.translations
-								<li.book_in_list .selected=currentTranslation(translation.short_name) tabindex="0" [display: flex]>
+								<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
 									<span @click=changeTranslation(translation.short_name)> translation.full_name
 									if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
 										<svg.translation_info viewBox="0 0 24 24">
@@ -2115,28 +2115,28 @@ export tag bible-reader
 					if settingsp.display && settingsp.edited_version == settingsp.translation
 						<>
 							for book in settingsp.filtered_books
-								<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid)> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
-										<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1) tabindex="0"> i+1
+										<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1)> i+1
 						if !settingsp.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 					else
 						<>
 							for book in settings.filtered_books
-								<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid) tabindex="0"> book.name
+								<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid)> book.name
 								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
 									for i in [0 ... book.chapters]
-										<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)  tabindex="0"> i+1
+										<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
-				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20" tabindex="0">
+				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
 
-			<main.main tabindex="0" @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+			<main.main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section#firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2378,7 +2378,7 @@ export tag bible-reader
 			<section.search_results .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') .show_search_results=(what_to_show_in_pop_up_block) [zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 'auto'}]>
 				if what_to_show_in_pop_up_block == 'show_help'
 					<article.search_hat>
-						<svg.close_search @click=turnHelpBox() viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=turnHelpBox() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.help
@@ -2388,7 +2388,7 @@ export tag bible-reader
 								<g>
 									<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
 									<path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
-					<article.helpFAQ.search_body tabindex="0">
+					<article.helpFAQ.search_body>
 						<p[color: $accent-hover-color font-size: 0.9em]> data.lang.faqmsg
 						<h3> data.lang.content
 						<ul>
@@ -2409,7 +2409,7 @@ export tag bible-reader
 							<a href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
 				elif what_to_show_in_pop_up_block == 'show_compare'
 					<article.search_hat>
-						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> highlighted_title
@@ -2422,7 +2422,7 @@ export tag bible-reader
 								<p[padding: 12px 8px]> data.lang.nothing_else
 							for translation in translations when !compare_translations.find(do |element| return element == translation.short_name)
 								<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
-					<article.search_body tabindex="0" [pb: 256px scroll-behavior: auto]>
+					<article.search_body [pb: 256px scroll-behavior: auto]>
 						<p.total_msg> data.lang.add_translations_msg
 						<ul.comparison_box>
 							for tr in comparison_parallel
@@ -2431,7 +2431,7 @@ export tag bible-reader
 							<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
-						<svg.close_search @click=clearSpace() viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.download_translations
@@ -2443,9 +2443,9 @@ export tag bible-reader
 							<svg.close_search @click=(do data.clearVersesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
 								<title> data.lang.remove_all_translations
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-					<article.search_body tabindex="0">
+					<article.search_body>
 						for language in languages
-							<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language) tabindex="0">
+							<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
 								language.language
 								<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.open
@@ -2471,7 +2471,7 @@ export tag bible-reader
 						<.freespace>
 				elif what_to_show_in_pop_up_block == 'show_support'
 					<article.search_hat>
-						<svg.close_search @click=turnSupport() viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=turnSupport() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.support
@@ -2490,7 +2490,7 @@ export tag bible-reader
 							<li> <span innerHTML=text>
 				elif what_to_show_in_pop_up_block == "show_note"
 					<article.search_hat>
-						<svg.close_search @click=makeNote() viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search @click=makeNote() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> data.lang.note, ',', highlighted_title
@@ -2513,7 +2513,7 @@ export tag bible-reader
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
 					<article.search_hat>
-						<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20" tabindex="0">
+						<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
@@ -2523,7 +2523,7 @@ export tag bible-reader
 							<title> data.lang.bible_search
 							<path d=svg_paths.search>
 						if search_verses.length
-							<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20" tabindex="0">
+							<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
 								<title> data.lang.addfilter
 								<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
@@ -2641,11 +2641,11 @@ export tag bible-reader
 						if window.innerWidth < 640
 							<svg.close_colorPicker
 								@click=(do store.show_color_picker = !store.show_color_picker)
-								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" tabindex="0"
+								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
 							>
 								<title> data.lang.close
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle tabindex="0">  data.lang.canvastitle
+						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle>  data.lang.canvastitle
 					<p> highlighted_title, ' ', choosen_parallel == "first" ? settings.translation : settingsp.translation
 					<ul.mark_grid>
 						<li[border: none; bg: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)].color_mark @click=(do store.show_color_picker = !store.show_color_picker)>
@@ -2661,7 +2661,7 @@ export tag bible-reader
 							<li[background: {highlight}].color_mark @click=changeHighlightColor(highlight)>
 								<svg.delete_color
 										@click=deleteColor(highlight)
-										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" tabindex="0"
+										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
 										>
 									<title> data.lang.delete
 									<path d=svg_paths.close>
@@ -2695,7 +2695,7 @@ export tag bible-reader
 
 			<section.history.filters .show_history=show_history>
 				<[m: 0].nighttheme.flex>
-					<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20" tabindex="0">
+					<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<h1[margin: 0 0 0 8px]> data.lang.history
@@ -2740,7 +2740,7 @@ export tag bible-reader
 				<section.verse_picker.filters [z-index: 100] .show=(show_verse_picker || show_parallel_verse_picker)>
 					<.flex>
 						<h1[margin: 0 auto;font-size: 1.3em; line-height: 1;]> data.lang.choose_verse
-						<svg[m: 0 8px].close_search @click=hideVersePicker() viewBox="0 0 20 20" tabindex="0">
+						<svg[m: 0 8px].close_search @click=hideVersePicker() viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<[m: 0].list_of_chapters.show_list_of_chapters>
@@ -2777,6 +2777,6 @@ export tag bible-reader
 						<title> data.lang.delete
 						<path[m:auto] d=svg_paths.close>
 
-					<svg.close_search [ml: auto] @click=clearSpace viewBox="0 0 20 20" tabindex="0">
+					<svg.close_search [ml: auto] @click=clearSpace viewBox="0 0 20 20">
 						<title> data.lang.close
 						<path[m: auto] d=svg_paths.close>

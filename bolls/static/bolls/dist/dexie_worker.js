@@ -1,4 +1,4 @@
-importScripts('/static/bolls/public/dexie.min.js');
+importScripts("/static/bolls/dist/dexie.min.js");
 
 Dexie = Dexie.default
 
@@ -8,6 +8,7 @@ db.version(2).stores({
 	verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
 	bookmarks: '&verse, *collections'
 })
+
 
 self.onmessage = function (msg) {
 	if (typeof msg.data == 'object') {

@@ -245,7 +245,7 @@ export class State
 				imba.commit()
 
 			if window.Worker
-				let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
 
 				dexieWorker.postMessage(url)
 
@@ -295,7 +295,7 @@ export class State
 				downloadTranslation(translation)
 
 		if window.Worker
-			let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
+			let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
 
 			dexieWorker.postMessage(translation)
 
@@ -417,7 +417,7 @@ export class State
 
 		if window.Worker
 			return new Promise(do |resolveSearch|
-				let dexieWorker = new Worker('/static/bolls/public/dexie_worker.js')
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
 
 				dexieWorker.postMessage(search)
 

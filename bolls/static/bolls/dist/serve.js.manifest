@@ -337,21 +337,21 @@
     "$$36$$",
     "$$37$$"
   ],
-  "hash": "WMXSHJER",
+  "hash": "PQQFNXRU",
   "originalPath": "public/app/index.__dist__.html"
 },
 "$$33$$":{
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 604563,
+  "bytes": 603855,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "BMLUFIXQ",
+  "hash": "OICN2F3N",
   "originalPath": "public/__assets__/app/client.__dist__.js.map"
 },
 "$$34$$":{
@@ -444,7 +444,7 @@
     ],
     [
       "$$61$$",
-      15192
+      15186
     ],
     [
       "$$62$$",
@@ -516,7 +516,7 @@
     ],
     [
       "$$79$$",
-      183342
+      182634
     ],
     [
       "$$80$$",
@@ -531,16 +531,16 @@
       2243
     ]
   ],
-  "bytes": 679483,
+  "bytes": 678769,
   "source": "$$39$$",
   "css": "$$82$$",
   "map": "$$33$$",
   "_": "output",
   "path": "public/__assets__/app/client.js",
-  "url": "/__assets__/app/client.js?v=BMLUFIXQ",
+  "url": "/__assets__/app/client.js?v=OICN2F3N",
   "type": "js",
   "dependencies": [],
-  "hash": "BMLUFIXQ",
+  "hash": "OICN2F3N",
   "originalPath": "public/__assets__/app/client.__dist__.js"
 },
 "$$35$$":{
@@ -795,7 +795,7 @@
   "path": "app/views/langdata.imba"
 },
 "$$61$$":{
-  "bytes": 72589,
+  "bytes": 72575,
   "imports": [
     "$$58$$",
     "$$59$$",
@@ -932,7 +932,7 @@
   "path": "styles:app/views/Bible.imba"
 },
 "$$79$$":{
-  "bytes": 644397,
+  "bytes": 641958,
   "imports": [
     "$$58$$",
     "$$62$$",
@@ -1105,7 +1105,7 @@
   "path": "node_modules/imba/src/imba/imba.imba"
 },
 "$$94$$":{
-  "bytes": 72589,
+  "bytes": 72575,
   "imports": [
     "$$105$$",
     "$$106$$"
@@ -1114,7 +1114,7 @@
   "path": "app/views/state.imba"
 },
 "$$95$$":{
-  "bytes": 644397,
+  "bytes": 641958,
   "imports": [
     "$$107$$",
     "$$105$$",
@@ -1316,7 +1316,7 @@
   },
   "urls": {
     "/__assets__/app/client.js.map": "$$33$$",
-    "/__assets__/app/client.js?v=BMLUFIXQ": "$$34$$",
+    "/__assets__/app/client.js?v=OICN2F3N": "$$34$$",
     "/__assets__/app/client.css?v=MGKBL6EL": "$$35$$"
   },
   "main": "$$31$$",
@@ -1330,5 +1330,5 @@
   "path": "serve.js.manifest",
   "srcdir": "../..",
   "outdir": "..",
-  "hash": "XLLEOFYT"
+  "hash": "YCSIBAKV"
 }
