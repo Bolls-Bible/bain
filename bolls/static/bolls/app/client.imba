@@ -3,37 +3,21 @@ import './views/Bible'
 import './views/Profile'
 import './views/downloads'
 import {Notifications} from './views/Notifications'
+import {verse-navigator, chapter-navigator} from './route-navigators'
 
 
-let Data = new State()
+let state = new State()
 
 tag the-app
 	<self>
-		<bible-reader route='/' bind=Data>
+		<bible-reader route='/' data=state>
 		<verse-navigator route='/:translation/:book/:chapter/:verse/'>
 		<chapter-navigator route='/:translation/:book/:chapter/'>
 
-		<profile-page route.exact='/profile/$' bind=Data>
-		<downloads-page route.exact='/downloads/$' bind=Data>
-
-
-
-tag verse-navigator
-	def unmount
-		const bible = document.getElementsByTagName("BIBLE-READER")
-		if bible[0]
-			bible[0].clearSpace!
-	<self>
-
-tag chapter-navigator
-	def routed params
-		window.on_pops_tate = yes
-		const bible = document.getElementsByTagName("BIBLE-READER")
-		if bible[0]
-			bible[0].getText(params.translation, parseInt(params.book), parseInt(params.chapter))
-	<self>
+		<profile-page route.exact='/profile/$' data=state>
+		<downloads-page route.exact='/downloads/$' data=state>
 
 
 imba.mount <the-app>
 
-imba.mount <Notifications data=Data>
+imba.mount <Notifications data=state>

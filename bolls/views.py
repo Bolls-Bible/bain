@@ -1,3 +1,4 @@
+import re
 import os
 import ast
 import math
@@ -133,6 +134,11 @@ def search(request, translation, piece):
     return response
 
 
+def cleanhtml(raw_html):
+    cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext
+
 def getDescription(verses, verse, endverse):
     if verse <= len(verses) and len(verses) > 0:
         i = 0
@@ -141,7 +147,7 @@ def getDescription(verses, verse, endverse):
             for i in range(verse, endverse):
                 if i < len(verses):
                     description += ' ' + verses[i]['text']
-        return description
+        return cleanhtml(description)
     else:
         return 'Corrupted link!'
 

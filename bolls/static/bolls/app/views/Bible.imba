@@ -378,16 +378,17 @@ export tag bible-reader
 			window.localStorage.removeItem("bookmarks-to-delete")
 
 
-	def routed params, state
-		# onpopstate = yes
-		# if params.path.length > 1
-		# 	if state.parallel-translation && state.parallel-book && state.parallel-chapter
-		# 		getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
-		# 	getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
+	# def routed params
+	# 	state = window.history.state
+	# 	onpopstate = yes
+	# 	if params.path.length > 1
+	# 		if state.parallel-translation && state.parallel-book && state.parallel-chapter
+	# 			getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
+	# 		getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
 
-		# 	settingsp.display = state.parallel_display
-		# 	window.localStorage.setItem('parallel_display', state.parallel_display)
-		clearSpace!
+	# 		settingsp.display = state.parallel_display
+	# 		window.localStorage.setItem('parallel_display', state.parallel_display)
+	# 	clearSpace!
 
 
 	def searchPagination e
@@ -476,22 +477,9 @@ export tag bible-reader
 						parallel-chapter: settingsp.chapter,
 						parallel-verse: 0,
 					},
-					0,
+					'',
 					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
-				# router.go("/{translation}/{book}/{chapter}/", {
-				# 		translation: translation,
-				# 		book: book,
-				# 		chapter: chapter,
-				# 		verse: verse,
-				# 		parallel: no,
-				# 		parallel_display: settingsp.display
-				# 		parallel-translation: settingsp.translation,
-				# 		parallel-book: settingsp.book,
-				# 		parallel-chapter: settingsp.chapter,
-				# 		parallel-verse: 0,
-				# 	})
-			window.on_pops_tate = no
 			clearSpace()
 			document.title = "Bolls Bible " + " " + nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name
 			if chronorder
@@ -515,9 +503,9 @@ export tag bible-reader
 				else
 					verses = await loadData(url)
 				loading = no
-				window.scroll(0,0)
 				imba.commit()
 				if verse > 0 then show_verse_picker = no else show_verse_picker = yes
+
 			catch error
 				loading = no
 				imba.commit()
@@ -526,10 +514,12 @@ export tag bible-reader
 			if settings.parallel_synch && settingsp.display && changeParallel
 				getParallelText settingsp.translation, book, chapter, verse, yes
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
-			else setTimeout(&, 100) do window.scroll(0,0)
 		if verse
 			findVerse(verse)
 		clearSpace!
+		window.on_pops_tate = no
+		setTimeout(&, 100) do window.scroll(0,0)
+
 
 	def getParallelText translation, book, chapter, verse, caller
 		let changeParallel = yes
@@ -1282,7 +1272,20 @@ export tag bible-reader
 				choosenid.push(pk)
 				choosen.push(id)
 				pushCollectionIfExist(pk)
-				router.go(window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
+				window.history.pushState({
+						translation: settings.translation,
+						book: settings.book,
+						chapter: settings.chapter,
+						verse: id,
+						parallel: parallel != 'first',
+						parallel_display: settingsp.display
+						parallel-translation: settingsp.translation,
+						parallel-book: settingsp.book,
+						parallel-chapter: settingsp.chapter,
+						parallel-verse: id,
+					}
+					'',
+					window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
 
 			# Check if the user choosed a verse in the same parallel scope
 			elif choosen_parallel == parallel
@@ -1308,6 +1311,8 @@ export tag bible-reader
 				highlighted_title = getHighlightedRow(settingsp.translation, settingsp.book, settingsp.chapter, choosen)
 			showDeleteBookmark()
 			mergeNotes()
+
+
 
 	def showDeleteBookmark
 		show_delete_bookmark = no
