@@ -337,21 +337,21 @@
     "$$36$$",
     "$$37$$"
   ],
-  "hash": "D8NM8L4T",
+  "hash": "UG31DIUH",
   "originalPath": "public/app/index.__dist__.html"
 },
 "$$33$$":{
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 605185,
+  "bytes": 605398,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "C601DVWC",
+  "hash": "FDQRAXNX",
   "originalPath": "public/__assets__/app/client.__dist__.js.map"
 },
 "$$34$$":{
@@ -516,7 +516,7 @@
     ],
     [
       "$$79$$",
-      182802
+      183116
     ],
     [
       "$$80$$",
@@ -535,16 +535,16 @@
       1465
     ]
   ],
-  "bytes": 679342,
+  "bytes": 679656,
   "source": "$$39$$",
   "css": "$$83$$",
   "map": "$$33$$",
   "_": "output",
   "path": "public/__assets__/app/client.js",
-  "url": "/__assets__/app/client.js?v=C601DVWC",
+  "url": "/__assets__/app/client.js?v=FDQRAXNX",
   "type": "js",
   "dependencies": [],
-  "hash": "C601DVWC",
+  "hash": "FDQRAXNX",
   "originalPath": "public/__assets__/app/client.__dist__.js"
 },
 "$$35$$":{
@@ -937,7 +937,7 @@
   "path": "styles:app/views/Bible.imba"
 },
 "$$79$$":{
-  "bytes": 642076,
+  "bytes": 642840,
   "imports": [
     "$$58$$",
     "$$62$$",
@@ -1128,7 +1128,7 @@
   "path": "app/views/state.imba"
 },
 "$$96$$":{
-  "bytes": 642076,
+  "bytes": 642840,
   "imports": [
     "$$109$$",
     "$$107$$",
@@ -1336,7 +1336,7 @@
   },
   "urls": {
     "/__assets__/app/client.js.map": "$$33$$",
-    "/__assets__/app/client.js?v=C601DVWC": "$$34$$",
+    "/__assets__/app/client.js?v=FDQRAXNX": "$$34$$",
     "/__assets__/app/client.css?v=MGKBL6EL": "$$35$$"
   },
   "main": "$$31$$",
@@ -1350,5 +1350,5 @@
   "path": "serve.js.manifest",
   "srcdir": "../..",
   "outdir": "..",
-  "hash": "TMVPP2UU"
+  "hash": "ANG7UIGE"
 }

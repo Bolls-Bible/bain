@@ -2298,10 +2298,10 @@ export tag bible-reader
 				<.profile_in_settings>
 					if data.getUserName()
 						<a.username route-to.exact='/profile/$'> data.getUserName()
-						<a.prof_btn href="/accounts/logout/"> data.lang.logout
+						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
 					else
-						<a.prof_btn href="/accounts/login/"> data.lang.login
-						<a.prof_btn.signin href="/signup/"> data.lang.signin
+						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
+						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> data.lang.signin
 				<.help @click=turnHistory>
 					<svg.helpsvg width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.history
