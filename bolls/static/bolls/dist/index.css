@@ -690,6 +690,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 
 .filled {
   fill: olivedrab;
+  stroke: olivedrab;
 }
 
 .arrows {

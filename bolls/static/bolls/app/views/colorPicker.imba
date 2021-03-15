@@ -33,8 +33,8 @@ export tag color-picker
 		firstChild.getContext('2d').fillRect(0, 0, width, height)
 
 	def pickAColor e
-		let offsetX = e.x - ((window.innerWidth - 330) / 2)
-		let offsetY = window.innerWidth <= 640 ? e.y - (window.innerHeight - 210) : e.y - (window.innerHeight - 383)
+		const offsetX = e.x - ((window.innerWidth - 320) / 2)
+		const offsetY = window.innerWidth <= 640 ? e.y - (window.innerHeight - 208) : e.y - (window.innerHeight - 376)
 		imgData = firstChild.getContext('2d').getImageData(offsetX, offsetY, 1, 1)
 		rgba = imgData.data
 		data.highlight_color = "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")"
@@ -43,7 +43,7 @@ export tag color-picker
 		<self>
 			<canvas @touch=pickAColor>
 
-	css
+	css canvas
 		position: absolute
 		bottom: 100% @lt-xs: 0
 		cursor: crosshair

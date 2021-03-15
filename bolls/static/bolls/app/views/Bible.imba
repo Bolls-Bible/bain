@@ -60,21 +60,11 @@ let settings =
 	parallel_synch: yes
 
 # Detect dark mode
-if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && window.localStorage.getItem('sepia') != 'true'
+	console.log('NOOOOOOOOOOOOOOO')
 	settings.theme = 'dark'
 	settings.sepia = no
 	settings.accent = 'gold'
-
-# Detect change of dark/light mode
-window.matchMedia('(prefers-color-scheme: dark)')
-.addEventListener('change', do |event|
-	const bible = document.getElementsByTagName("BIBLE-READER")
-	if bible[0]
-		if event.matches
-			bible[0].changeTheme('dark')
-		else
-			bible[0].turnSepia!
-)
 
 
 let settingsp = {
@@ -202,56 +192,6 @@ const accents = [
 	},
 ]
 
-document.onkeydown = do |e|
-	e = e || window.event
-	const bible = document.getElementsByTagName("BIBLE-READER")
-	if bible[0]
-		const bibletag = bible[0]
-		if document.activeElement.tagName != 'INPUT' && document.activeElement.contentEditable != 'true' && document.getSelection().isCollapsed
-			if e.code == "ArrowRight" && e.altKey && e.ctrlKey
-				bibletag.nextChapter('true')
-			elif e.code == "ArrowLeft" && e.altKey && e.ctrlKey
-				bibletag.prevChapter('true')
-			elif e.code == "ArrowRight" && e.ctrlKey
-				bibletag.nextChapter()
-			elif e.code == "ArrowLeft" && e.ctrlKey
-				bibletag.prevChapter()
-			elif e.code == "KeyN" && e.altKey
-				bibletag.nextBook()
-			elif e.code == "KeyP" && e.altKey
-				bibletag.prevBook()
-		if e.code == "Escape"
-			bibletag.clearSpace()
-		if e.ctrlKey && e.code == "KeyF"
-			e.preventDefault!
-			e.stopPropagation!
-			page_search.query = window.getSelection().toString()
-			bibletag.clearSpace!
-			bibletag.pageSearch!
-		if e.ctrlKey && e.code == "KeyF" && e.shiftKey
-			e.preventDefault!
-			e.stopPropagation!
-			bibletag.clearSpace!
-			bibletag.turnGeneralSearch!
-	if e.code == "KeyH" && e.altKey && e.ctrlKey
-		menuicons = !menuicons
-		imba.commit()
-		window.localStorage.setItem("menuicons", menuicons)
-	elif e.code == "KeyY" && e.ctrlKey
-		fixdrawers = !fixdrawers
-		imba.commit()
-		window.localStorage.setItem("fixdrawers", fixdrawers)
-	elif e.code == "ArrowRight" && e.altKey
-		e.preventDefault()
-		window.history.forward()
-	elif e.code == "ArrowLeft" && e.altKey
-		e.preventDefault()
-		window.history.back()
-
-document.onfocus = do
-	for item in document.getElementsByTagName('BIBLE-READER')
-		item.focus!
-
 export tag bible-reader
 	prop verses = []
 	prop search_verses = {}
@@ -269,6 +209,64 @@ export tag bible-reader
 	prop search = {}
 
 	def setup
+		# # # Setup some global events
+		# Detect change of dark/light mode
+		window.matchMedia('(prefers-color-scheme: dark)')
+		.addEventListener('change', do |event|
+			if event.matches
+				changeTheme('dark')
+			else
+				turnSepia!
+		)
+
+
+		document.onkeydown = do |e|
+			e = e || window.event
+			if document.activeElement.tagName != 'INPUT' && document.activeElement.contentEditable != 'true' && document.getSelection().isCollapsed
+				if e.code == "ArrowRight" && e.altKey && e.ctrlKey
+					nextChapter('true')
+				elif e.code == "ArrowLeft" && e.altKey && e.ctrlKey
+					prevChapter('true')
+				elif e.code == "ArrowRight" && e.ctrlKey
+					nextChapter()
+				elif e.code == "ArrowLeft" && e.ctrlKey
+					prevChapter()
+				elif e.code == "KeyN" && e.altKey
+					nextBook()
+				elif e.code == "KeyP" && e.altKey
+					prevBook()
+			if e.code == "Escape"
+				clearSpace()
+			if e.ctrlKey && e.code == "KeyF"
+				e.preventDefault!
+				e.stopPropagation!
+				page_search.query = window.getSelection().toString()
+				clearSpace!
+				pageSearch!
+			if e.ctrlKey && e.code == "KeyF" && e.shiftKey
+				e.preventDefault!
+				e.stopPropagation!
+				clearSpace!
+				turnGeneralSearch!
+			if e.code == "KeyH" && e.altKey && e.ctrlKey
+				menuicons = !menuicons
+				imba.commit()
+				setCookie("menuicons", menuicons)
+			elif e.code == "KeyY" && e.ctrlKey
+				fixdrawers = !fixdrawers
+				imba.commit()
+				setCookie("fixdrawers", fixdrawers)
+			elif e.code == "ArrowRight" && e.altKey
+				e.preventDefault()
+				window.history.forward()
+			elif e.code == "ArrowLeft" && e.altKey
+				e.preventDefault()
+				window.history.back()
+
+		# Focus the reader tag in order to enable keyboard navigation
+		document.onfocus = do
+			focus!
+
 		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
 		if window.translation
 			if translations.find(do |element| return element.short_name == window.translation)
@@ -294,8 +292,9 @@ export tag bible-reader
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
+			const sepiaaa = getCookie('sepia') == 'true'
 			changeTheme(settings.theme)
-			if getCookie('sepia') == 'true'
+			if sepiaaa
 				turnSepia!
 		else
 			if settings.theme == 'dark'
@@ -306,6 +305,7 @@ export tag bible-reader
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
+
 		welcome = getCookie('welcome') || welcome
 		settings.font.size = parseInt(getCookie('font')) || settings.font.size
 		settings.font.family = getCookie('font-family') || settings.font.family
@@ -518,7 +518,9 @@ export tag bible-reader
 			findVerse(verse)
 		clearSpace!
 		window.on_pops_tate = no
-		setTimeout(&, 100) do window.scroll(0,0)
+		setTimeout(&, 100) do
+			$firstparallel.scrollTo(0,0)
+			scrollTo(0,0)
 
 
 	def getParallelText translation, book, chapter, verse, caller
@@ -583,6 +585,7 @@ export tag bible-reader
 			setCookie('parallel_chapter', chapter)
 			if verse
 				findVerse("p{verse}")
+			setTimeout(&, 100) do $secondparallel.scrollTo(0,0)
 
 	def theChapterExistInThisTranslation translation, book, chapter
 		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
@@ -1349,7 +1352,7 @@ export tag bible-reader
 			window.localStorage.setItem("highlights", JSON.stringify(highlights))
 		let collections = ''
 		for category, key in choosen_categories
-			collections += category
+			collections += category.trim()
 			if key + 1 < choosen_categories.length
 				collections += " | "
 		unless data.user.username
@@ -2081,6 +2084,13 @@ export tag bible-reader
 	def hideReader
 		return window.location.pathname.indexOf('profile') > -1 || window.location.pathname.indexOf('downloads') > -1
 
+	def validateNewCollectionInput e
+		if store.newcollection.length > 2 && store.newcollection[store.newcollection.length - 1] == store.newcollection[store.newcollection.length - 2]
+			store.newcollection = store.newcollection.trim!
+		if e.enter
+			addNewCollection(store.newcollection)
+
+
 	def render
 		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
@@ -2142,7 +2152,7 @@ export tag bible-reader
 
 
 			<main.main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
-				<section#firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
@@ -2184,7 +2194,7 @@ export tag bible-reader
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 					elif not loading
 						<p.in_offline> data.lang.unexisten_chapter
-				<section#secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -2581,7 +2591,7 @@ export tag bible-reader
 								<line x1="10" y1="0" x2="10" y2="20">
 					<.mark_grid>
 						if addcollection
-							<input#newcollectioninput.newcollectioninput bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) type="text">
+							<input#newcollectioninput.newcollectioninput bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 						elif categories.length
 							for category in categories
 								if category
