@@ -16,10 +16,10 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 -- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
 UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, WITH beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
-SELECT * FROM bolls_verses where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
+YLT/24/36/3/
 
-
-UPDATE bolls_verses SET text = ('Y a los hombres que estaban a la puerta de la casa hirieron con ceguera desde el menor hasta el mayor,  de manera que se fatigaban buscando la puerta') where translation = 'RV1960' and book = 1 and chapter = 19 and verse = 11;
+UPDATE bolls_verses SET text = ('if so be the house of Israel do hear all the evil that I am thinking of doing to them, so that they turn back each from his evil way, and I have been propitious to their iniquity, and to their sin.''') where translation = 'YLT' and  book = 24 and chapter = 36 and verse = 3;
 
 
 ----------- INSERTING OF THE TEXT TO THE DB

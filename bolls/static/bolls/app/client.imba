@@ -14,8 +14,8 @@ tag the-app
 		<verse-navigator route='/:translation/:book/:chapter/:verse/'>
 		<chapter-navigator route='/:translation/:book/:chapter/'>
 
-		<profile-page route.exact='/profile/$' data=state>
-		<downloads-page route.exact='/downloads/$' data=state>
+		<profile-page route.exact='/profile/' data=state>
+		<downloads-page route.exact='/downloads/' data=state>
 
 
 imba.mount <the-app>

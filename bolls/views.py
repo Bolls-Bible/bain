@@ -235,39 +235,12 @@ def getBookmarks(request, translation, book, chapter):
         return JsonResponse([], safe=False)
 
 
-def getProfileBookmarks(request, range_from, range_to):
-    if request.user.is_authenticated:
-        user = request.user
-        bookmarks = []
-        bookmarkslist = user.bookmarks_set.all().order_by(
-            '-date', 'verse')[range_from:range_to]
-        for bookmark in bookmarkslist:
-            note = ''
-            if bookmark.note is not None:
-                note = bookmark.note.text
-            bookmarks.append({
-                "verse": {
-                    "pk": bookmark.verse.pk,
-                    "translation": bookmark.verse.translation,
-                    "book": bookmark.verse.book,
-                    "chapter": bookmark.verse.chapter,
-                    "verse": bookmark.verse.verse,
-                    "text": bookmark.verse.text,
-                },
-                "date": bookmark.date,
-                "color": bookmark.color,
-                "collection": bookmark.collection,
-                "note": note,
-            })
-
-        return JsonResponse(bookmarks, safe=False)
-    return JsonResponse([], safe=False)
-
-
-def getSearchedProfileBookmarks(request, query):
-    user = request.user
+def mapBookmarks(bookmarkslist):
     bookmarks = []
-    for bookmark in user.bookmarks_set.all().filter(collection__icontains=query).order_by('-date', 'verse'):
+    for bookmark in bookmarkslist:
+        note = ''
+        if bookmark.note is not None:
+            note = bookmark.note.text
         bookmarks.append({
             "verse": {
                 "pk": bookmark.verse.pk,
@@ -280,7 +253,30 @@ def getSearchedProfileBookmarks(request, query):
             "date": bookmark.date,
             "color": bookmark.color,
             "collection": bookmark.collection,
+            "note": note,
         })
+    return bookmarks
+
+
+
+def getProfileBookmarks(request, range_from, range_to):
+    if request.user.is_authenticated:
+        user = request.user
+        bookmarks = mapBookmarks(user.bookmarks_set.all().order_by(
+            '-date', 'verse')[range_from:range_to])
+        return JsonResponse(bookmarks, safe=False)
+    return JsonResponse([], safe=False)
+
+
+def getSearchedProfileBookmarks(request, query, range_from, range_to):
+    user = request.user
+    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(collection__icontains=query).order_by('-date', 'verse')[range_from:range_to]),
+    return JsonResponse(bookmarks, safe=False)
+
+
+def getBookmarksWithNotes(request, range_from, range_to):
+    user = request.user
+    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(note__isnull=False).order_by('-date', 'verse')[range_from:range_to]),
     return JsonResponse(bookmarks, safe=False)
 
 

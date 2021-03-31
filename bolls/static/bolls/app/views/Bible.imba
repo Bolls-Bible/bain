@@ -281,14 +281,14 @@ export tag bible-reader
 				settings.book = window.book
 				settings.chapter = window.chapter
 				settings.name_of_book = nameOfBook(settings.book, settings.translation)
-				document.title += " " + getNameOfBookFromHistory(window.translation, window.book) + ' ' + window.chapter
+				document.title = " " + getNameOfBookFromHistory(window.translation, window.book) + ' ' + window.chapter
 				if window.verses
 					verses = window.verses
 					getBookmarks("/get-bookmarks/" + window.translation + '/' + window.book + '/' + window.chapter + '/', 'bookmarks')
 				if window.verse
 					document.title += ':' + window.verse
 					findVerse(window.verse, window.endverse)
-				document.title += ' ' + window.translation
+				document.title += ' ' + window.translation + " Bolls Bible"
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
@@ -376,20 +376,6 @@ export tag bible-reader
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
-
-
-	# def routed params
-	# 	state = window.history.state
-	# 	onpopstate = yes
-	# 	if params.path.length > 1
-	# 		if state.parallel-translation && state.parallel-book && state.parallel-chapter
-	# 			getParallelText(state.parallel-translation, state.parallel-book, state.parallel-chapter, state.parallel-verse)
-	# 		getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
-
-	# 		settingsp.display = state.parallel_display
-	# 		window.localStorage.setItem('parallel_display', state.parallel_display)
-	# 	clearSpace!
-
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -480,8 +466,9 @@ export tag bible-reader
 					'',
 					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
+				router.go(window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/')
 			clearSpace()
-			document.title = "Bolls Bible " + " " + nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name
+			document.title = nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name + " Bolls Bible"
 			if chronorder
 				chronorder = !chronorder
 				toggleChronorder!
@@ -670,12 +657,6 @@ export tag bible-reader
 		show_verse_picker = no
 		show_share_box = no
 		choosen_categories = []
-
-		# If the user is watching his profile then turn back from profile to the reader
-		let profile = document.getElementsByClassName("Profile")
-		if profile[0]
-			profile[0]._tag.orphanize()
-			window.history.back()
 
 		# unless the user is typing something focus the reader in order to enable arrow navigation on the text
 		unless page_search.d
@@ -960,9 +941,7 @@ export tag bible-reader
 
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
-		let query = search.search_input.replace(/\//g, '')
-		query = query.replace(/\\/g, '')
-		query = query.trim!
+		let query = cleanString(search.search_input)
 
 		# If the query is long enough and it is different from the previous query -- do the search again.
 		if query.length > 1 && (search.search_result_header != query || !search.search_div)
@@ -975,11 +954,11 @@ export tag bible-reader
 			let url
 			if settingsp.edited_version == settingsp.translation && settingsp.display
 				search.translation = settingsp.edited_version
-				url = '/search/' + settingsp.edited_version + '/' + query + '/'
+				url = '/search/' + settingsp.edited_version + '/' + window.encodeURIComponent(query) + '/'
 				search.search_result_translation = settingsp.edited_version
 			else
 				search.translation = settings.translation
-				url = '/search/' + settings.translation + '/' + query + '/'
+				url = '/search/' + settings.translation + '/' + window.encodeURIComponent(query) + '/'
 				search.search_result_translation = settings.translation
 
 			search_verses = {}
@@ -2299,12 +2278,12 @@ export tag bible-reader
 					<svg.cbtn @click=toggleParallelMode(yes) [padding: 8px] viewBox="0 0 400 338">
 						<title> data.lang.parallel
 						<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
-				<.nighttheme @click=(do show_fonts = !show_fonts)>
+				<.nighttheme [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
-					settings.font.name
-					<.languages .show_languages=show_fonts>
+					<select[bg:transparent font:inherit appearance:none bd:none c:inherit w:100% cursor:pointer] bind=settings.font.name>
 						for font in fonts
-							<button[ff: {font.code}] @click=setFontFamily(font)> font.name
+							<option[ff: {font.code}] @click=setFontFamily(font) value=font.name> font.name
+
 				<.profile_in_settings>
 					if data.getUserName()
 						<a.username route-to.exact='/profile/$'> data.getUserName()
@@ -2652,16 +2631,13 @@ export tag bible-reader
 									<path d="M38.263 27.725c-.377.01-.746.05-.884.452-.208.601.229.745.674.816 1.485.239 2.267 1.114 2.415 2.596.04.402.295.727.684.682.538-.065.587-.544.57-.998.027-1.665-1.854-3.588-3.46-3.548z">
 					<button.cancel @click=(do show_share_box = no)> data.lang.cancel
 				else
-					if store.show_color_picker
-						if window.innerWidth < 640
-							<svg.close_colorPicker
-								@click=(do store.show_color_picker = !store.show_color_picker)
-								xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
-							>
-								<title> data.lang.close
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle>  data.lang.canvastitle
-					<p> highlighted_title, ' ', choosen_parallel == "first" ? settings.translation : settingsp.translation
+					<p>
+						highlighted_title, ' '
+						<span>
+							if choosen_parallel == "first"
+								settings.translation
+							else
+								settingsp.translation
 					<ul.mark_grid>
 						<li[border: none; bg: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)].color_mark @click=(do store.show_color_picker = !store.show_color_picker)>
 
@@ -2706,7 +2682,16 @@ export tag bible-reader
 						<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
 							<title> data.lang.create
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-
+					if store.show_color_picker
+						<>
+							if window.innerWidth < 640
+								<svg.close_colorPicker
+									@click=(do store.show_color_picker = !store.show_color_picker)
+									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
+								>
+									<title> data.lang.close
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle>  data.lang.canvastitle
 
 			<section.history.filters .show_history=show_history>
 				<[m: 0].nighttheme.flex>

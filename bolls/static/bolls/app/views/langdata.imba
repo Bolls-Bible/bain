@@ -24,6 +24,7 @@ export const english = {
 		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Translate its interface to a new language. </a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
+	"all": "All"
 	"account_deleted": "Account Deleted",
 	"account_edited": "Account edited",
 	"add_translation_btn": "Add translation",
@@ -40,6 +41,7 @@ export const english = {
 	"cancel": "Cancel",
 	"cannot_be_undone": "This action cannot be undone. This will permanently delete your account and bookmarks.",
 	"canvastitle": "Pick a color to highlight choosen verses",
+	"collections": "Collections"
 	"change_book": "Bible",
 	"change_password": "Change password",
 	"change_translation": "Change translation",
@@ -99,6 +101,7 @@ export const english = {
 	"next": "Next",
 	"nighttheme": "Turn on night theme",
 	"note": "Note",
+	"notes": "Notes"
 	"nothing": "We didn't find anything. Check or simplify your query.",
 	"nothing_else": "Nothing else",
 	"offline": "You are offline(",
@@ -178,6 +181,7 @@ export const ukrainian = {
 		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Перекладіть інтерфейс додатку на нову мову.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Цей додаток не є безкоштовним. Завжди є потреба в грошах для хостингу, для розробки, поширення на нові платформи та часу на розробку..."
 	],
+	"all": "Все"
 	"account_deleted": "Обліковий запис видалено",
 	"account_edited": "Обліковий запис редаговано",
 	"add_translation_btn": "Додати переклад",
@@ -194,6 +198,7 @@ export const ukrainian = {
 	"cancel": "Відмінити",
 	"cannot_be_undone": "Цю дію не можна скасувати. Це назавжди видалить ваш обліковий запис і закладки.",
 	"canvastitle": "Натицькайте колір",
+	"collections": "Коллекції"
 	"change_book": "Біблія",
 	"change_password": "Змінити пароль",
 	"change_translation": "Змінити переклад",
@@ -253,6 +258,7 @@ export const ukrainian = {
 	"next": "Наступна глава",
 	"nighttheme": "Увімкнути нічну тему",
 	"note": "Нотатка",
+	"notes": "Нотатки"
 	"nothing": "Ми нічого не знайшли. Перевірте або спростіть запит.",
 	"nothing_else": "Нічого більше",
 	"offline": "Ви в оффлайні(",
@@ -332,6 +338,7 @@ export const russian = {
 		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Переведите интерфейт приолжения на новый язык.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Это приложение не бесплатное. Всегда есть потребность в деньгах для хостинга, для разработки, распространения на новые платформы и времени на разработку..."
 	],
+	"all": "Всё"
 	"account_deleted": "Аккаунт уделён",
 	"account_edited": "Аккаунт редактирован",
 	"add_translation_btn": "Добавить перевод",
@@ -348,6 +355,7 @@ export const russian = {
 	"cancel": "Отменить",
 	"cannot_be_undone": "Это действие не может быть отменено. Это навсегда удалит ваш аккаунт и закладки.",
 	"canvastitle": "Выберите цвет",
+	"collections": "Коллекции"
 	"change_book": "Библия",
 	"change_password": "Поменять пароль",
 	"change_translation": "Поменять перевод",
@@ -407,6 +415,7 @@ export const russian = {
 	"next": "Следущая глава",
 	"nighttheme": "Включить ночную тему",
 	"note": "Заметка",
+	"notes": "Заметки"
 	"nothing": "Мы ничего не нашли. Проверте или спростите запрос.",
 	"nothing_else": "Нечего больше",
 	"offline": "Вы в оффлайне(",
@@ -486,6 +495,7 @@ export const portuguese = {
 		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traduza a interface para um novo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ..."
 	],
+	"all": "Tudo"
 	"account_deleted": "Conta excluída",
 	"account_edited": "Cuenta editada",
 	"add_translation_btn": "Adicionar tradução",
@@ -502,6 +512,7 @@ export const portuguese = {
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Essa ação não pode ser desfeita. Isso excluirá permanentemente sua conta e favoritos.",
 	"canvastitle": "Escolha uma cor para destacar os versos escolhidos",
+	"collections": "Coleções"
 	"change_book": "Bíblia",
 	"change_password": "Mudar senha",
 	"change_translation": "Mudar tradução",
@@ -561,6 +572,7 @@ export const portuguese = {
 	"next": "Pos",
 	"nighttheme": "Ativar o tema noturno",
 	"note": "Nota",
+	"notes": "Notas"
 	"nothing": "Não encontramos nada. Verifique ou simplifique sua consulta.",
 	"nothing_else": "Nada mais",
 	"offline": "Você está offline(",
@@ -640,6 +652,7 @@ export const espanol = {
 		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traducir la interfaz a un nuevo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
 	],
+	"all": "Todo"
 	"account_deleted": "Cuenta borrada",
 	"account_edited": "Cuenta editada",
 	"add_translation_btn": "Agregar traducción",
@@ -656,6 +669,7 @@ export const espanol = {
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Esta acción no puede deshacerse. Esto borrará permanentemente tu cuenta y señaladores.",
 	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",
+	"collections": "Colecciones"
 	"change_book": "Biblia",
 	"change_password": "Cambiar contraseña",
 	"change_translation": "Cambiar traducción",
@@ -715,6 +729,7 @@ export const espanol = {
 	"next": "Pos",
 	"nighttheme": "Activar el tema nocturno",
 	"note": "Nota",
+	"notes": "Notas"
 	"nothing": "No encontramos nada, Verifica o simplifica la consulta.",
 	"nothing_else": "Nada más",
 	"offline": "Tu estás offline(",
@@ -794,6 +809,7 @@ export const german = {
 		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Translate its interface to a new language. </a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
+	"all": "Alles"
 	"account_deleted": "Konto gelöscht.",
 	"account_edited": "Konto bearbeitet",
 	"add_translation_btn": "Übersetzungen hinzufügen",
@@ -810,6 +826,7 @@ export const german = {
 	"cancel": "Aufheben",
 	"cannot_be_undone": "Diese Aktion löscht Ihr Konto, Ihre Informationen und Lesezeichen dauerhaft. Warnung! Diese Aktion kann nicht rückgängig gemacht werden..",
 	"canvastitle": "Wählen Sie eine Farbe, Verse hervorheben",
+	"collections": "Sammlungen"
 	"change_book": "Die Bibel",
 	"change_password": "Passwort wechseln",
 	"change_translation": "Chronologischer Reihenfolge.",
@@ -870,6 +887,7 @@ export const german = {
 	"next": "Nächster",
 	"nighttheme": "Dunkles Theme einschalten.",
 	"note": "Note",
+	"notes": "Notes"
 	"nothing": "Wir haben nichts gefunden. Bitte überprüfen oder vereinfachen Sie Ihre Anfrage.",
 	"nothing_else": "Sonst nichts zu sehen",
 	"offline": "Sie sind offline",

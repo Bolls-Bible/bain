@@ -4,7 +4,7 @@ export tag verse-navigator
 		if bible[0]
 			bible[0].clearSpace!
 
-	def routed params
+	def routed params, state
 		state = window.history.state
 		if state.verse || state.parallel-verse
 			window.on_pops_tate = yes
@@ -18,6 +18,7 @@ export tag verse-navigator
 						parseInt(state.parallel-chapter),
 						parseInt(state.parallel-verse))
 				else
+
 					bible[0].getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
 	<self>
 

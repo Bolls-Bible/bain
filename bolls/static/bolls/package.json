@@ -6,10 +6,10 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "imba": "^2.0.0-alpha.130"
+    "imba": "^2.0.0-alpha.129"
   },
   "devDependencies": {
-    "@types/node": "^14.14.34"
+    "@types/node": "^14.14.37"
   },
   "repository": "Bohooslav/bolls",
   "description": "Frontend for Bolls Bible app",
