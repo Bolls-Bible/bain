@@ -202,6 +202,7 @@ export tag profile-page
 
 
 	def goToBookmark bookmark
+		log bookmark, verse
 		let bible = document.getElementsByTagName("bible-reader")
 		bible[0].getText(bookmark.translation, bookmark.book, bookmark.chapter, bookmark.verse)
 

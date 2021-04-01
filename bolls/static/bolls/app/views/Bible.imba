@@ -61,7 +61,6 @@ let settings =
 
 # Detect dark mode
 if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && window.localStorage.getItem('sepia') != 'true'
-	console.log('NOOOOOOOOOOOOOOO')
 	settings.theme = 'dark'
 	settings.sepia = no
 	settings.accent = 'gold'
@@ -240,22 +239,21 @@ export tag bible-reader
 			if e.ctrlKey && e.code == "KeyF"
 				e.preventDefault!
 				e.stopPropagation!
-				page_search.query = window.getSelection().toString()
+				page_search.query = window.getSelection!.toString!
+				search.search_input = page_search.query
 				clearSpace!
-				pageSearch!
-			if e.ctrlKey && e.code == "KeyF" && e.shiftKey
-				e.preventDefault!
-				e.stopPropagation!
-				clearSpace!
-				turnGeneralSearch!
+				if e.shiftKey
+					turnGeneralSearch!
+				else
+					pageSearch!
 			if e.code == "KeyH" && e.altKey && e.ctrlKey
 				menuicons = !menuicons
-				imba.commit()
 				setCookie("menuicons", menuicons)
+
 			elif e.code == "KeyY" && e.ctrlKey
 				fixdrawers = !fixdrawers
-				imba.commit()
 				setCookie("fixdrawers", fixdrawers)
+
 			elif e.code == "ArrowRight" && e.altKey
 				e.preventDefault()
 				window.history.forward()
@@ -447,7 +445,10 @@ export tag bible-reader
 			chapter = settings.chapter
 			changeParallel = no
 
-		if !(translation == settings.translation && book == settings.book && chapter == settings.chapter) || !verses.length
+		const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
+		const the_same_chapter = translation == settings.translation && book == settings.book && chapter == settings.chapter
+
+		if not the_same_chapter or locations_are_different or !verses.length
 			loading = yes
 			switchTranslation translation
 			if !window.on_pops_tate && (verses.length || !window.navigator.onLine)
@@ -502,7 +503,10 @@ export tag bible-reader
 				getParallelText settingsp.translation, book, chapter, verse, yes
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 		if verse
-			findVerse(verse)
+			if verse.length > 1
+				findVerse(verse[0], verse[verse.length - 1])
+			else
+				findVerse(verse)
 		clearSpace!
 		window.on_pops_tate = no
 		setTimeout(&, 100) do
@@ -936,7 +940,7 @@ export tag bible-reader
 	def turnGeneralSearch
 		clearSpace!
 		popUp 'search'
-		focusElement "generalsearch"
+		setTimeout(&, 300) do $generalsearch.select!
 
 
 	def getSearchText e
@@ -946,7 +950,7 @@ export tag bible-reader
 		# If the query is long enough and it is different from the previous query -- do the search again.
 		if query.length > 1 && (search.search_result_header != query || !search.search_div)
 			clearSpace!
-			document.getElementById("generalsearch").blur!
+			$generalsearch.blur!
 			popUp 'search'
 			search.search_result_header = ''
 			loading = yes
@@ -2511,7 +2515,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input#generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
 
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search

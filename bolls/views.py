@@ -258,7 +258,6 @@ def mapBookmarks(bookmarkslist):
     return bookmarks
 
 
-
 def getProfileBookmarks(request, range_from, range_to):
     if request.user.is_authenticated:
         user = request.user
@@ -414,6 +413,9 @@ def historyOf(user):
         try:
             obj = user.history_set.get(user=user)
             return obj.history
+        except History.MultipleObjectsReturned:
+            user.history_set.filter(user=user).delete()
+            return []
         except History.DoesNotExist:
             return []
     else:
