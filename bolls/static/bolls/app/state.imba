@@ -15,6 +15,7 @@ export class State
 	prop user = {}
 	prop translations_current_state = {}
 	prop addBtn = no
+	prop hideInstallPromotion = no
 	prop deferredPrompt
 	prop translations = []
 	prop timeoutID = undefined
@@ -99,12 +100,27 @@ export class State
 		# Update obsole translations if such exist.
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
-		window.addEventListener('beforeinstallprompt', do |e|
+
+		window.addEventListener('beforeinstallprompt', do(e)
 			e.preventDefault()
 			deferredPrompt = e
 			addBtn = yes
-			imba.commit()
+			imba.commit!
 		)
+
+		window.addEventListener('appinstalled', do(event)
+			// Clear the deferredPrompt so it can be garbage collected
+			window.deferredPrompt = null
+			hideInstallPromotion = yes
+		)
+
+		#  Detect if the app is installed in order to prevent the install app button and its text
+		const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+		if (document.referrer.startsWith('android-app://'))
+			hideInstallPromotion = yes
+		elif (window.navigator.standalone || window.isStandalone)
+			hideInstallPromotion = yes
+
 
 	def setDefaultTranslation translation
 		language = 'eng'
@@ -242,7 +258,7 @@ export class State
 				translations_current_state[translation] = Date.now()
 				setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
 				console.log("Translation ", translation, " is saved. Time: ", (Date.now() - begtime) / 1000, "s")
-				imba.commit()
+				imba.commit!
 
 			if window.Worker
 				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
@@ -290,7 +306,7 @@ export class State
 			downloading_of_this_translations.splice(downloading_of_this_translations.indexOf(deleteCount[1]), 1)
 			delete translations_current_state[deleteCount[1]]
 			setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
-			imba.commit()
+			imba.commit!
 			if update
 				downloadTranslation(translation)
 
@@ -335,7 +351,7 @@ export class State
 			downloaded_translations = []
 			downloading_of_this_translations = []
 			deleting_of_all_transllations = no
-			imba.commit()
+			imba.commit!
 		).catch(do |e|
 			console.error(e)
 		)
@@ -533,13 +549,13 @@ export class State
 			hideNotification(ntfc)
 		timeoutID = setTimeout(&, 4500) do
 			notifications = []
-			imba.commit()
+			imba.commit!
 
-		imba.commit()
+		imba.commit!
 
 	def hideNotification ntfctn
 		notifications.find(|el| return el == ntfctn).className = 'hide-notification'
-		imba.commit()
+		imba.commit!
 
 
 

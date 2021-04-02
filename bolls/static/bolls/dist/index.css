@@ -843,6 +843,8 @@ aside {
   color: var(--text-color);
   display: inline-block;
   text-align: center;
+  background-color: transparent;
+  cursor:pointer;
 }
 
 .cbtn:hover {
@@ -889,7 +891,7 @@ img,
   position: absolute;
   right: 32px;
   transform: translateX(32px);
-  border-radius: 4px;
+  border-radius: 8px;
   visibility: hidden;
   opacity: 0;
   border: 1px solid #8888;
@@ -902,18 +904,23 @@ img,
   z-index: 10000000;
 }
 
-.languages button {
-  background-color: transparent;
-  background: var(--btn-bg);
+.languages .butt {
+  background: transparent;
   color: var(--text-color);
   cursor: pointer;
   padding: 12px;
   font-size: 16px;
   display: block;
   width: 100%;
+  text-align: left;
+  min-width: 128px;
 }
 
-.languages button:hover {
+.languages .active_butt {
+  background: var(--btn-bg);
+}
+
+.languages .butt:hover {
     background: var(--btn-bg-hover);
 }
 
@@ -1236,6 +1243,10 @@ html[data-light="light"] #daf article {
 .parent_checkbox {
   --filling: var(--disabled);
   color: var(--filling);
+  background-color: transparent;
+  text-align: left;
+  width: 100%;
+  font: inherit;
 }
 
 .checkbox {
@@ -1927,4 +1938,10 @@ editing-area pre {
 
 editing-area p {
   padding: 8px 0px 4px;
+}
+
+@media all and (display-mode: standalone) {
+  #pwa {
+    display: none;
+  }
 }

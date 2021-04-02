@@ -1,5 +1,5 @@
 import *  as BOOKS from "./translations_books.json"
-import languages from "./languages.json"
+import languages from "../languages.json"
 import './Profile'
 import "./loading.imba"
 import "./downloads.imba"
@@ -2241,11 +2241,11 @@ export tag bible-reader
 						<title> data.lang.lighttheme
 						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
 				<.btnbox>
-					<a[p: 12px fs: 20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
-					<a[p: 8px fs: 24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
+					<button[p: 12px fs: 20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
+					<button[p: 8px fs: 24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
 				<.btnbox>
-					<a.cbtn [padding: 8px font-size: 24px font-weight: 100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
-					<a.cbtn [padding: 8px font-size: 24px font-weight: 900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
+					<button.cbtn [padding: 8px font-size: 24px font-weight: 100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
+					<button.cbtn [padding: 8px font-size: 24px font-weight: 900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
 					<svg.cbtn @click.changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [padding: 16px 0]>
 						<title> data.lang.decrease_line_height
@@ -2284,9 +2284,10 @@ export tag bible-reader
 						<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 				<.nighttheme [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
-					<select[bg:transparent font:inherit appearance:none bd:none c:inherit w:100% cursor:pointer] bind=settings.font.name>
+					settings.font.name
+					<.languages .show_languages=show_fonts>
 						for font in fonts
-							<option[ff: {font.code}] @click=setFontFamily(font) value=font.name> font.name
+							<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
 
 				<.profile_in_settings>
 					if data.getUserName()
@@ -2310,22 +2311,22 @@ export tag bible-reader
 					data.lang.language
 					<button.change_language> currentLanguage!
 					<.languages .show_languages=data.show_languages>
-						<button @click=(do data.setLanguage('ukr'))> "Українська"
-						<button @click=(do data.setLanguage('ru'))> "Русский"
-						<button @click=(do data.setLanguage('eng'))> "English"
-						<button @click=(do data.setLanguage('de'))> "Deutsch"
-						<button @click=(do data.setLanguage('pt'))> "Portuguese"
-						<button @click=(do data.setLanguage('es'))> "Español"
-				<.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
+						<button.butt @click=(do data.setLanguage('ukr'))> "Українська"
+						<button.butt @click=(do data.setLanguage('ru'))> "Русский"
+						<button.butt @click=(do data.setLanguage('eng'))> "English"
+						<button.butt @click=(do data.setLanguage('de'))> "Deutsch"
+						<button.butt @click=(do data.setLanguage('pt'))> "Portuguese"
+						<button.butt @click=(do data.setLanguage('es'))> "Español"
+				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
 					data.lang.parallel_synch
 					<p.checkbox> <span>
-				<.nighttheme.parent_checkbox.flex @click=toggleVersePicker() .checkbox_turned=settings.verse_picker>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVersePicker() .checkbox_turned=settings.verse_picker>
 					data.lang.verse_picker
 					<p.checkbox> <span>
-				<.nighttheme.parent_checkbox.flex @click=toggleTransitions() .checkbox_turned=settings.transitions>
+				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions() .checkbox_turned=settings.transitions>
 					data.lang.transitions
 					<p.checkbox> <span>
-				<.nighttheme.parent_checkbox.flex @click=toggleVerseBreak() .checkbox_turned=settings.verse_break>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak() .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
 					<p.checkbox> <span>
 

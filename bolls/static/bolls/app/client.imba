@@ -1,4 +1,4 @@
-import {State} from './views/state'
+import {State} from './state'
 import './views/Bible'
 import './views/Profile'
 import './views/downloads'
