@@ -70,7 +70,9 @@ def getText(request, translation, book, chapter):
 
 def search(request, translation, piece):
     results_of_exec_search = []
+    d = []
     piece = piece.strip()
+
     if len(piece) > 2:
         query_set = []
 
@@ -103,29 +105,19 @@ def search(request, translation, piece):
                     list(set(results_of_search) - set(results_of_exec_search))
         else:
             results_of_search = results_of_exec_search
+
+        for obj in results_of_search:
+            d.append({
+                "pk": obj.pk,
+                "translation": obj.translation,
+                "book": obj.book,
+                "chapter": obj.chapter,
+                "verse": obj.verse,
+                "text": obj.text
+            })
     else:
-        results_of_search = [
-            {
-                "pk": -1,
-                "translation": translation,
-                "book": 'BOOKLESS',
-                "chapter": 'NO RESULTS',
-                "verse": "WHY?",
-                "text": "Because your query is not longer than 2 characters! And don't forget to trim it)"
-            }
-        ]
+        d = [{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}]
 
-
-    d = []
-    for obj in results_of_search:
-        d.append({
-            "pk": obj.pk,
-            "translation": obj.translation,
-            "book": obj.book,
-            "chapter": obj.chapter,
-            "verse": obj.verse,
-            "text": obj.text
-        })
     response = JsonResponse(d, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"

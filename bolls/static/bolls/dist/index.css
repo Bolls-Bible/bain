@@ -72,8 +72,10 @@ html[data-theme="redlight"] {
 }
 
 html[data-transitions="true"] * {
-  transition: all 250ms ease 0s;
-  transition-delay: 0ms;
+  transition-timing-function: ease;
+  transition-delay: 0;
+  transition-duration: 300ms;
+  transition-property: color, background, width, height, transform, opacity, max-height, max-width, top, left, bottom, right, visibility, fill, stroke, margin, padding, font-size;
 }
 
 html[data-pukaka="yes"] * {
@@ -886,25 +888,30 @@ img,
   background-color: var(--btn-bg-hover);
 }
 
-.languages {
+.popup_menu_box {
+  position: relative;
+}
+
+.popup_menu {
   background-color: var(--background-color);
   position: absolute;
-  right: 32px;
-  transform: translateX(32px);
+  right: 0;
+  top: calc(100% + 8px);
+  transform: translateY(-32px);
   border-radius: 8px;
   visibility: hidden;
   opacity: 0;
   border: 1px solid #8888;
 }
 
-.show_languages {
-  transform: translateY(-64px);
+.show_popup_menu {
+  transform: none;
   visibility: visible;
   opacity: 1;
   z-index: 10000000;
 }
 
-.languages .butt {
+.popup_menu .butt {
   background: transparent;
   color: var(--text-color);
   cursor: pointer;
@@ -916,11 +923,11 @@ img,
   min-width: 128px;
 }
 
-.languages .active_butt {
+.popup_menu .active_butt {
   background: var(--btn-bg);
 }
 
-.languages .butt:hover {
+.popup_menu .butt:hover {
     background: var(--btn-bg-hover);
 }
 
@@ -1338,10 +1345,6 @@ html[data-light="light"] #daf article {
   --fill-on-hover: var(--accent-hover-color);
 }
 
-.change_password .show_languages {
-  transform: translateY(82px);
-}
-
 .display_none {
   display: none !important;
 }
@@ -1501,7 +1504,6 @@ html[data-transitions="true"] .show_history {
   align-items: center;
   padding: 16px;
   border-top: 1px solid var(--btn-bg-hover);
-  border-bottom: 1px solid var(--btn-bg-hover);
   cursor: default;
   height: 52px;
 }
@@ -1542,7 +1544,7 @@ html[data-transitions="true"] .show_history {
 
 .collection {
   display: inline-block;
-  margin: 8px;
+  margin: 4px;
   background: var(--btn-bg);
   padding: 4px 8px;
   cursor: pointer;
@@ -1563,7 +1565,6 @@ html[data-transitions="true"] .show_history {
   color: inherit;
   padding: 16px;
   cursor: pointer;
-  border-top: 1px solid var(--btn-bg-hover);
   font-weight: bold;
   font-size: 16px;
   width: 100%;
@@ -1869,7 +1870,7 @@ address a:hover {
 
 input:invalid,
 .invalid {
-  box-shadow: 0px 0px 4px red, 0px 0px 3px red, 0px 0px 2px red;
+  box-shadow: 0 0 0 2px #aa3344;
 }
 
 .errormessage {
@@ -1939,6 +1940,7 @@ editing-area pre {
 editing-area p {
   padding: 8px 0px 4px;
 }
+
 
 @media all and (display-mode: standalone) {
   #pwa {

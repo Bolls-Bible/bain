@@ -1,4 +1,4 @@
-import languages from "./languages.json"
+import languages from "./views/languages.json"
 import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
 
 

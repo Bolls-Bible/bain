@@ -34,7 +34,7 @@ export tag color-picker
 
 	def pickAColor e
 		const offsetX = e.x - ((window.innerWidth - 320) / 2)
-		const offsetY = window.innerWidth <= 640 ? e.y - (window.innerHeight - 208) : e.y - (window.innerHeight - 376)
+		const offsetY = e.y - (window.innerHeight - 208)
 		imgData = firstChild.getContext('2d').getImageData(offsetX, offsetY, 1, 1)
 		rgba = imgData.data
 		data.highlight_color = "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")"
@@ -45,7 +45,7 @@ export tag color-picker
 
 	css canvas
 		position: absolute
-		bottom: 100% @lt-xs: 0
+		bottom: 0
 		cursor: crosshair
 		border: 2px solid var(--background-color)
 		right: calc(100% / 2 - 162px)

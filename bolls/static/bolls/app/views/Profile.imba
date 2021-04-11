@@ -279,18 +279,18 @@ export tag profile-page
 	def render
 		<self @scroll=scroll>
 			<header.profile_hat>
-				<.collectionsflex[z-index: 100000]>
+				<.collectionsflex[z-index: 100000 of:visible]>
 					<a.svgBack [pos:relative m:auto 16px auto 0 l:8px] route-to='/'>
 						<svg[w:20px min-width: 20px h:32px fill:inherit] viewBox="0 0 20 20">
 							<title> data.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 					<h1[margin: 1em 4px]> data.getUserName()
 					if window.navigator.onLine
-						<.change_password.help>
+						<.change_password.help.popup_menu_box>
 							<svg.helpsvg @click=showOptions('account_actions') viewBox="0 0 24 24" width="18px" height="18px">
 								<title> data.lang.edit_account
 								<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
-							<.languages[pos:fixed right:{window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(show_options_of == 'account_actions')>
+							<.popup_menu .show_popup_menu=(show_options_of == 'account_actions')>
 								if data.user.is_password_usable then <a @click.prevent=(do window.location = "/accounts/password_change/")> <button.butt> data.lang.change_password
 								<button.butt @click=showDeleteForm()> data.lang.delete_account
 								<button.butt @click=showEditForm()> data.lang.edit_account
@@ -318,12 +318,12 @@ export tag profile-page
 								<p.collection @click=getSearchedBookmarks(collection)> collection
 					if bookmark.note
 						<p.profile_note.EditingArea[overflow: auto;] innerHTML=bookmark.note dir="auto">
-					<p.dataflex>
+					<p.dataflex.popup_menu_box>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
 						<svg._options @click=showOptions(bookmark.title) viewBox="0 0 20 20">
 							<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
-						<.languages[right: {window.innerWidth > 960 ? (window.innerWidth - 886) / 2 : 36}px] .show_languages=(bookmark.title == show_options_of)>
+						<.popup_menu .show_popup_menu=(bookmark.title == show_options_of)>
 							<button.butt @click=deleteBookmark(bookmark)> data.lang.delete
 							<button.butt @click=goToBookmark(bookmark)> data.lang.open
 							<button.butt @click=copyToClipboard(bookmark)> data.lang.copy

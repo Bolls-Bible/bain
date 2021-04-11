@@ -21,7 +21,7 @@ export const english = {
 		"Just share it -=> bolls.life",
 		"Write a feedback.",
 		"Submit an idea)",
-		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Translate its interface to a new language. </a>",
+		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate its interface to a new language. </a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
 	"all": "All"
@@ -78,7 +78,7 @@ export const english = {
 	"help": "Help",
 	"history": "History",
 	"ios_install": "To install the app on iOS follow the next steps",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
 		'Then press the share button at the middle bottom.',
 		'Scroll down and find the "Add to Home Screen" action.',
@@ -178,7 +178,7 @@ export const ukrainian = {
 		"Просто поширьте його -=> bolls.life",
 		"Напишіть відгук.",
 		"Запропонуйте ідею)",
-		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Перекладіть інтерфейс додатку на нову мову.</a>",
+		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Перекладіть інтерфейс додатку на нову мову.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Цей додаток не є безкоштовним. Завжди є потреба в грошах для хостингу, для розробки, поширення на нові платформи та часу на розробку..."
 	],
 	"all": "Все"
@@ -235,7 +235,7 @@ export const ukrainian = {
 	"help": "Допомога",
 	"history": "Історія",
 	"ios_install": "Щоб встановити додаток на iOS слідуйте за наступними інструкціями",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Відкрийте Safari і перейдіть до <a href="https://bolls.life"> bolls.life.',
 		'Потім натисніть кнопку Поділитися посередині внизу Safari.',
 		'Гортайте донизу поки не знайдете "Додати до Домашнього Екрану" кнопку. Натисніть її.',
@@ -335,7 +335,7 @@ export const russian = {
 		"Просто поделитесь им -=> bolls.life",
 		"Напишите отзыв.",
 		"Предложите идею)",
-		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Переведите интерфейт приолжения на новый язык.</a>",
+		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Переведите интерфейт приолжения на новый язык.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Это приложение не бесплатное. Всегда есть потребность в деньгах для хостинга, для разработки, распространения на новые платформы и времени на разработку..."
 	],
 	"all": "Всё"
@@ -392,7 +392,7 @@ export const russian = {
 	"help": "Помощь",
 	"history": "История",
 	"ios_install": "Чтобы установить приложение на iOS следуйте этим инструкциям",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Откройте Safari и перейдите к <a href="https://bolls.life"> bolls.life.',
 		'Нажмите на исонку Поделится посередине в самом низу.',
 		'Прокрутите к низу пока не увидите "Доюавить к Домашнему Экрану" кнопку. Нажмите её',
@@ -492,7 +492,7 @@ export const portuguese = {
 		"Apenas compartilhe -=> bolls.life",
 		"Escreva um comentário.",
 		"Envie uma ideia)",
-		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traduza a interface para um novo idioma.</a>",
+		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traduza a interface para um novo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento ..."
 	],
 	"all": "Tudo"
@@ -549,7 +549,7 @@ export const portuguese = {
 	"help": "Ajuda",
 	"history": "Historía",
 	"ios_install": "Para instalar o aplicativo no iOS, siga as próximas etapas",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
 		'Then press the share button at the middle bottom.',
 		'Scroll down and find the "Add to Home Screen" action.',
@@ -649,7 +649,7 @@ export const espanol = {
 		"Compartiéndolo -=> bolls.life",
 		"Escribe un comentario.",
 		"Enviar una idea)",
-		"<a target='_blank'rel='noreferrer' href='https://crowdin.com/project/bolls'>Traducir la interfaz a un nuevo idioma.</a>",
+		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traducir la interfaz a un nuevo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
 	],
 	"all": "Todo"
@@ -706,7 +706,7 @@ export const espanol = {
 	"help": "Ayuda",
 	"history": "Historial",
 	"ios_install": "Para instalar la aplicación en iOS siga los siguientes pasos",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
 		'Then press the share button at the middle bottom.',
 		'Scroll down and find the "Add to Home Screen" action.',
@@ -806,7 +806,7 @@ export const german = {
 		"Just share it -=> bolls.life",
 		"Write a feedback.",
 		"Submit an idea)",
-		"<a target='_blank' rel='noreferrer' href='https://crowdin.com/project/bolls'>Translate its interface to a new language. </a>",
+		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate its interface to a new language. </a>",
 		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
 	"all": "Alles"
@@ -864,7 +864,7 @@ export const german = {
 	"help": "Hilfen",
 	"history": "History",
 	"ios_install": "Befolgen Sie die nächsten Schritte, um die App unter iOS zu installieren",
-	"ioі_install_steps": [
+	"ios_install_steps": [
 		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
 		'Then press the share button at the middle bottom.',
 		'Scroll down and find the "Add to Home Screen" action.',

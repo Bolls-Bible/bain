@@ -1,5 +1,5 @@
 import *  as BOOKS from "./translations_books.json"
-import languages from "../languages.json"
+import languages from "./languages.json"
 import './Profile'
 import "./loading.imba"
 import "./downloads.imba"
@@ -948,7 +948,7 @@ export tag bible-reader
 		let query = cleanString(search.search_input)
 
 		# If the query is long enough and it is different from the previous query -- do the search again.
-		if query.length > 1 && (search.search_result_header != query || !search.search_div)
+		if query.length > 2 && (search.search_result_header != query || !search.search_div)
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -2282,10 +2282,10 @@ export tag bible-reader
 					<svg.cbtn @click=toggleParallelMode(yes) [padding: 8px] viewBox="0 0 400 338">
 						<title> data.lang.parallel
 						<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
-				<.nighttheme [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
+				<.nighttheme.popup_menu_box [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
 					settings.font.name
-					<.languages .show_languages=show_fonts>
+					<.popup_menu [l:0] .show_popup_menu=show_fonts>
 						for font in fonts
 							<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
 
@@ -2307,16 +2307,16 @@ export tag bible-reader
 						<title> data.lang.find_in_chapter
 						<path d=svg_paths.search>
 					data.lang.find_in_chapter
-				<.nighttheme.flex @click=(do data.show_languages = !data.show_languages)>
+				<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
 					data.lang.language
 					<button.change_language> currentLanguage!
-					<.languages .show_languages=data.show_languages>
-						<button.butt @click=(do data.setLanguage('ukr'))> "Українська"
-						<button.butt @click=(do data.setLanguage('ru'))> "Русский"
-						<button.butt @click=(do data.setLanguage('eng'))> "English"
-						<button.butt @click=(do data.setLanguage('de'))> "Deutsch"
-						<button.butt @click=(do data.setLanguage('pt'))> "Portuguese"
-						<button.butt @click=(do data.setLanguage('es'))> "Español"
+					<.popup_menu [l:0] .show_popup_menu=data.show_languages>
+						<button.butt .active_butt=('ukr'==data.language) @click=(do data.setLanguage('ukr'))> "Українська"
+						<button.butt .active_butt=('ru'==data.language) @click=(do data.setLanguage('ru'))> "Русский"
+						<button.butt .active_butt=('eng'==data.language) @click=(do data.setLanguage('eng'))> "English"
+						<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
+						<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
+						<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
 					data.lang.parallel_synch
 					<p.checkbox> <span>
@@ -2363,14 +2363,14 @@ export tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
-						<a target="_blank" rel="noreferrer" href="https://v2.imba.io"> "Imba"
+						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©",	<time dateTime='2020-07-26T12:11'> "2019"
+						"©", <time dateTime='2021-04-11T12:11'> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
@@ -2516,7 +2516,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none] bind=search.search_input type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
 
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search
@@ -2573,15 +2573,17 @@ export tag bible-reader
 								<title> data.lang.addcollection
 								<line x1="0" y1="10" x2="20" y2="10">
 								<line x1="10" y1="0" x2="10" y2="20">
-					<.mark_grid>
+					<.mark_grid [pt:0 pb:8px]>
 						if addcollection
 							<input#newcollectioninput.newcollectioninput bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 						elif categories.length
-							for category in categories
+							for category, index in categories
 								if category
 									<p.collection
 									.add_new_collection=(choosen_categories.find(do |element| return element == category))
 									@click=addNewCollection(category)> category
+								if Math.floor(categories.length / 2) == index
+									<br>
 							<div[min-width: 16px]>
 						else
 							<p[m: 8px auto].collection.add_new_collection @click=addCollection> data.lang.addcollection
@@ -2688,14 +2690,12 @@ export tag bible-reader
 							<title> data.lang.create
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 					if store.show_color_picker
-						<>
-							if window.innerWidth < 640
-								<svg.close_colorPicker
-									@click=(do store.show_color_picker = !store.show_color_picker)
-									xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
-								>
-									<title> data.lang.close
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+						<svg.close_colorPicker
+							@click=(do store.show_color_picker = !store.show_color_picker)
+							xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
+						>
+							<title> data.lang.close
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 						<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle>  data.lang.canvastitle
 
 			<section.history.filters .show_history=show_history>
