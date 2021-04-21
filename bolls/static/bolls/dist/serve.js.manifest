@@ -339,21 +339,21 @@
     "$$36$$",
     "$$37$$"
   ],
-  "hash": "ZRBDF1FH",
+  "hash": "JOPRRSK1",
   "originalPath": "public/app/index.__dist__.html"
 },
 "$$33$$":{
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 616813,
+  "bytes": 616632,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "BAMMB9OE",
+  "hash": "GX4HMZCS",
   "originalPath": "public/__assets__/app/client.__dist__.js.map"
 },
 "$$34$$":{
@@ -407,7 +407,7 @@
     ],
     [
       "$$51$$",
-      4441
+      4435
     ],
     [
       "$$52$$",
@@ -459,7 +459,7 @@
     ],
     [
       "$$64$$",
-      9444
+      9449
     ],
     [
       "$$65$$",
@@ -471,7 +471,7 @@
     ],
     [
       "$$67$$",
-      22281
+      22276
     ],
     [
       "$$68$$",
@@ -479,7 +479,7 @@
     ],
     [
       "$$69$$",
-      21316
+      21318
     ],
     [
       "$$70$$",
@@ -487,7 +487,7 @@
     ],
     [
       "$$71$$",
-      6812
+      6811
     ],
     [
       "$$72$$",
@@ -507,7 +507,7 @@
     ],
     [
       "$$76$$",
-      8796
+      8805
     ],
     [
       "$$77$$",
@@ -519,7 +519,7 @@
     ],
     [
       "$$79$$",
-      185134
+      185694
     ],
     [
       "$$80$$",
@@ -538,16 +538,16 @@
       1463
     ]
   ],
-  "bytes": 687455,
+  "bytes": 688019,
   "source": "$$39$$",
   "css": "$$83$$",
   "map": "$$33$$",
   "_": "output",
   "path": "public/__assets__/app/client.js",
-  "url": "/__assets__/app/client.js?v=BAMMB9OE",
+  "url": "/__assets__/app/client.js?v=GX4HMZCS",
   "type": "js",
   "dependencies": [],
-  "hash": "BAMMB9OE",
+  "hash": "GX4HMZCS",
   "originalPath": "public/__assets__/app/client.__dist__.js"
 },
 "$$35$$":{
@@ -567,7 +567,7 @@
     ],
     [
       "$$87$$",
-      9310
+      9381
     ],
     [
       "$$88$$",
@@ -614,14 +614,14 @@
       0
     ]
   ],
-  "bytes": 16234,
+  "bytes": 16305,
   "source": "$$99$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
-  "url": "/__assets__/app/client.css?v=2OWMAWVJ",
+  "url": "/__assets__/app/client.css?v=0TCARKCI",
   "type": "css",
   "dependencies": [],
-  "hash": "2OWMAWVJ",
+  "hash": "0TCARKCI",
   "originalPath": "public/__assets__/app/client.__dist__.css"
 },
 "$$36$$":{
@@ -962,13 +962,13 @@
   "path": "app/views/thanks_to.imba"
 },
 "$$78$$":{
-  "bytes": 10389,
+  "bytes": 10471,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
 },
 "$$79$$":{
-  "bytes": 648742,
+  "bytes": 649238,
   "imports": [
     "$$58$$",
     "$$62$$",
@@ -1015,7 +1015,7 @@
   "inputs": [
     [
       "$$78$$",
-      9310
+      9381
     ],
     [
       "$$80$$",
@@ -1046,14 +1046,14 @@
       1852
     ]
   ],
-  "bytes": 16234,
+  "bytes": 16305,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
-  "url": "/__assets__/app/client.css?v=FRE7GRIA",
+  "url": "/__assets__/app/client.css?v=OBDMEZTX",
   "type": "css",
   "dependencies": [],
-  "hash": "FRE7GRIA",
+  "hash": "OBDMEZTX",
   "originalPath": "public/__assets__/app/client.__dist__.css"
 },
 "$$84$$":{
@@ -1075,7 +1075,7 @@
   "path": "styles:app/state.imba"
 },
 "$$87$$":{
-  "bytes": 10389,
+  "bytes": 10471,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1203,7 +1203,7 @@
   "path": "app/state.imba"
 },
 "$$103$$":{
-  "bytes": 648742,
+  "bytes": 649238,
   "imports": [
     "$$116$$",
     "$$114$$",
@@ -1421,8 +1421,8 @@
   },
   "urls": {
     "/__assets__/app/client.js.map": "$$33$$",
-    "/__assets__/app/client.js?v=BAMMB9OE": "$$34$$",
-    "/__assets__/app/client.css?v=2OWMAWVJ": "$$35$$"
+    "/__assets__/app/client.js?v=GX4HMZCS": "$$34$$",
+    "/__assets__/app/client.css?v=0TCARKCI": "$$35$$"
   },
   "main": "$$31$$",
   "assets": [
@@ -1435,5 +1435,5 @@
   "path": "serve.js.manifest",
   "srcdir": "../..",
   "outdir": "..",
-  "hash": "ADD7MQGG"
+  "hash": "BQE5SLZQ"
 }

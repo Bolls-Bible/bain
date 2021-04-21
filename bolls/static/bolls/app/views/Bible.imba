@@ -98,6 +98,7 @@ let store =
 	highlight_color: ''
 	show_color_picker: no
 	note: ''
+	collections_search: ''
 
 let page_search =
 	d: no
@@ -510,6 +511,7 @@ export tag bible-reader
 		clearSpace!
 		window.on_pops_tate = no
 		setTimeout(&, 100) do
+			chapter_headers.fontsize1 = 2
 			$firstparallel.scrollTo(0,0)
 			scrollTo(0,0)
 
@@ -523,23 +525,6 @@ export tag bible-reader
 			changeParallel = no
 
 		if !(translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter) || !parallel_verses.length || !settingsp.display
-			# if !window.on_pops_tate && verses
-			# 	window.history.pushState({
-			# 			translation: settings.translation,
-			# 			book: settings.book,
-			# 			chapter: settings.chapter,
-			# 			verse: settings.verse,
-			# 			parallel: yes,
-			# 			parallel_display: settingsp.display
-			# 			parallel-translation: translation,
-			# 			parallel-book: book,
-			# 			parallel-chapter: chapter,
-			# 			parallel-verse: verse,
-			# 		},
-			# 		0,
-			# 		null
-			# 	)
-			# window.on_pops_tate = no
 			if chronorder
 				chronorder = !chronorder
 				toggleChronorder!
@@ -576,7 +561,9 @@ export tag bible-reader
 			setCookie('parallel_chapter', chapter)
 			if verse
 				findVerse("p{verse}")
-			setTimeout(&, 100) do $secondparallel.scrollTo(0,0)
+			setTimeout(&, 100) do
+				chapter_headers.fontsize2 = 2
+				$secondparallel.scrollTo(0,0)
 
 	def theChapterExistInThisTranslation translation, book, chapter
 		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
@@ -2577,13 +2564,12 @@ export tag bible-reader
 						if addcollection
 							<input#newcollectioninput.newcollectioninput bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 						elif categories.length
-							for category, index in categories
-								if category
-									<p.collection
-									.add_new_collection=(choosen_categories.find(do |element| return element == category))
-									@click=addNewCollection(category)> category
-								if Math.floor(categories.length / 2) == index
-									<br>
+							<>
+								if categories.length > 8
+									<input.search placeholder=data.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
+							<>
+								for category in categories.filter(do(el) return el.toLowerCase!.indexOf(store.collections_search.toLowerCase!) > -1)
+									<p.collection .add_new_collection=(choosen_categories.find(do |element| return element == category)) @click=addNewCollection(category)> category
 							<div[min-width: 16px]>
 						else
 							<p[m: 8px auto].collection.add_new_collection @click=addCollection> data.lang.addcollection
