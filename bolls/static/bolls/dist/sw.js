@@ -1,4 +1,4 @@
-var CACHE_NAME = "v2.1.14";
+var CACHE_NAME = "v2.1.15";
 var urlsToCache = [
 	"/",
 	"/static/bolls/dist/public/__assets__/app/client.js",
@@ -15,7 +15,7 @@ self.addEventListener('install', function (event) {
 	event.waitUntil(
 		caches.open(CACHE_NAME)
 			.then(function (cache) {
-				consoles.log('👷 Opened cache ', CACHE_NAME);
+				consoles.log('👷', 'Opened cache ', CACHE_NAME);
 				return cache.addAll(urlsToCache);
 			})
 	);
