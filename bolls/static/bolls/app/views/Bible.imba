@@ -252,8 +252,7 @@ export tag bible-reader
 				setCookie("menuicons", menuicons)
 
 			elif e.code == "KeyY" && e.ctrlKey
-				fixdrawers = !fixdrawers
-				setCookie("fixdrawers", fixdrawers)
+				fixDrawers!
 
 			elif e.code == "ArrowRight" && e.altKey
 				e.preventDefault()
@@ -1638,6 +1637,10 @@ export tag bible-reader
 		settings.verse_break = !settings.verse_break
 		setCookie('verse_break', settings.verse_break)
 
+	def fixDrawers
+		fixdrawers = !fixdrawers
+		setCookie("fixdrawers", fixdrawers)
+
 	def translationFullName tr
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
@@ -2027,14 +2030,14 @@ export tag bible-reader
 	def install
 		data.deferredPrompt.prompt()
 
-	def settingsIconTransform
-		if fixdrawers && window.innerWidth > 1024
+	def settingsIconTransform huh
+		if (fixdrawers && window.innerWidth > 1024) or huh
 			return -(300 + settings_menu_left)
 		else
 			return 0
 
-	def bibleIconTransform
-		if fixdrawers && window.innerWidth > 1024
+	def bibleIconTransform huh
+		if (fixdrawers && window.innerWidth > 1024) or huh
 			return 300 + bible_menu_left
 		else
 			return 0
@@ -2042,7 +2045,7 @@ export tag bible-reader
 
 	css
 		height: 100vh
-		display: block
+		display: flex
 		ofy: auto
 		pos: relative
 		transition-property@force: none
@@ -2120,6 +2123,10 @@ export tag bible-reader
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
+			<div[w:32px h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:2] @click=toggleBibleMenu>
+				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
+					<title> data.lang.change_book
+					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 			<main.main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
@@ -2192,6 +2199,11 @@ export tag bible-reader
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
+
+			<div[w:32px h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:2] @click=toggleSettingsMenu>
+				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
+					<title> data.lang.other
+					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{MOBILE_PLATFORM ? settings_menu_left : settings_menu_left ? settings_menu_left : settings_menu_left + 12}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
@@ -2304,17 +2316,20 @@ export tag bible-reader
 						<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
 						<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
-				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch() .checkbox_turned=settings.parallel_synch>
+				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch .checkbox_turned=settings.parallel_synch>
 					data.lang.parallel_synch
 					<p.checkbox> <span>
-				<button.nighttheme.parent_checkbox.flex @click=toggleVersePicker() .checkbox_turned=settings.verse_picker>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVersePicker .checkbox_turned=settings.verse_picker>
 					data.lang.verse_picker
 					<p.checkbox> <span>
-				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions() .checkbox_turned=settings.transitions>
+				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
 					data.lang.transitions
 					<p.checkbox> <span>
-				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak() .checkbox_turned=settings.verse_break>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
+					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=fixDrawers .checkbox_turned=fixdrawers>
+					"Kakamalaka"
 					<p.checkbox> <span>
 
 				if window.navigator.onLine

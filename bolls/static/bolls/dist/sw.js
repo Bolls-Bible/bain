@@ -1,4 +1,4 @@
-var CACHE_NAME = "v2.1.13";
+var CACHE_NAME = "v2.1.14";
 var urlsToCache = [
 	"/",
 	"/static/bolls/dist/public/__assets__/app/client.js",
@@ -15,7 +15,7 @@ self.addEventListener('install', function (event) {
 	event.waitUntil(
 		caches.open(CACHE_NAME)
 			.then(function (cache) {
-				console.log('👷', 'Opened cache ', CACHE_NAME);
+				consoles.log('👷 Opened cache ', CACHE_NAME);
 				return cache.addAll(urlsToCache);
 			})
 	);
@@ -49,7 +49,7 @@ self.addEventListener('activate', (event) => {
 				}
 			})
 		)).then(() => {
-			console.log('👷 SW is activated and now ready to handle fetches!. ', CACHE_NAME);
+			console.log('👷 activated!', CACHE_NAME);
 			return self.clients.claim();
 		})
 	);

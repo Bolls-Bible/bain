@@ -402,8 +402,8 @@ body {
 }
 
 .main {
-  width: 100%;
-  padding: 4vw 3vw calc(4vw + 32px);
+  width: calc(100% - 64px);
+  padding: 4vw 0 calc(4vw + 32px);
   color: var(--text-color);
   margin: auto;
   word-break: break-word;
@@ -417,7 +417,7 @@ body {
 
 .parallel_text {
   display: flex;
-  padding: 0 2vw;
+  padding: 0;
   grid-gap: 1vw;
   height: 100vh;
 }

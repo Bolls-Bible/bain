@@ -339,21 +339,21 @@
     "$$36$$",
     "$$37$$"
   ],
-  "hash": "JOPRRSK1",
+  "hash": "CYRQAPFU",
   "originalPath": "public/app/index.__dist__.html"
 },
 "$$33$$":{
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 616632,
+  "bytes": 618833,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "GX4HMZCS",
+  "hash": "WG4QVIWH",
   "originalPath": "public/__assets__/app/client.__dist__.js.map"
 },
 "$$34$$":{
@@ -439,7 +439,7 @@
     ],
     [
       "$$59$$",
-      12336
+      12492
     ],
     [
       "$$60$$",
@@ -451,7 +451,7 @@
     ],
     [
       "$$62$$",
-      247745
+      251318
     ],
     [
       "$$63$$",
@@ -519,7 +519,7 @@
     ],
     [
       "$$79$$",
-      185694
+      188211
     ],
     [
       "$$80$$",
@@ -538,16 +538,16 @@
       1463
     ]
   ],
-  "bytes": 688019,
+  "bytes": 694265,
   "source": "$$39$$",
   "css": "$$83$$",
   "map": "$$33$$",
   "_": "output",
   "path": "public/__assets__/app/client.js",
-  "url": "/__assets__/app/client.js?v=GX4HMZCS",
+  "url": "/__assets__/app/client.js?v=WG4QVIWH",
   "type": "js",
   "dependencies": [],
-  "hash": "GX4HMZCS",
+  "hash": "WG4QVIWH",
   "originalPath": "public/__assets__/app/client.__dist__.js"
 },
 "$$35$$":{
@@ -567,7 +567,7 @@
     ],
     [
       "$$87$$",
-      9381
+      10038
     ],
     [
       "$$88$$",
@@ -614,14 +614,14 @@
       0
     ]
   ],
-  "bytes": 16305,
+  "bytes": 16962,
   "source": "$$99$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
-  "url": "/__assets__/app/client.css?v=0TCARKCI",
+  "url": "/__assets__/app/client.css?v=MVNDEMJK",
   "type": "css",
   "dependencies": [],
-  "hash": "0TCARKCI",
+  "hash": "MVNDEMJK",
   "originalPath": "public/__assets__/app/client.__dist__.css"
 },
 "$$36$$":{
@@ -819,7 +819,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$59$$":{
-  "bytes": 12789,
+  "bytes": 12983,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -841,7 +841,7 @@
   "path": "app/state.imba"
 },
 "$$62$$":{
-  "bytes": 301480,
+  "bytes": 307247,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -962,13 +962,13 @@
   "path": "app/views/thanks_to.imba"
 },
 "$$78$$":{
-  "bytes": 10471,
+  "bytes": 11204,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
 },
 "$$79$$":{
-  "bytes": 649238,
+  "bytes": 656251,
   "imports": [
     "$$58$$",
     "$$62$$",
@@ -1015,7 +1015,7 @@
   "inputs": [
     [
       "$$78$$",
-      9381
+      10038
     ],
     [
       "$$80$$",
@@ -1046,14 +1046,14 @@
       1852
     ]
   ],
-  "bytes": 16305,
+  "bytes": 16962,
   "source": "$$39$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
-  "url": "/__assets__/app/client.css?v=OBDMEZTX",
+  "url": "/__assets__/app/client.css?v=4DUXRJXA",
   "type": "css",
   "dependencies": [],
-  "hash": "OBDMEZTX",
+  "hash": "4DUXRJXA",
   "originalPath": "public/__assets__/app/client.__dist__.css"
 },
 "$$84$$":{
@@ -1075,7 +1075,7 @@
   "path": "styles:app/state.imba"
 },
 "$$87$$":{
-  "bytes": 10471,
+  "bytes": 11204,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1203,7 +1203,7 @@
   "path": "app/state.imba"
 },
 "$$103$$":{
-  "bytes": 649238,
+  "bytes": 656251,
   "imports": [
     "$$116$$",
     "$$114$$",
@@ -1301,7 +1301,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$114$$":{
-  "bytes": 12789,
+  "bytes": 12983,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1315,7 +1315,7 @@
   "path": "app/langdata.imba"
 },
 "$$116$$":{
-  "bytes": 301480,
+  "bytes": 307247,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1421,8 +1421,8 @@
   },
   "urls": {
     "/__assets__/app/client.js.map": "$$33$$",
-    "/__assets__/app/client.js?v=GX4HMZCS": "$$34$$",
-    "/__assets__/app/client.css?v=0TCARKCI": "$$35$$"
+    "/__assets__/app/client.js?v=WG4QVIWH": "$$34$$",
+    "/__assets__/app/client.css?v=MVNDEMJK": "$$35$$"
   },
   "main": "$$31$$",
   "assets": [
@@ -1435,5 +1435,5 @@
   "path": "serve.js.manifest",
   "srcdir": "../..",
   "outdir": "..",
-  "hash": "BQE5SLZQ"
+  "hash": "UB5BICSS"
 }

@@ -19,11 +19,9 @@ UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
 YLT/24/36/3/
 
-UPDATE bolls_verses SET text = ('if so be the house of Israel do hear all the evil that I am thinking of doing to them, so that they turn back each from his evil way, and I have been propitious to their iniquity, and to their sin.''') where translation = 'YLT' and  book = 24 and chapter = 36 and verse = 3;
-
 
 ----------- INSERTING OF THE TEXT TO THE DB
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/TB.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NTV.csv' DELIMITER '|' CSV HEADER;
 
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='HOM' and book = 72;
@@ -36,13 +34,7 @@ UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432    --username=postgres    --password    --dbname=bain
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/PDT.csv' DELIMITER '|' CSV HEADER;
-
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/NRT_verses.csv' DELIMITER '|' CSV HEADER;
-
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/lost_books(20,22).csv' DELIMITER '|' CSV HEADER;
-
-\copy bolls_bookmarks(id,color,note,user_id,verse_id,date) FROM '/home/b/Downloads/bolls_bookmarks.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bibles/NTV.csv' DELIMITER '|' CSV HEADER;
 
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bibles/verses.csv' DELIMITER '|' CSV HEADER;
 
