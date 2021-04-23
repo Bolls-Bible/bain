@@ -402,7 +402,7 @@ body {
 }
 
 .main {
-  width: calc(100% - 64px);
+  width: calc(100% - max(32px, min(64px, 4vw)));
   padding: 4vw 0 calc(4vw + 32px);
   color: var(--text-color);
   margin: auto;

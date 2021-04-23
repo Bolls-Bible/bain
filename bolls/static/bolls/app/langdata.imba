@@ -75,6 +75,7 @@ export const english = {
 	"faqmsg": "Here you can find answers to FAQ",
 	"filter_name": "Filter:",
 	"find_in_chapter": "Find in chapter",
+	"fixdrawers": "Fix drawers"
 	"help": "Help",
 	"history": "History",
 	"ios_install": "To install the app on iOS follow the next steps",
@@ -232,6 +233,7 @@ export const ukrainian = {
 	"faqmsg": "Тут ви зможете знайти відповіді на питання що часто задаються",
 	"filter_name": "Фільтр:",
 	"find_in_chapter": "Шукати в главі",
+	"fixdrawers": "Закріпити панелі"
 	"help": "Допомога",
 	"history": "Історія",
 	"ios_install": "Щоб встановити додаток на iOS слідуйте за наступними інструкціями",
@@ -389,6 +391,7 @@ export const russian = {
 	"faqmsg": "Здесь вы сможете найти ответы на часто задаваемые вопросы",
 	"filter_name": "Фильтр:",
 	"find_in_chapter": "Искать во главе",
+	"fixdrawers": "Закрепить панели"
 	"help": "Помощь",
 	"history": "История",
 	"ios_install": "Чтобы установить приложение на iOS следуйте этим инструкциям",
@@ -546,6 +549,7 @@ export const portuguese = {
 	"faqmsg": "Aqui você pode encontrar respostas para as perguntas frequentes",
 	"filter_name": "Filtro:",
 	"find_in_chapter": "Localizar no capítulo",
+	"fixdrawers": "Consertar gavetas"
 	"help": "Ajuda",
 	"history": "Historía",
 	"ios_install": "Para instalar o aplicativo no iOS, siga as próximas etapas",
@@ -703,6 +707,7 @@ export const espanol = {
 	"faqmsg": "Aquí puedes encontrar respuestas para las preguntas frecuentes",
 	"filter_name": "Filtro:",
 	"find_in_chapter": "Encuentra en el capítulo",
+	"fixdrawers": "Arreglar cajones"
 	"help": "Ayuda",
 	"history": "Historial",
 	"ios_install": "Para instalar la aplicación en iOS siga los siguientes pasos",
@@ -861,6 +866,7 @@ export const german = {
 	"feedback": "Feedback",
 	"filter_name": "Namensfilter:",
 	"find_in_chapter": "Finden im Kapitel",
+	"fixdrawers": "Schubladen reparieren"
 	"help": "Hilfen",
 	"history": "History",
 	"ios_install": "Befolgen Sie die nächsten Schritte, um die App unter iOS zu installieren",
