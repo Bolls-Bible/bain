@@ -1677,13 +1677,6 @@ address a:hover {
   color: var(--accent-hover-color);
 }
 
-.show {
-  visibility: visible;
-  opacity: 1;
-  transform: none;
-  z-index: auto;
-}
-
 @media screen and (min-width: 1600px) {
   .search_results {
     right: calc((100vw - 60em) / 2);
@@ -1941,6 +1934,13 @@ editing-area p {
   padding: 8px 0px 4px;
 }
 
+
+.show {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  z-index: auto;
+}
 
 @media all and (display-mode: standalone) {
   #pwa {

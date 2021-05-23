@@ -9,6 +9,7 @@ import "./compare-draggable-item"
 import './search-text-as-html'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
+import {scrollToY} from './smooth_scrolling'
 
 let html = document.documentElement
 
@@ -492,7 +493,6 @@ export tag bible-reader
 					verses = await loadData(url)
 				loading = no
 				imba.commit()
-				if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 
 			catch error
 				loading = no
@@ -511,8 +511,9 @@ export tag bible-reader
 		window.on_pops_tate = no
 		setTimeout(&, 100) do
 			chapter_headers.fontsize1 = 2
-			$firstparallel.scrollTo(0,0)
-			scrollTo(0,0)
+			scrollToY($firstparallel,0)
+			scrollToY(self, 0)
+		if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 
 
 	def getParallelText translation, book, chapter, verse, caller
@@ -542,8 +543,6 @@ export tag bible-reader
 					parallel_verses = await data.getChapterFromDB(translation, book, chapter, verse)
 				else
 					parallel_verses = await loadData(url)
-				if !window.on_pops_tate && verses && !verse && settingsp.display
-					show_parallel_verse_picker = true
 				imba.commit()
 			catch error
 				console.error('Error: ', error)
@@ -562,7 +561,9 @@ export tag bible-reader
 				findVerse("p{verse}")
 			setTimeout(&, 100) do
 				chapter_headers.fontsize2 = 2
-				$secondparallel.scrollTo(0,0)
+				scrollToY($secondparallel,0)
+			if !window.on_pops_tate && verses && !verse && settingsp.display
+				show_parallel_verse_picker = true
 
 	def theChapterExistInThisTranslation translation, book, chapter
 		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
@@ -581,7 +582,7 @@ export tag bible-reader
 				if settingsp.display
 					verse.parentNode.parentNode.scroll({left:0, top: verse.offsetTop - (window.innerHeight * 0.05), behavior: 'smooth'})
 				else
-					scrollTo(0, verse.offsetTop - (window.innerHeight * 0.05))
+					scrollToY(self, verse.offsetTop - (window.innerHeight * 0.05))
 				if highlight then highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse, highlight)
 
@@ -1226,7 +1227,7 @@ export tag bible-reader
 				const verse = document.getElementById(id)
 				const top_offset_of_verse = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - scrollTop
 				if top_offset_of_verse > window.innerHeight
-					scrollTo(0, scrollTop - (window.innerHeight - top_offset_of_verse))
+					scrollToY(self, scrollTop - (window.innerHeight - top_offset_of_verse))
 			else
 				let verse
 				if parallel == 'first'
@@ -1876,7 +1877,7 @@ export tag bible-reader
 		toggleBibleMenu()
 
 	def changeHeadersSizeOnScroll e
-		if e.target.id == 'firstparallel'
+		if e.target.classList.contains('firstparallel')
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
 				chapter_headers.fontsize1 = 12 / settings.font.size
@@ -2744,19 +2745,24 @@ export tag bible-reader
 
 
 			if settings.verse_picker
-				<section.verse_picker.filters [z-index: 100] .show=(show_verse_picker || show_parallel_verse_picker)>
+				# <p> typeof show_verse_picker, show_verse_picker
+				# if show_verse_picker
+				# 	window.alert('It is true')
+				<section.verse_picker.filters .show=show_verse_picker||show_parallel_verse_picker [z-index: 100]>
 					<.flex>
 						<h1[margin: 0 auto;font-size: 1.3em; line-height: 1;]> data.lang.choose_verse
-						<svg[m: 0 8px].close_search @click=hideVersePicker() viewBox="0 0 20 20">
+						<svg[m: 0 8px].close_search @click=hideVersePicker viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<[m: 0].list_of_chapters.show_list_of_chapters>
 						if show_verse_picker
-							for i in [0 ... verses.length]
-								<a.chapter_number @click=goToVerse(i + 1)> i + 1
+							<>
+								for i in [0 ... verses.length]
+									<a.chapter_number @click=goToVerse(i + 1)> i + 1
 						elif show_parallel_verse_picker
-							for j in [0 ... parallel_verses.length]
-								<a.chapter_number @click=goToVerse('p' + (j + 1))> j + 1
+							<>
+								for j in [0 ... parallel_verses.length]
+									<a.chapter_number @click=goToVerse('p' + (j + 1))> j + 1
 
 
 			if welcome != 'false'

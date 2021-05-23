@@ -5,7 +5,6 @@ import './views/downloads'
 import {Notifications} from './views/Notifications'
 import {verse-navigator, chapter-navigator} from './route-navigators'
 
-
 let state = new State()
 
 tag the-app
