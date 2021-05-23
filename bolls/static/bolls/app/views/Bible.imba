@@ -2119,7 +2119,7 @@ export tag bible-reader
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
-				<svg#close_book_search @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
+				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
@@ -2350,7 +2350,7 @@ export tag bible-reader
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
 					data.lang.help
-				<a#animated-heart.help @click=turnSupport()>
+				<a.help @click=turnSupport() id="animated-heart">
 					<svg.helpsvg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
 						<title> data.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
@@ -2500,7 +2500,7 @@ export tag bible-reader
 							<title> data.lang.create
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 					unless isNoteEmpty()
-						<p#note_placeholder> data.lang.write_something_awesone
+						<p id="note_placeholder"> data.lang.write_something_awesone
 					<rich-text-editor bind=store dir="auto">
 				else
 					if search_verses.length
@@ -2530,7 +2530,7 @@ export tag bible-reader
 								<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
 					if search.search_result_header
-						<article#search_body.search_body [position:relative] @scroll=searchPagination>
+						<article.search_body id="search_body" [position:relative] @scroll=searchPagination>
 							for rect in page_search.rects
 								<div.{rect.class}[top: {rect.top}px left: {rect.left}px width: {rect.width}px height: {rect.height}px]>
 
@@ -2578,7 +2578,7 @@ export tag bible-reader
 								<line x1="10" y1="0" x2="10" y2="20">
 					<.mark_grid [pt:0 pb:8px]>
 						if addcollection
-							<input#newcollectioninput.newcollectioninput bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
+							<input.newcollectioninput id="newcollectioninput" bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 						elif categories.length
 							<>
 								if categories.length > 8
@@ -2665,7 +2665,7 @@ export tag bible-reader
 										>
 									<title> data.lang.delete
 									<path d=svg_paths.close>
-					<#addbuttons>
+					<div id="addbuttons">
 						if show_delete_bookmark then <svg.close_search @click=deleteBookmarks(choosenid) viewBox="0 0 12 16" alt=data.lang.delete>
 							<title> data.lang.delete
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
@@ -2725,7 +2725,7 @@ export tag bible-reader
 
 
 			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
-				<section#navigation>
+				<section id="navigation">
 					<[l:0 transform: translateY({menu_icons_transform}%) translateX({bibleIconTransform!}px)] @click=toggleBibleMenu>
 						<svg viewBox="0 0 16 16">
 							<title> data.lang.change_book
@@ -2760,15 +2760,15 @@ export tag bible-reader
 
 
 			if welcome != 'false'
-				<section#welcome.history.filters [right: 3vw top: auto bottom: 2% visibility: visible transform: none]>
+				<section.history.filters id="welcome" [right: 3vw top: auto bottom: 2% visibility: visible transform: none]>
 					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
 					<p> data.lang.welcome_msg, <span.emojify> ' 😉'
 					<button @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
 
 
 			if page_search.d
-				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'}]>
-					<input#pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.find_in_chapter>
+				<section id="page_search" [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'}]>
+					<input.search id="pagesearch" bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.find_in_chapter>
 					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
 						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>
 							<title> data.lang.prev

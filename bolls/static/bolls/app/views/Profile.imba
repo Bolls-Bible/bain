@@ -339,7 +339,7 @@ export tag profile-page
 
 
 
-			<div#daf[visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}]>
+			<div id="daf" [visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}]>
 				<section.search_results .show_search_results=(show_options_of == "delete_form" || show_options_of == "edit_form")>
 					if show_options_of == "delete_form"
 						<form action="/delete-my-account/">
@@ -356,7 +356,7 @@ export tag profile-page
 							else
 								<button.change_language disabled> data.lang.i_understand
 					else
-						<article#edit_account>
+						<article id="edit_account">
 							<header.search_hat>
 								<h1[margin:auto]> data.lang.edit_account
 								<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
