@@ -1,3 +1,9 @@
+----------- INSERTING OF THE TEXT TO THE DB
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NVIPT.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NVT.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NTLH.csv' DELIMITER '|' CSV HEADER;
+
+
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/w.csv' DELIMITER ',' CSV HEADER;
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/LUT.csv' DELIMITER '	' CSV HEADER;
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/meng.csv' DELIMITER '|' CSV HEADER;
@@ -19,10 +25,6 @@ UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
 YLT/24/36/3/
 
-
------------ INSERTING OF THE TEXT TO THE DB
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NTV.csv' DELIMITER '|' CSV HEADER;
-
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='HOM' and book = 72;
 
@@ -34,9 +36,9 @@ UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432    --username=postgres    --password    --dbname=bain
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bibles/NTV.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NVIPT.csv' DELIMITER '|' CSV HEADER;
 
-\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bibles/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/verses.csv' DELIMITER '|' CSV HEADER;
 
 
 

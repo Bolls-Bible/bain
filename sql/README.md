@@ -9,7 +9,7 @@
  - Than add it to local PosqgreSQL db called bain. The next commant may be used:
  ```sql
  psql bain
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/{TRANSLATION}.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/path_to_Bible/{TRANSLATION}.csv' DELIMITER '|' CSV HEADER;
 
  ```
  - Generate array of books with the structure like in translation_books.json inside of components folder.

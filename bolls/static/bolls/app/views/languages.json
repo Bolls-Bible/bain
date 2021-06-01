@@ -212,6 +212,24 @@
 				"full_name": "O Livro",
 				"info": "",
 				"updated": 1591781197652
+			},
+			{
+				"short_name": "NVIPT",
+				"full_name": "Nova Versão Internacional",
+				"info": "https://pt.wikipedia.org/wiki/Nova_Vers%C3%A3o_Internacional",
+				"updated": 1591781197652
+			},
+			{
+				"short_name": "NVT",
+				"full_name": "Bíblia Sagrada, Nova Versão Transformadora, 2016",
+				"info": "https://pt.wikipedia.org/wiki/Nova_Vers%C3%A3o_Transformadora",
+				"updated": 1591781197652
+			},
+			{
+				"short_name": "NTLH",
+				"full_name": "Nova Tradução na Linguagem de Hoje, 2000",
+				"info": "https://pt.wikipedia.org/wiki/Nova_Tradu%C3%A7%C3%A3o_na_Linguagem_de_Hoje",
+				"updated": 1591781197652
 			}
 		]
 	},
