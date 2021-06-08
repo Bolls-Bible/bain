@@ -758,20 +758,6 @@ aside {
   background-color: var(--background-color);
 }
 
-.settings_header {
-  font-size: 24px;
-  text-align: center;
-  cursor: default;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  --fill-on-hover: var(--text-color);
-}
-
-.settings_header svg:hover {
-  --fill-on-hover: var(--accent-hover-color);
-}
-
 .current_accent {
   cursor: pointer;
   height: 1em;
@@ -795,19 +781,19 @@ aside {
 
 .accents {
   margin-right: 1em;
-  margin-top: -1em;
+  margin-top: -28px;
   border-radius: 23%;
   display: flex;
-  flex-direction: column;
   cursor: pointer;
   visibility: hidden;
   opacity: 0;
   transform: scale(0.8);
-  transform-origin: top right;
+  transform-origin: center right;
 }
 
 .show_accents {
-  margin-top: 2px;
+  margin-right: 1em;
+  margin-top: -32px;
   visibility: visible;
   opacity: 1;
   transform: scale(1);
@@ -817,13 +803,13 @@ aside {
   border-radius: 23%;
   height: 32px;
   width: 32px;
-  margin: 0 0 -32px;
+  margin: 0 2px 0;
   cursor: pointer;
   border: 1px solid var(--btn-bg-hover);
 }
 
 .show_accents .accent {
-  margin: 2px 0;
+  margin: 0 -34px 0;
 }
 
 .nighttheme {
@@ -967,11 +953,6 @@ img,
 .search:focus {
   opacity: 1;
   background: var(--btn-bg-hover);
-}
-
-.profile_in_settings {
-  display: flex;
-  margin: 24px 0;
 }
 
 .prof_btn {

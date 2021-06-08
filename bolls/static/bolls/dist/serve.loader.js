@@ -154,7 +154,7 @@ var Asset = class {
     return stream.pipe(res);
   }
   toString() {
-    return this.url;
+    return this.url || this.absPath;
   }
 };
 var Manifest = class extends import_events.EventEmitter {
@@ -210,6 +210,9 @@ var Manifest = class extends import_events.EventEmitter {
       return import_path.default.resolve(this.cwd, path.path || path);
     }
     ;
+  }
+  resolveAssetPath(path) {
+    return import_path.default.resolve(this.outdir, path);
   }
   read(path) {
     return import_fs.default.readFileSync(this.resolve(path), "utf-8");

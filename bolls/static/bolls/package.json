@@ -2,16 +2,10 @@
   "name": "bolls",
   "scripts": {
     "start": "imba build --no-hashing -w ./app/index.html",
-    "build": "imba build --no-hashing ./app/index.html",
-    "babel-build": "npx babel dist/public/__assets__/app/client.js -o dist/public/__assets__/app/main.js",
-    "rename": "node -e \"require('fs').rename('dist/public/__assets__/app/main.js', 'dist/public/__assets__/app/client.js', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\"",
-    "b": "npm run build && npm run babel-build && npm run rename"
+    "build": "imba build --no-hashing ./app/index.html"
   },
   "dependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.2",
-    "@babel/preset-env": "^7.14.2",
-    "imba": "^2.0.0-alpha.129"
+    "imba": "^2.0.0-alpha.140"
   },
   "devDependencies": {
     "@types/node": "^14.14.37"

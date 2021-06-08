@@ -420,26 +420,26 @@ def userLogged(request):
     return JsonResponse({"username": ""}, safe=False)
 
 
-def robots(request):
-    filename = "robots.txt"
-    content = "User-agent: *\nDisallow: /admin/\nAllow: /\nSitemap: http://bolls.life/static/all_chapters.xml"
-    response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(
-        filename)
-    return response
+# def robots(request):
+#     filename = "robots.txt"
+#     content = "User-agent: *\nDisallow: /admin/\nAllow: /\nSitemap: http://bolls.life/static/all_chapters.xml"
+#     response = HttpResponse(content, content_type='text/plain')
+#     response['Content-Disposition'] = 'attachment; filename={0}'.format(
+#         filename)
+#     return response
 
 
 def api(request):
     return render(request, 'bolls/api.html')
 
 
-def sw(request):
-    # sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
-    sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
-    response = HttpResponse(content=sw_file)
-    response['Content-Type'] = 'application/javascript'
-    response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'
-    return response
+# def sw(request):
+#     # sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
+#     sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
+#     response = HttpResponse(content=sw_file)
+#     response['Content-Type'] = 'application/javascript'
+#     response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'
+#     return response
 
 
 def handler404(request, *args, **argv):

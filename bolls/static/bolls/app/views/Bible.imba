@@ -31,7 +31,7 @@ let MOBILE_PLATFORM = no
 if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
 	MOBILE_PLATFORM = yes
 
-const inner_height = window.innerHeight
+const outer_height = window.outerHeight
 let iOS_keaboard_height = 0
 
 let translations = []
@@ -327,7 +327,7 @@ export tag bible-reader
 		settings.filtered_books = filteredBooks('books')
 		getText(settings.translation, settings.book, settings.chapter)
 		if getCookie('parallel_display') == 'true'
-			toggleParallelMode("build")
+			toggleParallelMode!
 		if window.navigator.onLine
 			try
 				let userdata = await loadData("/user-logged/")
@@ -705,8 +705,8 @@ export tag bible-reader
 			focusInput()
 			return 0
 
-		if window.navigator.platform.charAt(0) == 'i' && inner_height > window.innerHeight
-			iOS_keaboard_height = inner_height - window.innerHeight
+		if window.navigator.platform.charAt(0) == 'i' && outer_height > window.outerHeight
+			iOS_keaboard_height = outer_height - window.outerHeight
 
 		# if the query is not an emty string lets clean it up for regex
 		let regex_compatible_query
@@ -870,8 +870,8 @@ export tag bible-reader
 			clearSpace()
 			popUp 'show_support'
 
-	def toggleParallelMode parallel
-		console
+	def toggleParallelMode
+		let parallel = !settingsp.display
 		if !parallel
 			settingsp.display = no
 			clearSpace()
@@ -2065,6 +2065,7 @@ export tag bible-reader
 			addNewCollection(store.newcollection)
 
 
+
 	def render
 		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
@@ -2208,26 +2209,41 @@ export tag bible-reader
 
 
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{MOBILE_PLATFORM ? settings_menu_left : settings_menu_left ? settings_menu_left : settings_menu_left + 12}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
-				<p.settings_header>
-					if data.getUserName()
-						<a.helpsvg route-to.exact='/profile/$'>
-							<svg.helpsvg viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
-								<title> data.getUserName()
-								<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
-									<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
-									<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
-
+				<p[fs:24px h:32px ta:center c:default d:flex jc:space-between ai:center $fill-on-hover:$text-color @hover:$accent-hover-color]>
 					data.lang.other
 					<.current_accent .enlarge_current_accent=show_accents>
 						<.visible_accent @click=(do show_accents = !show_accents)>
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
-				<button.btnbox.cbtn [w:100% h:46px bg:transparent @hover:$btn-bg-hover d:flex ai:center font:inherit p:0 12px] @click=turnGeneralSearch>
-					<svg.helpsvg[p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
+				<[d:flex m:24px 0 ai:center $fill-on-hover:$text-color @hover:$accent-hover-color]>
+					if data.getUserName()
+						<svg.helpsvg route-to.exact='/profile/$' viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+							<title> data.getUserName()
+							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
+								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
+								<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
+						<a.username [c:$fill-on-hover] route-to.exact='/profile/$'> data.getUserName()
+						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
+					else
+						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
+						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> data.lang.signin
+				<button.btnbox.cbtn.aside_button @click=turnGeneralSearch>
+					<svg.helpsvg [p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
 						<title> data.lang.find_in_chapter
 						<path d=svg_paths.search>
 					data.lang.bible_search
+				<button.btnbox.cbtn.aside_button @click=pageSearch()>
+					<svg.helpsvg [p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
+						<title> data.lang.find_in_chapter
+						<path d=svg_paths.search>
+					data.lang.find_in_chapter
+				<button.btnbox.cbtn.aside_button @click=turnHistory>
+					<svg.helpsvg width="24" height="24" viewBox="0 0 24 24">
+						<title> data.lang.history
+						<path d="M0 0h24v24H0z" fill="none">
+						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
+					data.lang.history
 				<.btnbox>
 					<svg.cbtn[p:8px w:33.333%] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
@@ -2275,38 +2291,14 @@ export tag bible-reader
 							<title> data.lang.decrease_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
-				<.btnbox>
-					<svg.cbtn @click=toggleParallelMode(no) [padding: 8px] viewBox="0, 0, 400,338.0281690140845" height="338.0281690140845" width="400">
-						<title> data.lang.usual_reading
-						<path[stroke-width:1.81818] fill-rule="evenodd" stroke="none" d="m 35.947276,15.059555 c -7.969093,0.761817 -16.59819,3.661819 -16.59819,5.578181 0,0.283637 -0.409086,0.516365 -0.909082,0.516365 -0.498182,0 -1.332726,0.650909 -1.85455,1.445454 -0.52,0.794546 -2.256363,2.158182 -3.856362,3.030909 -4.2854562,2.334545 -5.9854559,4.496363 -7.5981831,9.663636 -0.7927271,2.536365 -1.6272721,4.750909 -1.8581814,4.921819 -0.2290909,0.170909 -1.0600003,2.521818 -1.845455,5.225455 L 0,50.355918 v 118.650912 118.6509 l 1.4272725,4.91455 c 0.7854547,2.70182 1.6163641,5.05454 1.845455,5.22545 0.2309093,0.17092 1.0654543,2.38546 1.8581814,4.92182 1.6127272,5.16727 3.3127269,7.32727 7.5981831,9.66364 1.599999,0.87273 3.336362,2.23636 3.856362,3.03091 0.521824,0.79455 1.356368,1.44363 1.85455,1.44363 0.499996,0 0.909082,0.23273 0.909082,0.51818 0,0.97456 6.109095,3.84182 10.278187,4.82546 7.178184,1.69455 80.296367,1.94181 87.632717,0.29818 6.04365,-1.35454 8.16365,-2.48181 9.22729,-4.90545 0.40182,-0.91091 0.87272,-1.79637 1.04909,-1.96545 5.33636,-5.1291 5.29091,-24.29273 -0.0654,-26.33274 -0.29454,-0.11268 -0.53818,-0.5109 -0.53818,-0.88363 0,-1.30001 -2.77637,-4.72909 -4.30182,-5.31454 -5.89454,-2.25456 -9.98909,-2.51091 -40.25999,-2.51091 -36.860011,0 -34.947285,0.51454 -36.567285,-9.83638 -0.858181,-5.48544 -0.858181,-198.0018 0,-203.48908 1.62,-10.350906 -0.292726,-9.83636 36.567285,-9.83636 30.2709,0 34.36545,-0.254546 40.25999,-2.51091 1.52545,-0.583635 4.30182,-4.012727 4.30182,-5.312726 0,-0.374547 0.24364,-0.772729 0.53818,-0.885456 5.35637,-2.039999 5.40182,-21.203635 0.0654,-26.332727 -0.17637,-0.16909 -0.64727,-1.052727 -1.04909,-1.965455 -1.05091,-2.392726 -3.17092,-3.545454 -8.92,-4.845453 -5.51091,-1.245455 -69.73091,-1.65091 -81.620004,-0.512728 m 246.100004,0.529091 c -5.69091,1.21091 -7.93818,2.427273 -8.91455,4.82909 -0.37092,0.912728 -1.60181,3.692727 -2.73818,6.18 -4.27454,9.361819 0.24,27.027274 7.32909,28.67091 8.94545,2.072727 10.5,2.156364 40.21636,2.156364 36.34,0 34.19273,-0.589092 35.82364,9.83636 0.85818,5.48728 0.85818,198.00364 0,203.48908 -1.63091,10.42547 0.51636,9.83638 -35.82364,9.83638 -29.71636,0 -31.27091,0.0837 -40.21636,2.15817 -7.08909,1.64183 -11.60363,19.30728 -7.32909,28.67092 1.13637,2.48545 2.36726,5.26727 2.73818,6.17818 2.17818,5.35635 7.25091,5.97636 48.9909,5.98727 47.96183,0.0107 53.39273,-0.65818 60.00001,-7.4 1.30545,-1.33091 3.97273,-3.35819 5.92728,-4.50364 5.00908,-2.93635 5.34181,-3.44363 7.8509,-12.03272 1.23454,-4.22727 2.63637,-8.98183 3.11636,-10.56727 1.30909,-4.32001 1.30909,-235.821822 0,-240.14364 -0.47999,-1.585454 -1.88182,-6.34 -3.11636,-10.565454 -2.50909,-8.589091 -2.84182,-9.098182 -7.8509,-12.032728 -1.95455,-1.147272 -4.62183,-3.172727 -5.92728,-4.505454 -6.62546,-6.76 -12.08,-7.425455 -60.30728,-7.36 -30.57272,0.04 -35.33817,0.174546 -39.76908,1.118182 M 87.376365,80.17046 c -4.607268,1.17637 -8.121822,2.99091 -9.203631,4.75273 -0.276368,0.44909 -2.036365,1.68182 -3.910922,2.74 -5.672718,3.20364 -7.954534,10.04727 -6.37817,19.13091 0.736355,4.23455 3.161809,9.6491 4.325448,9.6491 0.303645,0 2.779999,1.52726 5.505457,3.39272 8.17091,5.59636 101.970903,6.05455 126.714543,5.66182 l 107.36546,-0.32001 5.72727,-2.60363 c 7.41637,-3.3709 9.73092,-5.63091 13.21091,-12.89273 3.39091,-7.07272 3.38727,-7.00363 0.48909,-13.67818 -2.98545,-6.87273 -6.95454,-10.82363 -14.29273,-14.22363 l -5.09272,-2.36 -108.00001,-0.24 C 184.65273,78.95774 91.839996,79.03228 87.376365,80.17046 m -2.554545,68.22365 c -16.609096,1.92908 -23.163632,22.64726 -11.147273,35.23271 6.041822,6.3291 5.400003,6.20546 34.032723,6.47819 33.53273,0.32 214.32191,2.93417 217.311,-3.40764 0.68001,-1.44182 4.32537,-7.49055 5.54355,-9.29964 3.30727,-4.90545 3.30727,-11.87637 0,-16.78181 -1.21818,-1.8091 -2.77273,-4.47091 -3.45272,-5.91273 -2.89273,-6.13636 -94.60182,-6.93273 -125.25091,-6.82 -12.34183,0.0454 -115.007284,0.27454 -117.03637,0.51092 m 2.616365,65.16725 c -3.589093,0.91638 -5.980003,2.05274 -9.718185,4.61274 -2.727272,1.86726 -5.207265,3.39454 -5.51091,3.39454 -1.163639,0 -3.589093,5.41455 -4.325448,9.65091 -1.576364,9.08363 0.705452,15.92727 6.37817,19.12909 1.874557,1.05818 3.634554,2.29091 3.910922,2.74 3.005453,4.89818 101.847266,6.2 126.289086,5.81273 l 107.39819,-0.31818 5.08,-2.35455 c 7.32544,-3.39454 11.29817,-7.34909 14.28181,-14.22 2.89818,-6.67272 2.90182,-6.60364 -0.48909,-13.67637 -3.47999,-7.26545 -5.79454,-9.52181 -13.22182,-12.89999 l -5.74,-2.6091 -107.96909,-0.24 c -19.0691,-0.22 -111.976369,-0.14363 -116.363635,0.97818">
-					<svg.cbtn @click=toggleParallelMode(yes) [padding: 8px] viewBox="0 0 400 338">
-						<title> data.lang.parallel
-						<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
-				<.nighttheme.popup_menu_box [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
+
+				<.btnbox.cbtn.aside_button.popup_menu_box [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
 					settings.font.name
 					<.popup_menu [l:0] .show_popup_menu=show_fonts>
 						for font in fonts
 							<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
 
-				<.profile_in_settings>
-					if data.getUserName()
-						<a.username route-to.exact='/profile/$'> data.getUserName()
-						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
-					else
-						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
-						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> data.lang.signin
-				<.help @click=turnHistory>
-					<svg.helpsvg width="24" height="24" viewBox="0 0 24 24">
-						<title> data.lang.history
-						<path d="M0 0h24v24H0z" fill="none">
-						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
-					data.lang.history
-				<.help @click=pageSearch()>
-					<svg.helpsvg[p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
-						<title> data.lang.find_in_chapter
-						<path d=svg_paths.search>
-					data.lang.find_in_chapter
 				<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
 					data.lang.language
 					<button.change_language> currentLanguage!
@@ -2317,6 +2309,9 @@ export tag bible-reader
 						<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
 						<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
+				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
+					data.lang.parallel
+					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch .checkbox_turned=settings.parallel_synch>
 					data.lang.parallel_synch
 					<p.checkbox> <span>
@@ -2328,6 +2323,9 @@ export tag bible-reader
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
+					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleChronorder .checkbox_turned=chronorder>
+					data.lang.chronological_order
 					<p.checkbox> <span>
 				unless MOBILE_PLATFORM
 					<button.nighttheme.parent_checkbox.flex @click=fixDrawers .checkbox_turned=fixdrawers>
@@ -2793,3 +2791,9 @@ export tag bible-reader
 					<svg.close_search [ml: auto] @click=clearSpace viewBox="0 0 20 20">
 						<title> data.lang.close
 						<path[m: auto] d=svg_paths.close>
+
+
+
+	css
+		.aside_button
+			w:100% h:46px bg:transparent @hover:$btn-bg-hover d:flex ai:center font:inherit p:0 12px
