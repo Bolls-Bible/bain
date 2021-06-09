@@ -11,12 +11,12 @@ handlers:
   secure: always
 
 - url: /robots.txt
-  static_files: shop/robots.txt
-  upload: shop/robots.txt
+  static_files: bolls/robots.txt
+  upload: bolls/robots.txt
 
 - url: /sw.js
-  static_files: shop/sw.js
-  upload: shop/sw.js
+  static_files: bolls/sw.js
+  upload: bolls/sw.js
 
 
 # This handler routes all requests not caught above to your main app. It is
