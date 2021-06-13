@@ -2292,7 +2292,7 @@ export tag bible-reader
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
 
-				<.btnbox.cbtn.aside_button.popup_menu_box [d:flex ai:center] @click=(do show_fonts = !show_fonts)>
+				<.btnbox.cbtn.aside_button.popup_menu_box [d:flex transform@important:none ai:center] @click=(do show_fonts = !show_fonts)>
 					<span.font_icon> "B"
 					settings.font.name
 					<.popup_menu [l:0] .show_popup_menu=show_fonts>
@@ -2318,11 +2318,11 @@ export tag bible-reader
 				<button.nighttheme.parent_checkbox.flex @click=toggleVersePicker .checkbox_turned=settings.verse_picker>
 					data.lang.verse_picker
 					<p.checkbox> <span>
-				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
-					data.lang.transitions
-					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
+					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
+					data.lang.transitions
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleChronorder .checkbox_turned=chronorder>
 					data.lang.chronological_order
@@ -2705,7 +2705,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path d=svg_paths.close>
 					<h1[margin: 0 0 0 8px]> data.lang.history
-					<svg[margin-left: auto; padding: 0; margin: 0 12px 0 16px; width: 32px;].close_search @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
+					<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
 						<title> data.lang.delete
 						<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
 				<article.historylist>

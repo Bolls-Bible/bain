@@ -331,18 +331,24 @@ def getParallelVerses(request):
 
 
 def saveBookmarks(request):
-    if request.user.is_authenticated:
-        received_json_data = json.loads(request.body)
-        user = request.user
+    if not request.user.is_authenticated:
+        return HttpResponse(status_code=401)
+    if request.method != 'POST':
+        return HttpResponse(status_code=405)
 
-        def createNewBookmark():
-            note = None
-            if len(received_json_data["note"]):
-                note = Note.objects.create(text=received_json_data["note"])
-            user.bookmarks_set.create(
-                verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"], note=note)
 
-        for verseid in ast.literal_eval(received_json_data["verses"]):
+    received_json_data = json.loads(request.body)
+    user = request.user
+
+    def createNewBookmark():
+        note = None
+        if len(received_json_data["note"]):
+            note = Note.objects.create(text=received_json_data["note"])
+        user.bookmarks_set.create(
+            verse=verse, date=received_json_data["date"], color=received_json_data["color"], collection=received_json_data["collections"], note=note)
+
+    for verseid in ast.literal_eval(received_json_data["verses"]):
+        try:
             verse = Verses.objects.get(pk=verseid)
             try:
                 obj = user.bookmarks_set.get(user=user, verse=verse)
@@ -369,7 +375,10 @@ def saveBookmarks(request):
             except Bookmarks.MultipleObjectsReturned:
                 deleteBookmarks(request)
                 createNewBookmark()
-    return JsonResponse({"response": "200"}, safe=False)
+
+        except Verses.DoesNotExist:
+            return HttpResponse(status_code=418)
+
 
 
 def saveHistory(request):
