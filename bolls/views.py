@@ -375,6 +375,7 @@ def saveBookmarks(request):
             except Bookmarks.MultipleObjectsReturned:
                 deleteBookmarks(request)
                 createNewBookmark()
+            return JsonResponse({"status_code":200}, safe=False)
 
         except Verses.DoesNotExist:
             return HttpResponse(status_code=418)
@@ -397,16 +398,19 @@ def saveHistory(request):
             user.history_set.create(history=received_json_data["history"])
         return JsonResponse({"response": "200"}, safe=False)
     else:
-        return JsonResponse({"response": "200"}, safe=False)
+        return HttpResponse(status_code=401)
 
 
 def deleteBookmarks(request):
-    received_json_data = json.loads(request.body)
-    user = request.user
-    for verseid in ast.literal_eval(received_json_data["verses"]):
-        verse = Verses.objects.get(pk=verseid)
-        user.bookmarks_set.filter(verse=verse).delete()
-    return JsonResponse({"response": "200"}, safe=False)
+    if request.user.is_authenticated:
+        received_json_data = json.loads(request.body)
+        user = request.user
+        for verseid in ast.literal_eval(received_json_data["verses"]):
+            verse = Verses.objects.get(pk=verseid)
+            user.bookmarks_set.filter(verse=verse).delete()
+        return JsonResponse({"response": "200"}, safe=False)
+    else:
+        return HttpResponse(status_code=401)
 
 
 def historyOf(user):
