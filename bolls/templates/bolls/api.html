@@ -66,6 +66,8 @@
 		<li> The <code>name</code> field is a name of this book.
 		<li> The <code>chapters</code> field is a number of chapters of this book.
 	</ul>
+	<p>Curl code</p>
+	<pre>curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre>
 	<h2 id='Fetch a chapter'>Fetch a chapter</h2>
 	<p>Then, using that data, you can form a url for fetching a chapter of certain translation and book. The url
 		constructor is the next:
@@ -80,6 +82,8 @@
 	</p>
 
 	<pre><a target="_blank" href="https://bolls.life/get-text/YLT/22/8/">https://bolls.life/get-text/YLT/22/8/</a></pre>
+	<p>Curl code</p>
+	<pre>curl --location --request GET 'https://bolls.life/get-text/YLT/22/8/'</pre>
 
 	<p>The result of this request will be a list of verses of that chapter, where every verse will has some several
 		fields.</p>
@@ -115,14 +119,18 @@
 		<li> The <code>verse</code> field is a number of the verse in the chapter.
 		<li> The <code>text</code> field contains a text of this verse.
 	</ul>
+	<p>Curl code</p>
+	<pre>curl --location --request GET 'https://bolls.life/search/YLT/Haggi'</pre>
 	<h2 id='Get a translation'>Get a translation</h2>
-	<p>You can get full translation just quering in hte next manner:</p>
+	<p>You can get full translation just quering in the next manner:</p>
 	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre>
 	<p>The result of it will be an array of all verses, that belongs to the given translation. For example you can try
 		the next link:</p>
 	<pre><a target="_blank"
 			href="https://bolls.life/static/translations/YLT.json">https://bolls.life/static/translations/YLT.json</a></pre>
 	<p>The structure of nodes in this array will be like in the nodes of search query</p>
+	<p>Curl code</p>
+	<pre>curl --location --request GET 'https://bolls.life/static/translations/YLT.json'</pre>
 	<h2 id="compare">Compare versions</h2>
 	<p>You can make a request for peculiar verses in peculiar translations. For example if you wanna see some exact
 		verse or verses in different translation to compare them you can use this api. The request should POST, and you
@@ -139,7 +147,6 @@
 	</ul>
 	<p>Imba example.</p>
 	<pre>
-
 window.fetch("/get-paralel-verses/", {
 	method: "POST",
 	cache: "no-cache",
@@ -162,12 +169,10 @@ window.fetch("/get-paralel-verses/", {
 .then(do |resdata|
 	translations_with_verses = resdata
 	console.log console.log
-)
-	</pre>
+)	</pre>
 	<p>The result of this request will be an array of translations where every translation is an array of requested
 		verses, where every verse has <a href="#verse_fields">this fields</a>. Here is the example of the result:</p>
-	<pre>
-[
+	<pre>[
   [
     {
       "pk": 1145257,
@@ -220,8 +225,8 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Hast thou set thy heart unto My servant Job because there is none like him in the land, a man perfect and upright, fearing God and turning aside from evil? and still he is keeping hold on his integrity, and thou dost move Me against him to swallow him up for nought!'"
     }
   ]
-]
-	</pre>
+]	</pre>
+
 
 	<h2 id="Fetch a verse">Fetch a verse</h2>
 	<p>You may need this a lot. To fetch a single verse of a few verses of a single translation you should use the
@@ -229,9 +234,7 @@ window.fetch("/get-paralel-verses/", {
 		book code and array with verse
 		/ verses and you will get it.</p>
 	<p>Imba example.</p>
-	<pre>
-
-window.fetch("/get-paralel-verses/", {
+	<pre>window.fetch("/get-paralel-verses/", {
 	method: "POST",
 	cache: "no-cache",
 	headers: {
@@ -253,11 +256,18 @@ window.fetch("/get-paralel-verses/", {
 .then(do |resdata|
 	translations_with_verses = resdata
 	console.log console.log
-)
-	</pre>
+)	</pre>
+	<p>Curl code</p>
+	<pre>curl --location --request POST 'https://bolls.life/get-paralel-verses/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "translations": "[\"ESV\"]",
+    "verses": "[1]",
+    "book": 9,
+    "chapter": 4
+}'</pre>
 	<p>Here is example of the response. YLT translation, Job (18) 2:6</p>
-	<pre>
-[
+	<pre>[
   [
     {
       "pk": 36112,
@@ -268,8 +278,7 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Lo, he [is] in thy hand; only his life take care of.'"
     }
   ]
-]
-	</pre>
+]	</pre>
 	<p>As you see it is the same as <a href='#compare'>Compare translation API</a>. More detailes about the fields of
 		this request see the <a href='#compare'>Compare translation API</a>.</p>
 

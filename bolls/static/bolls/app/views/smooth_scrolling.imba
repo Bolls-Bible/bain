@@ -9,7 +9,7 @@ export def scrollToY(scrollblock, scrollTargetY)
 
 	let scrollY = scrollblock.scrollTop
 	scrollTargetY = scrollTargetY || 0
-	let speed = 2000
+	let speed = 3000
 	let currentTime = 0
 
 	# min time .1, max time .8 seconds

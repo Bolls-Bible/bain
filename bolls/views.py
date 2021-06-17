@@ -290,44 +290,47 @@ def getCategories(request):
 def getParallelVerses(request):
     if request.method == 'POST':
         received_json_data = json.loads(request.body)
-        if received_json_data["chapter"] > 0 and received_json_data["book"] > 0 and len(received_json_data["translations"]) > 5 and len(received_json_data["verses"]) > 2:
-            book = received_json_data["book"]
-            chapter = received_json_data["chapter"]
-            response = []
-            query_set = []
-            for translation in ast.literal_eval(received_json_data["translations"]):
-                for verse in ast.literal_eval(received_json_data["verses"]):
-                    query_set.append("Q(translation=\"" + translation + "\", book=" + str(
-                        book) + ", chapter=" + str(chapter) + ", verse=" + str(verse) + ")")
+        try:
+            if received_json_data["chapter"] > 0 and received_json_data["book"] > 0 and len(received_json_data["translations"]) > 5 and len(received_json_data["verses"]) > 2:
+                book = received_json_data["book"]
+                chapter = received_json_data["chapter"]
+                response = []
+                query_set = []
+                for translation in ast.literal_eval(received_json_data["translations"]):
+                    for verse in ast.literal_eval(received_json_data["verses"]):
+                        query_set.append("Q(translation=\"" + translation + "\", book=" + str(
+                            book) + ", chapter=" + str(chapter) + ", verse=" + str(verse) + ")")
 
-            query = ' | '.join(query_set)
-            queryres = Verses.objects.filter(eval(query))
+                query = ' | '.join(query_set)
+                queryres = Verses.objects.filter(eval(query))
 
-            for translation in ast.literal_eval(received_json_data["translations"]):
-                verses = []
-                for verse in ast.literal_eval(received_json_data["verses"]):
-                    v = [x for x in queryres if (
-                        (x.verse == verse) & (x.translation == translation))]
-                    if len(v):
-                        for item in v:
+                for translation in ast.literal_eval(received_json_data["translations"]):
+                    verses = []
+                    for verse in ast.literal_eval(received_json_data["verses"]):
+                        v = [x for x in queryres if (
+                            (x.verse == verse) & (x.translation == translation))]
+                        if len(v):
+                            for item in v:
+                                verses.append({
+                                    "pk": item.pk,
+                                    "translation": item.translation,
+                                    "book": item.book,
+                                    "chapter": item.chapter,
+                                    "verse": item.verse,
+                                    "text": item.text,
+                                })
+                        else:
                             verses.append({
-                                "pk": item.pk,
-                                "translation": item.translation,
-                                "book": item.book,
-                                "chapter": item.chapter,
-                                "verse": item.verse,
-                                "text": item.text,
+                                "translation": translation,
                             })
-                    else:
-                        verses.append({
-                            "translation": translation,
-                        })
-                response.append(verses)
-            return JsonResponse(response, safe=False)
-        else:
-            return HttpResponse(status=400)
+                    response.append(verses)
+                return JsonResponse(response, safe=False)
+            else:
+                return HttpResponse("Body fields are incorrect", status=400)
+        except:
+            return HttpResponse("Body fields are incorrect", status=400)
     else:
-        return HttpResponse(status=400)
+        return HttpResponse("The request should be POSTed", status=400)
 
 
 def saveBookmarks(request):

@@ -4,9 +4,6 @@
     "start": "imba build --no-hashing -w ./app/index.html",
     "build": "imba build --no-hashing ./app/index.html"
   },
-  "dependencies": {
-    "imba": "^2.0.0-alpha.140"
-  },
   "devDependencies": {
     "@types/node": "^14.14.37"
   },
@@ -15,5 +12,8 @@
   "version": "1.0.0",
   "homepage": "https://github.com/Bohooslav/bolls",
   "author": "Pavlyshynets Bohuslav (https://github.com/Bohooslav)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "imba": "^2.0.0-alpha.145"
+  }
 }

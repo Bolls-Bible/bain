@@ -27,7 +27,8 @@
 	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
 	<script src="{% static 'bolls/dist/public/__assets__/app/client.js' %}" async></script>
 
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}">
+	{% comment %} <link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}"> {% endcomment %}
+	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/__styles__.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/mobile_index.css' %}" media="(max-width: 639px)">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
