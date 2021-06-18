@@ -36,10 +36,10 @@ export tag profile-page
 	tab = 0
 	list_for_display = []
 
-	def setup
+	def setaleup
 		highlights_range = {
 			from: 0,
-			to: 32,
+			to: 0,
 			loaded: 0
 		}
 		notes_range = {
@@ -52,7 +52,7 @@ export tag profile-page
 			to: 32,
 			loaded: 0
 		}
-		loading = true
+		loading = yes
 		bookmarks = []
 		highlights = []
 		notes = []
@@ -65,7 +65,7 @@ export tag profile-page
 
 	def mount
 		document.title = "Bolls · " + data.getUserName()
-		setup!
+		setaleup!
 
 	def loadData url
 		var res = await window.fetch url
@@ -134,22 +134,24 @@ export tag profile-page
 
 	def getProfileBookmarks
 		tab = 0
+		highlights_range.to += 32
+		log highlights_range
 		if highlights_range.loaded != highlights_range.to
 			highlights_range.from = highlights_range.loaded
-			highlights_range.to = highlights_range.from + 32
 
 			const url = "/get-profile-bookmarks/" + highlights_range.from + '/' + highlights_range.to + '/'
 
 			let bookmarksdata
 			if window.navigator.onLine
 				bookmarksdata = await loadData(url)
+				log bookmarksdata, highlights_range
 			else
 				bookmarksdata = await data.getBookmarksFromStorage() || []
 			highlights_range.loaded += bookmarksdata.length
 			parseBookmarks(bookmarksdata, 'highlights')
 		list_for_display = highlights
 		loading = no
-		imba.commit()
+		imba.commit!
 
 
 	def getSearchedBookmarks collection
@@ -190,19 +192,25 @@ export tag profile-page
 	def scroll
 		if (clientHeight - 512 < scrollTop + window.innerHeight) && !loading && query == ''
 			loading = yes
+			log highlights_range
 			if tab == 0
 				if highlights_range.loaded == highlights_range.to
 					getProfileBookmarks()
+				else
+					loading = no
 			elif tab == 1
 				if collection_range.loaded == collection_range.to
 					getSearchedBookmarks()
+				else
+					loading = no
 			else
 				if notes_range.loaded == notes_range.to
 					getBookmarksWithNotes!
+				else
+					loading = no
 
 
 	def goToBookmark bookmark
-		log bookmark, verse
 		let bible = document.getElementsByTagName("bible-reader")
 		bible[0].getText(bookmark.translation, bookmark.book, bookmark.chapter, bookmark.verse)
 

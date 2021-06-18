@@ -22,6 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def index(request):
+    if request.user.is_authenticated:
+        print(request.user.id)
     return render(request, 'bolls/index.html')
 
 
@@ -401,7 +403,7 @@ def saveHistory(request):
             user.history_set.create(history=received_json_data["history"])
         return JsonResponse({"response": "200"}, safe=False)
     else:
-        return HttpResponse(status_code=401)
+        return HttpResponse(status_code=405)
 
 
 def deleteBookmarks(request):
@@ -468,3 +470,24 @@ def handler500(request, *args, **argv):
     response = render('500.html', {}, context_instance=RequestContext(request))
     response.status_code = 500
     return response
+
+
+# def fixBookmarks(request):
+#     # rename KJV to OKJC
+#     # push new KJV to the db
+#     # map bookmarks in given range to the new KJV
+
+#     # bookmarks = Bookmarks.objects.all().filter(verse__gte=992272, verse__lte=1023502)
+#     bookmarks = Bookmarks.objects.all()
+#     length = len(bookmarks)
+#     for bookmark in bookmarks:
+#         if bookmark.verse.id >= 992272 and bookmark.verse.id <= 1023502:
+#             print(bookmark.verse.book, bookmark.verse.chapter, bookmark.verse.verse, bookmark.verse.translation)
+#             new_verse = Verses.objects.get(translation="KJV", book=bookmark.verse.book, chapter=bookmark.verse.chapter, verse=bookmark.verse.verse)
+#             if new_verse:
+#                 bookmark.verse = new_verse
+#                 bookmark.save()
+#             else:
+#                 print('AAAAAAAAA')
+
+    return HttpResponse(length)

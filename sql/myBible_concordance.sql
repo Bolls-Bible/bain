@@ -84,6 +84,8 @@ UPDATE verses set book_number=83 where book_number=790;
 UPDATE verses set book_number=86 where book_number=245;
 UPDATE verses set book_number=85 where book_number=235;
 UPDATE verses set book_number=87 where book_number=341;
+UPDATE verses set book_number=88 where book_number=305;
+
 
 
 UPDATE books set book_number=1 where book_number=10;
@@ -172,3 +174,4 @@ UPDATE books set book_number=83 where book_number=790;
 UPDATE books set book_number=86 where book_number=245;
 UPDATE books set book_number=85 where book_number=235;
 UPDATE books set book_number=87 where book_number=341;
+UPDATE books set book_number=88 where book_number=305;

@@ -48,6 +48,7 @@ urlpatterns = [
 
 	path('international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/',
 		views.linkToVerses),
+	# path('/fixBookmarks/', views.fixBookmarks)
 ]
 
 handler404 = views.handler404
