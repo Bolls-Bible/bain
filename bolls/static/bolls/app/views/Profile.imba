@@ -312,7 +312,7 @@ export tag profile-page
 				<.collectionsflex [flex-wrap: wrap]>
 					for collection in collections
 						if collection
-							<p.collection @click=getSearchedBookmarks(collection)> collection
+							<p.collection .add_new_collection=(collection==query) @click=getSearchedBookmarks(collection)> collection
 					<div [min-width: 16px]>
 
 

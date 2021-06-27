@@ -1,3 +1,4 @@
+import { split } from '../../../../../static/admin/js/vendor/xregexp/xregexp.js'
 import *  as BOOKS from "./translations_books.json"
 import languages from "./languages.json"
 import './Profile'
@@ -207,7 +208,7 @@ export tag bible-reader
 	prop history = []
 	prop categories = []
 	prop chronorder = no
-	prop search = {}
+	prop search = {suggestions:{}}
 
 	def setup
 		# # # Setup some global events
@@ -360,17 +361,18 @@ export tag bible-reader
 		compare_translations.push(settingsp.translation)
 		if JSON.parse(getCookie("compare_translations")) then compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
 		search =
-			search_div: no,
-			search_input: '',
-			search_result_header: '',
-			search_result_translation: '',
-			show_filters: no,
-			counter: 50,
-			filter: 0,
-			loading: no,
-			change_translation: no,
-			bookid_of_results: [],
+			search_div: no
+			search_input: ''
+			search_result_header: ''
+			search_result_translation: ''
+			show_filters: no
+			counter: 50
+			filter: 0
+			loading: no
+			change_translation: no
+			bookid_of_results: []
 			translation: settings.translation
+			suggestions: {}
 		let bookmarks-to-delete = JSON.parse(getCookie("bookmarks-to-delete"))
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
@@ -927,15 +929,16 @@ export tag bible-reader
 	def turnGeneralSearch
 		clearSpace!
 		popUp 'search'
+		searchSuggestions!
 		setTimeout(&, 300) do $generalsearch.select!
 
 
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
-		let query = cleanString(search.search_input)
 
 		# If the query is long enough and it is different from the previous query -- do the search again.
-		if query.length > 2 && (search.search_result_header != query || !search.search_div)
+		if search.search_input.length > 2 && (search.search_result_header != query || !search.search_div)
+			let query = window.encodeURIComponent(search.search_input).toLowerCase()
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -1004,6 +1007,53 @@ export tag bible-reader
 		settings_menu_left = -300
 		if document.getElementById('search')
 			document.getElementById('search').blur()
+
+
+	def searchSuggestions
+		const query = search.search_input.trim!
+
+		const parts = query.split(' ')
+		const last_part = parts[parts.length - 1]
+		search.suggestions.chapter = null
+		search.suggestions.verse = null
+
+		if /\d/.test(last_part) && parts.length > 1
+			if last_part.indexOf(':') > -1
+				const ch_v_numbers = last_part.split(':')
+				search.suggestions.chapter = parseInt(ch_v_numbers[0])
+				if ch_v_numbers[1].length
+					search.suggestions.verse = parseInt(ch_v_numbers[1])
+			else
+				search.suggestions.chapter = parseInt(last_part)
+			parts.pop!
+
+		unless search.suggestions.chapter
+			search.suggestions.chapter = 1
+
+		const bookname = parts.join(' ')
+
+		# If the query is long enough and it is different from the previous query -- do the search again.
+		let filtered_books = []
+		if bookname.length > 1
+
+			for book in self['books']
+				const score = scoreSearch(book.name, bookname)
+				if score > bookname.length * 0.75
+					filtered_books.push({
+						book: book
+						score: score
+					})
+
+			filtered_books = filtered_books.sort(do |a, b| b.score - a.score)
+
+
+		# Generate suggestions list
+		search.suggestions.books = []
+		for item in filtered_books
+			if theChapterExistInThisTranslation settings.translation, item.book.bookid, search.suggestions.chapter
+				search.suggestions.books.push item.book
+		log search.suggestions
+
 
 	def addFilter book
 		page_search.matches = []
@@ -1772,24 +1822,18 @@ export tag bible-reader
 	def boxShadow grade
 		settings.theme == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
 
-
-
-	def cleanString s
-		if s
-			return s.toLowerCase().replace(/[^0-9a-zа-яіїєёґ\s]+/g, "")
-		else return ''
-
+	### Used only for books filtering ###
 	# Compute a search relevance score for an item.
-	def scoreSearch item
-		let thename = cleanString(item)
-		let search_query = cleanString(store.book_search)
+	def scoreSearch item, search_query
+		item = item.toLowerCase!
+		search_query = search_query.toLowerCase!
 		let score = 0
 		let p = 0 # Position within the `item`
 		# Look through each character of the search string, stopping at the end(s)...
 
 		for i in [0 ... search_query.length]
 			# Figure out if the current letter is found in the rest of the `item`.
-			const index = thename.indexOf(search_query[i], p)
+			const index = item.indexOf(search_query[i], p)
 			# If not, stop here.
 			if index < 0
 				break
@@ -1808,7 +1852,7 @@ export tag bible-reader
 			let filtered_books = []
 
 			for book in self[books]
-				const score = scoreSearch(book.name)
+				const score = scoreSearch(book.name, store.book_search)
 				if score > 0
 					filtered_books.push({
 						book: book
@@ -2064,6 +2108,10 @@ export tag bible-reader
 		if e.enter
 			addNewCollection(store.newcollection)
 
+	def tDir translation
+		if translation in ['WLC', 'WLCC', 'POV']
+			return 'rtl'
+		return 'ltr'
 
 
 	def render
@@ -2131,7 +2179,7 @@ export tag bible-reader
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 			<main.main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto; max-width: {settings.font.max-width}em]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
@@ -2173,7 +2221,7 @@ export tag bible-reader
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 					elif not loading
 						<p.in_offline> data.lang.unexisten_chapter
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir="auto" [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -2513,12 +2561,12 @@ export tag bible-reader
 								if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
-					<article.search_hat>
+					<article.search_hat [pos:relative]>
 						<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText>
+						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
 
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search
@@ -2527,6 +2575,18 @@ export tag bible-reader
 							<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
 								<title> data.lang.addfilter
 								<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
+
+						if search.suggestions.books
+							if search.suggestions.books.length
+								<[d:flex fld:column pos:absolute t:100% r:0 l:0 bg:$background-color border:1px solid $btn-bg-hover bdt:none p:8px rdbl:8px rdbr:8px]>
+									for book in search.suggestions.books
+										<search-text-as-html.book_in_list data={translation:settings.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+											book.name, ' '
+											if search.suggestions.chapter
+												search.suggestions.chapter
+											if search.suggestions.verse
+												':'
+												search.suggestions.verse
 
 					if search.search_result_header
 						<article.search_body id="search_body" [position:relative] @scroll=searchPagination>
