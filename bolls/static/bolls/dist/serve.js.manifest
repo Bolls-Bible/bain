@@ -368,7 +368,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 931104,
+  "bytes": 931173,
   "source": "$$41$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -376,7 +376,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "6PQTVZTH"
+  "hash": "JQRTXVSA"
 },
 "$$36$$":{
   "imports": [],
@@ -465,7 +465,7 @@
     ],
     [
       "$$62$$",
-      13165
+      13307
     ],
     [
       "$$63$$",
@@ -481,7 +481,7 @@
     ],
     [
       "$$66$$",
-      267645
+      271154
     ],
     [
       "$$67$$",
@@ -568,7 +568,7 @@
       1471
     ]
   ],
-  "bytes": 837669,
+  "bytes": 841320,
   "map": "$$35$$",
   "source": "$$41$$",
   "css": "$$87$$",
@@ -578,7 +578,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "6PQTVZTH",
+  "hash": "JQRTXVSA",
   "originalPath": "app/client.__dist__.js"
 },
 "$$37$$":{
@@ -862,7 +862,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$62$$":{
-  "bytes": 13806,
+  "bytes": 13988,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -884,7 +884,7 @@
   "path": "app/state.imba"
 },
 "$$65$$":{
-  "bytes": 718453,
+  "bytes": 718612,
   "imports": [
     "$$61$$",
     "$$43$$",
@@ -906,7 +906,7 @@
   "path": "app/views/Bible.imba"
 },
 "$$66$$":{
-  "bytes": 332823,
+  "bytes": 338566,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1262,7 +1262,7 @@
   "path": "app/state.imba"
 },
 "$$108$$":{
-  "bytes": 718453,
+  "bytes": 718612,
   "imports": [
     "$$122$$",
     "$$123$$",
@@ -1370,7 +1370,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$120$$":{
-  "bytes": 13806,
+  "bytes": 13988,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1390,7 +1390,7 @@
   "path": "../../../static/admin/js/vendor/xregexp/xregexp.js"
 },
 "$$123$$":{
-  "bytes": 332823,
+  "bytes": 338566,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1513,7 +1513,7 @@
     "/__assets__/all.css": "$$32$$"
   },
   "mappings": {},
-  "hash": "02JUFFMY",
+  "hash": "WECTHTFN",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

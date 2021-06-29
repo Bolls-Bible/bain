@@ -1017,7 +1017,9 @@ export tag bible-reader
 		search.suggestions.chapter = null
 		search.suggestions.verse = null
 
+		# Check if the ending of the query contains numbers
 		if /\d/.test(last_part) && parts.length > 1
+			# If verse is included
 			if last_part.indexOf(':') > -1
 				const ch_v_numbers = last_part.split(':')
 				search.suggestions.chapter = parseInt(ch_v_numbers[0])
@@ -1027,16 +1029,15 @@ export tag bible-reader
 				search.suggestions.chapter = parseInt(last_part)
 			parts.pop!
 
+		# If no numbers provided -- suggest first chapter
 		unless search.suggestions.chapter
 			search.suggestions.chapter = 1
 
 		const bookname = parts.join(' ')
 
-		# If the query is long enough and it is different from the previous query -- do the search again.
 		let filtered_books = []
 		if bookname.length > 1
-
-			for book in self['books']
+			for book in self['books'] # in aa given translations book
 				const score = scoreSearch(book.name, bookname)
 				if score > bookname.length * 0.75
 					filtered_books.push({

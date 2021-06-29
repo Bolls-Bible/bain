@@ -67,6 +67,12 @@
 				"full_name": "New International Version, 1984",
 				"info": "https://en.wikipedia.org/wiki/New_International_Version",
 				"updated": 1591185595149
+			},
+			{
+				"short_name": "NLT",
+				"full_name": "New Living Translation, 2015",
+				"info": "https://en.wikipedia.org/wiki/New_Living_Translation",
+				"updated": 1591185595149
 			}
 		]
 	},

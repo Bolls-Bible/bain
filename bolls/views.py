@@ -21,6 +21,10 @@ from .models import Verses, Bookmarks, History, Note
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def errRes(code, text=''):
+    response = HttpResponse
+
+
 def index(request):
     if request.user.is_authenticated:
         print(request.user.id)
@@ -291,8 +295,8 @@ def getCategories(request):
 @csrf_exempt
 def getParallelVerses(request):
     if request.method == 'POST':
-        received_json_data = json.loads(request.body)
         try:
+            received_json_data = json.loads(request.body)
             if received_json_data["chapter"] > 0 and received_json_data["book"] > 0 and len(received_json_data["translations"]) > 5 and len(received_json_data["verses"]) > 2:
                 book = received_json_data["book"]
                 chapter = received_json_data["chapter"]
@@ -337,9 +341,9 @@ def getParallelVerses(request):
 
 def saveBookmarks(request):
     if not request.user.is_authenticated:
-        return HttpResponse(status_code=401)
+        return HttpResponse(status=401)
     if request.method != 'POST':
-        return HttpResponse(status_code=405)
+        return HttpResponse(status=405)
 
 
     received_json_data = json.loads(request.body)
@@ -383,7 +387,7 @@ def saveBookmarks(request):
             return JsonResponse({"status_code":200}, safe=False)
 
         except Verses.DoesNotExist:
-            return HttpResponse(status_code=418)
+            return HttpResponse(status=418)
 
 
 
@@ -403,7 +407,7 @@ def saveHistory(request):
             user.history_set.create(history=received_json_data["history"])
         return JsonResponse({"response": "200"}, safe=False)
     else:
-        return HttpResponse(status_code=405)
+        return HttpResponse(status=405)
 
 
 def deleteBookmarks(request):
@@ -415,7 +419,7 @@ def deleteBookmarks(request):
             user.bookmarks_set.filter(verse=verse).delete()
         return JsonResponse({"response": "200"}, safe=False)
     else:
-        return HttpResponse(status_code=401)
+        return HttpResponse(status=401)
 
 
 def historyOf(user):
