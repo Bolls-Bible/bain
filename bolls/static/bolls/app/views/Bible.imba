@@ -932,13 +932,16 @@ export tag bible-reader
 		searchSuggestions!
 		setTimeout(&, 300) do $generalsearch.select!
 
+	def cleanString str
+		return str.replace(/[`^'"\\\/]/gi, '');
 
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
+		let query = search.search_input.replace('/', '')
 
 		# If the query is long enough and it is different from the previous query -- do the search again.
 		if search.search_input.length > 2 && (search.search_result_header != query || !search.search_div)
-			let query = window.encodeURIComponent(search.search_input).toLowerCase()
+			query = cleanString(query)
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -1053,7 +1056,6 @@ export tag bible-reader
 		for item in filtered_books
 			if theChapterExistInThisTranslation settings.translation, item.book.bookid, search.suggestions.chapter
 				search.suggestions.books.push item.book
-		log search.suggestions
 
 
 	def addFilter book

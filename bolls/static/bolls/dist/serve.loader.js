@@ -172,10 +172,10 @@ var Manifest = class extends import_events.EventEmitter {
     this.init(options.data);
   }
   get srcdir() {
-    return import_path.default.resolve(import_path.default.dirname(this.path), this.data.srcdir);
+    return import_path.default.resolve(this.path, this.data.srcdir);
   }
   get outdir() {
-    return import_path.default.resolve(import_path.default.dirname(this.path), this.data.outdir);
+    return import_path.default.resolve(this.path, this.data.outdir);
   }
   get changes() {
     return this.data.changes || {};

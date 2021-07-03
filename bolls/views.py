@@ -162,7 +162,7 @@ def linkToVerses(request, translation, book, chapter, verse, endverse):
 
 def linkToChapter(request, translation, book, chapter):
     verses = getChapter(translation, book, chapter)
-    return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 0, 3)})
+    return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
 
 
 def signUp(request):
