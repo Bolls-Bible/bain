@@ -92,10 +92,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': AWS_RDS_HOST,
-            'USER': 'postgres',
-            'PASSWORD': AWS_RDS_DB_PASSWORD,
-            'NAME': 'bain',
+            'HOST': CONTABO_POSTGRESQL_DB_HOST,
+            'USER': CONTABO_POSTGRESQL_DB_USERBAME,
+            'PASSWORD': CONTABO_POSTGRESQL_DB_PASSWORD,
+            'NAME': CONTABO_POSTGRESQL_DB_NAME,
             'PORT': '5432',
         }
     }
