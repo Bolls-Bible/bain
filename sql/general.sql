@@ -1,5 +1,5 @@
 ----------- INSERTING OF THE TEXT TO THE DB
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NLT.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/KJA.csv' DELIMITER '|' CSV HEADER;
 
 
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/w.csv' DELIMITER ',' CSV HEADER;
@@ -37,7 +37,7 @@ UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 \copy auth_user(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM '/home/b/data-1583933238173.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_bookmarks(id, color, collection, user_id, verse_id, date, note_id) FROM '/home/bohuslav/bookmarks' DELIMITER ',' CSV HEADER;
 
-psql    --host=bollsdb.cekf5swxirfn.us-east-2.rds.amazonaws.com    --port=5432    --username=postgres    --password    --dbname=bain
+psql    --host=144.126.148.204    --port=5432    --username=bain    --password    --dbname=bain
 
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NVIPT.csv' DELIMITER '|' CSV HEADER;
 

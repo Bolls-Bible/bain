@@ -8,6 +8,7 @@ import "./rich_text_editor"
 import "./colorPicker.imba"
 import "./compare-draggable-item"
 import './search-text-as-html'
+import "./note-up"
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
 import {scrollToY} from './smooth_scrolling'
@@ -26,13 +27,12 @@ let isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000))
 let isUnknownMobile = (isWebkit && isSmallScreen)
 let isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile)
 let isTablet = (isIPad || (isMobile && !isSmallScreen))
-
 let MOBILE_PLATFORM = no
 
 if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
 	MOBILE_PLATFORM = yes
 
-const outer_height = window.outerHeight
+const inner_height = window.innerHeight
 let iOS_keaboard_height = 0
 
 let translations = []
@@ -137,6 +137,10 @@ let compare_parallel_of_book
 let highlighted_title = ''
 const fonts = [
 	{
+		name: "Sans Serif",
+		code: "sans, sans-serif"
+	},
+	{
 		name: "David Libre",
 		code: "'David Libre', serif"
 	},
@@ -151,10 +155,6 @@ const fonts = [
 	{
 		name: "Roboto Slab",
 		code: "'Roboto Slab', sans-serif"
-	},
-	{
-		name: "Sans Serif",
-		code: "sans, sans-serif"
 	},
 	{
 		name: "Monospace",
@@ -581,10 +581,18 @@ export tag bible-reader
 		setTimeout(&,250) do
 			const verse = document.getElementById(id)
 			if verse
-				if settingsp.display
-					verse.parentNode.parentNode.scroll({left:0, top: verse.offsetTop - (window.innerHeight * 0.05), behavior: 'smooth'})
+				let topScroll = verse.offsetTop
+				if (isIPad or isIOS) and page_search.d
+					topScroll -= iOS_keaboard_height
 				else
-					scrollToY(self, verse.offsetTop - (window.innerHeight * 0.05))
+					topScroll -= (window.innerHeight * 0.05)
+
+
+				if settingsp.display
+					verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
+				else
+					scrollToY(self, topScroll)
+				log verse.offsetTop - (window.innerHeight * topScrollOffset), topScrollOffset
 				if highlight then highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse, highlight)
 
@@ -707,8 +715,8 @@ export tag bible-reader
 			focusInput()
 			return 0
 
-		if window.navigator.platform.charAt(0) == 'i' && outer_height > window.outerHeight
-			iOS_keaboard_height = outer_height - window.outerHeight
+		if window.navigator.platform.charAt(0) == 'i' && inner_height > window.innerHeight
+			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
 		# if the query is not an emty string lets clean it up for regex
 		let regex_compatible_query
@@ -791,6 +799,8 @@ export tag bible-reader
 			let parallel = 0
 			for chapter in chapter_articles
 				for child in chapter.children
+					if child.tagName == 'NOTE-UP'
+						continue
 					while ((array1 = regex1.exec(child.textContent)) !== null)
 						# Save the index of found text to page_search.matches
 						# for further navigation
@@ -951,11 +961,11 @@ export tag bible-reader
 			let url
 			if settingsp.edited_version == settingsp.translation && settingsp.display
 				search.translation = settingsp.edited_version
-				url = '/search/' + settingsp.edited_version + '/' + window.encodeURIComponent(query) + '/'
+				url = '/search/' + settingsp.edited_version + '/?search=' + window.encodeURIComponent(query)
 				search.search_result_translation = settingsp.edited_version
 			else
 				search.translation = settings.translation
-				url = '/search/' + settings.translation + '/' + window.encodeURIComponent(query) + '/'
+				url = '/search/' + settings.translation + '/?search=' + window.encodeURIComponent(query)
 				search.search_result_translation = settings.translation
 
 			search_verses = {}
@@ -1239,6 +1249,9 @@ export tag bible-reader
 				return  "linear-gradient({highlight.color} 0px, {highlight.color} 100%)"
 			else
 				return ''
+
+	def getBookmark verse, bookmarks
+		return self[bookmarks].find(do |element| return element.verse == verse)
 
 	def getParallelHighlight verse
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -2091,17 +2104,6 @@ export tag bible-reader
 			return 0
 
 
-	css
-		height: 100vh
-		display: flex
-		ofy: auto
-		pos: relative
-		transition-property@force: none
-		-webkit-overflow-scrolling@force: auto
-
-	css .height_auto
-		max-height: 76px
-
 	def hideReader
 		return window.location.pathname.indexOf('profile') > -1 || window.location.pathname.indexOf('downloads') > -1
 
@@ -2115,6 +2117,16 @@ export tag bible-reader
 		if translation in ['WLC', 'WLCC', 'POV']
 			return 'rtl'
 		return 'ltr'
+
+	def layerHeight parallel
+		if parallel
+			log 'nonono'
+			return 0
+		else
+			if settingsp.display
+				return $firstparallel.clientHeight
+			return $main.clientHeight
+
 
 
 	def render
@@ -2181,7 +2193,7 @@ export tag bible-reader
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-			<main.main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+			<main$main [pos:{page_search.d ? 'static' : 'relative'}] @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2201,13 +2213,18 @@ export tag bible-reader
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
-								if settings.verse_break
-									<br>
-								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse
+								const bukmark = getBookmark(verse.pk, 'bookmarks')
+								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse, " "
 								<span innerHTML=verse.text
 										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
+								if bukmark
+									if bukmark.collection || bukmark.note
+										<note-up label=data.lang.note bookmark=bukmark containerHeight=layerHeight(no) parentMaxWidth=$firstparallel.clientWidth>
+
+								if settings.verse_break
+									<br>
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2231,16 +2248,15 @@ export tag bible-reader
 						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu(yes)>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
 								settingsp.name_of_book, ' ', settingsp.chapter
-
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
-								if settings.verse_break
-									<br>
-								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse
+								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse, " "
 								<span innerHTML=parallel_verse.text
 									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
+								if settings.verse_break
+									<br>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2564,7 +2580,7 @@ export tag bible-reader
 								if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
 								for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 									<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
-					<article.search_hat [pos:relative]>
+					<article.search_hat#gs_hat [pos:relative]>
 						<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
@@ -2581,7 +2597,7 @@ export tag bible-reader
 
 						if search.suggestions.books
 							if search.suggestions.books.length
-								<[d:flex fld:column pos:absolute t:100% r:0 l:0 bg:$background-color border:1px solid $btn-bg-hover bdt:none p:8px rdbl:8px rdbr:8px]>
+								<.search_suggestions>
 									for book in search.suggestions.books
 										<search-text-as-html.book_in_list data={translation:settings.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
 											book.name, ' '
@@ -2858,5 +2874,27 @@ export tag bible-reader
 
 
 	css
+		height: 100vh
+		display: flex
+		ofy: auto
+		pos: relative
+		transition-property@force: none
+		-webkit-overflow-scrolling@force: auto
+
+		.height_auto
+			max-height: 76px
+
 		.aside_button
 			w:100% h:46px bg:transparent @hover:$btn-bg-hover d:flex ai:center font:inherit p:0 12px
+
+		.search_suggestions
+			d:flex fld:column p:8px
+			pos:absolute t:100% r:0 l:0 zi:1
+			bg:$background-color
+			border:1px solid $btn-bg-hover bdt:none rdbl:8px rdbr:8px
+			visibility:hidden
+			o:0
+
+		#gs_hat:focus-within > .search_suggestions
+			visibility:visible
+			o:1

@@ -28,16 +28,19 @@ After formating the text and books you may add it to the app. First of all copy 
 
 Also paste the books array with the abbreviation of the translation as a name. This abbreviation should be the same as the first collumn of the `translation` collumn in the database that is described above.
 
-After that go to `[host:port]/get-translation/{abbreviation of the new translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Example you may find in that folder. Otherwise the user will not be able to download it.
+### Create pull request.
+
+I will run it locally, test it, and if everything is workinig fine I will deploy it.
+!NOTE. Attach to the pull request the csv files you were working with. I need them for my local db. It is not shipped with the project, because it is big. Next steps are for me.
+
+### Deploy the translation to production database
+
+Deploy the translation to main database. Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Example you may find in that folder. Otherwise the user will not be able to download it.
 
 ### Test it.
 
 Check out if it works. If the books chapters are in a proper number, if there are no weird signs. Check out everything that you think should be verified. And if everything is right...
 
-### Create pull request.
-
-I will run it locally, test it, and if everything is workinig fine I will deploy it.
-!NOTE. Attach to the pull request the csv files you were working with. I need them for my local db. It is not shipped with the project, because it is big.
 
 ### May Jehovah bless you.
 

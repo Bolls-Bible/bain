@@ -131,6 +131,8 @@ body {
   background: var(--background-color);
   color: var(--text-color);
   overflow: hidden;
+  min-height: -webkit-fill-available;
+  height: -webkit-fill-available;
 }
 
 ul li {
@@ -567,6 +569,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
   color: var(--accent-color);
   padding-bottom: 1em;
   vertical-align: super;
+  white-space: pre;
 }
 
 .verse:hover {

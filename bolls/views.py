@@ -74,7 +74,9 @@ def getText(request, translation, book, chapter):
     return response
 
 
-def search(request, translation, piece):
+def search(request, translation, piece=''):
+    if len(piece) == 0:
+        piece = request.GET.get('search', 'ua')
     results_of_exec_search = []
     d = []
     piece = piece.strip()

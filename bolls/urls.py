@@ -27,6 +27,7 @@ urlpatterns = [
 	path('get-notes-bookmarks/<int:range_from>/<int:range_to>/',
 		views.getBookmarksWithNotes),
 	path('search/<slug:translation>/<str:piece>/', views.search),
+	path('search/<slug:translation>/', views.search),
 
 	# AAA
 	path('<slug:translation>/<str:piece>/', views.search),

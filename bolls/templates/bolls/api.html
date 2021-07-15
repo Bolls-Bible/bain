@@ -98,16 +98,16 @@
 	<h2 id='Search'>Search</h2>
 	<p>To find verses by a slug or a string you need to form a url in the next manner:</p>
 
-	<pre>https://bolls.life/&lt;slug:translation&gt;/&lt;str:piece&gt;/</pre>
+	<pre>https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;</pre>
 
 	<p>Where <code>&lt;slug:translation&gt;</code> is a translation in which you want to find something. The
 		<code>&lt;str:piece&gt;</code> is a piece of text which can be a slug or a string which you look for. It is`not
-		case sensitive, and it can be anything on any language: <code>.../WLC/שָּׁמַ֖יִם וְאֵ֥ת/</code>, <code>.../LXX/ὁ
-				θεὸς τὸν/</code>, <code>.../UBIO/Небо та землю/</code>, <code>.../CUV/淵 面 黑 暗/</code>. For example the next url
+		case sensitive, and it can be anything on any language: <code>.../WLC?search=שָּׁמַ֖יִם וְאֵ֥ת</code>, <code>.../LXX?search=ὁ
+				θεὸς τὸν</code>, <code>.../UBIO?search=Небо та землю</code>, <code>.../CUV?search=淵 面 黑 暗</code>. For example the next url
 		will returm a list of verses, where "Haggi" word is found:
 	</p>
 
-	<pre><a target="_blank" href="https://bolls.life/search/YLT/haggi/">https://bolls.life/search/YLT/haggi/</a></pre>
+	<pre><a target="_blank" href="https://bolls.life/search/YLT/?search=haggi">https://bolls.life/search/YLT/?search=haggi</a></pre>
 
 	<p>The result of this request will be a list of ALL found verses in the given translation, where every verse will
 		has some several fields:</p>
@@ -120,7 +120,7 @@
 		<li> The <code>text</code> field contains a text of this verse.
 	</ul>
 	<p>Curl code</p>
-	<pre>curl --location --request GET 'https://bolls.life/search/YLT/Haggi'</pre>
+	<pre>curl --location --request GET 'https://bolls.life/search/YLT/?search=haggi'</pre>
 	<h2 id='Get a translation'>Get a translation</h2>
 	<p>You can get full translation just quering in the next manner:</p>
 	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre>
