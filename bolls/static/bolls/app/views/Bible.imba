@@ -101,6 +101,7 @@ let store =
 	show_color_picker: no
 	note: ''
 	collections_search: ''
+	compare_translations_search: ''
 
 let page_search =
 	d: no
@@ -2128,6 +2129,14 @@ export tag bible-reader
 			return $main.clientHeight
 
 
+	def filterCompareTranslation translation
+		unless store.compare_translations_search.length
+			return 1
+		else
+			return store.compare_translations_search.toLowerCase() in (translation.short_name + translation.full_name).toLowerCase()
+			# return scoreSearch(store.compare_translations_search, translation.full_name) > 0
+
+
 
 	def render
 		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
@@ -2188,7 +2197,8 @@ export tag bible-reader
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:2] @click=toggleBibleMenu>
+
+			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleBibleMenu>
 				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2214,14 +2224,14 @@ export tag bible-reader
 						<article>
 							for verse in verses
 								const bukmark = getBookmark(verse.pk, 'bookmarks')
-								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \t', verse.verse, " "
+								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \u2007\u2007\u2007', verse.verse, "\u2007"
 								<span innerHTML=verse.text
 										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 								if bukmark
 									if bukmark.collection || bukmark.note
-										<note-up label=data.lang.note bookmark=bukmark containerHeight=layerHeight(no) parentMaxWidth=$firstparallel.clientWidth>
+										<note-up label=data.lang.note bookmark=bukmark containerHeight=layerHeight(no)>
 
 								if settings.verse_break
 									<br>
@@ -2251,7 +2261,7 @@ export tag bible-reader
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
-								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse, " "
+								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse, "\u2007"
 								<span innerHTML=parallel_verse.text
 									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
@@ -2269,7 +2279,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:2] @click=toggleSettingsMenu>
+			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleSettingsMenu>
 				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.other
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2481,22 +2491,26 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 						<h1> highlighted_title
-						<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke: $text-color]>
+						<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke:$text-color stroke-width:2px]>
 							<title> data.lang.compare
 							<line x1="0" y1="10" x2="20" y2="10">
 							<line x1="10" y1="0" x2="10" y2="20">
 						<[z-index: 1100].filters .show=show_translations_for_comparison>
 							if compare_translations.length == translations.length
 								<p[padding: 12px 8px]> data.lang.nothing_else
-							for translation in translations when !compare_translations.find(do |element| return element == translation.short_name)
+							<input.search bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
+							for translation in translations when (!compare_translations.find(do |element| return element == translation.short_name) and filterCompareTranslation translation)
 								<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
+
 					<article.search_body [pb: 256px scroll-behavior: auto]>
 						<p.total_msg> data.lang.add_translations_msg
 						<ul.comparison_box>
 							for tr in comparison_parallel
 								<compare-draggable-item data=tr id="compare_{tr[0].translation}" langdata=data.lang>
+
 						unless compare_translations.length
 							<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
+
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
 						<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
@@ -2590,6 +2604,7 @@ export tag bible-reader
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search
 							<path d=svg_paths.search>
+
 						if search_verses.length
 							<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
 								<title> data.lang.addfilter

@@ -280,7 +280,7 @@
   "public": true,
   "path": "public/__assets__/all.css",
   "asset": "$$32$$",
-  "hash": "MFLMZKBS",
+  "hash": "B6LIX8WX",
   "originalPath": "all.__dist__.css",
   "url": "/__assets__/all.css"
 },
@@ -368,7 +368,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 940491,
+  "bytes": 941820,
   "source": "$$41$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -376,7 +376,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "CLACM4HI"
+  "hash": "B91P1OHT"
 },
 "$$36$$":{
   "imports": [],
@@ -473,11 +473,11 @@
     ],
     [
       "$$64$$",
-      15486
+      15513
     ],
     [
       "$$65$$",
-      195335
+      196050
     ],
     [
       "$$66$$",
@@ -545,7 +545,7 @@
     ],
     [
       "$$82$$",
-      2612
+      2627
     ],
     [
       "$$83$$",
@@ -576,7 +576,7 @@
       1681
     ]
   ],
-  "bytes": 857598,
+  "bytes": 858359,
   "map": "$$35$$",
   "source": "$$41$$",
   "css": "$$89$$",
@@ -586,7 +586,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "CLACM4HI",
+  "hash": "B91P1OHT",
   "originalPath": "app/client.__dist__.js"
 },
 "$$37$$":{
@@ -606,7 +606,7 @@
     ],
     [
       "$$93$$",
-      10905
+      11010
     ],
     [
       "$$94$$",
@@ -634,7 +634,7 @@
     ],
     [
       "$$100$$",
-      818
+      971
     ],
     [
       "$$101$$",
@@ -661,7 +661,7 @@
       0
     ]
   ],
-  "bytes": 18733,
+  "bytes": 18991,
   "source": "$$107$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -669,7 +669,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "ARBOU7C4",
+  "hash": "UFR12EYR",
   "originalPath": "app/client.__dist__.css"
 },
 "$$38$$":{
@@ -886,7 +886,7 @@
   "path": "app/langdata.imba"
 },
 "$$64$$":{
-  "bytes": 85052,
+  "bytes": 85195,
   "imports": [
     "$$61$$",
     "$$62$$",
@@ -896,7 +896,7 @@
   "path": "app/state.imba"
 },
 "$$65$$":{
-  "bytes": 729125,
+  "bytes": 732031,
   "imports": [
     "$$61$$",
     "$$43$$",
@@ -1034,13 +1034,13 @@
   "path": "app/views/compare-draggable-item.imba"
 },
 "$$81$$":{
-  "bytes": 902,
+  "bytes": 1074,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/note-up.imba"
 },
 "$$82$$":{
-  "bytes": 10681,
+  "bytes": 11019,
   "imports": [
     "$$61$$",
     "$$81$$"
@@ -1061,7 +1061,7 @@
   "path": "app/views/smooth_scrolling.imba"
 },
 "$$85$$":{
-  "bytes": 12138,
+  "bytes": 12252,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1094,7 +1094,7 @@
   "inputs": [
     [
       "$$85$$",
-      10905
+      11010
     ],
     [
       "$$86$$",
@@ -1118,7 +1118,7 @@
     ],
     [
       "$$81$$",
-      818
+      971
     ],
     [
       "$$74$$",
@@ -1129,7 +1129,7 @@
       1874
     ]
   ],
-  "bytes": 18733,
+  "bytes": 18991,
   "source": "$$41$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -1137,7 +1137,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "YA4RLSW4",
+  "hash": "W0D3DEEZ",
   "originalPath": "app/client.__dist__.css"
 },
 "$$90$$":{
@@ -1159,7 +1159,7 @@
   "path": "styles:app/state.imba"
 },
 "$$93$$":{
-  "bytes": 12138,
+  "bytes": 12252,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1201,7 +1201,7 @@
   "path": "styles:app/views/downloads.imba"
 },
 "$$100$$":{
-  "bytes": 902,
+  "bytes": 1074,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/note-up.imba"
@@ -1290,7 +1290,7 @@
   "path": "node_modules/imba/src/imba/imba.imba"
 },
 "$$110$$":{
-  "bytes": 85071,
+  "bytes": 85214,
   "imports": [
     "$$123$$",
     "$$124$$",
@@ -1300,7 +1300,7 @@
   "path": "app/state.imba"
 },
 "$$111$$":{
-  "bytes": 729125,
+  "bytes": 732031,
   "imports": [
     "$$125$$",
     "$$126$$",
@@ -1477,7 +1477,7 @@
   "path": "app/views/search-text-as-html.imba"
 },
 "$$132$$":{
-  "bytes": 10681,
+  "bytes": 11019,
   "imports": [
     "$$100$$"
   ],
@@ -1560,7 +1560,7 @@
     "/__assets__/all.css": "$$32$$"
   },
   "mappings": {},
-  "hash": "IHSA3JJF",
+  "hash": "DBIGH8BB",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

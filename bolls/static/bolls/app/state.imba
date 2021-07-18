@@ -176,6 +176,7 @@ export class State
 				if translations_current_state[translation] > stored_translations_updates[translation]
 					console.log("Need to be updated")
 					deleteTranslation(translation, yes)
+			console.log "finish translations update check"
 		else
 			stored_translations_updates = translations_current_state
 			window.localStorage.setItem('stored_translations_updates', JSON.stringify(translations_current_state))

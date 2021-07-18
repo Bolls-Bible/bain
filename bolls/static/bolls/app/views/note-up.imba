@@ -2,9 +2,9 @@ export tag note-up
 	prop label = ''
 	prop text = ''
 	prop containerHeight = 0
-	prop parentMaxWidth = 0
 	prop bookmark = {}
 
+	#max_content_length = 0
 	#left_offset = '0px'
 	#right_offset = 'auto'
 	#vertclass = ''
@@ -14,18 +14,16 @@ export tag note-up
 		if event.originalTarget.nodeName == 'P' or event.originalTarget.nodeName == 'DIV'
 			return
 
-
-		log containerHeight, event.layerY, containerHeight - event.layerY
 		if containerHeight - event.layerY < 720
 			#vertclass = 'bottom'
 		else
 			#vertclass = ''
 
-		max_content_length = Math.max(bookmark.collection.length, bookmark.note.length) * 10
-		if (max_content_length / 2) < parentMaxWidth
+		#max_content_length = Math.max(bookmark.collection.length, bookmark.note.length) * 10
+		if (#max_content_length / 2) < window.innerWidth
 			#left_offset = event.layerX + 'px'
 			#right_offset = 'auto'
-			if parentMaxWidth - event.layerX < Math.max(max_content_length, 200) + 24
+			if window.innerWidth - event.layerX < Math.max(#max_content_length, 200) + 24
 				#left_offset = 'auto'
 				#right_offset = '0'
 		else
@@ -44,18 +42,25 @@ export tag note-up
 
 	def render
 		<self tabIndex=1 @click.stop.prevent=setBorders>
-			" "
+			'\u2007\u2007'
 			<svg viewBox="0 0 20 20" alt=label>
 				<title> label
 				<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-			<div .{#vertclass} [left:{#left_offset}px right:{#right_offset}]> <p innerHTML=inlineNote()>
+			"\u2007"
+			<div .{#vertclass} [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'}]> <p innerHTML=inlineNote()>
 
 
 
 	css
 		pb:0.75em
+		font-size: 0.68em;
 		cursor:pointer
-		fs:14px
+		vertical-align: super;
+		white-space: pre;
+		us:none
+		fill:$accent-color @hover:$accent-hover-color
+		stroke:$accent-color @hover:$accent-hover-color
+
 
 		div
 			pos:absolute zi:1
@@ -65,6 +70,9 @@ export tag note-up
 			bg:$background-color
 			min-width:16em
 			max-height:256px
+			fs:14px
+			us:select
+			white-space: break-spaces;
 
 			visibility:hidden
 			o:0
@@ -76,8 +84,8 @@ export tag note-up
 
 		svg
 			size:0.68em
-			fill:$accent-color @hover:$accent-hover-color
-			stroke:$accent-color @hover:$accent-hover-color
+			fill:inherit
+			stroke:inherit
 
 
 		@focus-within > div

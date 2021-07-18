@@ -1054,6 +1054,10 @@ img,
   margin: auto;
 }
 
+.search_hat svg {
+  min-width: 24px;
+}
+
 .show_search_results {
   top: 7%;
   visibility: visible;
