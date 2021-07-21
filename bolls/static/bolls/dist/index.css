@@ -1052,6 +1052,11 @@ img,
 .search_hat h1 {
   text-align: center;
   margin: auto;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  font-size: 1em;
 }
 
 .search_hat svg {
@@ -1928,6 +1933,11 @@ editing-area p {
   opacity: 1;
   transform: none;
   z-index: auto;
+}
+
+mark {
+  color: inherit;
+  background-color: var(--btn-bg-hover);
 }
 
 @media all and (display-mode: standalone) {

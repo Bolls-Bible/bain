@@ -382,7 +382,6 @@ export tag bible-reader
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
 			search.counter += 20
-			setTimeout(&, 500) do pageSearch()
 
 	# I call items from localStorage cookies :P
 	def getCookie c_name
@@ -698,9 +697,8 @@ export tag bible-reader
 			selectionStart = event.target.selectionStart
 
 		# Show pageSearch box
-		unless what_to_show_in_pop_up_block
-			clearSpace()
-			page_search.d = yes
+		clearSpace()
+		page_search.d = yes
 
 		def focusInput
 			const input = document.getElementById('pagesearch')
@@ -710,7 +708,7 @@ export tag bible-reader
 			else setTimeout(&,50) do focusInput()
 
 		# Check if query is not an empty string
-		unless page_search.query.length || what_to_show_in_pop_up_block
+		unless page_search.query.length
 			page_search.matches = []
 			page_search.rects = []
 			focusInput()
@@ -741,10 +739,7 @@ export tag bible-reader
 		def highlightText node, lastIndex, cssclass, parallel
 			# Create range of matched text to get its position in document
 			const range = document.createRange()
-			unless what_to_show_in_pop_up_block
-				range.setStart(node.firstChild, lastIndex - page_search.query.length)	# Start at first character of query
-			else
-				range.setStart(node.firstChild, lastIndex - search.search_input.length)
+			range.setStart(node.firstChild, lastIndex - page_search.query.length)	# Start at first character of query
 			range.setEnd(node.firstChild, lastIndex)	# End at last character
 
 			def getSearchSelectionTopOffset rect_top
@@ -796,32 +791,20 @@ export tag bible-reader
 		const regex1 = RegExp(regex_compatible_query, 'gi')
 		let array1
 		page_search.matches = []
-		unless what_to_show_in_pop_up_block
-			let parallel = 0
-			for chapter in chapter_articles
-				for child in chapter.children
-					if child.tagName == 'NOTE-UP'
-						continue
-					while ((array1 = regex1.exec(child.textContent)) !== null)
-						# Save the index of found text to page_search.matches
-						# for further navigation
-						page_search.matches.push({
-							id: child.previousSibling.id,
-							rects: getSelectionHighlightRect(child, regex1.lastIndex, parallel)
-						})
+		let parallel = 0
+		for chapter in chapter_articles
+			for child in chapter.children
+				if child.tagName == 'NOTE-UP'
+					continue
+				while ((array1 = regex1.exec(child.textContent)) !== null)
+					# Save the index of found text to page_search.matches
+					# for further navigation
+					page_search.matches.push({
+						id: child.previousSibling.id,
+						rects: getSelectionHighlightRect(child, regex1.lastIndex, parallel)
+					})
 
-				parallel++
-		else
-			for i in [1 ... search_body.children.length - 1]
-				let text = search_body.children[i]
-				if text.className == 'more_results'
-					break
-
-				if text.firstChild
-					while ((array1 = regex1.exec(text.firstChild.textContent)) !== null)
-						page_search.matches.push({
-							rects: highlightText(text.firstChild, regex1.lastIndex, 'another_occurences', 'ps')
-						})
+			parallel++
 
 		# Gather all rects to one array
 		page_search.rects = []
@@ -831,14 +814,13 @@ export tag bible-reader
 		page_search.rects = nskrjvnslif
 
 		# After all scroll to results
-		unless what_to_show_in_pop_up_block
-			if page_search.current_occurence > page_search.matches.length - 1
-				page_search.current_occurence = 0
-				if page_search.matches.length
-					pageSearch()
-			if page_search.matches[page_search.current_occurence]
-				findVerse(page_search.matches[page_search.current_occurence].id, no, no)
-			focusInput()
+		if page_search.current_occurence > page_search.matches.length - 1
+			page_search.current_occurence = 0
+			if page_search.matches.length
+				pageSearch()
+		if page_search.matches[page_search.current_occurence]
+			findVerse(page_search.matches[page_search.current_occurence].id, no, no)
+		focusInput()
 		imba.commit()
 
 
@@ -943,16 +925,12 @@ export tag bible-reader
 		searchSuggestions!
 		setTimeout(&, 300) do $generalsearch.select!
 
-	def cleanString str
-		return str.replace(/[`^'"\\\/]/gi, '');
-
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
-		let query = search.search_input.replace('/', '')
+		let query = search.search_input
 
 		# If the query is long enough and it is different from the previous query -- do the search again.
 		if search.search_input.length > 2 && (search.search_result_header != query || !search.search_div)
-			query = cleanString(query)
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -978,7 +956,6 @@ export tag bible-reader
 						search.bookid_of_results.push verse.book
 				closeSearch!
 				# popUp 'search'
-				highlightSearchResults!
 				imba.commit!
 			catch error
 				console.error error
@@ -990,20 +967,8 @@ export tag bible-reader
 							search.bookid_of_results.push verse.book
 					closeSearch!
 					# popUp 'search'
-					highlightSearchResults!
 					imba.commit!
 
-	def highlightSearchResults
-		page_search.matches = []
-		page_search.rects = []
-		unless search_verses.length then return
-		if document.getElementById('search_body')
-			if document.getElementById('search_body').children[0]
-				if Array.from(document.getElementById('search_body').children).find(do |element| return element.className.indexOf('total_msg') > -1)
-					setTimeout(&, 1000) do
-						pageSearch()
-					return
-		setTimeout(&, 16) do highlightSearchResults()
 
 	def moreSearchResults
 		search.counter += 50
@@ -1075,13 +1040,11 @@ export tag bible-reader
 		search.filter = book
 		search.show_filters = no
 		search.counter = 50
-		setTimeout(&, 16) do highlightSearchResults()
 
 	def dropFilter
 		search.filter = ''
 		search.show_filters = no
 		search.counter = 50
-		setTimeout(&, 16) do highlightSearchResults()
 
 	def getFilteredASearchVerses
 		if search.filter
@@ -2510,7 +2473,6 @@ export tag bible-reader
 
 						unless compare_translations.length
 							<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
-
 				elif what_to_show_in_pop_up_block == 'show_downloads'
 					<article.search_hat>
 						<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
@@ -2623,10 +2585,7 @@ export tag bible-reader
 												search.suggestions.verse
 
 					if search.search_result_header
-						<article.search_body id="search_body" [position:relative] @scroll=searchPagination>
-							for rect in page_search.rects
-								<div.{rect.class}[top: {rect.top}px left: {rect.left}px width: {rect.width}px height: {rect.height}px]>
-
+						<article.search_body id="search_body" @scroll=searchPagination>
 							<p.total_msg> search.search_result_header, ': ', page_search.rects.length, ' / ',  getFilteredASearchVerses().length, ' ', data.lang.totalyresultsofsearch
 
 							<>

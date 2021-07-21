@@ -76,7 +76,7 @@ def getText(request, translation, book, chapter):
 
 def search(request, translation, piece=''):
     if len(piece) == 0:
-        piece = request.GET.get('search', 'ua')
+        piece = request.GET.get('search', '')
     results_of_exec_search = []
     d = []
     piece = piece.strip()
@@ -85,24 +85,26 @@ def search(request, translation, piece=''):
         query_set = []
 
         for word in piece.split():
-            query_set.append("Q(translation=\"" + translation + "\", text__icontains=\"" + word + "\")")
+            query_set.append("Q(translation=\"" + translation + "\", text__icontains=" + json.dumps(word) + ")")
 
         query = ' & '.join(query_set)
-        queryres = Verses.objects.filter(eval(query))
 
         results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
 
 
         if len(results_of_exec_search) < 256:
-            rank_threshold = 1 - math.exp(-0.003 * (len(piece) + 2) ** (2))
+            rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
+            # 1 - e^(-0.0001 * (x + 16) ** (2))
 
             vector = SearchVector('text')
             query = SearchQuery(piece)
             results_of_rank = Verses.objects.annotate(rank=SearchRank(
-                vector, query)).filter(translation=translation, rank__gt=(rank_threshold * 0.5)).order_by('-rank')
+                vector, query)).filter(translation=translation, rank__gt=(0.05)).order_by('-rank')
 
             results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
                 'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
+
+
             results_of_search = list(results_of_similarity) + \
                 list(set(results_of_rank) - set(results_of_similarity))
 
@@ -114,14 +116,15 @@ def search(request, translation, piece=''):
         else:
             results_of_search = results_of_exec_search
 
-        for obj in results_of_search:
+        mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
+        for obj in results_of_search[0:1024]:
             d.append({
                 "pk": obj.pk,
                 "translation": obj.translation,
                 "book": obj.book,
                 "chapter": obj.chapter,
                 "verse": obj.verse,
-                "text": obj.text
+                "text": mark_replacement.sub("<mark>" + piece + "</mark>", obj.text)
             })
     else:
         d = [{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}]
