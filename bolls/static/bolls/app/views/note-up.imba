@@ -11,6 +11,7 @@ export tag note-up
 	#hortclass = ''
 
 	def setBorders event
+		event.originalTarget ||= event.target
 		if event.originalTarget.nodeName == 'P' or event.originalTarget.nodeName == 'DIV'
 			return
 

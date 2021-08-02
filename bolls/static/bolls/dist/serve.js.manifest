@@ -368,7 +368,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 938971,
+  "bytes": 938848,
   "source": "$$41$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -376,7 +376,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "4YZIOKF8"
+  "hash": "QASCCRLD"
 },
 "$$36$$":{
   "imports": [],
@@ -477,7 +477,7 @@
     ],
     [
       "$$65$$",
-      194187
+      194139
     ],
     [
       "$$66$$",
@@ -529,7 +529,7 @@
     ],
     [
       "$$78$$",
-      708
+      688
     ],
     [
       "$$79$$",
@@ -545,7 +545,7 @@
     ],
     [
       "$$82$$",
-      2627
+      2673
     ],
     [
       "$$83$$",
@@ -576,7 +576,7 @@
       1681
     ]
   ],
-  "bytes": 856784,
+  "bytes": 856762,
   "map": "$$35$$",
   "source": "$$41$$",
   "css": "$$89$$",
@@ -586,7 +586,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "4YZIOKF8",
+  "hash": "QASCCRLD",
   "originalPath": "app/client.__dist__.js"
 },
 "$$37$$":{
@@ -896,7 +896,7 @@
   "path": "app/state.imba"
 },
 "$$65$$":{
-  "bytes": 723643,
+  "bytes": 723269,
   "imports": [
     "$$61$$",
     "$$43$$",
@@ -1009,7 +1009,7 @@
   "path": "app/views/colorPicker.imba"
 },
 "$$78$$":{
-  "bytes": 3075,
+  "bytes": 2988,
   "imports": [
     "$$61$$"
   ],
@@ -1040,7 +1040,7 @@
   "path": "styles:app/views/note-up.imba"
 },
 "$$82$$":{
-  "bytes": 11019,
+  "bytes": 11232,
   "imports": [
     "$$61$$",
     "$$81$$"
@@ -1300,7 +1300,7 @@
   "path": "app/state.imba"
 },
 "$$111$$":{
-  "bytes": 723643,
+  "bytes": 723269,
   "imports": [
     "$$125$$",
     "$$126$$",
@@ -1469,7 +1469,7 @@
   "path": "app/views/compare-draggable-item.imba"
 },
 "$$131$$":{
-  "bytes": 3094,
+  "bytes": 3007,
   "imports": [
     "$$105$$"
   ],
@@ -1477,7 +1477,7 @@
   "path": "app/views/search-text-as-html.imba"
 },
 "$$132$$":{
-  "bytes": 11019,
+  "bytes": 11232,
   "imports": [
     "$$100$$"
   ],
@@ -1560,7 +1560,7 @@
     "/__assets__/all.css": "$$32$$"
   },
   "mappings": {},
-  "hash": "KDUPBWPK",
+  "hash": "Z3TI5UB0",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

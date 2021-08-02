@@ -1,6 +1,5 @@
 tag search-text-as-html
 	def goToVerse event
-		log data
 		if event.ctrlKey
 			window.open("/{data.translation}/{data.book}/{data.chapter}/{data.verse}", '_blank')
 		elif document.getSelection().isCollapsed

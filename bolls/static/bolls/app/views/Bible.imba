@@ -365,9 +365,9 @@ export tag bible-reader
 			search_div: no
 			search_input: ''
 			search_result_header: ''
-			search_result_translation: ''
 			show_filters: no
 			counter: 50
+			results:0
 			filter: 0
 			loading: no
 			change_translation: no
@@ -937,15 +937,8 @@ export tag bible-reader
 			search.search_result_header = ''
 			loading = yes
 
-			let url
-			if settingsp.edited_version == settingsp.translation && settingsp.display
-				search.translation = settingsp.edited_version
-				url = '/search/' + settingsp.edited_version + '/?search=' + window.encodeURIComponent(query)
-				search.search_result_translation = settingsp.edited_version
-			else
-				search.translation = settings.translation
-				url = '/search/' + settings.translation + '/?search=' + window.encodeURIComponent(query)
-				search.search_result_translation = settings.translation
+			search.translation = searchTranslation!
+			const url = '/search/' + search.translation + '/?search=' + window.encodeURIComponent(query)
 
 			search_verses = {}
 			try
@@ -954,20 +947,20 @@ export tag bible-reader
 				for verse in search_verses
 					if !search.bookid_of_results.find(do |element| return element == verse.book)
 						search.bookid_of_results.push verse.book
-				closeSearch!
-				# popUp 'search'
-				imba.commit!
 			catch error
 				console.error error
-				if data.db_is_available && data.downloaded_translations.indexOf(search.search_result_translation) != -1
+				if data.db_is_available && data.downloaded_translations.indexOf(search.translation) != -1
 					search_verses = await data.getSearchedTextFromStorage(search)
 					search.bookid_of_results = []
 					for verse in search_verses
 						if !search.bookid_of_results.find(do |element| return element == verse.book)
 							search.bookid_of_results.push verse.book
-					closeSearch!
-					# popUp 'search'
-					imba.commit!
+
+			search.results = 0
+			for result in search_verses
+				search.results += (result.text.match(/<mark>/g) || []).length
+			closeSearch!
+			imba.commit!
 
 
 	def moreSearchResults
@@ -1032,6 +1025,11 @@ export tag bible-reader
 		for item in filtered_books
 			if theChapterExistInThisTranslation settings.translation, item.book.bookid, search.suggestions.chapter
 				search.suggestions.books.push item.book
+
+	def searchTranslation
+		if settingsp.edited_version == settingsp.translation && settingsp.display
+			return settingsp.edited_version
+		return settings.translation
 
 
 	def addFilter book
@@ -2561,7 +2559,7 @@ export tag bible-reader
 							<title> data.lang.close
 							<path[m: auto] d=svg_paths.close>
 
-						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=data.lang.bible_search aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
+						<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
 
 						<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 							<title> data.lang.bible_search
@@ -2586,7 +2584,7 @@ export tag bible-reader
 
 					if search.search_result_header
 						<article.search_body id="search_body" @scroll=searchPagination>
-							<p.total_msg> search.search_result_header, ': ', page_search.rects.length, ' / ',  getFilteredASearchVerses().length, ' ', data.lang.totalyresultsofsearch
+							<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  getFilteredASearchVerses().length, ' ', data.lang.totalyresultsofsearch
 
 							<>
 								for verse, key in getFilteredASearchVerses()
@@ -2609,7 +2607,7 @@ export tag bible-reader
 							unless search_verses.length
 								<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
 									<p> data.lang.nothing
-									<p[padding: 32px 0px 8px]> data.lang.translation, ' ', search.search_result_translation
+									<p[padding: 32px 0px 8px]> data.lang.translation, ' ', search.translation
 									<button.more_results @click=showTranslations> data.lang.change_translation
 							<.freespace>
 

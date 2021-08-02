@@ -1760,7 +1760,7 @@ address a:hover {
   display: flex;
   align-items: center;
   border-top: 1px solid var(--btn-bg);
-  padding: 8px;
+  padding: 2px 8px;
   z-index: 1100;
 }
 
