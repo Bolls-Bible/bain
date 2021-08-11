@@ -43,7 +43,3 @@ Check out if it works. If the books chapters are in a proper number, if there ar
 
 
 ### May Jehovah bless you.
-
-### Release _(This is for myself)_
-
-Copy the `TRANSLATION.csv` to production database before deploying the app to GAE.

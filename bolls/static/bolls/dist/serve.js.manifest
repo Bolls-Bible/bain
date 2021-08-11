@@ -376,7 +376,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "QASCCRLD"
+  "hash": "84CQGYWU"
 },
 "$$36$$":{
   "imports": [],
@@ -465,7 +465,7 @@
     ],
     [
       "$$62$$",
-      13491
+      13633
     ],
     [
       "$$63$$",
@@ -481,7 +481,7 @@
     ],
     [
       "$$66$$",
-      275353
+      279889
     ],
     [
       "$$67$$",
@@ -576,7 +576,7 @@
       1681
     ]
   ],
-  "bytes": 856762,
+  "bytes": 861442,
   "map": "$$35$$",
   "source": "$$41$$",
   "css": "$$89$$",
@@ -586,7 +586,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "QASCCRLD",
+  "hash": "84CQGYWU",
   "originalPath": "app/client.__dist__.js"
 },
 "$$37$$":{
@@ -874,7 +874,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$62$$":{
-  "bytes": 14210,
+  "bytes": 14392,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -919,7 +919,7 @@
   "path": "app/views/Bible.imba"
 },
 "$$66$$":{
-  "bytes": 344920,
+  "bytes": 351493,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1409,7 +1409,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$123$$":{
-  "bytes": 14210,
+  "bytes": 14392,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1429,7 +1429,7 @@
   "path": "../../../static/admin/js/vendor/xregexp/xregexp.js"
 },
 "$$126$$":{
-  "bytes": 344920,
+  "bytes": 351493,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1560,7 +1560,7 @@
     "/__assets__/all.css": "$$32$$"
   },
   "mappings": {},
-  "hash": "Z3TI5UB0",
+  "hash": "QXMVJM25",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",
