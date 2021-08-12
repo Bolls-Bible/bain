@@ -403,9 +403,13 @@ let books = [
 ];
 
 for (index in ylt) {
-	let book = ylt[index]
-
-  books.find((el) => {return el.bookid == book.bookid}).chronorder = book.chronorder
+  let book = ylt[index];
+  new_book = books.find((el) => {
+    return el.bookid == book.bookid;
+  });
+  if (new_book) {
+    new_book.chronorder = book.chronorder;
+  }
 }
 
 // In a case when the ylt array doesn't contain some apocrifal books -- assign to the chronorder bookid of the book

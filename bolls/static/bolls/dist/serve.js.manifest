@@ -280,7 +280,7 @@
   "public": true,
   "path": "public/__assets__/all.css",
   "asset": "$$32$$",
-  "hash": "LTGBGPDY",
+  "hash": "QXBGPILO",
   "originalPath": "all.__dist__.css",
   "url": "/__assets__/all.css"
 },
@@ -368,7 +368,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 938848,
+  "bytes": 939060,
   "source": "$$41$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -376,7 +376,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "84CQGYWU"
+  "hash": "DNMWVOHC"
 },
 "$$36$$":{
   "imports": [],
@@ -465,7 +465,7 @@
     ],
     [
       "$$62$$",
-      13633
+      13772
     ],
     [
       "$$63$$",
@@ -477,11 +477,11 @@
     ],
     [
       "$$65$$",
-      194139
+      194339
     ],
     [
       "$$66$$",
-      279889
+      282791
     ],
     [
       "$$67$$",
@@ -576,7 +576,7 @@
       1681
     ]
   ],
-  "bytes": 861442,
+  "bytes": 864687,
   "map": "$$35$$",
   "source": "$$41$$",
   "css": "$$89$$",
@@ -586,7 +586,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "84CQGYWU",
+  "hash": "DNMWVOHC",
   "originalPath": "app/client.__dist__.js"
 },
 "$$37$$":{
@@ -669,7 +669,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "TBUO90JJ",
+  "hash": "B0KJBNMU",
   "originalPath": "app/client.__dist__.css"
 },
 "$$38$$":{
@@ -874,7 +874,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$62$$":{
-  "bytes": 14392,
+  "bytes": 14571,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -896,7 +896,7 @@
   "path": "app/state.imba"
 },
 "$$65$$":{
-  "bytes": 723269,
+  "bytes": 723775,
   "imports": [
     "$$61$$",
     "$$43$$",
@@ -919,7 +919,7 @@
   "path": "app/views/Bible.imba"
 },
 "$$66$$":{
-  "bytes": 351493,
+  "bytes": 356220,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1137,7 +1137,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "M5BAEXTH",
+  "hash": "0WMZB0A7",
   "originalPath": "app/client.__dist__.css"
 },
 "$$90$$":{
@@ -1300,7 +1300,7 @@
   "path": "app/state.imba"
 },
 "$$111$$":{
-  "bytes": 723269,
+  "bytes": 723775,
   "imports": [
     "$$125$$",
     "$$126$$",
@@ -1409,7 +1409,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$123$$":{
-  "bytes": 14392,
+  "bytes": 14571,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1429,7 +1429,7 @@
   "path": "../../../static/admin/js/vendor/xregexp/xregexp.js"
 },
 "$$126$$":{
-  "bytes": 351493,
+  "bytes": 356220,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1560,7 +1560,7 @@
     "/__assets__/all.css": "$$32$$"
   },
   "mappings": {},
-  "hash": "QXMVJM25",
+  "hash": "XMKBCN3E",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

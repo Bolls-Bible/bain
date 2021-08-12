@@ -2129,7 +2129,10 @@ export tag bible-reader
 						<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 							for translation in language.translations
 								<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
-									<span @click=changeTranslation(translation.short_name)> translation.full_name
+									<span @click=changeTranslation(translation.short_name)>
+										<b> translation.short_name
+										', '
+										translation.full_name
 									if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
 										<svg.translation_info viewBox="0 0 24 24">
 											<title> translation.info

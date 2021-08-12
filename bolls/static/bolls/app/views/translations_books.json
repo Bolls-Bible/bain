@@ -22320,5 +22320,331 @@
 			"chronorder": 65,
 			"chapters": 22
 		}
+	],
+	"LXXE": [
+		{
+			"bookid": 1,
+			"name": "Genesis",
+			"chronorder": 1,
+			"chapters": 50
+		},
+		{
+			"bookid": 2,
+			"name": "Exodus",
+			"chronorder": 3,
+			"chapters": 40
+		},
+		{
+			"bookid": 3,
+			"name": "Leviticus",
+			"chronorder": 4,
+			"chapters": 27
+		},
+		{
+			"bookid": 4,
+			"name": "Numbers",
+			"chronorder": 5,
+			"chapters": 36
+		},
+		{
+			"bookid": 5,
+			"name": "Deuteronomy",
+			"chronorder": 6,
+			"chapters": 34
+		},
+		{
+			"bookid": 6,
+			"name": "Joshua",
+			"chronorder": 7,
+			"chapters": 24
+		},
+		{
+			"bookid": 7,
+			"name": "Judges",
+			"chronorder": 8,
+			"chapters": 21
+		},
+		{
+			"bookid": 8,
+			"name": "Ruth",
+			"chronorder": 9,
+			"chapters": 4
+		},
+		{
+			"bookid": 9,
+			"name": "1 Samuel",
+			"chronorder": 10,
+			"chapters": 31
+		},
+		{
+			"bookid": 10,
+			"name": "2 Samuel",
+			"chronorder": 11,
+			"chapters": 24
+		},
+		{
+			"bookid": 11,
+			"name": "1 Kings",
+			"chronorder": 15,
+			"chapters": 22
+		},
+		{
+			"bookid": 12,
+			"name": "2 Kings",
+			"chronorder": 28,
+			"chapters": 25
+		},
+		{
+			"bookid": 13,
+			"name": "1 Chronicles",
+			"chronorder": 12,
+			"chapters": 29
+		},
+		{
+			"bookid": 14,
+			"name": "2 Chronicles",
+			"chronorder": 16,
+			"chapters": 36
+		},
+		{
+			"bookid": 15,
+			"name": "Ezra",
+			"chronorder": 37,
+			"chapters": 10
+		},
+		{
+			"bookid": 16,
+			"name": "Nehemiah",
+			"chronorder": 38,
+			"chapters": 13
+		},
+		{
+			"bookid": 17,
+			"name": "Esther",
+			"chronorder": 36,
+			"chapters": 10
+		},
+		{
+			"bookid": 18,
+			"name": "Job",
+			"chronorder": 2,
+			"chapters": 42
+		},
+		{
+			"bookid": 19,
+			"name": "Psalms",
+			"chronorder": 13,
+			"chapters": 151
+		},
+		{
+			"bookid": 20,
+			"name": "Proverbs",
+			"chronorder": 17,
+			"chapters": 31
+		},
+		{
+			"bookid": 21,
+			"name": "Ecclesiastes",
+			"chronorder": 18,
+			"chapters": 12
+		},
+		{
+			"bookid": 22,
+			"name": "Song of Solomon",
+			"chronorder": 14,
+			"chapters": 8
+		},
+		{
+			"bookid": 23,
+			"name": "Isaiah",
+			"chronorder": 25,
+			"chapters": 66
+		},
+		{
+			"bookid": 24,
+			"name": "Jeremiah",
+			"chronorder": 29,
+			"chapters": 52
+		},
+		{
+			"bookid": 25,
+			"name": "Lamentations",
+			"chronorder": 30,
+			"chapters": 5
+		},
+		{
+			"bookid": 26,
+			"name": "Ezekiel",
+			"chronorder": 32,
+			"chapters": 48
+		},
+		{
+			"bookid": 27,
+			"name": "Daniel",
+			"chronorder": 33,
+			"chapters": 12
+		},
+		{
+			"bookid": 28,
+			"name": "Hosea",
+			"chronorder": 23,
+			"chapters": 14
+		},
+		{
+			"bookid": 29,
+			"name": "Joel",
+			"chronorder": 20,
+			"chapters": 3
+		},
+		{
+			"bookid": 30,
+			"name": "Amos",
+			"chronorder": 21,
+			"chapters": 9
+		},
+		{
+			"bookid": 31,
+			"name": "Obadiah",
+			"chronorder": 31,
+			"chapters": 1
+		},
+		{
+			"bookid": 32,
+			"name": "Jonah",
+			"chronorder": 19,
+			"chapters": 4
+		},
+		{
+			"bookid": 33,
+			"name": "Micah",
+			"chronorder": 22,
+			"chapters": 7
+		},
+		{
+			"bookid": 34,
+			"name": "Nahum",
+			"chronorder": 24,
+			"chapters": 3
+		},
+		{
+			"bookid": 35,
+			"name": "Habakkuk",
+			"chronorder": 27,
+			"chapters": 3
+		},
+		{
+			"bookid": 36,
+			"name": "Zephaniah",
+			"chronorder": 26,
+			"chapters": 3
+		},
+		{
+			"bookid": 37,
+			"name": "Haggai",
+			"chronorder": 34,
+			"chapters": 2
+		},
+		{
+			"bookid": 38,
+			"name": "Zechariah",
+			"chronorder": 35,
+			"chapters": 14
+		},
+		{
+			"bookid": 39,
+			"name": "Malachi",
+			"chronorder": 39,
+			"chapters": 4
+		},
+		{
+			"bookid": 68,
+			"name": "Tobit",
+			"chronorder": 68,
+			"chapters": 14
+		},
+		{
+			"bookid": 69,
+			"name": "Judith",
+			"chronorder": 69,
+			"chapters": 16
+		},
+		{
+			"bookid": 74,
+			"name": "1 Maccabees",
+			"chronorder": 74,
+			"chapters": 16
+		},
+		{
+			"bookid": 75,
+			"name": "2 Maccabees",
+			"chronorder": 75,
+			"chapters": 15
+		},
+		{
+			"bookid": 76,
+			"name": "3 Maccabees",
+			"chronorder": 76,
+			"chapters": 7
+		},
+		{
+			"bookid": 80,
+			"name": "4 Maccabees",
+			"chronorder": 80,
+			"chapters": 18
+		},
+		{
+			"bookid": 70,
+			"name": "Wisdom",
+			"chronorder": 70,
+			"chapters": 19
+		},
+		{
+			"bookid": 71,
+			"name": "Sirach",
+			"chronorder": 71,
+			"chapters": 51
+		},
+		{
+			"bookid": 73,
+			"name": "Baruch",
+			"chronorder": 73,
+			"chapters": 5
+		},
+		{
+			"bookid": 88,
+			"name": "Azariah",
+			"chronorder": 88,
+			"chapters": 1
+		},
+		{
+			"bookid": 78,
+			"name": "Susanna",
+			"chronorder": 78,
+			"chapters": 1
+		},
+		{
+			"bookid": 83,
+			"name": "Prayer of Manasseh",
+			"chronorder": 83,
+			"chapters": 1
+		},
+		{
+			"bookid": 79,
+			"name": "Bel and Dragon",
+			"chronorder": 79,
+			"chapters": 1
+		},
+		{
+			"bookid": 72,
+			"name": "Epistle of Jeremiah",
+			"chronorder": 72,
+			"chapters": 1
+		},
+		{
+			"bookid": 67,
+			"name": "1 Esdras",
+			"chronorder": 67,
+			"chapters": 9
+		}
 	]
 }
