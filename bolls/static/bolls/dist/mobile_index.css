@@ -8,40 +8,16 @@
   .Bible main h1 {
     margin: 32px 0 16px;
   }
-  @keyframes showing_search_results {
-    0% {
-      top: 100%;
-    }
-    100% {
-      top: 0%;
-    }
+  .popup_container {
+    padding: 0 0;
   }
-  @keyframes hiding_search_results {
-    0% {
-      top: 0%;
-    }
-    100% {
-      top: 100%;
-    }
-  }
-  .search_results {
-    right: 0;
-    height: 100%;
-    max-height: 100%;
-    width: 100%;
-    border-top: none;
-    border-left: none;
-    border-right: none;
+  .popup_container > .popup {
+    max-height: 100vh;
+    max-width: 100%;
+    width:100%;
     border-radius: 0;
+    border:none;
     padding: 12px;
-    -webkit-animation: hiding_search_results 300ms ease 0ms both;
-    animation: hiding_search_results 300ms ease 0ms both;
-  }
-  .show_search_results {
-    box-shadow: none;
-    top: 0%;
-    -webkit-animation: showing_search_results 300ms ease 0ms both;
-    animation: showing_search_results 300ms ease 0ms both;
   }
   .filters {
     max-height: 96%;
@@ -87,13 +63,10 @@
   .noscroll {
     padding-right: 0;
   }
-  #page_search input {
-    width: calc(100vw - 210px);
-  }
   #page_search .close_search {
-    margin: 0 8px 0 auto
+    margin: 0 8px 0 auto;
   }
   #page_search p {
-    margin-left: 8px;
+    margin: 0 8px 0 -8px;
   }
 }

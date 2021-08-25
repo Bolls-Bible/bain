@@ -135,7 +135,6 @@ export tag profile-page
 	def getProfileBookmarks
 		tab = 0
 		highlights_range.to += 32
-		log highlights_range
 		if highlights_range.loaded != highlights_range.to
 			highlights_range.from = highlights_range.loaded
 
@@ -144,7 +143,6 @@ export tag profile-page
 			let bookmarksdata
 			if window.navigator.onLine
 				bookmarksdata = await loadData(url)
-				log bookmarksdata, highlights_range
 			else
 				bookmarksdata = await data.getBookmarksFromStorage() || []
 			highlights_range.loaded += bookmarksdata.length
@@ -192,7 +190,6 @@ export tag profile-page
 	def scroll
 		if (clientHeight - 512 < scrollTop + window.innerHeight) && !loading && query == ''
 			loading = yes
-			log highlights_range
 			if tab == 0
 				if highlights_range.loaded == highlights_range.to
 					getProfileBookmarks()
@@ -342,13 +339,16 @@ export tag profile-page
 			else
 				<div.freespace>
 
-			if !highlights.length && !collections.length
+			if !(highlights.length && collections.length)
 				<p[text-align: center]> data.lang.thereisnobookmarks
 
+			if !list_for_display.length && !loading
+				<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 
 
-			<div id="daf" [visibility: {show_options_of == "delete_form" || show_options_of == "edit_form" ? 'visible' : 'hidden'}]>
-				<section.search_results .show_search_results=(show_options_of == "delete_form" || show_options_of == "edit_form")>
+
+			<section.popup_container.daf .show_popup_container=(show_options_of == "delete_form" || show_options_of == "edit_form") [zi:auto] @click=(show_options_of = '')>
+				<div.popup@click.stop [max-width:486px m:auto p:0 16px 16px]>
 					if show_options_of == "delete_form"
 						<form action="/delete-my-account/">
 							<header.search_hat>

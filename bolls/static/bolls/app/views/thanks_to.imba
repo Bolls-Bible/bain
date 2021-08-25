@@ -2,8 +2,9 @@ export const thanks_to = [
 	"Павлишинець Тимофій, advocate, sponsor."
 	"Silvia Sanchez (Kohane), German localisation.",
 	"Rodolfo Schonhals Fischer, contributor, security auditor, Portuguese and Español localisation"
-	"Juan Martin"
-	"Vladimir Pandovski, donator"
+	"Joel Chackosaji, patron"
+	"Juan Martin, donator"
+	"Vladimir Pandovski, donator, patron"
 	"Dj. Crouch, donator"
 	"Alexander Alemayhu, patron"
 	"Павлишинець Едуард, contributor"

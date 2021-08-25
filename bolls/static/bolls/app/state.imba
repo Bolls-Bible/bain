@@ -3,22 +3,23 @@ import {english, ukrainian, russian, portuguese, espanol, german} from './langda
 
 
 export class State
-	prop downloaded_translations
-	prop db_is_available
-	prop db
-	prop downloading_of_this_translations
-	prop deleting_of_all_transllations
-	prop show_languages
-	prop language
-	prop lang
-	prop notifications = []
-	prop user = {}
-	prop translations_current_state = {}
-	prop addBtn = no
-	prop hideInstallPromotion = no
-	prop deferredPrompt
-	prop translations = []
-	prop timeoutID = undefined
+	downloaded_translations
+	db_is_available
+	db
+	downloading_of_this_translations
+	deleting_of_all_transllations
+	show_languages
+	language
+	lang
+	notifications = []
+	user = {}
+	translations_current_state = {}
+	addBtn = no
+	hideInstallPromotion = no
+	deferredPrompt
+	translations = []
+	timeoutID = undefined
+	PSWV = no # Play Store Web View
 
 	def constructor
 		for lngg in languages
@@ -42,6 +43,16 @@ export class State
 		# To know as fast as possible if the user possibly is logged in.
 		user.username = getCookie('username') || ''
 		user.name = getCookie('name') || ''
+
+
+		if window.navigator.userAgent.indexOf('Android') > -1 && window.navigator.userAgent.indexOf(' Bolls/') > -1
+			PSWV = yes
+			english["SUPPORT"].length = 4
+			ukrainian["SUPPORT"].length = 4
+			russian["SUPPORT"].length = 4
+			portuguese["SUPPORT"].length = 4
+			espanol["SUPPORT"].length = 4
+			german["SUPPORT"].length = 4
 
 		# If the user defined his language -- use it.
 		if getCookie('language')

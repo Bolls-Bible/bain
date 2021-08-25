@@ -53,14 +53,18 @@ export tag note-up
 
 
 	css
-		pb:0.75em
-		font-size: 0.68em;
+		d:inline
+		pb:1em
+		pt:0.5em
+		font-size: 0.68em
 		cursor:pointer
-		vertical-align: super;
-		white-space: pre;
+		vertical-align: super
+		white-space: pre
 		us:none
 		fill:$accent-color @hover:$accent-hover-color
 		stroke:$accent-color @hover:$accent-hover-color
+		bg@hover:$btn-bg-hover
+		rd:4px
 
 
 		div

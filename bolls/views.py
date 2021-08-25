@@ -77,7 +77,6 @@ def getText(request, translation, book, chapter):
 def search(request, translation, piece=''):
     if len(piece) == 0:
         piece = request.GET.get('search', '')
-    results_of_exec_search = []
     d = []
     piece = piece.strip()
 
@@ -91,8 +90,9 @@ def search(request, translation, piece=''):
 
         results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
 
-
-        if len(results_of_exec_search) < 256:
+        results_of_search = []
+        print(results_of_exec_search)
+        if len(results_of_exec_search) < 24:
             rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
             # 1 - e^(-0.0001 * (x + 16) ** (2))
 
@@ -101,12 +101,16 @@ def search(request, translation, piece=''):
             results_of_rank = Verses.objects.annotate(rank=SearchRank(
                 vector, query)).filter(translation=translation, rank__gt=(0.05)).order_by('-rank')
 
-            results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
-                'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
+            print(results_of_exec_search, results_of_rank)
+            results_of_search = []
+            if len(results_of_rank) < 24:
+                results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
+                    'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
 
+                results_of_search = list(results_of_similarity) + \
+                    list(set(results_of_rank) - set(results_of_similarity))
+                print(results_of_exec_search, results_of_rank, results_of_similarity)
 
-            results_of_search = list(results_of_similarity) + \
-                list(set(results_of_rank) - set(results_of_similarity))
 
             results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
 
