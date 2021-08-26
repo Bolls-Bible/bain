@@ -2409,7 +2409,7 @@ export tag bible-reader
 						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
-						unless data.PSWV
+						unless data.pswv
 							<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"

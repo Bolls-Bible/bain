@@ -379,7 +379,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 941149,
+  "bytes": 941158,
   "source": "$$42$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -387,7 +387,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "N1PHLGI9"
+  "hash": "DPNTZXDY"
 },
 "$$37$$":{
   "imports": [],
@@ -484,7 +484,7 @@
     ],
     [
       "$$65$$",
-      15845
+      15853
     ],
     [
       "$$66$$",
@@ -599,7 +599,7 @@
       1722
     ]
   ],
-  "bytes": 867730,
+  "bytes": 867738,
   "map": "$$36$$",
   "source": "$$42$$",
   "css": "$$93$$",
@@ -609,7 +609,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "N1PHLGI9",
+  "hash": "DPNTZXDY",
   "originalPath": "app/client.__dist__.js"
 },
 "$$38$$":{
@@ -910,7 +910,7 @@
   "path": "app/langdata.imba"
 },
 "$$65$$":{
-  "bytes": 86931,
+  "bytes": 86947,
   "imports": [
     "$$62$$",
     "$$63$$",
@@ -1346,7 +1346,7 @@
   "path": "node_modules/imba/src/imba/imba.imba"
 },
 "$$114$$":{
-  "bytes": 86950,
+  "bytes": 86966,
   "imports": [
     "$$127$$",
     "$$128$$",
@@ -1617,7 +1617,7 @@
     "/__assets__/all.css": "$$33$$"
   },
   "mappings": {},
-  "hash": "RVEFWVM4",
+  "hash": "2W9TT5UB",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

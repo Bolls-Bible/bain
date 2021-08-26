@@ -19,7 +19,7 @@ export class State
 	deferredPrompt
 	translations = []
 	timeoutID = undefined
-	PSWV = no # Play Store Web View
+	pswv = no # Play Store Web View
 
 	def constructor
 		for lngg in languages
@@ -45,8 +45,8 @@ export class State
 		user.name = getCookie('name') || ''
 
 
-		if window.navigator.userAgent.indexOf('Android') > -1 && window.navigator.userAgent.indexOf(' Bolls/') > -1
-			PSWV = yes
+		if window.navigator.userAgent.indexOf('Android') > -1 && window.navigator.userAgent.indexOf(' Bolls.2.1') > -1
+			pswv = yes
 			english["SUPPORT"].length = 4
 			ukrainian["SUPPORT"].length = 4
 			russian["SUPPORT"].length = 4
