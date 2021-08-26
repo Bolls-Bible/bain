@@ -51,10 +51,10 @@ let settings =
 	book: 1
 	chapter: 1
 	font:
-		size: window.innerWidth > 512 ? 24 : 20
+		size: 20
 		family: "sans, sans-serif"
 		name: "Sans Serif"
-		line-height: window.innerWidth > 512 ? 2 : 1.8
+		line-height: 1.8
 		weight: 400
 		max-width: 30
 		align: ''
@@ -2388,6 +2388,9 @@ export tag bible-reader
 					<a.help href='/downloads/' target="_blank" @click=install>
 						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
+					<a.help href='https://bohuslav.me/Dictionary/' target='_blank'>
+						<span.font_icon> 'א'
+						'Dictionary'
 				<a.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
