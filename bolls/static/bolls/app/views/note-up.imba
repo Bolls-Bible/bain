@@ -1,54 +1,65 @@
 export tag note-up
-	prop label = ''
 	prop text = ''
 	prop containerHeight = 0
+	prop containerWidth = 0
 	prop bookmark = {}
+	prop parallelMode = no
 
 	#max_content_length = 0
 	#left_offset = '0px'
 	#right_offset = 'auto'
 	#vertclass = ''
 	#hortclass = ''
+	#show = no
 
 	def setBorders event
+		#show = !#show
 		event.originalTarget ||= event.target
+
+		let offsetX = 0
+		if parallelMode
+			offsetX = event.layerX
+		else
+			offsetX = event.clientX
+
 		if event.originalTarget.nodeName == 'P' or event.originalTarget.nodeName == 'DIV'
 			return
 
-		if containerHeight - event.layerY < 720
+		if containerHeight - event.clientY < 720
 			#vertclass = 'bottom'
 		else
 			#vertclass = ''
 
-		#max_content_length = Math.max(bookmark.collection.length, bookmark.note.length) * 10
-		if (#max_content_length / 2) < window.innerWidth
-			#left_offset = event.layerX + 'px'
+		if offsetX < containerWidth / 2
+			#left_offset = offsetX + 'px'
 			#right_offset = 'auto'
-			if window.innerWidth - event.layerX < Math.max(#max_content_length, 200) + 24
-				#left_offset = 'auto'
-				#right_offset = '0'
 		else
-			#left_offset = '0px'
+			#left_offset = 'auto'
+			#right_offset = (containerWidth - offsetX) + 'px'
+		if containerWidth < 480
+			#left_offset = 'auto'
 			#right_offset = 'auto'
+
 
 
 	def inlineNote
-		if bookmark.collection && bookmark.note
-			return '<b>' + bookmark.collection + '</b><br>' + bookmark.note
-		elif bookmark.collection
-			return '<b>' + bookmark.collection + '</b>'
-		else return bookmark.note
+		if typeof bookmark == 'object'
+			if bookmark.collection && bookmark.note
+				return '<b>' + bookmark.collection + '</b><br>' + bookmark.note
+			elif bookmark.collection
+				return '<b>' + bookmark.collection + '</b>'
+			else return bookmark.note
+		else return bookmark
 
 
 
 	def render
-		<self tabIndex=1 @click.stop.prevent=setBorders>
+		<self tabIndex=0 @click.stop.prevent=setBorders>
 			'\u2007\u2007'
-			<svg viewBox="0 0 20 20" alt=label>
-				<title> label
-				<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-			"\u2007"
-			<div .{#vertclass} [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'}]> <p innerHTML=inlineNote()>
+			<slot>
+			"  "
+			<div .{#vertclass} .show=#show [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'}]>
+				<p innerHTML=inlineNote()>
 
 
 
@@ -75,7 +86,6 @@ export tag note-up
 			bg:$background-color
 			min-width:16em
 			max-height:256px
-			fs:14px
 			us:select
 			white-space: break-spaces;
 
@@ -87,16 +97,12 @@ export tag note-up
 			overflow:auto
 			max-height:232px
 
-		svg
-			size:0.68em
-			fill:inherit
-			stroke:inherit
 
+		@focus-within
+			.show
+				visibility:visible
+				o:1
+				transform:none
 
-		@focus-within > div
-			visibility:visible
-			o:1
-			transform:none
-
-		@focus-within > .bottom
+		.bottom
 			transform:translateY(calc(-100% - 2em))

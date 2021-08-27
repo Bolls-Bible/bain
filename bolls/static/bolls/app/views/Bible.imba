@@ -214,6 +214,7 @@ export tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {suggestions:{}}
+	#main_header_size = ''
 
 	def setup
 		# # # Setup some global events
@@ -445,6 +446,10 @@ export tag bible-reader
 		imba.commit()
 
 	def getText translation, book, chapter, verse
+		router.go(window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/')
+		getChapter translation, book, chapter, verse
+
+	def getChapter translation, book, chapter, verse
 		let changeParallel = yes
 		const does_the_chapter_exist_in_this_translation = theChapterExistInThisTranslation(translation, book, chapter)
 		unless does_the_chapter_exist_in_this_translation
@@ -452,29 +457,12 @@ export tag bible-reader
 			chapter = settings.chapter
 			changeParallel = no
 
-		const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
+		# const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
 		const the_same_chapter = translation == settings.translation && book == settings.book && chapter == settings.chapter
 
-		if not the_same_chapter or locations_are_different or !verses.length
+		if !the_same_chapter or !verses.length
 			loading = yes
 			switchTranslation translation
-			if !window.on_pops_tate && (verses.length || !window.navigator.onLine)
-				window.history.pushState({
-						translation: translation,
-						book: book,
-						chapter: chapter,
-						verse: verse,
-						parallel: no,
-						parallel_display: settingsp.display
-						parallel-translation: settingsp.translation,
-						parallel-book: settingsp.book,
-						parallel-chapter: settingsp.chapter,
-						parallel-verse: 0,
-					},
-					'',
-					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
-				)
-				router.go(window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/')
 			clearSpace()
 			document.title = nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name + " Bolls Bible"
 			if chronorder
@@ -489,7 +477,7 @@ export tag bible-reader
 			settings.name_of_book = nameOfBook(settings.book, settings.translation)
 			settings.filtered_books = filteredBooks('books')
 			saveToHistory(translation, book, chapter, verse, no)
-			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
+			let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
 			try
 				verses = []
 				imba.commit()
@@ -508,17 +496,18 @@ export tag bible-reader
 			if settings.parallel_synch && settingsp.display && changeParallel
 				getParallelText settingsp.translation, book, chapter, verse, yes
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
+		clearSpace!
+		window.on_pops_tate = no
 		if verse
 			if verse.length > 1
 				findVerse(verse[0], verse[verse.length - 1])
 			else
 				findVerse(verse)
-		clearSpace!
-		window.on_pops_tate = no
-		setTimeout(&, 100) do
-			chapter_headers.fontsize1 = 2
-			scrollToY($firstparallel,0)
-			scrollToY(self, 0)
+		else
+			setTimeout(&, 100) do
+				chapter_headers.fontsize1 = 2
+				scrollToY($firstparallel,0)
+				scrollToY(self, 0)
 		if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 
 
@@ -542,7 +531,7 @@ export tag bible-reader
 			settingsp.name_of_book = nameOfBook(settingsp.book, settingsp.translation)
 			settingsp.filtered_books = filteredBooks('parallel_books')
 			clearSpace()
-			let url = "/get-text/" + translation + '/' + book + '/' + chapter + '/'
+			let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
 			parallel_verses = []
 			try
 				if data.db_is_available && data.downloaded_translations.indexOf(translation) != -1
@@ -565,9 +554,10 @@ export tag bible-reader
 			setCookie('parallel_chapter', chapter)
 			if verse
 				findVerse("p{verse}")
-			setTimeout(&, 100) do
-				chapter_headers.fontsize2 = 2
-				scrollToY($secondparallel,0)
+			else
+				setTimeout(&, 100) do
+					chapter_headers.fontsize2 = 2
+					scrollToY($secondparallel,0)
 			if !window.on_pops_tate && verses && !verse && settingsp.display
 				show_parallel_verse_picker = true
 
@@ -596,7 +586,6 @@ export tag bible-reader
 					verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
 				else
 					scrollToY(self, topScroll)
-				log verse.offsetTop - (window.innerHeight * topScrollOffset), topScrollOffset
 				if highlight then highlightLinkedVerses(id, endverse)
 			else findVerse(id, endverse, highlight)
 
@@ -2083,12 +2072,19 @@ export tag bible-reader
 
 	def layerHeight parallel
 		if parallel
-			log 'nonono'
-			return 0
+			return $secondparallel.clientHeight
 		else
 			if settingsp.display
 				return $firstparallel.clientHeight
 			return $main.clientHeight
+
+	def layerWidth parallel
+		if parallel
+			return $secondparallel.clientWidth
+		else
+			if settingsp.display
+				return $firstparallel.clientWidth
+			return $main.clientWidth
 
 
 	def filterCompareTranslation translation
@@ -2096,7 +2092,6 @@ export tag bible-reader
 			return 1
 		else
 			return store.compare_translations_search.toLowerCase() in (translation.short_name + translation.full_name).toLowerCase()
-			# return scoreSearch(store.compare_translations_search, translation.full_name) > 0
 
 
 
@@ -2177,14 +2172,15 @@ export tag bible-reader
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
 						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu()>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
-								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:max({max_header_font}em, {chapter_headers.fontsize1}em) max-width:max({max_header_font}em, {chapter_headers.fontsize1}em)] title=data.lang.prev href="{prevChapterLink()}">
+							#main_header_size = "max({max_header_font}em, {chapter_headers.fontsize1}em)"
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:{#main_header_size} d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
+								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{#main_header_size} max-width:{#main_header_size} min-height:{#main_header_size} min-width:{#main_header_size}] title=data.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settings.name_of_book, ' ', settings.chapter
 
-								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:max({max_header_font}em, {chapter_headers.fontsize1}em) max-width:max({max_header_font}em, {chapter_headers.fontsize1}em)] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{#main_header_size} max-width:{#main_header_size} min-height:{#main_header_size} min-width:{#main_header_size}] title=data.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2199,7 +2195,14 @@ export tag bible-reader
 									>
 								if bukmark
 									if bukmark.collection || bukmark.note
-										<note-up label=data.lang.note bookmark=bukmark containerHeight=layerHeight(no)>
+										<note-up parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+											<svg viewBox="0 0 20 20" alt=data.lang.note>
+												<title> data.lang.note
+												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
+
+								if verse.comment
+									<note-up parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
 
 								if settings.verse_break
 									<br>
@@ -2235,6 +2238,11 @@ export tag bible-reader
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 								if settings.verse_break
 									<br>
+
+								if parallel_verse.comment
+									<note-up parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
+										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
+
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2548,7 +2556,7 @@ export tag bible-reader
 							<svg.close_search @click=makeNote() viewBox="0 0 20 20">
 								<title> data.lang.close
 								<path[m: auto] d=svg_paths.close>
-							<h1> data.lang.note, ',', highlighted_title
+							<h1> data.lang.note, ', ', highlighted_title
 							<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
 								<title> data.lang.create
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
@@ -2886,3 +2894,8 @@ export tag bible-reader
 		#gs_hat:focus-within > .search_suggestions
 			visibility:visible
 			o:1
+
+		note-up svg
+			size:0.68em
+			fill:inherit
+			stroke:inherit

@@ -1654,11 +1654,13 @@ footer a:hover {
   margin: 128px 0 16px;
 }
 
-address a {
+address a,
+note-up a {
   color: var(--accent-color);
 }
 
-address a:hover {
+address a:hover,
+note-up a:hover {
   color: var(--accent-hover-color);
 }
 

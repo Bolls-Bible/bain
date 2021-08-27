@@ -33,6 +33,8 @@ urlpatterns = [
 	path('<slug:translation>/<str:piece>/', views.search),
 	path('get-text/<slug:translation>/<int:book>/<int:chapter>/',
 		views.getText),
+	path('get-chapter/<slug:translation>/<int:book>/<int:chapter>/',
+		views.getChapterWithComments),
 	path('get-bookmarks/<slug:translation>/<int:book>/<int:chapter>/',
 		views.getBookmarks),
 	path('get-profile-bookmarks/<int:range_from>/<int:range_to>/',

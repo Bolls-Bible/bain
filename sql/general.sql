@@ -1,10 +1,17 @@
------------ INSERTING OF THE TEXT TO THE DB
+----------- INSERTING TEXT TO THE DB
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/LXXE.csv' DELIMITER '|' CSV HEADER;
 
 
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/w.csv' DELIMITER ',' CSV HEADER;
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/LUT.csv' DELIMITER '	' CSV HEADER;
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/meng.csv' DELIMITER '|' CSV HEADER;
+
+
+----------- INSERTING COMMENTARIES TO THE DB
+\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
+
+
+
 
 INSERT inTO bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
 

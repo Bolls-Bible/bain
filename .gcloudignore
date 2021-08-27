@@ -37,10 +37,10 @@ static/bolls/package-lock.json
 sql/
 languages/
 migrations/
-old_bolls/
 README.md
 .github
 .vscode
+commentaries/
 
 LICENSE
 

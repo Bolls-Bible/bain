@@ -4,32 +4,21 @@ export tag verse-navigator
 		if bible[0]
 			bible[0].clearSpace!
 
-	def routed params, state
-		state = window.history.state
-		if state.verse || state.parallel-verse
-			window.on_pops_tate = yes
-			const bible = document.getElementsByTagName("BIBLE-READER")
+	def routed params
+		const bible = document.getElementsByTagName("BIBLE-READER")
 
-			if bible[0]
-				if state.parallel
-					bible[0].getParallelText(
-						state.parallel-translation,
-						parseInt(state.parallel-book),
-						parseInt(state.parallel-chapter),
-						parseInt(state.parallel-verse))
-				else
-
-					bible[0].getText(params.translation, parseInt(params.book), parseInt(params.chapter), parseInt(params.verse))
-	<self>
+		if bible[0]
+			let verse
+			if '-' in params.verse
+				verse = params.verse.split('-').map(do(el) parseInt(el))
+			else
+				verse = parseInt(params.verse)
+			bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter), verse)
 
 
 export tag chapter-navigator
 	def routed params
-		state = window.history.state
-		if state
-			if state.translation
-				window.on_pops_tate = yes
-				const bible = document.getElementsByTagName("BIBLE-READER")
-				if bible[0]
-					bible[0].getText(params.translation, parseInt(params.book), parseInt(params.chapter))
-	<self>
+		unless window.location.pathname.split('/').length == 5
+			const bible = document.getElementsByTagName("BIBLE-READER")
+			if bible[0]
+				bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter))

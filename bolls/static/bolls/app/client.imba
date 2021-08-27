@@ -3,15 +3,15 @@ import './views/Bible'
 import './views/Profile'
 import './views/downloads'
 import {Notifications} from './views/Notifications'
-import {verse-navigator, chapter-navigator} from './route-navigators'
+import './route-navigators'
 
 let state = new State()
 
 tag the-app
 	<self>
 		<bible-reader route='/' data=state>
-		<verse-navigator route='/:translation/:book/:chapter/:verse/'>
-		<chapter-navigator route='/:translation/:book/:chapter/'>
+		<verse-navigator route='/:translation/:book/:chapter/:verse'>
+		<chapter-navigator route='/:translation/:book/:chapter'>
 
 		<profile-page route.exact='/profile/' data=state>
 		<downloads-page route.exact='/downloads/' data=state>
