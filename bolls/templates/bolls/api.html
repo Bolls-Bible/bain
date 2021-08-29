@@ -69,10 +69,10 @@
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre>
 	<h2 id='Fetch a chapter'>Fetch a chapter</h2>
-	<p>Then, using that data, you can form a url for fetching a chapter of certain translation and book. The url
-		constructor is the next:
+	<p>Then, using that data, you can form a url for fetching a chapter of certain translation and book. You may fetch the chapter with translator commentarie or without them. The url constructor is the next:
 
-	<pre>https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/</pre>
+	<pre>https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # Without commentaries</pre>
+	<pre>https://bolls.life/get-chapter/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # With commentaries</pre>
 
 	<p>Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation like <code>YLT</code> or
 		<code>UBIO</code> or <code>SYNOD</code>, and where <code>&lt;int:book&gt;</code>
@@ -82,15 +82,18 @@
 	</p>
 
 	<pre><a target="_blank" href="https://bolls.life/get-text/YLT/22/8/">https://bolls.life/get-text/YLT/22/8/</a></pre>
+	<pre><a target="_blank" href="https://bolls.life/get-chapter/NKJV/22/8/">https://bolls.life/get-chapter/NKJV/22/8/</a></pre>
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/get-text/YLT/22/8/'</pre>
+	<pre>curl --location --request GET 'https://bolls.life/get-chapter/NKJV/22/8/'</pre>
 
 	<p>The result of this request will be a list of verses of that chapter, where every verse will has some several
 		fields.</p>
 	<ul>
 		<li> The <code>pk</code> field is an id of the verse in database.
 		<li> The <code>verse</code> field is a number of the verse in its chapter.
-		<li> The <code>text</code> field contains a text of this verse.
+		<li> The <code>text</code> field contains an html text of this verse.
+		<li> The optional <code>comment</code> field contains an html text of translators comment or references.
 	</ul>
 	<p><b>NOTE!</b> To fetch a single verse or a few verses of one or more translations use <a href='#compare'>Compare
 			versions API</a></p>

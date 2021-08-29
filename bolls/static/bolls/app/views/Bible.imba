@@ -214,7 +214,7 @@ export tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {suggestions:{}}
-	#main_header_size = ''
+	#main_header_arrow_size = ''
 
 	def setup
 		# # # Setup some global events
@@ -258,6 +258,7 @@ export tag bible-reader
 			if e.code == "KeyH" && e.altKey && e.ctrlKey
 				menuicons = !menuicons
 				setCookie("menuicons", menuicons)
+				imba.commit!
 
 			elif e.code == "KeyY" && e.ctrlKey
 				fixDrawers!
@@ -972,7 +973,7 @@ export tag bible-reader
 
 
 	def searchSuggestions
-		const query = search.search_input.trim!
+		const query = search.search_input.trim!.toLowerCase!
 
 		const parts = query.split(' ')
 		const last_part = parts[parts.length - 1]
@@ -1015,6 +1016,13 @@ export tag bible-reader
 		for item in filtered_books
 			if theChapterExistInThisTranslation settings.translation, item.book.bookid, search.suggestions.chapter
 				search.suggestions.books.push item.book
+
+		search.suggestions.translations = []
+		if query.length > 2
+			for translation in translations
+				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase!
+					search.suggestions.translations.push(translation)
+
 
 	def searchTranslation
 		if settingsp.edited_version == settingsp.translation && settingsp.display
@@ -1194,7 +1202,7 @@ export tag bible-reader
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
-			return 'repeating-linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0) 4px, ' + store.highlight_color + ' 4px, ' + store.highlight_color + ' 8px)'
+			return 'repeating-linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0) 0.15em, ' + store.highlight_color + ' 0.15em, ' + store.highlight_color + ' 0.3em)'
 		else
 			let highlight = self[bookmarks].find(do |element| return element.verse == verse)
 			if highlight
@@ -1911,7 +1919,7 @@ export tag bible-reader
 				if e.target.scrollTop < last_known_scroll_position || not e.target.scrollTop
 					menu_icons_transform = 0
 				elif e.target.scrollTop > last_known_scroll_position
-					if window.innerWidth > 1024
+					if window.innerWidth >= 1024
 						menu_icons_transform = -100
 					else
 						menu_icons_transform = 100
@@ -1931,7 +1939,7 @@ export tag bible-reader
 			if scrollTop < last_known_scroll_position || not scrollTop
 				menu_icons_transform = 0
 			elif scrollTop > last_known_scroll_position
-				if window.innerWidth > 1024
+				if window.innerWidth >= 1024
 					menu_icons_transform = -100
 				else
 					menu_icons_transform = 100
@@ -2044,13 +2052,13 @@ export tag bible-reader
 		data.deferredPrompt.prompt()
 
 	def settingsIconTransform huh
-		if (fixdrawers && window.innerWidth > 1024) or huh
+		if (fixdrawers && window.innerWidth >= 1024) or huh
 			return -(300 + settings_menu_left)
 		else
 			return 0
 
 	def bibleIconTransform huh
-		if (fixdrawers && window.innerWidth > 1024) or huh
+		if (fixdrawers && window.innerWidth >= 1024) or huh
 			return 300 + bible_menu_left
 		else
 			return 0
@@ -2171,37 +2179,39 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if verses.length
-						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu()>
-							#main_header_size = "max({max_header_font}em, {chapter_headers.fontsize1}em)"
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:{#main_header_size} d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
-								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{#main_header_size} max-width:{#main_header_size} min-height:{#main_header_size} min-width:{#main_header_size}] title=data.lang.prev href="{prevChapterLink()}">
+						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
+							#main_header_arrow_size = "min(64px, max({max_header_font}em, {chapter_headers.fontsize1}em))"
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
+								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settings.name_of_book, ' ', settings.chapter
 
-								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{#main_header_size} max-width:{#main_header_size} min-height:{#main_header_size} min-width:{#main_header_size}] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article>
 							for verse in verses
-								const bukmark = getBookmark(verse.pk, 'bookmarks')
-								<span.verse id=verse.verse @click=goToVerse(verse.verse)> ' \u2007\u2007\u2007', verse.verse, "\u2007"
+								let bukmark = getBookmark(verse.pk, 'bookmarks')
+								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
+								<span> ' '
+								<span.verse style=super_style id=verse.verse @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
 								<span innerHTML=verse.text
 										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 								if bukmark
 									if bukmark.collection || bukmark.note
-										<note-up parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 											<svg viewBox="0 0 20 20" alt=data.lang.note>
 												<title> data.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if verse.comment
-									<note-up parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+									<note-up style=super_style parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
 
 								if settings.verse_break
@@ -2226,23 +2236,32 @@ export tag bible-reader
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
-						<header[h: 0 mt:4em z-index: {what_to_show_in_pop_up_block ? 0 : 1}] @click=toggleBibleMenu(yes)>
+						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
 								settingsp.name_of_book, ' ', settingsp.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article>
 							for parallel_verse in parallel_verses
-								<span.verse id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> ' \t', parallel_verse.verse, "\u2007"
+								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
+								let bukmark = getBookmark(parallel_verse.pk, 'parallel_bookmarks')
+								<span> ' '
+								<span.verse style=super_style id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\u2007\u2007\u2007', parallel_verse.verse, "\u2007"
 								<span innerHTML=parallel_verse.text
 									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
-								if settings.verse_break
-									<br>
+								if bukmark
+									if bukmark.collection || bukmark.note
+										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+											<svg viewBox="0 0 20 20" alt=data.lang.note>
+												<title> data.lang.note
+												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if parallel_verse.comment
-									<note-up parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
+									<note-up style=super_style parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
 										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
 
+								if settings.verse_break
+									<br>
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2454,12 +2473,12 @@ export tag bible-reader
 							<ul>
 								for q in data.lang.HB
 									<li> <a href="#{q[0]}"> q[0]
-								if window.innerWidth > 1024
+								if window.innerWidth >= 1024
 									<li> <a href="#shortcuts"> data.lang.shortcuts
 							for q in data.lang.HB
 								<h3 id=q[0] > q[0]
 								<p> q[1]
-							if window.innerWidth > 1024
+							if window.innerWidth >= 1024
 								<div id="shortcuts">
 									<h3> data.lang.shortcuts
 									for shortcut in data.lang.shortcuts_list
@@ -2592,7 +2611,7 @@ export tag bible-reader
 									<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
 							if search.suggestions.books
-								if search.suggestions.books.length
+								if search.suggestions.books.length or search.suggestions.translations.length
 									<.search_suggestions>
 										for book in search.suggestions.books
 											<search-text-as-html.book_in_list data={translation:settings.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
@@ -2602,6 +2621,13 @@ export tag bible-reader
 												if search.suggestions.verse
 													':'
 													search.suggestions.verse
+
+										for translation in search.suggestions.translations
+											<li.book_in_list [display: flex]>
+												<span @click=changeTranslation(translation.short_name)>
+													<b> translation.short_name
+													', '
+													translation.full_name
 
 						if search.search_result_header
 							<article.search_body id="search_body" @scroll=searchPagination>
@@ -2811,7 +2837,7 @@ export tag bible-reader
 
 
 			if loading
-				<loading-animation[position: fixed; top: 50%; left: 50%;]>
+				<loading-animation[pos:fixed t:50% l:50% zi:100]>
 
 
 			if settings.verse_picker

@@ -567,11 +567,9 @@ html[data-transitions="true"] .helpFAQ a:hover {
 .verse {
   font-size: 0.68em;
   color: var(--accent-color);
-  padding-bottom: 1.2em;
   vertical-align: super;
   white-space: pre;
   border-radius: 4px;
-  padding-top: 0.5em;
 }
 
 .verse:hover {
@@ -1032,6 +1030,7 @@ img,
 }
 
 .popup_container > .popup {
+  position:relative;
   max-height: 72vh;
   max-width: 64em;
   width:80%;
@@ -1215,6 +1214,7 @@ html[data-light="light"] .Notifications p {
 .book_in_filter {
   width: max-content;
   max-width: 370px;
+  text-align: inherit;
 }
 
 .parallel {

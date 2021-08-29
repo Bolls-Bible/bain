@@ -65,8 +65,6 @@ export tag note-up
 
 	css
 		d:inline
-		pb:1em
-		pt:0.5em
 		font-size: 0.68em
 		cursor:pointer
 		vertical-align: super

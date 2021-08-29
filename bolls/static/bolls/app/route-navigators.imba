@@ -13,7 +13,8 @@ export tag verse-navigator
 				verse = params.verse.split('-').map(do(el) parseInt(el))
 			else
 				verse = parseInt(params.verse)
-			bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter), verse)
+			unless verse == 0
+				bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter), verse)
 
 
 export tag chapter-navigator
