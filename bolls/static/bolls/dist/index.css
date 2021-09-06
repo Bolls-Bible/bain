@@ -92,7 +92,6 @@ html[data-transitions="false"] * {
   scrollbar-width: auto;
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -405,7 +404,7 @@ body {
 
 .main {
   width: calc(100% - max(32px, min(64px, 4vw)));
-  padding: 4vw 0 calc(4vw + 32px);
+  padding: 0;
   color: var(--text-color);
   margin: auto;
   word-break: break-word;
@@ -415,6 +414,7 @@ body {
 .main article {
   overflow-x: visible;
   touch-action: pan-y;
+  text-indent: 2.5em;
 }
 
 .parallel_text {
@@ -553,7 +553,7 @@ footer a,
 .main span {
   cursor: pointer;
   background-repeat: no-repeat;
-  background-size: 100% 0.25em;
+  background-size: 100% 0.3em;
   background-position: 0px 110%;
 }
 
@@ -1123,6 +1123,7 @@ img,
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   height: calc(100% - 50px);
+  scroll-behavior: smooth;
 }
 
 .total_msg {

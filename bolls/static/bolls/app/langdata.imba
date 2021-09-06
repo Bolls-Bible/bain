@@ -148,6 +148,7 @@ export const english = {
 	"usual_reading": "Usual reading",
 	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Verse wrap",
+	"verse_number": "Verse number"
 	"verse_picker": "Verse picker",
 	"view_source": "View the source code",
 	"welcome": "Welcome to Bolls :)",
@@ -306,6 +307,7 @@ export const ukrainian = {
 	"usual_reading": "Звичайне читання",
 	"unexisten_chapter": "Ця глава неіснує"
 	"verse_break": "Перенос віршів",
+	"verse_number": "Номер вірша"
 	"verse_picker": "Вибір вірша",
 	"view_source": "Дивитися джерельний код",
 	"welcome": "Ласкаво просимо в Bolls :)",
@@ -464,6 +466,7 @@ export const russian = {
 	"usual_reading": "Обычное чтение",
 	"unexisten_chapter": "Такой главы не существует"
 	"verse_break": "Перенос стихов",
+	"verse_number": "Номер стиха"
 	"verse_picker": "Выбор стиха",
 	"view_source": "Смотреть исходный код",
 	"welcome": "Добро пожаловать в Bolls :)",
@@ -622,6 +625,7 @@ export const portuguese = {
 	"usual_reading": "Leitura habitual",
 	"unexisten_chapter": "Este capítulo não existe"
 	"verse_break": "Um versículo por linha",
+	"verse_number": "Número do verso"
 	"verse_picker": "Seletor de versículo",
 	"view_source": "Veja o código fonte",
 	"welcome": "Bem-vindo ao Bolls :)",
@@ -780,6 +784,7 @@ export const espanol = {
 	"usual_reading": "Lectura habitual",
 	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Envolver verso",
+	"verse_number": "Número de verso"
 	"verse_picker": "Selector de versículo",
 	"view_source": "Ver el código fuente",
 	"welcome": "Bienvenido a Bolls :)",
@@ -939,6 +944,7 @@ export const german = {
 	"usual_reading": "Normales lesen",
 	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Zeilenumbruch",
+	"verse_number": "Versnummer"
 	"verse_picker": "Versauswahl",
 	"view_source": "Source code anzeigen",
 	"welcome": "Willkommen bei Bolls :)",

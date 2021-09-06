@@ -58,6 +58,7 @@ let settings =
 		weight: 400
 		max-width: 30
 		align: ''
+	verse_number: yes
 	verse_break: no
 	verse_picker: no
 	transitions: yes
@@ -83,8 +84,8 @@ let settingsp = {
 }
 
 let chapter_headers = {
-	fontsize1: 2
-	fontsize2: 2
+	fontsize1: 1.2
+	fontsize2: 1.2
 }
 
 let onzone = no
@@ -323,6 +324,7 @@ export tag bible-reader
 		settings.font.align = getCookie('align') || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
+		settings.verse_number = !(getCookie('verse_number') == 'false')
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
 		settings.translation = getCookie('translation') || settings.translation
 		settings.book = parseInt(getCookie('book')) || settings.book
@@ -971,26 +973,49 @@ export tag bible-reader
 		if document.getElementById('search')
 			document.getElementById('search').blur()
 
+	def suggestTranslations query
+		let suggested_translations = []
+		if query.length > 2
+			for translation in translations
+				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase!
+					suggested_translations.push(translation)
+		return suggested_translations
 
 	def searchSuggestions
 		const query = search.search_input.trim!.toLowerCase!
 
 		const parts = query.split(' ')
-		const last_part = parts[parts.length - 1]
+		let numbers_part = ''
+		for part, index in parts when index > 0
+			if /\d/.test(part)
+				numbers_part = part
+				break
+
 		search.suggestions.chapter = null
 		search.suggestions.verse = null
+		search.suggestions.translation = null
 
 		# Check if the ending of the query contains numbers
-		if /\d/.test(last_part) && parts.length > 1
+		if numbers_part
 			# If verse is included
-			if last_part.indexOf(':') > -1
-				const ch_v_numbers = last_part.split(':')
+			if numbers_part.indexOf(':') > -1
+				const ch_v_numbers = numbers_part.split(':')
 				search.suggestions.chapter = parseInt(ch_v_numbers[0])
 				if ch_v_numbers[1].length
 					search.suggestions.verse = parseInt(ch_v_numbers[1])
 			else
-				search.suggestions.chapter = parseInt(last_part)
-			parts.pop!
+				search.suggestions.chapter = parseInt(numbers_part)
+
+			if numbers_part != parts[-1]
+				# Then test also translation part
+				search.suggestions.translation = suggestTranslations(parts[-1])[0]..short_name
+				parts.pop!
+				parts.pop!
+			else
+				parts.pop!
+			unless search.suggestions.translation
+				search.suggestions.translation = settings.translation
+
 
 		# If no numbers provided -- suggest first chapter
 		unless search.suggestions.chapter
@@ -1017,11 +1042,7 @@ export tag bible-reader
 			if theChapterExistInThisTranslation settings.translation, item.book.bookid, search.suggestions.chapter
 				search.suggestions.books.push item.book
 
-		search.suggestions.translations = []
-		if query.length > 2
-			for translation in translations
-				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase!
-					search.suggestions.translations.push(translation)
+		search.suggestions.translations = suggestTranslations(query)
 
 
 	def searchTranslation
@@ -1202,7 +1223,8 @@ export tag bible-reader
 
 	def getHighlight verse, bookmarks
 		if choosenid.length && choosenid.find(do |element| return element == verse)
-			return 'repeating-linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0) 0.15em, ' + store.highlight_color + ' 0.15em, ' + store.highlight_color + ' 0.3em)'
+			let width = Math.ceil(0.5 * settings.font.size)	# size of dots
+			return "repeating-linear-gradient(90deg, {store.highlight_color}, {store.highlight_color} {width}px, rgba(0,0,0,0) {width}px, rgba(0,0,0,0) {width * 2}px)"
 		else
 			let highlight = self[bookmarks].find(do |element| return element.verse == verse)
 			if highlight
@@ -1664,6 +1686,10 @@ export tag bible-reader
 		settings.verse_break = !settings.verse_break
 		setCookie('verse_break', settings.verse_break)
 
+	def toggleVerseNumber
+		settings.verse_number = !settings.verse_number
+		setCookie('verse_number', settings.verse_number)
+
 	def fixDrawers
 		fixdrawers = !fixdrawers
 		setCookie("fixdrawers", fixdrawers)
@@ -1904,7 +1930,7 @@ export tag bible-reader
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize1 = testsize
 			else
-				chapter_headers.fontsize1 = 2
+				chapter_headers.fontsize1 = 1.2
 		else
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
@@ -1912,7 +1938,7 @@ export tag bible-reader
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize2 = testsize
 			else
-				chapter_headers.fontsize2 = 2
+				chapter_headers.fontsize2 = 1.2
 
 			const last_known_scroll_position = e.target.scrollTop
 			setTimeout(&, 100) do
@@ -2102,6 +2128,16 @@ export tag bible-reader
 			return store.compare_translations_search.toLowerCase() in (translation.short_name + translation.full_name).toLowerCase()
 
 
+	def searchSuggestionText book
+		let text = book.name + ' '
+		if search.suggestions.chapter
+			text += search.suggestions.chapter
+		if search.suggestions.verse
+			text += ':' + search.suggestions.verse
+		if search.suggestions.translation
+			text += ' ' + search.suggestions.translation
+		return text
+
 
 	def render
 		if applemob
@@ -2197,9 +2233,14 @@ export tag bible-reader
 							for verse in verses
 								let bukmark = getBookmark(verse.pk, 'bookmarks')
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
-								<span> ' '
-								<span.verse style=super_style id=verse.verse @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
+
+								if settings.verse_number
+									<span> ' '
+									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
+								else
+									<span> ' '
 								<span innerHTML=verse.text
+								 		id=verse.verse
 										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
@@ -2216,6 +2257,8 @@ export tag bible-reader
 
 								if settings.verse_break
 									<br>
+									unless settings.verse_number
+										<span> '	'
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2244,8 +2287,12 @@ export tag bible-reader
 							for parallel_verse in parallel_verses
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
 								let bukmark = getBookmark(parallel_verse.pk, 'parallel_bookmarks')
-								<span> ' '
-								<span.verse style=super_style id="p{parallel_verse.verse}" @click=goToVerse('p' + parallel_verse.verse)> '\u2007\u2007\u2007', parallel_verse.verse, "\u2007"
+
+								if settings.verse_number
+									<span> ' '
+									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
+								else
+									<span> ' '
 								<span innerHTML=parallel_verse.text
 									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
@@ -2262,6 +2309,8 @@ export tag bible-reader
 
 								if settings.verse_break
 									<br>
+									unless settings.verse_number
+										<span> '	'
 						<.arrows>
 							<a.arrow @click=prevChapter("true")>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2370,6 +2419,8 @@ export tag bible-reader
 					<.popup_menu [l:0] .show_popup_menu=show_fonts>
 						for font in fonts
 							<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
+					if show_fonts
+						<global @click.capture.outside.stop=(show_fonts=no)>
 
 				<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
 					data.lang.language
@@ -2381,6 +2432,8 @@ export tag bible-reader
 						<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
 						<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
 						<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
+					if data.show_languages
+						<global @click.capture.outside.stop=(data.show_languages=no)>
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
 					data.lang.parallel
 					<p.checkbox> <span>
@@ -2392,6 +2445,9 @@ export tag bible-reader
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak .checkbox_turned=settings.verse_break>
 					data.lang.verse_break
+					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVerseNumber .checkbox_turned=settings.verse_number>
+					data.lang.verse_number
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
 					data.lang.transitions
@@ -2485,7 +2541,7 @@ export tag bible-reader
 										<p> <span innerHTML=shortcut>
 							<address.still_have_questions>
 								data.lang.still_have_questions
-								<a href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
+								<a target="_blank" href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
 					elif what_to_show_in_pop_up_block == 'show_compare'
 						<article.search_hat>
 							<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
@@ -2557,7 +2613,7 @@ export tag bible-reader
 								<title> data.lang.close
 								<path[m: auto] d=svg_paths.close>
 							<h1> data.lang.support
-							<a href="mailto:bpavlisinec@gmail.com">
+							<a target="_blank" href="mailto:bpavlisinec@gmail.com">
 								<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
 									<title> data.lang.help
 									<g>
@@ -2614,13 +2670,9 @@ export tag bible-reader
 								if search.suggestions.books.length or search.suggestions.translations.length
 									<.search_suggestions>
 										for book in search.suggestions.books
-											<search-text-as-html.book_in_list data={translation:settings.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
-												book.name, ' '
-												if search.suggestions.chapter
-													search.suggestions.chapter
-												if search.suggestions.verse
-													':'
-													search.suggestions.verse
+											<search-text-as-html.book_in_list data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+												searchSuggestionText(book)
+
 
 										for translation in search.suggestions.translations
 											<li.book_in_list [display: flex]>
