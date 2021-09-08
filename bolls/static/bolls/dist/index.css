@@ -414,7 +414,6 @@ body {
 .main article {
   overflow-x: visible;
   touch-action: pan-y;
-  text-indent: 2.5em;
 }
 
 .parallel_text {

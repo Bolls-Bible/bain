@@ -335,7 +335,8 @@ export tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
-		getText(settings.translation, settings.book, settings.chapter)
+		unless verses.length
+			getText(settings.translation, settings.book, settings.chapter)
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
 		if window.navigator.onLine
@@ -428,9 +429,7 @@ export tag bible-reader
 			})
 			.then(do |response| response.json())
 			.then(do |data| undefined)
-			.catch(do |e|
-				console.log(e)
-				data.showNotification('error'))
+			.catch(do |e| console.log(e))
 
 	def loadData url
 		let res = await window.fetch(url)
@@ -600,8 +599,7 @@ export tag bible-reader
 					let nodes = []
 					for id in [verse..endverse]
 						if id <= verses.length
-							nodes.push document.getElementById(id).nextSibling
-					let node = document.getElementById(verse).nextSibling
+							nodes.push document.getElementById(id)
 					if window.getSelection
 						const selection = window.getSelection()
 						selection.removeAllRanges()
@@ -612,11 +610,10 @@ export tag bible-reader
 					else
 						console.warn("Could not select text in node: Unsupported browser.")
 				else
-					let node = versenode.nextSibling
 					if window.getSelection
 						const window_selection = window.getSelection()
 						const selection_range = document.createRange()
-						selection_range.selectNodeContents(node)
+						selection_range.selectNodeContents(versenode)
 						window_selection.removeAllRanges()
 						window_selection.addRange(selection_range)
 					else
@@ -1273,7 +1270,7 @@ export tag bible-reader
 			# scroll to it, to see the full verse
 			if !settingsp.display
 				const verse = document.getElementById(id)
-				const top_offset_of_verse = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - scrollTop
+				const top_offset_of_verse = verse.offsetHeight + verse.offsetTop + 200 - scrollTop
 				if top_offset_of_verse > window.innerHeight
 					scrollToY(self, scrollTop - (window.innerHeight - top_offset_of_verse))
 			else
@@ -1282,7 +1279,7 @@ export tag bible-reader
 					verse = document.getElementById(id)
 				else
 					verse = document.getElementById("p{id}")
-				const top_offset = verse.nextSibling.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
+				const top_offset = verse.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
 				if top_offset > verse.parentNode.parentNode.clientHeight
 					verse.parentNode.parentNode.scroll(0, verse.parentNode.parentNode.scrollTop - (verse.parentNode.parentNode.clientHeight - top_offset))
 
@@ -2229,13 +2226,14 @@ export tag bible-reader
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
-						<article>
+						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 							for verse in verses
 								let bukmark = getBookmark(verse.pk, 'bookmarks')
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
 
 								if settings.verse_number
-									<span> ' '
+									unless settings.verse_break
+										<span> ' '
 									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
 								else
 									<span> ' '
@@ -2283,13 +2281,14 @@ export tag bible-reader
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
 								settingsp.name_of_book, ' ', settingsp.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
-						<article>
+						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 							for parallel_verse in parallel_verses
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
 								let bukmark = getBookmark(parallel_verse.pk, 'parallel_bookmarks')
 
 								if settings.verse_number
-									<span> ' '
+									unless settings.verse_break
+										<span> ' '
 									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007', verse.verse, "\u2007"
 								else
 									<span> ' '
