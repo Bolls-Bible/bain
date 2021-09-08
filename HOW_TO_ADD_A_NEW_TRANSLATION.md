@@ -2,13 +2,13 @@
 
 ### Find it in appropriate format.
 
-I prefer sqlite modules from MyBible app. I have a `myBible_concordance.sql` file where is code for converting MyBible modules into appropriate for me format. I download that modules from 'https://www.ph4.ru/b4_poisk.php?text=TLV&abbr=0'. Except of sqlite modules it may be also any database or csv or structured data but mid that you will need to convert it into csv format to insert it into my postgresql db.
+I prefer sqlite modules from MyBible app. I have a `myBible_concordance.sql` file where is code for converting MyBible modules into appropriate for me format. I download that modules from 'https://www.ph4.ru/b4_poisk.php?text=YLT&abbr=0'. Except of sqlite modules it may be also any database or csv or structured data but mid that you will need to convert it into csv format to insert it into my postgresql db.
 
 ### Format it.
 
 I download selite module from there, run the code from `myBible_concordance.sql` and export the `verses` and `books` table to csv files. csv format is handy for working with data. Then I format the `verses.csv` table, I delete some unneded tags from there, convert some of that tags ...
 
-Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br.` &c to get the text neater. I would say also that you should use some text to make it looks better. Usually I get the text from MyBible modules and there are some patters. The `<J>` tags are incapsulating <i>Jesus words</i>. I delete it. There are `<t>` tags. Delete them. But the closing `</t>` tags change to new line tag `</br>`. There are many tags that I simply delete with regex. But you may find a new use for them.
+Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br>` &c to get the text neater. I would say also that you should use some text to make it looks better. Usually I get the text from MyBible modules and there are some patters. The `<J>` tags are incapsulating <i>Jesus words</i>. I delete it. There are `<t>` tags. Delete them. But the closing `</t>` tags change to new line tag `</br>`. There are many tags that I simply delete with regex. But you may find a new use for them.
 
 Also add before all a new collumn `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c. *It should be unique!*
 
