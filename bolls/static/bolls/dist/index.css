@@ -92,7 +92,6 @@ html[data-transitions="false"] * {
   scrollbar-width: auto;
   margin: 0;
   padding: 0;
-  scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -405,7 +404,7 @@ body {
 
 .main {
   width: calc(100% - max(32px, min(64px, 4vw)));
-  padding: 4vw 0 calc(4vw + 32px);
+  padding: 0;
   color: var(--text-color);
   margin: auto;
   word-break: break-word;
@@ -553,7 +552,7 @@ footer a,
 .main span {
   cursor: pointer;
   background-repeat: no-repeat;
-  background-size: 100% 0.25em;
+  background-size: 100% 0.3em;
   background-position: 0px 110%;
 }
 
@@ -567,11 +566,9 @@ html[data-transitions="true"] .helpFAQ a:hover {
 .verse {
   font-size: 0.68em;
   color: var(--accent-color);
-  padding-bottom: 1.2em;
   vertical-align: super;
   white-space: pre;
   border-radius: 4px;
-  padding-top: 0.5em;
 }
 
 .verse:hover {
@@ -1032,6 +1029,7 @@ img,
 }
 
 .popup_container > .popup {
+  position:relative;
   max-height: 72vh;
   max-width: 64em;
   width:80%;
@@ -1124,6 +1122,7 @@ img,
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   height: calc(100% - 50px);
+  scroll-behavior: smooth;
 }
 
 .total_msg {
@@ -1215,6 +1214,7 @@ html[data-light="light"] .Notifications p {
 .book_in_filter {
   width: max-content;
   max-width: 370px;
+  text-align: inherit;
 }
 
 .parallel {
@@ -1654,11 +1654,13 @@ footer a:hover {
   margin: 128px 0 16px;
 }
 
-address a {
+address a,
+note-up a {
   color: var(--accent-color);
 }
 
-address a:hover {
+address a:hover,
+note-up a:hover {
   color: var(--accent-hover-color);
 }
 

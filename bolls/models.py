@@ -12,6 +12,13 @@ class Verses(models.Model):
 	def natural_key(self):
 		return (self.translation, self.book, self.chapter, self.verse, self.text)
 
+class Commentary(models.Model):
+	translation = models.CharField(max_length=120)
+	book = models.PositiveSmallIntegerField()
+	chapter = models.PositiveSmallIntegerField()
+	verse = models.PositiveSmallIntegerField()
+	text = models.TextField()
+
 
 class Note(models.Model):
 	text = models.TextField()
