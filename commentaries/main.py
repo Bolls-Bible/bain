@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = 'RSV'
+translation = 'UMT'
 
 def parseLinks(text):
 	pieces = text.split("'")
