@@ -9,11 +9,11 @@ export def scrollToY(scrollblock, scrollTargetY)
 
 	let scrollY = scrollblock.scrollTop
 	scrollTargetY = scrollTargetY || 0
-	let speed = 3000
+	let speed = 500
 	let currentTime = 0
 
 	# min time .1, max time .8 seconds
-	let time = Math.max(0.1, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 0.8));
+	let time = Math.max(0.1, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1));
 
 	# easing equations from https://github.com/danro/easing-js/blob/master/easing.js
 	let PI_D2 = Math.PI / 2

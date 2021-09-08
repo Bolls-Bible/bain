@@ -16,7 +16,7 @@ from django.http import JsonResponse, HttpResponse
 
 from bolls.forms import SignUpForm
 
-from .models import Verses, Bookmarks, History, Note
+from .models import Verses, Bookmarks, History, Note, Commentary
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -64,7 +64,6 @@ def getChapter(translation, book, chapter):
         })
     return d
 
-
 def getText(request, translation, book, chapter):
     response = JsonResponse(getChapter(translation, book, chapter), safe=False)
     response["Access-Control-Allow-Origin"] = "*"
@@ -73,6 +72,38 @@ def getText(request, translation, book, chapter):
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
 
+def getChapterWithCommentaries(translation, book, chapter):
+    all_verses = Verses.objects.filter(
+        book=book, chapter=chapter, translation=translation).order_by('verse')
+
+    all_commentaries = Commentary.objects.filter(
+        book=book, chapter=chapter, translation=translation).order_by('verse')
+
+    d = []
+    for obj in all_verses:
+        verse = {
+            "pk": obj.pk,
+            "verse": obj.verse,
+            "text": obj.text
+        }
+        comment = ''
+        for item in all_commentaries:
+            if item.verse == obj.verse:
+                if len(comment) > 0:
+                    comment += '<br>'
+                comment += item.text
+        if len(comment) > 0:
+            verse["comment"] = comment
+        d.append(verse)
+    return d
+
+def getChapterWithComments(request, translation, book, chapter):
+    response = JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 def search(request, translation, piece=''):
     if len(piece) == 0:
@@ -160,17 +191,17 @@ def getDescription(verses, verse, endverse):
 
 
 def linkToVerse(request, translation, book, chapter, verse):
-    verses = getChapter(translation, book, chapter)
+    verses = getChapterWithCommentaries(translation, book, chapter)
     return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
 
 
 def linkToVerses(request, translation, book, chapter, verse, endverse):
-    verses = getChapter(translation, book, chapter)
+    verses = getChapterWithCommentaries(translation, book, chapter)
     return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
 
 
 def linkToChapter(request, translation, book, chapter):
-    verses = getChapter(translation, book, chapter)
+    verses = getChapterWithCommentaries(translation, book, chapter)
     return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
 
 
