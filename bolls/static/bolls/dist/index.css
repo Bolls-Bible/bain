@@ -189,7 +189,6 @@ html[data-transitions="true"] .collectionshat,
 html[data-transitions="true"] .collectionsflex,
 html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
-html[data-transitions="true"] #page_search,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] color-picker,
 html[data-transitions="true"] main section article {
@@ -443,18 +442,6 @@ nav input[type="text"] {
   opacity: 1;
 }
 
-#navigation {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  justify-content: space-between;
-  height: 0;
-  z-index: 2;
-  cursor: pointer;
-}
-
 #navigation > div {
   padding: 3vw;
   width: calc(32px + 6vw);
@@ -481,11 +468,6 @@ nav input[type="text"] {
 }
 
 @media screen and (max-width: 1023px) {
-  #navigation {
-    bottom: 0;
-    top: auto;
-  }
-
   #navigation > div {
     width: 50%;
     bottom: 0;
@@ -574,23 +556,6 @@ html[data-transitions="true"] .helpFAQ a:hover {
 .verse:hover {
   background:var(--btn-bg-hover);
   color:var(--accent-hover-color);
-}
-
-.hide {
-  position: fixed;
-  bottom: -256px;
-  width: 100%;
-  background: var(--background-color);
-  border-top: 1px solid var(--btn-bg);
-  visibility: hidden;
-  text-align: center;
-  padding: 16px 0;
-  z-index: 1100;
-}
-
-.choosen_verses {
-  bottom: 0;
-  visibility: visible;
 }
 
 .close_colorPicker {
@@ -702,7 +667,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
   display: flex;
   justify-content: space-between;
   direction: ltr;
-  padding: 24px 8px 128px;
+  padding: 24px 8px 96px;
   overflow: hidden;
 }
 
@@ -1011,42 +976,6 @@ img,
     background-size: 100% 0.2em;
     background-position: right 0px top 110%;
   }
-}
-
-.popup_container {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.25);
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 14vh 0;
-  visibility: hidden;
-  opacity: 0;
-}
-
-.popup_container > .popup {
-  position:relative;
-  max-height: 72vh;
-  max-width: 64em;
-  width:80%;
-  background-color: var(--background-color);
-  border: 1px solid var(--btn-bg-hover);
-  border-radius: 16px;
-  padding: 12px 24px;
-  transform: scale(0.75);
-}
-
-.show_popup_container {
-  visibility: visible;
-  opacity: 1;
-}
-
-.show_popup_container > .popup {
-  transform: none;
 }
 
 .search_hat {
@@ -1678,16 +1607,6 @@ note-up a:hover {
   flex-direction: column;
 }
 
-.DRAGGING * {
-  transition-duration: 150ms !important;
-}
-
-.dragging {
-  transition: none !important;
-  opacity: 0.6;
-  cursor: move;
-}
-
 .drag_handle {
   touch-action: none;
   max-width: 32px;
@@ -1739,18 +1658,6 @@ note-up a:hover {
   background-color: var(--btn-bg-hover);
   border-radius: 8px;
   cursor: pointer;
-}
-
-#page_search {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  border-top: 1px solid var(--btn-bg);
-  padding: 2px 8px;
-  z-index: 1100;
 }
 
 #page_search input {

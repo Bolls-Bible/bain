@@ -399,6 +399,7 @@ def saveBookmarks(request):
     for verseid in ast.literal_eval(received_json_data["verses"]):
         try:
             verse = Verses.objects.get(pk=verseid)
+            # If there is an existing bookmark -- update it
             try:
                 obj = user.bookmarks_set.get(user=user, verse=verse)
                 obj.date = received_json_data["date"]
@@ -419,15 +420,17 @@ def saveBookmarks(request):
                         obj.note = note
                         obj.note.save()
                 obj.save()
+            # Else create a new one
             except Bookmarks.DoesNotExist:
                 createNewBookmark()
+            # If there accidentsly are a few bookmarks for a single verse -- remove them all and create a new bookmark
             except Bookmarks.MultipleObjectsReturned:
-                deleteBookmarks(request)
+                removeBookmarks(user, [verseid])
                 createNewBookmark()
-            return JsonResponse({"status_code":200}, safe=False)
 
         except Verses.DoesNotExist:
             return HttpResponse(status=418)
+    return JsonResponse({"status_code":200}, safe=False)
 
 
 
@@ -453,13 +456,16 @@ def saveHistory(request):
 def deleteBookmarks(request):
     if request.user.is_authenticated:
         received_json_data = json.loads(request.body)
-        user = request.user
-        for verseid in ast.literal_eval(received_json_data["verses"]):
-            verse = Verses.objects.get(pk=verseid)
-            user.bookmarks_set.filter(verse=verse).delete()
+        removeBookmarks(request.user, ast.literal_eval(received_json_data["verses"]))
         return JsonResponse({"response": "200"}, safe=False)
     else:
         return HttpResponse(status=401)
+
+def removeBookmarks(user, verses):
+    for verseid in verses:
+        verse = Verses.objects.get(pk=verseid)
+        user.bookmarks_set.filter(verse=verse).delete()
+
 
 
 def historyOf(user):
@@ -481,23 +487,13 @@ def userLogged(request):
         return JsonResponse({"username": request.user.username, "name": request.user.first_name, "is_password_usable": is_password_usable(request.user.password), "history": historyOf(request.user)}, safe=False)
     return JsonResponse({"username": ""}, safe=False)
 
-
-# def robots(request):
-#     filename = "robots.txt"
-#     content = "User-agent: *\nDisallow: /admin/\nAllow: /\nSitemap: http://bolls.life/static/all_chapters.xml"
-#     response = HttpResponse(content, content_type='text/plain')
-#     response['Content-Disposition'] = 'attachment; filename={0}'.format(
-#         filename)
-#     return response
-
-
 def api(request):
     return render(request, 'bolls/api.html')
 
 
 # def sw(request):
-#     # sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
-#     sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
+#     sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
+#     # sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
 #     response = HttpResponse(content=sw_file)
 #     response['Content-Type'] = 'application/javascript'
 #     response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'
@@ -534,4 +530,4 @@ def handler500(request, *args, **argv):
 #             else:
 #                 print('AAAAAAAAA')
 
-    return HttpResponse(length)
+#    return HttpResponse(length)

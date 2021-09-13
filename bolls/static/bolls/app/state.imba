@@ -20,6 +20,7 @@ export class State
 	translations = []
 	timeoutID = undefined
 	pswv = no # Play Store Web View
+	intouch = no
 
 	def constructor
 		for lngg in languages

@@ -346,40 +346,40 @@ export tag profile-page
 				<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 
 
-
-			<section.popup_container.daf .show_popup_container=(show_options_of == "delete_form" || show_options_of == "edit_form") [zi:auto] @click=(show_options_of = '')>
-				<div.popup@click.stop [max-width:486px m:auto p:0 16px 16px]>
-					if show_options_of == "delete_form"
-						<form action="/delete-my-account/">
-							<header.search_hat>
-								<h1[margin:auto]> data.lang.are_you_sure
-								<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
-									<title> data.lang.close
-									<path d=svg_paths.close [margin:auto]>
-							<p[margin-bottom:16px]> data.lang.cannot_be_undone
-							<label> data.lang.delete_account_label
-							<input.search bind=storage.username [margin: 8px 0 border-radius:4px]>
-							if storage.username == data.user.username
-								<button.change_language> data.lang.i_understand
-							else
-								<button.change_language disabled> data.lang.i_understand
-					else
-						<article id="edit_account">
-							<header.search_hat>
-								<h1[margin:auto]> data.lang.edit_account
-								<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
-									<title> data.lang.close
-									<path d=svg_paths.close css:margin="auto">
-							<label> data.lang.edit_username_label
-							<input.search bind=storage.username .invalid=taken_usernames.includes(storage.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
-							if taken_usernames.includes(storage.username)
-								<p.errormessage> data.lang.username_taken
-							<label> data.lang.edit_name_label
-							<input.search bind=storage.name maxlength=30 [margin: 8px 0 border-radius:4px]>
-							if editAccountFormIsValid()
-								<button.change_language :click.editAccount()> data.lang.edit_account
-							else
-								<button.change_language disabled :click.editAccount()> data.lang.edit_account
+			if show_options_of == "delete_form" || show_options_of == "edit_form"
+				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(show_options_of = '') ease>
+					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
+						if show_options_of == "delete_form"
+							<form action="/delete-my-account/">
+								<header.search_hat>
+									<h1[margin:auto]> data.lang.are_you_sure
+									<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+										<title> data.lang.close
+										<path d=svg_paths.close [margin:auto]>
+								<p[margin-bottom:16px]> data.lang.cannot_be_undone
+								<label> data.lang.delete_account_label
+								<input.search bind=storage.username [margin: 8px 0 border-radius:4px]>
+								if storage.username == data.user.username
+									<button.change_language> data.lang.i_understand
+								else
+									<button.change_language disabled> data.lang.i_understand
+						else
+							<article id="edit_account">
+								<header.search_hat>
+									<h1[margin:auto]> data.lang.edit_account
+									<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+										<title> data.lang.close
+										<path d=svg_paths.close css:margin="auto">
+								<label> data.lang.edit_username_label
+								<input.search bind=storage.username .invalid=taken_usernames.includes(storage.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
+								if taken_usernames.includes(storage.username)
+									<p.errormessage> data.lang.username_taken
+								<label> data.lang.edit_name_label
+								<input.search bind=storage.name maxlength=30 [margin: 8px 0 border-radius:4px]>
+								if editAccountFormIsValid()
+									<button.change_language :click.editAccount()> data.lang.edit_account
+								else
+									<button.change_language disabled :click.editAccount()> data.lang.edit_account
 
 
 

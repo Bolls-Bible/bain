@@ -8,17 +8,6 @@
   .Bible main h1 {
     margin: 32px 0 16px;
   }
-  .popup_container {
-    padding: 0 0;
-  }
-  .popup_container > .popup {
-    max-height: 100vh;
-    max-width: 100%;
-    width:100%;
-    border-radius: 0;
-    border:none;
-    padding: 12px;
-  }
   .filters {
     max-height: 96%;
     top: 2%;

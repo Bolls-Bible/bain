@@ -3,9 +3,15 @@ import re
 from books_map import *
 
 
-translation = 'UMT'
+translation = 'UTT'
 
 def parseLinks(text):
+	if type(text) == float:
+		return ''
+
+	text = re.sub(r'(<[/]?span[^>]*)>', '', text)	# Clean up unneeded spans
+	text = re.sub(r'( class=\'\w+\')', '', text)	# Avoid unneded classes on anchors
+
 	pieces = text.split("'")
 
 	result = ''

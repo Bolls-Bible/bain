@@ -7,6 +7,10 @@ import './route-navigators'
 
 let state = new State()
 
+extend tag element
+	get state
+		return state
+
 tag the-app
 	<self>
 		<bible-reader route='/' data=state>
