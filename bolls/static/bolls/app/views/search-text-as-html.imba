@@ -1,10 +1,14 @@
 tag search-text-as-html
 	def goToVerse event
 		unless state.intouch
+			let route = "/{data.translation}/{data.book}/{data.chapter}"
+			if data.verse
+				route += "/{data.verse}"
+
 			if event.ctrlKey
-				window.open("/{data.translation}/{data.book}/{data.chapter}/{data.verse}", '_blank')
+				window.open(route, '_blank')
 			elif document.getSelection().isCollapsed
-				router.go "/{data.translation}/{data.book}/{data.chapter}/{data.verse}"
+				router.go route
 
 	def render
 		<self @click=goToVerse>

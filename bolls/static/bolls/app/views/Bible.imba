@@ -83,8 +83,8 @@ let settingsp = {
 }
 
 let chapter_headers = {
-	fontsize1: 1.2
-	fontsize2: 1.2
+	fontsize1: 2
+	fontsize2: 2
 }
 
 let onzone = no
@@ -693,8 +693,9 @@ export tag bible-reader
 
 		def focusInput
 			if $pagesearch
-				$pagesearch.focus()
-				$pagesearch.setSelectionRange(selectionStart, selectionStart)
+				imba.commit().then do
+					$pagesearch.focus()
+					$pagesearch.setSelectionRange(selectionStart, selectionStart)
 			else setTimeout(&,50) do focusInput()
 
 		# Check if query is not an empty string
@@ -1781,6 +1782,7 @@ export tag bible-reader
 			.then(do |response| response.json())
 			.then(do |resdata|
 				comparison_parallel = resdata.concat(comparison_parallel)
+				scrollToY($compare_body, 0)
 				loading = no
 				imba.commit()
 			)
@@ -1790,11 +1792,7 @@ export tag bible-reader
 				data.showNotification('error'))
 		else
 			compare_translations.splice(compare_translations.indexOf(translation.short_name), 1)
-			document.getElementById("compare_{translation.short_name}").style.animation = "the-element-left-us 300ms ease forwards"
-			setTimeout(&, 300) do
-				document.getElementById("compare_{translation.short_name}").style.animation = ""
-				comparison_parallel.splice(comparison_parallel.indexOf(comparison_parallel.find(do |prlll| return prlll[0].translation == translation.short_name)), 1)
-				imba.commit()
+			comparison_parallel.splice(comparison_parallel.indexOf(comparison_parallel.find(do |prlll| return prlll[0].translation == translation.short_name)), 1)
 		window.localStorage.setItem("compare_translations", JSON.stringify(compare_translations))
 		show_translations_for_comparison = no
 
@@ -1938,7 +1936,7 @@ export tag bible-reader
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize1 = testsize
 			else
-				chapter_headers.fontsize1 = 1.2
+				chapter_headers.fontsize1 = 2
 		else
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
@@ -1946,7 +1944,7 @@ export tag bible-reader
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize2 = testsize
 			else
-				chapter_headers.fontsize2 = 1.2
+				chapter_headers.fontsize2 = 2
 
 			const last_known_scroll_position = e.target.scrollTop
 			setTimeout(&, 100) do
@@ -2523,7 +2521,7 @@ export tag bible-reader
 			if what_to_show_in_pop_up_block
 				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 3}] @click=(do unless state.intouch then clearSpace!) ease>
 
-					<div[p:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
+					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
 
 						if what_to_show_in_pop_up_block == 'show_help'
 							<article.search_hat>
@@ -2574,7 +2572,7 @@ export tag bible-reader
 									for translation in translations when (!compare_translations.find(do |element| return element == translation.short_name) and filterCompareTranslation translation)
 										<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
 
-							<article.search_body [pb: 256px scroll-behavior: auto]>
+							<article$compare_body.search_body [pb: 256px scroll-behavior: auto]>
 								<p.total_msg> data.lang.add_translations_msg
 
 								<orderable-list list=comparison_parallel saveCompareChanges=saveCompareChanges>
@@ -2729,7 +2727,7 @@ export tag bible-reader
 									<.freespace>
 
 			if show_collections || show_share_box || choosenid.length
-				<section [pos:fixed b:0 l:0 r:0 w:100% bgc:$background-color bdt:1px solid btn-bg ta:center p:16px 0 zi:1100 y@off:100%] .without_padding=(show_collections || show_share_box) ease>
+				<section [pos:fixed b:0 l:0 r:0 w:100% bgc:$background-color bdt:1px solid $btn-bg ta:center p:{show_collections || show_share_box ? "0" : "16px 0"} zi:1100 y@off:100%] ease>
 					if show_collections
 						<.collectionshat>
 							<svg.svgBack viewBox="0 0 20 20" @click=turnCollections>
@@ -2868,28 +2866,29 @@ export tag bible-reader
 							<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle>  data.lang.canvastitle
 
 
-			<section.history.filters .show_history=show_history>
-				<[m: 0].nighttheme.flex>
-					<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
-							<title> data.lang.close
-							<path d=svg_paths.close>
-					<h1[margin: 0 0 0 8px]> data.lang.history
-					<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
-						<title> data.lang.delete
-						<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
-				<article.historylist>
-					for h in history.slice().reverse()
-						<div[display: flex]>
-							<a.book_in_list @click=backInHistory(h)>
-								getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
-								if h.verse
-									':' + h.verse
-								' ' + h.translation
-							<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
-								<title> data.lang.open_in_parallel
-								<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
-					else
-						<p[padding: 12px]> data.lang.empty_history
+			if show_history
+				<section [pos:fixed bg:$background-color rd:16px b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75) border:1px solid $btn-bg] ease>
+					<[m: 0 c:inherit].nighttheme.flex>
+						<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
+								<title> data.lang.close
+								<path d=svg_paths.close>
+						<h1[margin: 0 0 0 8px]> data.lang.history
+						<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
+							<title> data.lang.delete
+							<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
+					<article[of:auto max-height: calc(97vh - 82px)]>
+						for h in history.slice().reverse()
+							<div[display: flex]>
+								<a.book_in_list @click=backInHistory(h)>
+									getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
+									if h.verse
+										':' + h.verse
+									' ' + h.translation
+								<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
+									<title> data.lang.open_in_parallel
+									<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
+						unless history.length
+							<p[padding: 12px]> data.lang.empty_history
 
 
 			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
@@ -2908,7 +2907,7 @@ export tag bible-reader
 
 
 			if loading
-				<loading-animation[pos:fixed t:50% l:50% zi:100]>
+				<loading-animation [pos:fixed t:50% l:50% zi:100 o@off:0] ease>
 
 
 			if settings.verse_picker

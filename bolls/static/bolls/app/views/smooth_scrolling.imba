@@ -1,7 +1,7 @@
-# # first add raf shim
-# # http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
+# first add raf shim
+# http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
 
-# # # main function
+# def scrollToY(scrollblock, scrollTargetY)
 export def scrollToY(scrollblock, scrollTargetY)
 	# scrollTargetY: the target scrollY property of the window
 	# speed: time in pixels per second

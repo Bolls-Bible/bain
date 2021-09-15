@@ -75,19 +75,16 @@ export tag loading-animation
 	css
 		display: flex
 		justify-content: center
-		-webkit-animation: text-came 300ms cubic-bezier(0.39, 0.575, 0.565, 1) 800ms both
-		animation: text-came 300ms cubic-bezier(0.39, 0.575, 0.565, 1) 800ms both
-		transition: none
 
-	css div
-		position: absolute
-		transition: none
+		div
+			position: absolute
+			transition: none
 
-	css svg
-		height: 8px
-		width: 8px
-		fill: var(--text-color)
-		transition-duration: 300ms
-		transition-timing-function: linear
-		overflow: visible
-		transition: none
+		svg
+			height: 8px
+			width: 8px
+			fill: var(--text-color)
+			transition-duration: 300ms
+			transition-timing-function: linear
+			overflow: visible
+			transition: none

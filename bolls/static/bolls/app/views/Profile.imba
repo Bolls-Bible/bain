@@ -335,7 +335,7 @@ export tag profile-page
 				<hr.hr>
 
 			if loading
-				<loading-animation[padding: 128px 0]>
+				<loading-animation[padding: 128px 0 o@off:0] ease>
 			else
 				<div.freespace>
 

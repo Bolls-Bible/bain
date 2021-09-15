@@ -125,7 +125,7 @@ export tag orderable-list
 
 							<svg.remove_parallel.close_search @click.prevent.addTranslation({short_name: item[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=state.lang.delete>
 								<title> state.lang.delete
-								<path d="M1 8.586z">
+								<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
 				else
 					<div.search_res_verse_header .draggable=(item[0].translation == #drugging_target) id=item[0].translation [p: 16px 0px mb:0 display:flex align-items:center transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,1)=triggerAutoscroll>
 						<svg.drag_handle [margin-right: 16px] @touch=reorder(e, item[0].translation) xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
