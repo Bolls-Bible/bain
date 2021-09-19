@@ -673,7 +673,7 @@ export const espanol = {
 	"auto_align": "Alineación automática",
 	"back": "Volver",
 	"bgthnkst": "Muchas gracias a",
-	"bible_search": "buscar en la Biblia",
+	"bible_search": "Buscar en la Biblia",
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Esta acción no puede deshacerse. Esto borrará permanentemente tu cuenta y señaladores.",
 	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",

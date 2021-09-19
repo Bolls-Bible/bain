@@ -5,9 +5,6 @@
   main, main h1 {
     overflow-wrap: break-word;
   }
-  .Bible main h1 {
-    margin: 32px 0 16px;
-  }
   .filters {
     max-height: 96%;
     top: 2%;

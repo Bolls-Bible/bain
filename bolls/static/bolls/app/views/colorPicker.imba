@@ -42,6 +42,12 @@ export tag color-picker
 	def render
 		<self>
 			<canvas @touch=pickAColor>
+	css
+		position: fixed
+		bottom: 0
+		margin: auto
+		right: -9999px
+		left: -9999px
 
 	css canvas
 		position: absolute

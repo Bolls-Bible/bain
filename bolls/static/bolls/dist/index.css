@@ -159,10 +159,8 @@ input {
 }
 
 [data-transitions="true"] .book_in_list,
-html[data-transitions="true"] .list_of_chapters,
 html[data-transitions="true"] main section h1,
-html[data-transitions="true"] .bookmark_in_list,
-html[data-transitions="true"] .close_colorPicker {
+html[data-transitions="true"] .bookmark_in_list {
   -webkit-animation: text-came 250ms ease;
   animation: text-came 250ms ease;
 }
@@ -176,7 +174,6 @@ html[data-transitions="true"] .collectionsflex,
 html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
-html[data-transitions="true"] color-picker,
 html[data-transitions="true"] main section article {
   -webkit-animation: text-came 250ms ease forwards;
   animation: text-came 250ms ease forwards;
@@ -261,33 +258,6 @@ body {
 
 .chronological_order_in_use {
   transform: rotate(-24deg);
-}
-
-.translations_list {
-  display: block;
-  margin: -16px 0;
-  padding: 8px;
-  height: 32px;
-  opacity: 0;
-  visibility: hidden;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
-
-.show_translations_list {
-  margin: 16px 0;
-  padding: 8px;
-  height: 100%;
-  visibility: visible;
-  opacity: 1;
-}
-
-.translation_info {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  margin-left: 16px;
 }
 
 .choose_parallel {
@@ -428,63 +398,6 @@ nav input[type="text"] {
   opacity: 1;
 }
 
-#navigation > div {
-  cursor:pointer;
-  padding: 3vw;
-  width: calc(32px + 6vw);
-  height: calc(32px + 6vw);
-}
-
-#navigation svg {
-  width: 32px;
-  height: 32px;
-  min-height: 32px;
-  fill: var(--accent-color);
-}
-
-#navigation div:hover {
-  color: var(--accent-hover-color);
-}
-
-#navigation div:hover svg {
-  fill: var(--accent-hover-color);
-}
-
-#navigation p {
-  display: none;
-}
-
-@media screen and (max-width: 1023px) {
-  #navigation > div {
-    width: 50%;
-    bottom: 0;
-    padding: 4px;
-    height: 54px;
-    position: absolute;
-    flex-direction: column;
-    background-color: var(--background-color);
-    border-top: 1px solid var(--btn-bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #navigation svg {
-    fill: var(--text-color);
-    opacity: 0.75;
-  }
-
-  #navigation svg:hover {
-    opacity: 1;
-  }
-
-  #navigation p {
-    display: inline-block;
-    padding: 0 8px;
-    opacity: 0.75;
-    font-size: 12px;
-  }
-}
 
 h1 {
   font-size: 1.5em;
@@ -1106,17 +1019,6 @@ img,
   opacity: 0;
 }
 
-.verse_picker {
-  position: fixed;
-  top: 8vh;
-  left: 48px;
-  z-index: 0;
-  width: 300px;
-  padding: 12px;
-  padding-top: 8;
-  max-height: 86%;
-}
-
 html[data-light="light"] .filters,
 html[data-light="light"] .Notifications p {
   box-shadow: 0 2.74416px 2.74416px rgba(0, 0, 0, 0.0274351),
@@ -1571,42 +1473,11 @@ note-up a:hover {
   fill: var(--accent-hover-color);
 }
 
-#welcome {
-  padding: 16px;
-  animation-duration: 1.2s;
-}
-
-#welcome p {
-  margin-bottom: 8px;
-  text-indent: 1.5em;
-  line-height: 1.5;
-  font-size: 0.9em;
-  text-align: justify;
-}
 
 .emojify {
   font-family: "Apple Color Emoji", "Droid Sans Fallback", "Noto Color Emoji",
     "Segoe UI Emoji";
   margin-right: 16px;
-}
-
-#welcome button {
-  width: 100%;
-  height: 32px;
-  background: var(--btn-bg);
-  color: var(--text-color);
-  text-align: center;
-  border: none;
-  font-size: 1em;
-  border-radius: 4px;
-}
-
-#welcome button:hover {
-  fill: var(--accent-hover-color);
-  color: var(--accent-hover-color);
-  background-color: var(--btn-bg-hover);
-  border-radius: 8px;
-  cursor: pointer;
 }
 
 #page_search input {

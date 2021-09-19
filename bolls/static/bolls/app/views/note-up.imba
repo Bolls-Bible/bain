@@ -54,12 +54,15 @@ export tag note-up
 
 
 	def render
-		<self tabIndex=0 @click.stop.prevent=setBorders>
+		<self @click.stop.prevent=setBorders>
 			'\u2007\u2007'
 			<slot>
 			"  "
-			<div .{#vertclass} .show=#show [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'}]>
-				<p innerHTML=inlineNote()>
+			if #show
+				<div .{#vertclass} [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'} o@off:0 scale@off:0.75] ease>
+					<p innerHTML=inlineNote()>
+
+				<global @click.outside=(do #show = no)>
 
 
 
@@ -87,20 +90,10 @@ export tag note-up
 			us:select
 			white-space: break-spaces;
 
-			visibility:hidden
-			o:0
-			transform: scale(0.75)
-
 		p
 			overflow:auto
 			max-height:232px
 
-
-		@focus-within
-			.show
-				visibility:visible
-				o:1
-				transform:none
 
 		.bottom
 			transform:translateY(calc(-100% - 2em))
