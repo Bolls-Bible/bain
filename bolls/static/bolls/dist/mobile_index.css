@@ -6,8 +6,6 @@
     overflow-wrap: break-word;
   }
   .filters {
-    max-height: 96%;
-    top: 2%;
     padding: 12px 4px;
   }
   .verse_picker {

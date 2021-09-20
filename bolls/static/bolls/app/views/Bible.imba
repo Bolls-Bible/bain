@@ -2570,12 +2570,19 @@ export tag bible-reader
 									<title> data.lang.compare
 									<line x1="0" y1="10" x2="20" y2="10">
 									<line x1="10" y1="0" x2="10" y2="20">
-								<[z-index: 1100].filters .show=show_translations_for_comparison>
-									if compare_translations.length == translations.length
-										<p[padding: 12px 8px]> data.lang.nothing_else
-									<input.search bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
-									for translation in translations when (!compare_translations.find(do |element| return element == translation.short_name) and filterCompareTranslation translation)
-										<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
+								if show_translations_for_comparison
+									<[z-index: 1100 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
+										if compare_translations.length == translations.length
+											<p[padding: 12px 8px]> data.lang.nothing_else
+										<div[d:hflex bg:$background-color pos:sticky t:-8px]>
+											<input.search bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
+											<svg.close_search [mr:-16px @lt-sm:8px h:42px p:0px] @click=(show_translations_for_comparison = no) viewBox="0 0 20 20">
+												<title> data.lang.close
+												<path[m: auto] d=svg_paths.close>
+
+										for translation in translations when (!compare_translations.find(do |element| return element == translation.short_name) and filterCompareTranslation translation)
+											<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
+
 
 							<article$compare_body.search_body [pb: 256px scroll-behavior: auto]>
 								<p.total_msg> data.lang.add_translations_msg
@@ -2661,16 +2668,22 @@ export tag bible-reader
 
 						else
 							if search_verses.length
-								<.filters .show=search.show_filters [z-index:1]>
-									if settingsp.edited_version == settingsp.translation && settingsp.display
-										if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
-										<>
-											for book in parallel_books
+								if search.show_filters
+									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
+										<div[d:hflex bg:$background-color ai:center jc:space-between p:0 8px pos:sticky t:-8px]>
+											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> data.lang.addfilter
+											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
+												<title> data.lang.close
+												<path[m: auto] d=svg_paths.close>
+										if settingsp.edited_version == settingsp.translation && settingsp.display
+											if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
+											<>
+												for book in parallel_books
+													<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
+										else
+											if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
+											for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
 												<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
-									else
-										if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
-										for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
-											<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
 							<article.search_hat#gs_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2720,14 +2733,14 @@ export tag bible-reader
 													<svg.open_in_parallel [margin-left: 4px] viewBox="0 0 400 338" @click=backInHistory({translation: search.translation, book: verse.book, chapter: verse.chapter,verse: verse.verse}, yes)>
 														<title> data.lang.open_in_parallel
 														<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
-										if search.filter then <div[p: 12px 0px; text-align: center]>
+										if search.filter then <div[p:12px 0px ta:center]>
 											data.lang.filter_name, ' ', nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
 											<br>
 											<button[d: inline-block; mt: 12px].more_results @click=dropFilter> data.lang.drop_filter
 									unless search_verses.length
 										<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
 											<p> data.lang.nothing
-											<p[padding: 32px 0px 8px]> data.lang.translation, ' ', search.translation
+											<p[padding:32px 0px 8px]> data.lang.translation, ' ', search.translation
 											<button.more_results @click=showTranslations> data.lang.change_translation
 									<.freespace>
 
@@ -2978,7 +2991,7 @@ export tag bible-reader
 		-webkit-overflow-scrolling@force: auto
 
 	css .height_auto
-		max-height: 76px
+		max-height@important:76px
 		mb:auto
 		border-bottom:1px solid $btn-bg-hover
 

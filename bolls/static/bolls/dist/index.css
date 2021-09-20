@@ -808,7 +808,7 @@ img,
   border: 1px solid var(--btn-bg);
   margin: 24px 0 0;
   color: inherit;
-  padding: 4px 8px;
+  padding: 0 8px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
   opacity: 0.7;
@@ -1003,12 +1003,11 @@ img,
 .filters {
   position: absolute;
   display: block;
-  visibility: hidden;
-  transform: scale(0.96) translateY(-16px);
   transform-origin: top right;
-  top: 4%;
-  right: 48px;
-  max-height: 92%;
+  top: 8px;
+  right: 8px;
+  max-height: calc(100% - 16px);
+  max-width: calc(100% - 16px);
   width: auto;
   padding: 8px 16px 8px 8px;
   background: var(--background-color);
@@ -1016,7 +1015,6 @@ img,
   -webkit-overflow-scrolling: touch;
   border-radius: 16px;
   border: 1px solid var(--btn-bg);
-  opacity: 0;
 }
 
 html[data-light="light"] .filters,
