@@ -19,13 +19,13 @@ let notes_range = {
 	loaded: 0
 }
 let query = ''
-let storage =
+let store =
 	username: ''
 	name: ''
+	show_options_of: ''
 
 let taken_usernames = []
 let loading = no
-let show_options_of = ''
 
 export tag profile-page
 	bookmarks = []
@@ -57,7 +57,7 @@ export tag profile-page
 		highlights = []
 		notes = []
 		query = ''
-		show_options_of = ''
+		store.show_options_of = ''
 		getProfileBookmarks()
 		if window.navigator.onLine
 			getCategories()
@@ -213,8 +213,8 @@ export tag profile-page
 
 
 	def showOptions title
-		if show_options_of == title then show_options_of = ''
-		else show_options_of = title
+		if store.show_options_of == title then store.show_options_of = ''
+		else store.show_options_of = title
 
 	def deleteBookmark bookmark
 		data.requestDeleteBookmark(bookmark.pks)
@@ -223,22 +223,22 @@ export tag profile-page
 				bookmarks.splice(bookmarks.indexOf(bookmarks.find(do |bm| return bm.pks == pk)), 1)
 			if highlights.find(do |bm| return bm.pks == pk)
 				highlights.splice(highlights.indexOf(highlights.find(do |bm| return bm.pks == pk)), 1)
-		show_options_of = ''
+		store.show_options_of = ''
 		imba.commit()
 
 	def copyToClipboard bookmark
 		data.shareCopying(bookmark)
-		show_options_of = ''
+		store.show_options_of = ''
 
 	def showDeleteForm
-		show_options_of = 'delete_form'
-		storage.username = ''
+		store.show_options_of = 'delete_form'
+		store.username = ''
 		window.history.pushState({profile: yes}, "Delete Account")
 
 	def showEditForm
-		show_options_of = 'edit_form'
-		storage.username = data.user.username
-		storage.name = data.user.name
+		store.show_options_of = 'edit_form'
+		store.username = data.user.username
+		store.name = data.user.name
 		window.history.pushState({profile: yes}, "Edit Account")
 
 	def editAccountFormIsValid
@@ -262,20 +262,20 @@ export tag profile-page
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					newusername: storage.username,
-					newname: storage.name || '',
+					newusername: store.username,
+					newname: store.name || '',
 				}),
 			})
 			.then(do |response|
 				if response.status == 200
 					data.showNotification('account_edited')
-					data.user.username = storage.username
-					data.user.name = storage.name
+					data.user.username = store.username
+					data.user.name = store.name
 					data.setCookie('username', data.user.username)
 					data.setCookie('name', data.user.name)
-					show_options_of = ''
+					store.show_options_of = ''
 				elif response.status == 409
-					taken_usernames.push storage.username
+					taken_usernames.push store.username
 					data.showNotification('username_taken')
 			)
 			loading = no
@@ -295,10 +295,11 @@ export tag profile-page
 							<svg.helpsvg @click=showOptions('account_actions') viewBox="0 0 24 24" width="18px" height="18px">
 								<title> data.lang.edit_account
 								<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
-							<.popup_menu .show_popup_menu=(show_options_of == 'account_actions')>
-								if data.user.is_password_usable then <a @click.prevent=(do window.location = "/accounts/password_change/")> <button.butt> data.lang.change_password
-								<button.butt @click=showDeleteForm()> data.lang.delete_account
-								<button.butt @click=showEditForm()> data.lang.edit_account
+							if store.show_options_of == 'account_actions'
+								<.popup_menu [y@off:-32px o@off:0] ease>
+									<button.butt @click=showEditForm()> data.lang.edit_account
+									if data.user.is_password_usable then <a @click.prevent=(do window.location = "/accounts/password_change/")> <button.butt> data.lang.change_password
+									<button.butt @click=showDeleteForm()> data.lang.delete_account
 
 			<div.nav>
 				<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> data.lang.all
@@ -328,10 +329,12 @@ export tag profile-page
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
 						<svg._options @click=showOptions(bookmark.title) viewBox="0 0 20 20">
 							<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
-						<.popup_menu .show_popup_menu=(bookmark.title == show_options_of)>
-							<button.butt @click=deleteBookmark(bookmark)> data.lang.delete
-							<button.butt @click=goToBookmark(bookmark)> data.lang.open
-							<button.butt @click=copyToClipboard(bookmark)> data.lang.copy
+						<menu-popup bind=store.show_options_of>
+							if bookmark.title == store.show_options_of
+								<.popup_menu [y@off:-32px o@off:0] ease>
+									<button.butt @click=deleteBookmark(bookmark)> data.lang.delete
+									<button.butt @click=goToBookmark(bookmark)> data.lang.open
+									<button.butt @click=copyToClipboard(bookmark)> data.lang.copy
 				<hr.hr>
 
 			if loading
@@ -346,20 +349,20 @@ export tag profile-page
 				<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 
 
-			if show_options_of == "delete_form" || show_options_of == "edit_form"
-				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(show_options_of = '') ease>
+			if store.show_options_of == "delete_form" || store.show_options_of == "edit_form"
+				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(store.show_options_of = '') ease>
 					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
-						if show_options_of == "delete_form"
+						if store.show_options_of == "delete_form"
 							<form action="/delete-my-account/">
 								<header.search_hat>
 									<h1[margin:auto]> data.lang.are_you_sure
-									<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+									<svg.close_search :click=(do store.show_options_of = '') viewBox="0 0 20 20" tabindex="0">
 										<title> data.lang.close
 										<path d=svg_paths.close [margin:auto]>
 								<p[margin-bottom:16px]> data.lang.cannot_be_undone
 								<label> data.lang.delete_account_label
-								<input.search bind=storage.username [margin: 8px 0 border-radius:4px]>
-								if storage.username == data.user.username
+								<input.search bind=store.username [margin: 8px 0 border-radius:4px]>
+								if store.username == data.user.username
 									<button.change_language> data.lang.i_understand
 								else
 									<button.change_language disabled> data.lang.i_understand
@@ -367,15 +370,15 @@ export tag profile-page
 							<article id="edit_account">
 								<header.search_hat>
 									<h1[margin:auto]> data.lang.edit_account
-									<svg.close_search :click=(do show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+									<svg.close_search :click=(do store.show_options_of = '') viewBox="0 0 20 20" tabindex="0">
 										<title> data.lang.close
 										<path d=svg_paths.close css:margin="auto">
 								<label> data.lang.edit_username_label
-								<input.search bind=storage.username .invalid=taken_usernames.includes(storage.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
-								if taken_usernames.includes(storage.username)
+								<input.search bind=store.username .invalid=taken_usernames.includes(store.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
+								if taken_usernames.includes(store.username)
 									<p.errormessage> data.lang.username_taken
 								<label> data.lang.edit_name_label
-								<input.search bind=storage.name maxlength=30 [margin: 8px 0 border-radius:4px]>
+								<input.search bind=store.name maxlength=30 [margin: 8px 0 border-radius:4px]>
 								if editAccountFormIsValid()
 									<button.change_language :click.editAccount()> data.lang.edit_account
 								else

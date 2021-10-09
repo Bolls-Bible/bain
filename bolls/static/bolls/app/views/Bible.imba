@@ -7,6 +7,7 @@ import "./rich_text_editor"
 import "./colorPicker.imba"
 import './search-text-as-html'
 import "./note-up"
+import "./menu-popup"
 import './orderable-list'
 import {thanks_to} from './thanks_to'
 import {svg_paths} from "./svg_paths"
@@ -106,6 +107,7 @@ let store =
 	note: ''
 	collections_search: ''
 	compare_translations_search: ''
+	show_fonts: no
 
 let page_search =
 	d: no
@@ -120,18 +122,15 @@ window.on_pops_tate = no
 let loading = no
 let menuicons = yes
 let fixdrawers = no
-let show_fonts = no
 let max_header_font = 0
 let show_accents = no
+let show_language_of = ''
 let show_verse_picker = no
 let show_parallel_verse_picker = no
-let show_language_of = ''
 let show_share_box = no
 let what_to_show_in_pop_up_block = ''
-let deleting_of_all_transllations = no
 let choosen_for_comparison = []
 let comparison_parallel = []
-let new_comparison_parallel = []
 let show_delete_bookmark = no
 let show_translations_for_comparison = no
 let welcome = yes
@@ -644,7 +643,7 @@ export tag bible-reader
 		store.show_color_picker = no
 		show_collections = no
 		choosen_parallel = no
-		show_fonts = no
+		store.show_fonts = no
 		show_language_of = ''
 		show_translations_for_comparison = no
 		show_parallel_verse_picker = no
@@ -793,8 +792,6 @@ export tag bible-reader
 			for child in chapter.children
 				if child.tagName == 'NOTE-UP'
 					continue
-				if child.textContent.indexOf(search.search_input)
-					log child.textContent, regex_compatible_query
 				while ((array1 = regex1.exec(child.textContent)) !== null)
 					# Save the index of found text to page_search.matches
 					# for further navigation
@@ -2007,6 +2004,7 @@ export tag bible-reader
 		else
 			findVerse id, 0, no
 		hideVersePicker()
+		focus!
 
 	def randomVerse
 		const random_book = books[Math.round(Math.random() * books.length) - 1]
@@ -2172,7 +2170,7 @@ export tag bible-reader
 								<path d=svg_paths.download>
 
 				if show_list_of_translations
-					<div[m:16px 0 @off:0 p:8px h:100% @off:0px o@off:0 ofy:scroll -webkit-overflow-scrolling:touch pb:256px @off:0 y@off:-16px] ease>
+					<div[m:16px 0 @off:0 p:8px h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:256px @off:0 y@off:-16px] ease>
 						for language in languages
 							<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
 								language.language
@@ -2287,6 +2285,7 @@ export tag bible-reader
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 					elif not loading
 						<p.in_offline> data.lang.unexisten_chapter
+
 				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2353,12 +2352,12 @@ export tag bible-reader
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
 				<[d:flex m:24px 0 ai:center $fill-on-hover:$text-color @hover:$accent-hover-color]>
 					if data.getUserName()
-						<svg.helpsvg route-to.exact='/profile/$' viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+						<svg.helpsvg route-to.exact='/profile/' viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
 							<title> data.getUserName()
 							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
 								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
 								<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
-						<a.username [c:$fill-on-hover] route-to.exact='/profile/$'> data.getUserName()
+						<a.username [c:$fill-on-hover] route-to.exact='/profile/'> data.getUserName()
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
 					else
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
@@ -2427,27 +2426,27 @@ export tag bible-reader
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
 
-				<.btnbox.cbtn.aside_button.popup_menu_box [d:flex transform@important:none ai:center] @click=(do show_fonts = !show_fonts)>
-					<span.font_icon> "B"
-					settings.font.name
-					<.popup_menu [l:0] .show_popup_menu=show_fonts>
-						for font in fonts
-							<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
-					if show_fonts
-						<global @click.capture.outside.stop=(show_fonts=no)>
+				<menu-popup bind=store.show_fonts>
+					<.btnbox.cbtn.aside_button.popup_menu_box [d:flex transform@important:none ai:center] @click=(do store.show_fonts = !store.show_fonts)>
+						<span.font_icon> "B"
+						settings.font.name
+						if store.show_fonts
+							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
+								for font in fonts
+									<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
 
-				<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
-					data.lang.language
-					<button.change_language> currentLanguage!
-					<.popup_menu [l:0] .show_popup_menu=data.show_languages>
-						<button.butt .active_butt=('ukr'==data.language) @click=(do data.setLanguage('ukr'))> "Українська"
-						<button.butt .active_butt=('ru'==data.language) @click=(do data.setLanguage('ru'))> "Русский"
-						<button.butt .active_butt=('eng'==data.language) @click=(do data.setLanguage('eng'))> "English"
-						<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
-						<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
-						<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
-					if data.show_languages
-						<global @click.capture.outside.stop=(data.show_languages=no)>
+				<menu-popup bind=data.show_languages>
+					<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
+						data.lang.language
+						<button.change_language> currentLanguage!
+						if data.show_languages
+							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
+								<button.butt .active_butt=('ukr'==data.language) @click=(do data.setLanguage('ukr'))> "Українська"
+								<button.butt .active_butt=('ru'==data.language) @click=(do data.setLanguage('ru'))> "Русский"
+								<button.butt .active_butt=('eng'==data.language) @click=(do data.setLanguage('eng'))> "English"
+								<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
+								<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
+								<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
 					data.lang.parallel
 					<p.checkbox> <span>
@@ -2575,7 +2574,7 @@ export tag bible-reader
 										if compare_translations.length == translations.length
 											<p[padding: 12px 8px]> data.lang.nothing_else
 										<div[d:hflex bg:$background-color pos:sticky t:-8px]>
-											<input.search bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
+											<input.search [p:0 8px] bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
 											<svg.close_search [mr:-16px @lt-sm:8px h:42px p:0px] @click=(show_translations_for_comparison = no) viewBox="0 0 20 20">
 												<title> data.lang.close
 												<path[m: auto] d=svg_paths.close>
@@ -2953,10 +2952,11 @@ export tag bible-reader
 
 
 			if welcome != 'false'
-				<section#welcome.small_box [pos:fixed r:16px b:16px p:16px o@off:0 scale@off:0.75 origin:bottom right w:300px] ease>
+				<section#welcome.small_box [pos:fixed zi:9999 r:16px b:16px p:16px o@off:0 scale@off:0.75 origin:bottom right w:300px] ease>
 					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
 					<p[mb:8px text-indent:1.5em lh:1.5 fs:0.9em]> data.lang.welcome_msg, <span.emojify> ' 😉'
 					<button [w:100% h:32px bg:$btn-bg @hover:$btn-bg-hover c:$text-color @hover:$accent-hover-color ta:center border:none fs:1em rd:4px cursor:pointer] @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
+
 
 			if page_search.d
 				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $btn-bg p:2px 8px zi:1100] ease>
