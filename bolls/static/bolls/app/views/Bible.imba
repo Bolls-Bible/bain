@@ -226,49 +226,6 @@ export tag bible-reader
 				turnSepia!
 		)
 
-
-		document.onkeydown = do |e|
-			e = e || window.event
-			if document.activeElement.tagName != 'INPUT' && document.activeElement.contentEditable != 'true' && document.getSelection().isCollapsed
-				if e.code == "ArrowRight" && e.altKey && e.ctrlKey
-					nextChapter('true')
-				elif e.code == "ArrowLeft" && e.altKey && e.ctrlKey
-					prevChapter('true')
-				elif e.code == "ArrowRight" && e.ctrlKey
-					nextChapter()
-				elif e.code == "ArrowLeft" && e.ctrlKey
-					prevChapter()
-				elif e.code == "KeyN" && e.altKey
-					nextBook()
-				elif e.code == "KeyP" && e.altKey
-					prevBook()
-			if e.code == "Escape"
-				clearSpace()
-			if e.ctrlKey && e.code == "KeyF"
-				e.preventDefault!
-				e.stopPropagation!
-				page_search.query = window.getSelection!.toString!
-				search.search_input = page_search.query
-				clearSpace!
-				if e.shiftKey
-					turnGeneralSearch!
-				else
-					pageSearch!
-			if e.code == "KeyH" && e.altKey && e.ctrlKey
-				menuicons = !menuicons
-				setCookie("menuicons", menuicons)
-				imba.commit!
-
-			elif e.code == "KeyY" && e.ctrlKey
-				fixDrawers!
-
-			elif e.code == "ArrowRight" && e.altKey
-				e.preventDefault()
-				window.history.forward()
-			elif e.code == "ArrowLeft" && e.altKey
-				e.preventDefault()
-				window.history.back()
-
 		# Focus the reader tag in order to enable keyboard navigation
 		document.onfocus = do
 			focus!
@@ -1017,8 +974,8 @@ export tag bible-reader
 				parts.pop!
 			else
 				parts.pop!
-			unless search.suggestions.translation
-				search.suggestions.translation = settings.translation
+		unless search.suggestions.translation
+			search.suggestions.translation = settings.translation
 
 
 		# If no numbers provided -- suggest first chapter
@@ -1988,6 +1945,7 @@ export tag bible-reader
 		return store.note && store.note != '<br>'
 
 	def filterBooks
+		scrollToY($books,0)
 		if settingsp.display && settingsp.edited_version == settingsp.translation
 			settingsp.filtered_books = filteredBooks('parallel_books')
 		else
@@ -2144,6 +2102,11 @@ export tag bible-reader
 			text += ' ' + search.suggestions.translation
 		return text
 
+	def prepareForHotKey
+		page_search.query = window.getSelection!.toString!
+		search.search_input = page_search.query
+		clearSpace!
+
 
 	def render
 		if applemob
@@ -2189,7 +2152,7 @@ export tag bible-reader
 												<title> translation.info
 												<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
 
-				<.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
+				<$books.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
 					if settingsp.display && settingsp.edited_version == settingsp.translation
 						<>
 							for book in settingsp.filtered_books
@@ -2208,7 +2171,7 @@ export tag bible-reader
 										<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
 						if !settings.filtered_books.length
 							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-				<input$bookssearch.search @keyup.filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
+				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
 				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
@@ -2517,7 +2480,7 @@ export tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©", <time dateTime='2021-04-11T12:11'> "2019"
+						"©", <time dateTime='2021-11-11T21:11'> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
@@ -2981,6 +2944,25 @@ export tag bible-reader
 						<path[m: auto] d=svg_paths.close>
 
 
+
+			<global
+				@hotkey('mod+shift+f').prevent.stop.prepareForHotKey=turnGeneralSearch
+				@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
+				@hotkey('escape').capture.prevent.stop=clearSpace
+				@hotkey('mod+y').prevent.stop=fixDrawers
+				@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
+
+				@hotkey('alt+right').prevent.stop=nextChapter()
+				@hotkey('alt+left').prevent.stop=prevChapter()
+				@hotkey('alt+n').prevent.stop=nextBook()
+				@hotkey('alt+p').prevent.stop=prevBook()
+				@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
+				@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
+
+				@hotkey('alt+right').prevent.stop=window.history.forward!
+				@hotkey('alt+left').prevent.stop=window.history.back!
+
+				>
 
 	css
 		height: 100vh
