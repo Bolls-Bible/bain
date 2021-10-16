@@ -6,6 +6,7 @@ export const thanks_to = [
 	"Rodolfo Schonhals Fischer, contributor, security auditor, Portuguese and Español localisation"
 	"Joel Chackosaji, patron"
 	"Juan Martin, donator"
+	"Ryne4S, tester"
 	"Dj. Crouch, donator"
 	"Alexander Alemayhu, patron"
 	"Павлишинець Едуард, contributor"

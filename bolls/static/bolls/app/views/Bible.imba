@@ -97,7 +97,6 @@ let choosen = []
 let choosenid = []
 let highlights = []
 let show_collections = no
-let show_history = no
 let choosen_parallel = no
 let store =
 	newcollection: ''
@@ -108,6 +107,7 @@ let store =
 	collections_search: ''
 	compare_translations_search: ''
 	show_fonts: no
+	show_history: no
 
 let page_search =
 	d: no
@@ -290,7 +290,7 @@ export tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
-		unless verses.length
+		if !verses.length and !window.location.pathname.includes("downloads")
 			getText(settings.translation, settings.book, settings.chapter)
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
@@ -590,7 +590,7 @@ export tag bible-reader
 		search.search_div = no
 		onzone = no
 		inzone = no
-		show_history = no
+		store.show_history = no
 		search.filter = no
 		search.show_filters = no
 		search.counter = 50
@@ -1520,7 +1520,7 @@ export tag bible-reader
 				return book.name
 
 	def turnHistory
-		show_history = !show_history
+		store.show_history = !store.show_history
 		settings_menu_left = -300
 
 	def clearHistory
@@ -1954,13 +1954,11 @@ export tag bible-reader
 	def goToVerse id
 		if settings.parallel_synch
 			if id.toString().charAt(0) == 'p'
-				findVerse id, 0, no
 				findVerse id.toString().slice(1, id.length), 0, no
 			else
 				findVerse ('p' + id), 0, no
-				findVerse id, 0, no
-		else
-			findVerse id, 0, no
+
+		findVerse id, 0, no
 		hideVersePicker()
 		focus!
 
@@ -1994,7 +1992,7 @@ export tag bible-reader
 				touch.dx > 64 ? settings_menu_left = 0 : settings_menu_left = -300
 			else
 				touch.dx < -64 ? settings_menu_left = -300 : settings_menu_left = 0
-		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !show_history && !choosenid.length
+		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !store.show_history && !choosenid.length
 			if window.innerWidth > 600
 				if touch.dx < -32
 					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter("true") : prevChapter()
@@ -2848,29 +2846,30 @@ export tag bible-reader
 							<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
 
 
-			if show_history
-				<section.small_box [pos:fixed b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75)] ease>
-					<[m: 0 c:inherit].nighttheme.flex>
-						<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
-								<title> data.lang.close
-								<path d=svg_paths.close>
-						<h1[margin: 0 0 0 8px]> data.lang.history
-						<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
-							<title> data.lang.delete
-							<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
-					<article[of:auto max-height: calc(97vh - 82px)]>
-						for h in history.slice().reverse()
-							<div[display: flex]>
-								<a.book_in_list @click=backInHistory(h)>
-									getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
-									if h.verse
-										':' + h.verse
-									' ' + h.translation
-								<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
-									<title> data.lang.open_in_parallel
-									<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
-						unless history.length
-							<p[padding: 12px]> data.lang.empty_history
+			if store.show_history
+				<menu-popup bind=store.show_history scrollinview=no ease>
+					<section.small_box [pos:fixed b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75)]>
+						<[m: 0 c:inherit].nighttheme.flex>
+							<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
+									<title> data.lang.close
+									<path d=svg_paths.close>
+							<h1[margin: 0 0 0 8px]> data.lang.history
+							<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
+								<title> data.lang.delete
+								<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
+						<article[of:auto max-height: calc(97vh - 82px)]>
+							for h in history.slice().reverse()
+								<div[display: flex]>
+									<a.book_in_list @click=backInHistory(h)>
+										getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
+										if h.verse
+											':' + h.verse
+										' ' + h.translation
+									<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
+										<title> data.lang.open_in_parallel
+										<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
+							unless history.length
+								<p[padding: 12px]> data.lang.empty_history
 
 
 			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)

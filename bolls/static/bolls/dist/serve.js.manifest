@@ -325,7 +325,7 @@
   "public": true,
   "path": "public/__assets__/all.css",
   "asset": "$$37$$",
-  "hash": "HT3SEX9S",
+  "hash": "5NERYLAP",
   "originalPath": "all.__dist__.css",
   "url": "/__assets__/all.css"
 },
@@ -409,7 +409,7 @@
     "$$43$$",
     "$$44$$"
   ],
-  "hash": "LPCPYACC",
+  "hash": "Y3DKMTYH",
   "originalPath": "app/index.__dist__.html",
   "url": "/app/index.html"
 },
@@ -417,7 +417,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 751350,
+  "bytes": 748400,
   "source": "$$46$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -425,7 +425,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "4XEYBKUL"
+  "hash": "UHWHPPJQ"
 },
 "$$41$$":{
   "imports": [],
@@ -538,7 +538,7 @@
     ],
     [
       "$$73$$",
-      14133
+      14277
     ],
     [
       "$$74$$",
@@ -550,7 +550,7 @@
     ],
     [
       "$$76$$",
-      294069
+      297579
     ],
     [
       "$$77$$",
@@ -618,7 +618,7 @@
     ],
     [
       "$$93$$",
-      1101
+      1176
     ],
     [
       "$$94$$",
@@ -626,11 +626,11 @@
     ],
     [
       "$$95$$",
-      9270
+      9274
     ],
     [
       "$$96$$",
-      748
+      765
     ],
     [
       "$$97$$",
@@ -642,7 +642,7 @@
     ],
     [
       "$$99$$",
-      207268
+      207566
     ],
     [
       "$$100$$",
@@ -669,7 +669,7 @@
       1987
     ]
   ],
-  "bytes": 796623,
+  "bytes": 800671,
   "map": "$$40$$",
   "source": "$$46$$",
   "css": "$$105$$",
@@ -679,7 +679,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "4XEYBKUL",
+  "hash": "UHWHPPJQ",
   "originalPath": "app/client.__dist__.js"
 },
 "$$42$$":{
@@ -766,7 +766,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "8OFXI2PW",
+  "hash": "4OH471EM",
   "originalPath": "app/client.__dist__.css"
 },
 "$$43$$":{
@@ -1025,7 +1025,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$73$$":{
-  "bytes": 14876,
+  "bytes": 15060,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1047,7 +1047,7 @@
   "path": "app/state.imba"
 },
 "$$76$$":{
-  "bytes": 369334,
+  "bytes": 375078,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1173,7 +1173,7 @@
   "path": "styles:app/views/menu-popup.imba"
 },
 "$$93$$":{
-  "bytes": 3986,
+  "bytes": 4297,
   "imports": [
     "$$72$$",
     "$$92$$"
@@ -1188,7 +1188,7 @@
   "path": "styles:app/views/orderable-list.imba"
 },
 "$$95$$":{
-  "bytes": 33978,
+  "bytes": 33936,
   "imports": [
     "$$72$$",
     "$$79$$",
@@ -1199,7 +1199,7 @@
   "path": "app/views/orderable-list.imba"
 },
 "$$96$$":{
-  "bytes": 1963,
+  "bytes": 2026,
   "imports": [],
   "_": "input",
   "path": "app/views/thanks_to.imba"
@@ -1217,7 +1217,7 @@
   "path": "styles:app/views/Bible.imba"
 },
 "$$99$$":{
-  "bytes": 776182,
+  "bytes": 771080,
   "imports": [
     "$$72$$",
     "$$76$$",
@@ -1339,7 +1339,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "Z3D0762J",
+  "hash": "EPUNSL2P",
   "originalPath": "app/client.__dist__.css"
 },
 "$$106$$":{
@@ -1512,7 +1512,7 @@
   "path": "app/state.imba"
 },
 "$$128$$":{
-  "bytes": 776182,
+  "bytes": 771080,
   "imports": [
     "$$140$$",
     "$$138$$",
@@ -1605,7 +1605,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$138$$":{
-  "bytes": 14876,
+  "bytes": 15060,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1619,7 +1619,7 @@
   "path": "app/langdata.imba"
 },
 "$$140$$":{
-  "bytes": 369334,
+  "bytes": 375078,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1665,7 +1665,7 @@
   "path": "app/views/note-up.imba"
 },
 "$$146$$":{
-  "bytes": 3986,
+  "bytes": 4297,
   "imports": [
     "$$115$$"
   ],
@@ -1673,7 +1673,7 @@
   "path": "app/views/menu-popup.imba"
 },
 "$$147$$":{
-  "bytes": 33978,
+  "bytes": 33936,
   "imports": [
     "$$149$$",
     "$$144$$",
@@ -1683,7 +1683,7 @@
   "path": "app/views/orderable-list.imba"
 },
 "$$148$$":{
-  "bytes": 1982,
+  "bytes": 2045,
   "imports": [
     "$$121$$"
   ],
@@ -1763,7 +1763,7 @@
     "/__assets__/all.css": "$$37$$"
   },
   "mappings": {},
-  "hash": "S8OYOMJ9",
+  "hash": "W1EBGO87",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

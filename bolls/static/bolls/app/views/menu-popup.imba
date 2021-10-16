@@ -1,12 +1,14 @@
 # Used to hide it on global click and scroll into view when selected
 export tag menu-popup
 	prop show = no
+	prop scrollinview = yes
 
 	def scrollInView
-		if window.innerHeight > 640
-			scrollIntoView({behavior:'smooth', block:"center"})
-		else
-			scrollIntoView({behavior:'smooth', block:"start"})
+		if scrollinview
+			if window.innerHeight > 640
+				scrollIntoView({behavior:'smooth', block:"center"})
+			else
+				scrollIntoView({behavior:'smooth', block:"start"})
 
 
 	def render

@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = 'NRSVCE'
+translation = 'NET'
 
 def parseLinks(text):
 	if type(text) == float:
@@ -16,10 +16,14 @@ def parseLinks(text):
 
 	result = ''
 	for piece in pieces:
-		if 'B:' in piece:
+		if piece.startswith('B:'):
 			result += "'/" + translation + '/'
 			digits = re.findall(r'\d+', piece)
-			result += str(books_map[(digits[0])]) + '/' + digits[1] + '/' + digits[2]
+			try:
+				result += str(books_map[(digits[0])]) + '/' + digits[1] + '/' + digits[2]
+			except:
+				print(piece)
+
 			if len(digits) > 3:
 				result += '-' + digits[3]
 			result += "'"

@@ -91,6 +91,12 @@
 				"full_name": "New Revised Standard Version Catholic Edition, 1993",
 				"info": "https://en.wikipedia.org/wiki/New_Revised_Standard_Version_Catholic_Edition",
 				"updated": 1626349711821
+			},
+			{
+				"short_name": "NET",
+				"full_name": "New English Translation, 2007",
+				"info": "https://en.wikipedia.org/wiki/New_English_Translation",
+				"updated": 1626349711821
 			}
 		]
 	},
