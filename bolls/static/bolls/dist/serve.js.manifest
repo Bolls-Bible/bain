@@ -409,7 +409,7 @@
     "$$43$$",
     "$$44$$"
   ],
-  "hash": "Y3DKMTYH",
+  "hash": "LPCPYACC",
   "originalPath": "app/index.__dist__.html",
   "url": "/app/index.html"
 },
@@ -425,7 +425,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "UHWHPPJQ"
+  "hash": "JGO0OFWS"
 },
 "$$41$$":{
   "imports": [],
@@ -538,7 +538,7 @@
     ],
     [
       "$$73$$",
-      14277
+      14413
     ],
     [
       "$$74$$",
@@ -550,7 +550,7 @@
     ],
     [
       "$$76$$",
-      297579
+      301089
     ],
     [
       "$$77$$",
@@ -642,7 +642,7 @@
     ],
     [
       "$$99$$",
-      207566
+      207632
     ],
     [
       "$$100$$",
@@ -669,7 +669,7 @@
       1987
     ]
   ],
-  "bytes": 800671,
+  "bytes": 804383,
   "map": "$$40$$",
   "source": "$$46$$",
   "css": "$$105$$",
@@ -679,7 +679,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "UHWHPPJQ",
+  "hash": "JGO0OFWS",
   "originalPath": "app/client.__dist__.js"
 },
 "$$42$$":{
@@ -1025,7 +1025,7 @@
   "path": "node_modules/imba/index.imba"
 },
 "$$73$$":{
-  "bytes": 15060,
+  "bytes": 15236,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1047,7 +1047,7 @@
   "path": "app/state.imba"
 },
 "$$76$$":{
-  "bytes": 375078,
+  "bytes": 380822,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1605,7 +1605,7 @@
   "path": "node_modules/imba/src/imba/events/selection.imba"
 },
 "$$138$$":{
-  "bytes": 15060,
+  "bytes": 15236,
   "imports": [],
   "_": "input",
   "path": "app/views/languages.json"
@@ -1619,7 +1619,7 @@
   "path": "app/langdata.imba"
 },
 "$$140$$":{
-  "bytes": 375078,
+  "bytes": 380822,
   "imports": [],
   "_": "input",
   "path": "app/views/translations_books.json"
@@ -1763,7 +1763,7 @@
     "/__assets__/all.css": "$$37$$"
   },
   "mappings": {},
-  "hash": "W1EBGO87",
+  "hash": "KICDDR9J",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

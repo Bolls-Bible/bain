@@ -75,6 +75,12 @@
 				"updated": 1591185595149
 			},
 			{
+				"short_name": "DRB",
+				"full_name": "Douay Rheims Bible",
+				"info": "https://en.wikipedia.org/wiki/Douay%E2%80%93Rheims_Bible",
+				"updated": 1591185595149
+			},
+			{
 				"short_name": "NIV",
 				"full_name": "New International Version, 1984",
 				"info": "https://en.wikipedia.org/wiki/New_International_Version",

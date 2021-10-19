@@ -122,7 +122,6 @@ def search(request, translation, piece=''):
         results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
 
         results_of_search = []
-        print(results_of_exec_search)
         if len(results_of_exec_search) < 24:
             rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
             # 1 - e^(-0.0001 * (x + 16) ** (2))
@@ -132,7 +131,6 @@ def search(request, translation, piece=''):
             results_of_rank = Verses.objects.annotate(rank=SearchRank(
                 vector, query)).filter(translation=translation, rank__gt=(0.05)).order_by('-rank')
 
-            print(results_of_exec_search, results_of_rank)
             results_of_search = []
             if len(results_of_rank) < 24:
                 results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
@@ -140,7 +138,6 @@ def search(request, translation, piece=''):
 
                 results_of_search = list(results_of_similarity) + \
                     list(set(results_of_rank) - set(results_of_similarity))
-                print(results_of_exec_search, results_of_rank, results_of_similarity)
 
 
             results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
@@ -151,7 +148,13 @@ def search(request, translation, piece=''):
         else:
             results_of_search = results_of_exec_search
 
-        mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
+        def highlightHeadline(text):
+            highlighted_text = text
+            for word in piece.split():
+                mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
+                highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
+            return highlighted_text
+
         for obj in results_of_search[0:1024]:
             d.append({
                 "pk": obj.pk,
@@ -159,7 +162,7 @@ def search(request, translation, piece=''):
                 "book": obj.book,
                 "chapter": obj.chapter,
                 "verse": obj.verse,
-                "text": mark_replacement.sub("<mark>" + piece + "</mark>", obj.text)
+                "text": highlightHeadline(obj.text)
             })
     else:
         d = [{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}]

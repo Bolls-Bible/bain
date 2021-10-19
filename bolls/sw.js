@@ -1,4 +1,4 @@
-var CACHE_NAME = "v2.1.51";
+var CACHE_NAME = "v2.1.52";
 var urlsToCache = [
 	"/",
 	"/static/bolls/dist/public/__assets__/app/client.js",
