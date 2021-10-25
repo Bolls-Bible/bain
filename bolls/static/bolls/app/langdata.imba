@@ -95,6 +95,7 @@ export const english = {
 	"language": "Language",
 	"lighttheme": "Turn on light theme",
 	"loading": "Loading",
+	"processing": "Processing"
 	"login": "Log in",
 	"logout": "Log out",
 	"more_results": "More",
@@ -254,6 +255,7 @@ export const ukrainian = {
 	"language": "Мова",
 	"lighttheme": "Увімкнути світлу тему",
 	"loading": "Завантаження",
+	"processing": "Обробка"
 	"login": "Увійти",
 	"logout": "Вийти",
 	"more_results": "Більше",
@@ -413,6 +415,7 @@ export const russian = {
 	"language": "Язык",
 	"lighttheme": "Включить светлую тему",
 	"loading": "Загрузка",
+	"processing": "Обробка"
 	"login": "Войти",
 	"logout": "Выйти",
 	"more_results": "Больше",
@@ -572,6 +575,7 @@ export const portuguese = {
 	"language": "Idioma",
 	"lighttheme": "Ativar o tema claro",
 	"loading": "Carregando",
+	"processing": "Processamento"
 	"login": "Conecte-se",
 	"logout": "Sair",
 	"more_results": "Mais",
@@ -731,6 +735,7 @@ export const espanol = {
 	"language": "Idioma",
 	"lighttheme": "Activar el tema claro",
 	"loading": "Cargando",
+	"processing": "Procesamiento"
 	"login": "Conectarse",
 	"logout": "Salir",
 	"more_results": "Más",
@@ -891,6 +896,7 @@ export const german = {
 	"language": "Sprache",
 	"lighttheme": "Licht Theme einschalten",
 	"loading": "Wird geladen",
+	"processing": "Bearbeiten"
 	"login": "Log in",
 	"logout": "Log out",
 	"more_results": "Anderes",

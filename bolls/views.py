@@ -31,25 +31,44 @@ def index(request):
     return render(request, 'bolls/index.html')
 
 
+def crossOrigin(response):
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
+
+
+
 def getTranslation(request, translation):
-    all_objects = Verses.objects.filter(
+    all_verses = Verses.objects.filter(
         translation=translation).order_by('book', 'chapter', 'verse')
-    d = []
-    for obj in all_objects:
-        d.append({
+    all_commentaries = Commentary.objects.filter(
+        translation=translation).order_by('book', 'chapter', 'verse')
+
+    def serializeVerse(obj):
+        verse = {
             "pk": obj.pk,
             "translation": obj.translation,
             "book": obj.book,
             "chapter": obj.chapter,
             "verse": obj.verse,
             "text": obj.text
-        })
-    response = JsonResponse(d, safe=False)
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
-    return response
+        }
+        comment = ''
+        for item in all_commentaries:
+            if item.verse == obj.verse and item.chapter == obj.chapter and item.book == obj.book:
+                if len(comment) > 0:
+                    comment = "%s<br>" % (comment)
+                comment = "%s%s" % (comment, item.text)
+
+        if len(comment) > 0:
+            verse["comment"] = comment
+        return(verse)
+
+    verses = [serializeVerse(obj) for obj in all_verses]
+    return crossOrigin(JsonResponse(verses, safe=False))
+
 
 
 def getChapter(translation, book, chapter):
@@ -65,12 +84,7 @@ def getChapter(translation, book, chapter):
     return d
 
 def getText(request, translation, book, chapter):
-    response = JsonResponse(getChapter(translation, book, chapter), safe=False)
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
-    return response
+    return crossOrigin(JsonResponse(getChapter(translation, book, chapter), safe=False))
 
 def getChapterWithCommentaries(translation, book, chapter):
     all_verses = Verses.objects.filter(
@@ -98,12 +112,7 @@ def getChapterWithCommentaries(translation, book, chapter):
     return d
 
 def getChapterWithComments(request, translation, book, chapter):
-    response = JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False)
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
-    return response
+    return crossOrigin(JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False))
 
 def search(request, translation, piece=''):
     if len(piece) == 0:
@@ -166,13 +175,7 @@ def search(request, translation, piece=''):
             })
     else:
         d = [{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}]
-
-    response = JsonResponse(d, safe=False)
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
-    return response
+    return crossOrigin(JsonResponse(d, safe=False))
 
 
 def cleanhtml(raw_html):

@@ -2106,6 +2106,23 @@ export tag bible-reader
 		clearSpace!
 
 
+	def translationDownloadStatus translation
+		if data.translations_in_downloading.find(do |tr| return tr == translation.short_name)
+			return 'processing'
+		elif data.downloaded_translations.indexOf(translation.short_name) != -1
+			return 'delete'
+		else
+			return 'download'
+
+	def offlineTranslationAction tr
+		if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+			return
+		elif data.downloaded_translations.indexOf(tr.short_name) != -1
+			data.deleteTranslation(tr.short_name)
+		else
+			data.downloadTranslation(tr.short_name)
+
+
 	def render
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
@@ -2573,24 +2590,27 @@ export tag bible-reader
 										<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
 											<title> data.lang.open
 											<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
 									<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
 										for tr in language.translations
 											if window.navigator.onLine || data.downloaded_translations().indexOf(tr.short_name) != -1
-												<a.search_res_verse_header>
-													<.search_res_verse_text [margin-right: auto text-align: left]> tr.short_name, ', ', tr.full_name
-													if data.downloading_of_this_translations.find(do |translation| return translation == tr.short_name)
-														<svg.remove_parallel.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
+												<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$btn-bg-hover fill:$text-color @hover:$accent-hover-color rd:8px] @click=offlineTranslationAction(tr)>
+													if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+														<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
 															<title> data.lang.loading
 															<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
 													elif data.downloaded_translations.indexOf(tr.short_name) != -1
-														<svg.remove_parallel.close_search @click=(do data.deleteTranslation(tr.short_name)) viewBox="0 0 12 16" alt=data.lang.delete>
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
 															<title> data.lang.delete
 															<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 													else
-														<svg.remove_parallel.close_search @click=(do data.downloadTranslation(tr.short_name)) viewBox="0 0 212.646728515625 159.98291015625">
+														# <button.change_language[d:hflex a:center j:center p:4px 8px fs:0.75 ws:nowrap]>
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
 															<title> data.lang.download
 															<g transform="matrix(1.5 0 0 1.5 0 128)">
 																<path d=svg_paths.download>
+													# < [margin-right: auto text-align: left]>
+													<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
 								<.freespace>
 
 						elif what_to_show_in_pop_up_block == 'show_support'
@@ -2945,16 +2965,18 @@ export tag bible-reader
 
 
 			<global
-				@hotkey('mod+shift+f').prevent.stop.prepareForHotKey=turnGeneralSearch
+				@hotkey('mod+shift+f').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
 				@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 				@hotkey('escape').capture.prevent.stop=clearSpace
 				@hotkey('mod+y').prevent.stop=fixDrawers
 				@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
 
-				@hotkey('alt+right').prevent.stop=nextChapter()
-				@hotkey('alt+left').prevent.stop=prevChapter()
+				@hotkey('mod+right').prevent.stop=nextChapter()
+				@hotkey('mod+left').prevent.stop=prevChapter()
 				@hotkey('alt+n').prevent.stop=nextBook()
 				@hotkey('alt+p').prevent.stop=prevBook()
+				@hotkey('mod+n').prevent.stop=nextBook()
+				@hotkey('mod+p').prevent.stop=prevBook()
 				@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
 				@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
 

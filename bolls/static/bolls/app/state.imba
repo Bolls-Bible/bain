@@ -4,9 +4,11 @@ import {english, ukrainian, russian, portuguese, espanol, german} from './langda
 
 export class State
 	downloaded_translations
+	downloaded_comentaries	# new
 	db_is_available
 	db
-	downloading_of_this_translations
+	translations_in_downloading
+	commentaries_in_downloading	# new
 	deleting_of_all_transllations
 	show_languages
 	language
@@ -27,7 +29,7 @@ export class State
 			translations = translations.concat(lngg.translations)
 		db_is_available = yes
 		downloaded_translations = []
-		downloading_of_this_translations = []
+		translations_in_downloading = []
 		deleting_of_all_transllations = no
 		show_languages = no
 
@@ -259,7 +261,7 @@ export class State
 
 	def downloadTranslation translation
 		if (downloaded_translations.indexOf(translation) < 0 && window.navigator.onLine)
-			downloading_of_this_translations.push(translation)
+			translations_in_downloading.push(translation)
 			let begtime = Date.now()
 			let url = '/static/translations/' + translation + '.json'
 
@@ -267,7 +269,7 @@ export class State
 				db_is_available = yes
 				downloaded_translations.push(translation)
 				setCookie('downloaded_translations', JSON.stringify(downloaded_translations))
-				downloading_of_this_translations.splice(downloading_of_this_translations.indexOf(translation), 1)
+				translations_in_downloading.splice(translations_in_downloading.indexOf(translation), 1)
 				translations_current_state[translation] = Date.now()
 				setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
 				console.log("Translation ", translation, " is saved. Time: ", (Date.now() - begtime) / 1000, "s")
@@ -304,19 +306,19 @@ export class State
 					)
 
 	def handleDownloadingError translation
-		downloading_of_this_translations.splice(downloading_of_this_translations.indexOf(translation), 1)
+		translations_in_downloading.splice(translations_in_downloading.indexOf(translation), 1)
 		showNotification('error')
 
 	def deleteTranslation translation, update = no
 		downloaded_translations.splice(downloaded_translations.indexOf(translation), 1)
-		downloading_of_this_translations.push(translation)
+		translations_in_downloading.push(translation)
 		let begtime = Date.now()
 		db_is_available = no
 
 		def resolveDeletion deleteCount
 			db_is_available = yes
 			console.log( "Deleted ", deleteCount[1], " objects of ",  deleteCount[0], ". Time: ", (Date.now() - begtime) / 1000)
-			downloading_of_this_translations.splice(downloading_of_this_translations.indexOf(deleteCount[1]), 1)
+			translations_in_downloading.splice(translations_in_downloading.indexOf(deleteCount[1]), 1)
 			delete translations_current_state[deleteCount[1]]
 			setCookie('stored_translations_updates', JSON.stringify(translations_current_state))
 			imba.commit!
@@ -362,7 +364,7 @@ export class State
 		db.transaction("rw", db.verses, do
 			await db.verses.clear()
 			downloaded_translations = []
-			downloading_of_this_translations = []
+			translations_in_downloading = []
 			deleting_of_all_transllations = no
 			imba.commit!
 		).catch(do |e|

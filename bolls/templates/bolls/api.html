@@ -55,16 +55,18 @@
 			books</a>. The translations list contain nodes, which have the next properties:
 	</p>
 	<ul>
-		<li> The <code>short_name</code> field is an id of the translation in database. Use it for forming a url.
-		<li> The <code>full_name</code> field is a full name of its translation.
+		<li> The <code>short_name</code> field is an id of the translation in database. Use it for forming a url.</li>
+		<li> The <code>full_name</code> field is a full name of its translation.</li>
+		<li> The <code>commentaries</code> field indicates whether there is translators commentary to the translation.</li>
+		<li> The <code>updated</code> field is a date number when the translation was updated in the last time.</li>
 	</ul>
 
 	<p>The books object (or list) contains books, which contain nodes, which have the next properties:</p>
 	<ul>
-		<li> The <code>bookid</code> field is an id of the book in database.
-		<li> The <code>chronorder</code> field is a number of the book in chronological order (just a smoll feature).
-		<li> The <code>name</code> field is a name of this book.
-		<li> The <code>chapters</code> field is a number of chapters of this book.
+		<li> The <code>bookid</code> field is an id of the book in database.</li>
+		<li> The <code>chronorder</code> field is a number of the book in chronological order (just a smoll feature).</li>
+		<li> The <code>name</code> field is a name of this book.</li>
+		<li> The <code>chapters</code> field is a number of chapters of this book.</li>
 	</ul>
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre>
@@ -90,10 +92,10 @@
 	<p>The result of this request will be a list of verses of that chapter, where every verse will has some several
 		fields.</p>
 	<ul>
-		<li> The <code>pk</code> field is an id of the verse in database.
-		<li> The <code>verse</code> field is a number of the verse in its chapter.
-		<li> The <code>text</code> field contains an html text of this verse.
-		<li> The optional <code>comment</code> field contains an html text of translators comment or references.
+		<li> The <code>pk</code> field is an id of the verse in database.</li>
+		<li> The <code>verse</code> field is a number of the verse in its chapter.</li>
+		<li> The <code>text</code> field contains an html text of this verse.</li>
+		<li> The optional <code>comment</code> field contains an html text of translators comment or references.</li>
 	</ul>
 	<p><b>NOTE!</b> To fetch a single verse or a few verses of one or more translations use <a href='#compare'>Compare
 			versions API</a></p>
@@ -115,12 +117,13 @@
 	<p>The result of this request will be a list of ALL found verses in the given translation, where every verse will
 		has some several fields:</p>
 	<ul id="verse_fields">
-		<li> The <code>pk</code> field is an id of the verse in database.
-		<li> The <code>translation</code> field is a translation in which was the search.
-		<li> The <code>book</code> field is a book of the verse.
-		<li> The <code>chapter</code> field is a chapter of the book.
-		<li> The <code>verse</code> field is a number of the verse in the chapter.
-		<li> The <code>text</code> field contains a text of this verse.
+		<li> The <code>pk</code> field is an id of the verse in database.</li>
+		<li> The <code>translation</code> field is a translation in which was the search.</li>
+		<li> The <code>book</code> field is a book of the verse.</li>
+		<li> The <code>chapter</code> field is a chapter of the book.</li>
+		<li> The <code>verse</code> field is a number of the verse in the chapter.</li>
+		<li> The <code>text</code> field contains a text of this verse.</li>
+		<li> The optional <code>comment</code> field contains translators commentary to the verse if such exist.</li>
 	</ul>
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/search/YLT/?search=haggi'</pre>
@@ -134,6 +137,7 @@
 	<p>The structure of nodes in this array will be like in the nodes of search query</p>
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/static/translations/YLT.json'</pre>
+
 	<h2 id="compare">Compare versions</h2>
 	<p>You can make a request for peculiar verses in peculiar translations. For example if you wanna see some exact
 		verse or verses in different translation to compare them you can use this api. The request should POST, and you
@@ -229,7 +233,6 @@ window.fetch("/get-paralel-verses/", {
     }
   ]
 ]	</pre>
-
 
 	<h2 id="Fetch a verse">Fetch a verse</h2>
 	<p>You may need this a lot. To fetch a single verse of a few verses of a single translation you should use the
