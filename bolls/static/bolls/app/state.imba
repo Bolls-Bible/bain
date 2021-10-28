@@ -8,7 +8,6 @@ export class State
 	db_is_available
 	db
 	translations_in_downloading
-	commentaries_in_downloading	# new
 	deleting_of_all_transllations
 	show_languages
 	language

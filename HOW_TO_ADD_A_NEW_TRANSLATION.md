@@ -18,6 +18,16 @@ Also you need to format the books and make it a JavaScript array. Examples you m
 
 If you add a translation of a new language -- don't forget to set the translation a default for new users with that language default in their browser. Go to `state.imba` and see the switch inside of constructor.
 
+### If there are translator's commentaries -- prepare them too. Else -- skip this step.
+
+I assume you are using MyBible modules.
+Execute sql code from commentaries_concordance.sql in the commentaries database in order to format it.
+Export the commentaries table as .csv from the formatted database, save it to `/commentaries/mybcommentaries.csv`.
+Change `translation` variable at `/commentaries/main.py` to the translation abbreviation (for example 'JNT'), save and run it.
+It will store to the commentaries.csv file commentaries, ready for pushing to the app database.
+Run `\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;` to push the comments to the database (don't forget to edit the pach :).
+
+
 ### Add it to the app.
 
 After formating the text and books you may add it to the app. First of all copy the verses to the database with the next command:
