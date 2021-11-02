@@ -487,6 +487,9 @@ def historyOf(user):
     else:
         return []
 
+def getHistory(request):
+    return JsonResponse(historyOf(request.user), safe=False)
+
 
 def userLogged(request):
     if request.user.is_authenticated:

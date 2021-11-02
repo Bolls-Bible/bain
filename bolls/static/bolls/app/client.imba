@@ -1,9 +1,11 @@
 import {State} from './state'
 import './views/Bible'
+import './views/donate'
 import './views/Profile'
 import './views/downloads'
 import {Notifications} from './views/Notifications'
 import './route-navigators'
+import './icons'
 
 let state = new State()
 
@@ -19,6 +21,7 @@ tag the-app
 
 		<profile-page route.exact='/profile/' data=state>
 		<downloads-page route.exact='/downloads/' data=state>
+		<donate route.exact='/donate/'>
 
 
 imba.mount <the-app>

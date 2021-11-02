@@ -290,8 +290,8 @@ export tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
-		if !verses.length and !window.location.pathname.includes("downloads")
-			getText(settings.translation, settings.book, settings.chapter)
+		if !verses.length
+			getChapter(settings.translation, settings.book, settings.chapter)
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
 		if window.navigator.onLine
@@ -363,6 +363,9 @@ export tag bible-reader
 				books = BOOKS[translation]
 
 	def saveToHistory translation, book, chapter, verse, parallel
+		if data.user.username && window.navigator.onLine
+			history = await loadData('/get-history')
+
 		if getCookie("history")
 			history = JSON.parse(getCookie("history")) || []
 		if history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation)
@@ -2053,7 +2056,7 @@ export tag bible-reader
 
 
 	def hideReader
-		return window.location.pathname.indexOf('profile') > -1 || window.location.pathname.indexOf('downloads') > -1
+		return window.location.pathname.indexOf('profile') > -1 || window.location.pathname.indexOf('downloads') > -1 || window.location.pathname.indexOf('donate') > -1
 
 	def validateNewCollectionInput e
 		if store.newcollection.length > 2 && store.newcollection[store.newcollection.length - 1] == store.newcollection[store.newcollection.length - 2]
@@ -2487,10 +2490,9 @@ export tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						unless data.pswv
-							<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ"> '🔥 ', data.lang.donate, " 🐈"
+							<a route-to="/donate/"> '🔥 ', data.lang.donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
-						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
@@ -2604,12 +2606,10 @@ export tag bible-reader
 															<title> data.lang.delete
 															<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 													else
-														# <button.change_language[d:hflex a:center j:center p:4px 8px fs:0.75 ws:nowrap]>
 														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
 															<title> data.lang.download
 															<g transform="matrix(1.5 0 0 1.5 0 128)">
 																<path d=svg_paths.download>
-													# < [margin-right: auto text-align: left]>
 													<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
 								<.freespace>
 
@@ -2646,7 +2646,7 @@ export tag bible-reader
 								<p id="note_placeholder"> data.lang.write_something_awesone
 							<rich-text-editor bind=store dir="auto">
 
-						else
+						else	# search
 							if search_verses.length
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
@@ -2966,6 +2966,7 @@ export tag bible-reader
 
 			<global
 				@hotkey('mod+shift+f').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
+				@hotkey('mod+k').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
 				@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 				@hotkey('escape').capture.prevent.stop=clearSpace
 				@hotkey('mod+y').prevent.stop=fixDrawers

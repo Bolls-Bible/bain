@@ -515,6 +515,8 @@ export class State
 			console.error('Fallback: Oops, unable to copy', err)
 
 		document.body.removeChild(textArea)
+		showNotification('copied')
+
 
 	def copyTextToClipboard text
 		if !window.navigator.clipboard
@@ -526,21 +528,19 @@ export class State
 			console.error('Async: Could not copy text: ', err)
 			fallbackCopyTextToClipboard(text)
 		)
+		showNotification('copied')
 
 	def copyToClipboard copyobj
 		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title
 		copyTextToClipboard(text)
-		showNotification('copied')
 
 	def shareCopying copyobj
 		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
 		copyTextToClipboard(text)
-		showNotification('copied')
 
 	def internationalShareCopying copyobj
 		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life/international" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
 		copyTextToClipboard(text)
-		showNotification('copied')
 
 	def versePart verses
 		verses.length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return a - b)[verses.length - 1]) : (verses.sort(do |a, b| return a - b)[0])

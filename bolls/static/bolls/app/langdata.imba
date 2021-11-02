@@ -22,7 +22,7 @@ export const english = {
 		"Write a feedback.",
 		"Submit an idea)",
 		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate its interface to a new language. </a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
+		"<a target='_blank' relnoreferrer href='/donate/'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
 	"all": "All"
 	"account_deleted": "Account Deleted",
@@ -182,7 +182,7 @@ export const ukrainian = {
 		"Напишіть відгук.",
 		"Запропонуйте ідею)",
 		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Перекладіть інтерфейс додатку на нову мову.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Цей додаток не є безкоштовним. Завжди є потреба в грошах для хостингу, для розробки, поширення на нові платформи та часу на розробку..."
+		"<a target='_blank' relnoreferrer href='/donate/'>Пожертвуйте 🐈</a>. Цей додаток не є безкоштовним. Завжди є потреба в грошах для хостингу, для розробки, поширення на нові платформи та часу на розробку..."
 	],
 	"all": "Все"
 	"account_deleted": "Обліковий запис видалено",
@@ -342,7 +342,7 @@ export const russian = {
 		"Напишите отзыв.",
 		"Предложите идею)",
 		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Переведите интерфейт приолжения на новый язык.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Пожертвуйте 🐈</a>. Это приложение не бесплатное. Всегда есть потребность в деньгах для хостинга, для разработки, распространения на новые платформы и времени на разработку..."
+		"<a target='_blank' relnoreferrer href='/donate/'>Пожертвуйте 🐈</a>. Это приложение не бесплатное. Всегда есть потребность в деньгах для хостинга, для разработки, распространения на новые платформы и времени на разработку..."
 	],
 	"all": "Всё"
 	"account_deleted": "Аккаунт уделён",
@@ -502,7 +502,7 @@ export const portuguese = {
 		"Deixe um comentário.",
 		"Sugira uma ideia",
 		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traduza a interface para um novo idioma.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento…"
+		"<a target='_blank' relnoreferrer href='/donate/'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem, desenvolvimento, distribuição para novas plataformas e tempo de desenvolvimento…"
 	],
 	"all": "Tudo"
 	"account_deleted": "Conta excluída",
@@ -662,7 +662,7 @@ export const espanol = {
 		"Escribe un comentario.",
 		"Enviar una idea)",
 		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traducir la interfaz a un nuevo idioma.</a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
+		"<a target='_blank' relnoreferrer href='/donate/'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
 	],
 	"all": "Todo"
 	"account_deleted": "Cuenta borrada",
@@ -822,7 +822,7 @@ export const german = {
 		"Write a feedback.",
 		"Submit an idea)",
 		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate its interface to a new language. </a>",
-		"<a target='_blank' relnoreferrer href='https://send.monobank.ua/6ao79u5rFZ'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
+		"<a target='_blank' relnoreferrer href='/donate/'>Donate 🐈</a>. This app is not free. There is always a need for money for hosting, development, distribution to new platforms and development time..."
 	],
 	"all": "Alles"
 	"account_deleted": "Konto gelöscht.",

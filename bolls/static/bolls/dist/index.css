@@ -1285,6 +1285,7 @@ html[data-light="light"] .Notifications p {
   min-width: 20px;
   height: 32px;
   fill: var(--text-color);
+  color: var(--text-color);
   cursor: pointer;
   margin-left: auto;
   position: absolute;
@@ -1293,6 +1294,7 @@ html[data-light="light"] .Notifications p {
 
 .svgBack:hover {
   fill: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .collection {
