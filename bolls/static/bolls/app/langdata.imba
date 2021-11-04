@@ -31,7 +31,7 @@ export const english = {
 	"add_translations_msg": "Translations for comparison",
 	"addcollection": "Add a collection",
 	"addfilter": "Add filter",
-	"addtocollection": "Add to collection",
+	"bookmark": "Bookmark",
 	"align_justified": "Align justified",
 	"are_you_sure": "Are you absolutely sure?",
 	"auto_align": "Auto align",
@@ -122,6 +122,7 @@ export const english = {
 	"saveto": "Save to",
 	"search": "Search",
 	"share_via": "Share via",
+	"share": "Share"
 	"shortcuts": "Shortcuts",
 	"shortcuts_list": [
 		"Next chapter: <b>Ctrl + Right Arrow</b>",
@@ -191,7 +192,7 @@ export const ukrainian = {
 	"add_translations_msg": "Переклади для порівняння",
 	"addcollection": "Створити колекцію",
 	"addfilter": "Додати фільтр",
-	"addtocollection": "Додайти до колекції",
+	"bookmark": "Закладка",
 	"align_justified": "Вирівнювання по ширині",
 	"are_you_sure": "Ви повністю впевнені?",
 	"auto_align": "Автоматичне вирівнювання",
@@ -282,6 +283,7 @@ export const ukrainian = {
 	"saveto": "Зберегти до",
 	"search": "Пошук",
 	"share_via": "Поділитися через",
+	"share": "Поділитися"
 	"shortcuts": "Гярячі клавіші",
 	"shortcuts_list": [
 		"Наступна глава: <b>Ctrl + Права Стрілка</b>",
@@ -351,7 +353,7 @@ export const russian = {
 	"add_translations_msg": "Переводы для сравнения",
 	"addcollection": "Создать коллекцию",
 	"addfilter": "Добавить фильтр",
-	"addtocollection": "Добавить к коллекции",
+	"bookmark": "Закладка",
 	"align_justified": "Выравнивание по ширинє",
 	"are_you_sure": "Вы полностью уверены?",
 	"auto_align": "Автоматическое выравнивание",
@@ -442,6 +444,7 @@ export const russian = {
 	"saveto": "Сохранить к",
 	"search": "Поиск",
 	"share_via": "Отправить по",
+	"share": "Поделиться"
 	"shortcuts": "Горячие клавиши",
 	"shortcuts_list": [
 		"Следущая глава: <b>Ctrl + Правая Стрелка</b>",
@@ -511,7 +514,7 @@ export const portuguese = {
 	"add_translations_msg": "Traduções para comparação",
 	"addcollection": "Adicionar uma coleção",
 	"addfilter": "Adicionar filtro",
-	"addtocollection": "Adicionar à coleção",
+	"bookmark": "Marca",
 	"align_justified": "Alinhamento justificado",
 	"are_you_sure": "Você tem certeza?",
 	"auto_align": "Alinhamento à esquerda",
@@ -602,6 +605,7 @@ export const portuguese = {
 	"saveto": "Salvar em",
 	"search": "Procurar",
 	"share_via": "Compartilhar via",
+	"share": "Compartilhar"
 	"shortcuts": "Atalhos",
 	"shortcuts_list": [
 		"Próximo capítulo: <b>Ctrl + Seta para a Direita</b>",
@@ -671,7 +675,7 @@ export const espanol = {
 	"add_translations_msg": "Traducciones para comparación",
 	"addcollection": "Agregar una colección",
 	"addfilter": "Agregar filtro",
-	"addtocollection": "Agregar una colección",
+	"bookmark": "Marcador",
 	"align_justified": "Alinear por ancho",
 	"are_you_sure": "¿Estás absolutamente seguro?",
 	"auto_align": "Alineación automática",
@@ -762,6 +766,7 @@ export const espanol = {
 	"saveto": "Guardar en",
 	"search": "Buscar",
 	"share_via": "Compartir via",
+	"share": "Compartir"
 	"shortcuts": "Atajos",
 	"shortcuts_list": [
 		"Capítulo siguiente: <b>Ctrl + Flecha Derecha</b>",
@@ -831,7 +836,7 @@ export const german = {
 	"add_translations_msg": "Übersetzungen vergleichen",
 	"addcollection": "Fügen eine Sammlung hinzu.",
 	"addfilter": "Filter hinzufügen",
-	"addtocollection": "Zur Sammlung hinzufügen",
+	"bookmark": "Lesezeichen",
 	"align_justified": "Align justified",
 	"are_you_sure": "Sind Sie sicher?",
 	"auto_align": "Auto align",
@@ -923,6 +928,7 @@ export const german = {
 	"saveto": "Speichern unter",
 	"search": "Suchen",
 	"share_via": "Teilen per",
+	"share": "Teilen"
 	"shortcuts": "Abkürzung",
 	"shortcuts_list": [
 		"Next chapter: <b>Ctrl + Right Arrow</b>",

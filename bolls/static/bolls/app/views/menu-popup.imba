@@ -16,4 +16,4 @@ export tag menu-popup
 			<slot>
 
 			if data
-				<global @click.capture.outside.stop=(data=no;log data)>
+				<global @click.capture.outside=(data=no)>

@@ -47,6 +47,7 @@ let settings =
 	theme: 'light'
 	accent: 'blue'
 	sepia: yes
+	gray: no
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -67,7 +68,7 @@ let settings =
 	parallel_synch: yes
 
 # Detect dark mode
-if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && window.localStorage.getItem('sepia') != 'true'
+if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && window.localStorage.getItem('sepia') != 'true' && window.localStorage.getItem('gray') != 'true'
 	settings.theme = 'dark'
 	settings.sepia = no
 	settings.accent = 'gold'
@@ -228,7 +229,8 @@ export tag bible-reader
 
 		# Focus the reader tag in order to enable keyboard navigation
 		document.onfocus = do
-			focus!
+			if document.getSelection().toString().length == 0
+				focus!
 
 		# We check this out in the case when url has parameters that indicates wantes translation, chapter, etc
 		if window.translation
@@ -256,9 +258,13 @@ export tag bible-reader
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
 			const sepiaaa = getCookie('sepia') == 'true'
+			const grayyy = getCookie('gray') == 'true'
 			changeTheme(settings.theme)
 			if sepiaaa
 				turnSepia!
+			if grayyy
+				turnGray!
+
 		else
 			if settings.theme == 'dark'
 				changeTheme(settings.theme)
@@ -1039,13 +1045,16 @@ export tag bible-reader
 		html.dataset.pukaka = 'yes'
 
 		settings.sepia = no
+		settings.gray = no
 		settings.theme = theme
 		html.dataset.theme = settings.accent + settings.theme
 		html.dataset.light = settings.theme
 		html.dataset.sepia = no
+		html.dataset.gray = no
 
 		setCookie('theme', theme)
 		setCookie('sepia', settings.sepia)
+		setCookie('gray', settings.gray)
 
 		setTimeout(&, 75) do
 			imba.commit!.then do html.dataset.pukaka = 'no'
@@ -1054,13 +1063,34 @@ export tag bible-reader
 		html.dataset.pukaka = 'yes'
 
 		settings.sepia = yes
+		settings.gray = no
 		settings.theme = 'light'
 
 		html.dataset.theme = settings.accent + settings.theme
 		html.dataset.light = settings.theme
 		html.dataset.sepia = 'yes'
+		html.dataset.gray = 'no'
 
 		setCookie('sepia', settings.sepia)
+		setCookie('gray', settings.gray)
+
+		setTimeout(&, 75) do
+			imba.commit!.then do html.dataset.pukaka = 'no'
+
+	def turnGray
+		html.dataset.pukaka = 'yes'
+
+		settings.sepia = no
+		settings.gray = yes
+		settings.theme = 'light'
+
+		html.dataset.theme = settings.accent + settings.theme
+		html.dataset.light = settings.theme
+		html.dataset.sepia = 'no'
+		html.dataset.gray = 'yes'
+
+		setCookie('sepia', settings.sepia)
+		setCookie('gray', settings.gray)
 
 		setTimeout(&, 75) do
 			imba.commit!.then do html.dataset.pukaka = 'no'
@@ -1525,6 +1555,10 @@ export tag bible-reader
 	def turnHistory
 		store.show_history = !store.show_history
 		settings_menu_left = -300
+		if store.show_history && data.user.username && window.navigator.onLine
+			history = await loadData('/get-history')
+			history = JSON.parse(history)
+			imba.commit!
 
 	def clearHistory
 		turnHistory()
@@ -2200,7 +2234,7 @@ export tag bible-reader
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-			<main$main [pos:{page_search.d ? 'static' : 'relative'}] @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
+			<main$main .main [pos:{page_search.d ? 'static' : 'relative'}] @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2360,15 +2394,18 @@ export tag bible-reader
 						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
 					data.lang.history
 				<.btnbox>
-					<svg.cbtn[p:8px w:33.333%] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
+					<svg.cbtn[p:8px w:25%] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
 						<title> data.lang.nighttheme
 						<g>
 							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
 						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg.cbtn[w:33.333%] @click=turnSepia viewBox="0 0 8 8">
+					<svg.cbtn[w:25%] @click=turnGray viewBox="0 0 8 8">
+						<title> 'gray'
+						<rect x=1 y=2 width=6 height=4 rx=1 fill='#888'>
+					<svg.cbtn[w:25%] @click=turnSepia viewBox="0 0 8 8">
 						<title> 'sepia'
 						<rect x=1 y=2 width=6 height=4 rx=1 fill='#DEBB68'>
-					<svg.cbtn[w:33.333%] @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
+					<svg.cbtn[w:25%] @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
 						<title> data.lang.lighttheme
 						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
 				<.btnbox>
@@ -2494,6 +2531,7 @@ export tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
+						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
@@ -2760,7 +2798,7 @@ export tag bible-reader
 					elif show_share_box
 						<.collectionshat>
 							<p.saveto> data.lang.share_via
-						<.mark_grid>
+						<.mark_grid[py:8px]>
 							<.share_box @click=(do data.shareCopying(getShareObj()) && clearSpace())>
 								<svg.share_btn viewBox="0 0 561 561" alt=data.lang.copy fill="var(--text-color)">
 									<title> data.lang.copy
@@ -2831,31 +2869,47 @@ export tag bible-reader
 										<path d=svg_paths.close>
 						<div id="addbuttons">
 							if show_delete_bookmark
-								<svg.close_search @click=deleteBookmarks(choosenid) viewBox="0 0 12 16" alt=data.lang.delete [o@off:0 w@off:0 mr@off:-16px] ease>
-									<title> data.lang.delete
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-							<svg.close_search @click=clearSpace() viewBox="0 0 20 20" alt=data.lang.close>
-								<title> data.lang.close
-								<path d=svg_paths.close alt=data.lang.close>
-							<svg.save_bookmark [stroke:none] @click=(do show_share_box = yes) xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-								<title> data.lang.share
-								<path d="M0 0h24v24H0V0z" fill="none">
-								<path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z">
-							<svg.save_bookmark @click=copyToClipboard() viewBox="0 0 561 561" alt=data.lang.copy>
-								<title> data.lang.copy
-								<path d=svg_paths.copy>
-							<svg.save_bookmark @click=toggleCompare() viewBox='0 0 400 400'>
-								<title> data.lang.compare
-								<path d="m 158.87835,59.714254 c -22.24553,22.942199 -40.6885,42.183936 -40.98426,42.758776 -0.8318,1.61252 -0.20661,2.77591 3.5444,6.59866 5.52042,5.6227 1.07326,9.0169 37.637,-28.724885 17.50924,-18.073765 32.15208,-32.92934 32.53977,-33.012765 2.11329,-0.454845 1.99262,-9.787147 1.99262,154.63098 0,162.70162 0.0852,155.59667 -1.92404,155.16124 -0.4175,-0.0891 -31.30684,-31.67221 -68.64371,-70.1831 -82.516734,-85.113 -79.762069,-82.23881 -79.523922,-82.9759 0.156562,-0.48685 7.785466,-0.64342 40.516819,-0.82856 33.282953,-0.18856 40.451433,-0.33827 41.056163,-0.85598 0.99477,-0.85141 1.07891,-10.82255 0.10651,-12.19963 -1.01499,-1.43197 -104.747791,-1.64339 -106.131194,-0.216 -1.408859,1.45366 -1.422172,108.27345 -0.01065,109.72598 1.061864,1.09597 10.873494,1.39767 11.873689,0.36572 0.405788,-0.41828 0.535724,-10.38028 0.551701,-41.94167 0.01065,-31.23452 0.150173,-41.70737 0.55383,-42.67534 l 0.533593,-1.28109 78.641191,81.10851 c 43.25264,44.609 79.6823,82.26506 80.95505,83.67874 1.27157,1.41482 2.51534,2.57136 2.7635,2.57136 3.82365,0.0993 6.74023,0.19783 10.78264,0.32569 l 2.48223,-2.72678 c 9.56539,-10.51282 158.34672,-163.337 159.13762,-163.46273 1.69462,-0.2697 1.72007,0.33714 1.72678,42.53708 0.007,40.52683 0.0212,41.4788 0.86376,41.94164 1.22845,0.67884 10.78936,0.61599 11.45949,-0.0754 0.94791,-0.97828 0.75087,-109.32029 -0.20024,-110.13513 -0.61027,-0.52227 -9.49349,-0.64912 -53.0551,-0.75425 l -52.32298,-0.128 -0.77536,0.97824 c -1.17177,1.47768 -1.14409,11.36197 0.032,12.46251 0.74235,0.69256 4.25002,0.75654 41.35204,0.75654 22.29752,0 40.6652,0.12915 40.81803,0.28686 0.75194,0.77597 -5.99106,7.88549 -73.9736,77.99435 -74.8598,77.20005 -74.60834,76.94635 -75.706,76.51207 -0.65608,-0.25942 -1.04162,-309.073405 -0.38768,-310.829927 0.51549,-1.385101 3.29625,1.278819 28.18793,26.998083 44.2328,45.702694 38.02575,40.757704 43.65905,34.786424 4.03624,-4.27873 4.21348,-4.55415 3.74602,-5.85812 -0.56235,-1.56794 -81.63283,-85.027265 -82.59319,-85.027265 -0.5123,0 -16.36846,16.023541 -41.27664,41.713088" [stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;paint-order:normal] fill-rule="evenodd">
-							<svg.save_bookmark .filled=isNoteEmpty() @click=makeNote() viewBox="0 0 24 24" fill="black" alt=data.lang.note>
-								<title> data.lang.note
-								<path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
-							<svg.save_bookmark .filled=choosen_categories.length @click=turnCollections() viewBox="0 0 20 20" alt=data.lang.addtocollection>
-								<title> data.lang.addtocollection
-								<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-							<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
-								<title> data.lang.create
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+								<div .collection=(window.innerWidth > 475) @click=deleteBookmarks(choosenid) [o@off:0 w@off:0 p@off:0 of@off:hidden mr@off:-4px] ease>
+									<svg.close_search viewBox="0 0 12 16" alt=data.lang.delete>
+										<title> data.lang.delete
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+									<p> data.lang.delete
+							<div .collection=(window.innerWidth > 475) @click=clearSpace()>
+								<svg.close_search viewBox="0 0 20 20" alt=data.lang.close>
+									<title> data.lang.close
+									<path d=svg_paths.close alt=data.lang.close>
+								<p> data.lang.close
+							<div .collection=(window.innerWidth > 475) @click=(do show_share_box = yes)>
+								<svg.save_bookmark [stroke:none] @click=(do show_share_box = yes) xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+									<title> data.lang.share
+									<path d="M0 0h24v24H0V0z" fill="none">
+									<path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z">
+								<p> data.lang.share
+							<div .collection=(window.innerWidth > 475) @click=copyToClipboard()>
+								<svg.save_bookmark viewBox="0 0 561 561" alt=data.lang.copy>
+									<title> data.lang.copy
+									<path d=svg_paths.copy>
+								<p> data.lang.copy
+							<div .collection=(window.innerWidth > 475) @click=toggleCompare()>
+								<svg.save_bookmark viewBox='0 0 400 400'>
+									<title> data.lang.compare
+									<path d="m 158.87835,59.714254 c -22.24553,22.942199 -40.6885,42.183936 -40.98426,42.758776 -0.8318,1.61252 -0.20661,2.77591 3.5444,6.59866 5.52042,5.6227 1.07326,9.0169 37.637,-28.724885 17.50924,-18.073765 32.15208,-32.92934 32.53977,-33.012765 2.11329,-0.454845 1.99262,-9.787147 1.99262,154.63098 0,162.70162 0.0852,155.59667 -1.92404,155.16124 -0.4175,-0.0891 -31.30684,-31.67221 -68.64371,-70.1831 -82.516734,-85.113 -79.762069,-82.23881 -79.523922,-82.9759 0.156562,-0.48685 7.785466,-0.64342 40.516819,-0.82856 33.282953,-0.18856 40.451433,-0.33827 41.056163,-0.85598 0.99477,-0.85141 1.07891,-10.82255 0.10651,-12.19963 -1.01499,-1.43197 -104.747791,-1.64339 -106.131194,-0.216 -1.408859,1.45366 -1.422172,108.27345 -0.01065,109.72598 1.061864,1.09597 10.873494,1.39767 11.873689,0.36572 0.405788,-0.41828 0.535724,-10.38028 0.551701,-41.94167 0.01065,-31.23452 0.150173,-41.70737 0.55383,-42.67534 l 0.533593,-1.28109 78.641191,81.10851 c 43.25264,44.609 79.6823,82.26506 80.95505,83.67874 1.27157,1.41482 2.51534,2.57136 2.7635,2.57136 3.82365,0.0993 6.74023,0.19783 10.78264,0.32569 l 2.48223,-2.72678 c 9.56539,-10.51282 158.34672,-163.337 159.13762,-163.46273 1.69462,-0.2697 1.72007,0.33714 1.72678,42.53708 0.007,40.52683 0.0212,41.4788 0.86376,41.94164 1.22845,0.67884 10.78936,0.61599 11.45949,-0.0754 0.94791,-0.97828 0.75087,-109.32029 -0.20024,-110.13513 -0.61027,-0.52227 -9.49349,-0.64912 -53.0551,-0.75425 l -52.32298,-0.128 -0.77536,0.97824 c -1.17177,1.47768 -1.14409,11.36197 0.032,12.46251 0.74235,0.69256 4.25002,0.75654 41.35204,0.75654 22.29752,0 40.6652,0.12915 40.81803,0.28686 0.75194,0.77597 -5.99106,7.88549 -73.9736,77.99435 -74.8598,77.20005 -74.60834,76.94635 -75.706,76.51207 -0.65608,-0.25942 -1.04162,-309.073405 -0.38768,-310.829927 0.51549,-1.385101 3.29625,1.278819 28.18793,26.998083 44.2328,45.702694 38.02575,40.757704 43.65905,34.786424 4.03624,-4.27873 4.21348,-4.55415 3.74602,-5.85812 -0.56235,-1.56794 -81.63283,-85.027265 -82.59319,-85.027265 -0.5123,0 -16.36846,16.023541 -41.27664,41.713088" [stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;paint-order:normal] fill-rule="evenodd">
+								<p> data.lang.compare
+							<div .collection=(window.innerWidth > 475) @click=makeNote()>
+								<svg.save_bookmark .filled=isNoteEmpty() viewBox="0 0 24 24" fill="black" alt=data.lang.note>
+									<title> data.lang.note
+									<path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
+								<p> data.lang.note
+							<div .collection=(window.innerWidth > 475) @click=turnCollections()>
+								<svg.save_bookmark .filled=choosen_categories.length viewBox="0 0 20 20" alt=data.lang.bookmark>
+									<title> data.lang.bookmark
+									<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
+								<p> data.lang.bookmark
+							<div .collection=(window.innerWidth > 475) @click=sendBookmarksToDjango>
+								<svg.save_bookmark viewBox="0 0 12 16" alt=data.lang.create>
+									<title> data.lang.create
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+								<p> data.lang.create
 						if store.show_color_picker
 							<svg.close_colorPicker
 									@click=(do store.show_color_picker = no)

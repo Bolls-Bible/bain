@@ -24,12 +24,12 @@ export tag donate
 				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
 					<span> "ETH "
 					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
-				<h3 @click=state.copyTextToClipboard("bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8")>
+				<h3 @click=state.copyTextToClipboard("1NTDTBJHfCawieco1TP2B1vAHE4CPJHtbc")>
 					<span> "BTC "
-					<b> "bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8"
-				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
+					<b> "1NTDTBJHfCawieco1TP2B1vAHE4CPJHtbc"
+				<h3 @click=state.copyTextToClipboard("0x956cfb69b00df2a32df76ca4b3452565061f9d1a")>
 					<span> "USDT in ETH network "
-					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
+					<b> "0x956cfb69b00df2a32df76ca4b3452565061f9d1a"
 
 
 	css

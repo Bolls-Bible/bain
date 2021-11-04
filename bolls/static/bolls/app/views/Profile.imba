@@ -23,6 +23,7 @@ let store =
 	username: ''
 	name: ''
 	show_options_of: ''
+let account_action = 0
 
 let taken_usernames = []
 let loading = no
@@ -58,6 +59,7 @@ export tag profile-page
 		notes = []
 		query = ''
 		store.show_options_of = ''
+		account_action = 0
 		getProfileBookmarks()
 		if window.navigator.onLine
 			getCategories()
@@ -231,12 +233,12 @@ export tag profile-page
 		store.show_options_of = ''
 
 	def showDeleteForm
-		store.show_options_of = 'delete_form'
+		account_action = 2
 		store.username = ''
 		window.history.pushState({profile: yes}, "Delete Account")
 
 	def showEditForm
-		store.show_options_of = 'edit_form'
+		account_action = 1
 		store.username = data.user.username
 		store.name = data.user.name
 		window.history.pushState({profile: yes}, "Edit Account")
@@ -273,7 +275,7 @@ export tag profile-page
 					data.user.name = store.name
 					data.setCookie('username', data.user.username)
 					data.setCookie('name', data.user.name)
-					store.show_options_of = ''
+					account_action = 0
 				elif response.status == 409
 					taken_usernames.push store.username
 					data.showNotification('username_taken')
@@ -332,9 +334,9 @@ export tag profile-page
 						<menu-popup bind=store.show_options_of>
 							if bookmark.title == store.show_options_of
 								<.popup_menu [y@off:-32px o@off:0] ease>
-									<button.butt @click=deleteBookmark(bookmark)> data.lang.delete
-									<button.butt @click=goToBookmark(bookmark)> data.lang.open
-									<button.butt @click=copyToClipboard(bookmark)> data.lang.copy
+									<button.butt @click.stop=deleteBookmark(bookmark)> data.lang.delete
+									<button.butt @click.stop=goToBookmark(bookmark)> data.lang.open
+									<button.butt @click.stop=copyToClipboard(bookmark)> data.lang.copy
 				<hr.hr>
 
 			if loading
@@ -349,14 +351,14 @@ export tag profile-page
 				<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 
 
-			if store.show_options_of == "delete_form" || store.show_options_of == "edit_form"
-				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(store.show_options_of = '') ease>
+			if account_action
+				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(account_action = 0) ease>
 					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
-						if store.show_options_of == "delete_form"
+						if account_action == 2
 							<form action="/delete-my-account/">
 								<header.search_hat>
 									<h1[margin:auto]> data.lang.are_you_sure
-									<svg.close_search :click=(do store.show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+									<svg.close_search @click=(do account_action = 0) viewBox="0 0 20 20" tabindex="0">
 										<title> data.lang.close
 										<path d=svg_paths.close [margin:auto]>
 								<p[margin-bottom:16px]> data.lang.cannot_be_undone
@@ -370,7 +372,7 @@ export tag profile-page
 							<article id="edit_account">
 								<header.search_hat>
 									<h1[margin:auto]> data.lang.edit_account
-									<svg.close_search :click=(do store.show_options_of = '') viewBox="0 0 20 20" tabindex="0">
+									<svg.close_search @click=(do account_action = 0) viewBox="0 0 20 20" tabindex="0">
 										<title> data.lang.close
 										<path d=svg_paths.close css:margin="auto">
 								<label> data.lang.edit_username_label
@@ -380,9 +382,9 @@ export tag profile-page
 								<label> data.lang.edit_name_label
 								<input.search bind=store.name maxlength=30 [margin: 8px 0 border-radius:4px]>
 								if editAccountFormIsValid()
-									<button.change_language :click.editAccount()> data.lang.edit_account
+									<button.change_language @click.editAccount()> data.lang.edit_account
 								else
-									<button.change_language disabled :click.editAccount()> data.lang.edit_account
+									<button.change_language disabled @click.editAccount()> data.lang.edit_account
 
 
 

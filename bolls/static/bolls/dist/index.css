@@ -21,6 +21,13 @@ html[data-sepia="yes"] {
   --btn-bg-hover: rgb(230, 211, 167);
 }
 
+html[data-gray="yes"] {
+  --background-color: #f1f1f1;
+  --text-color: black;
+  --btn-bg: #d3d3d3;
+  --btn-bg-hover: #e5e5e5;
+}
+
 html[data-theme="bluedark"] {
   --accent-color: rgb(128, 128, 255);
   --accent-hover-color: rgba(150, 182, 243, 0.996);
@@ -519,14 +526,46 @@ html[data-transitions="true"] .helpFAQ a:hover {
 
 #addbuttons {
   display: flex;
-  grid-gap: 4px;
   margin: -8px auto 0;
-  width: 320px;
-  justify-content: space-around;
+  justify-content: center;
+  flex-wrap:wrap
 }
 
-#addbuttons svg:nth-child(2n + 1) {
-  padding: 24px 0 0;
+#addbuttons div {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 4px;
+}
+
+#addbuttons svg {
+  height: auto;
+  padding: 0;
+  max-width: 1.3em;
+  max-height: 1.3em;
+}
+
+#addbuttons p {
+  text-align: left;
+  padding-left: 4px;
+}
+
+@media screen and (max-width: 475px) {
+  #addbuttons {
+    justify-content: space-around;
+    width: 320px;
+}
+
+  #addbuttons p {
+    display: none;
+  }
+
+  #addbuttons svg {
+    height: auto;
+    padding: 0;
+    max-width: 3em;
+    max-height: 26px;
+  }
 }
 
 .save_bookmark {
