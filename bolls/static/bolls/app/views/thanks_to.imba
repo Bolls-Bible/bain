@@ -8,6 +8,7 @@ export const thanks_to = [
 	"Juan Martin, donator"
 	"Ryne4S, tester"
 	"Dj. Crouch, donator"
+	"George Dulishkovich, patron"
 	"Alexander Alemayhu, patron"
 	"Павлишинець Едуард, contributor"
 	"Eric Tirado, contributor, donator"

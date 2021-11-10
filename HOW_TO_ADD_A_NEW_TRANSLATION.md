@@ -25,7 +25,7 @@ Execute sql code from commentaries_concordance.sql in the commentaries database 
 Export the commentaries table as .csv from the formatted database, save it to `/commentaries/mybcommentaries.csv`.
 Change `translation` variable at `/commentaries/main.py` to the translation abbreviation (for example 'JNT'), save and run it.
 It will store to the commentaries.csv file commentaries, ready for pushing to the app database.
-Run `\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;` to push the comments to the database (don't forget to edit the pach :).
+Run `\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;` to push the comments to the database (don't forget to edit the path :).
 
 
 ### Add it to the app.

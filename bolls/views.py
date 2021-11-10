@@ -117,51 +117,68 @@ def getChapterWithComments(request, translation, book, chapter):
 def search(request, translation, piece=''):
     if len(piece) == 0:
         piece = request.GET.get('search', '')
+    match_case = request.GET.get('match_case', '') == 'true'
+    match_whole = request.GET.get('match_whole', '') == 'true'
+    print(match_case, match_whole)
+
     d = []
     piece = piece.strip()
 
     if len(piece) > 2:
-        query_set = []
-
-        for word in piece.split():
-            query_set.append("Q(translation=\"" + translation + "\", text__icontains=" + json.dumps(word) + ")")
-
-        query = ' & '.join(query_set)
-
-        results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
-
         results_of_search = []
-        if len(results_of_exec_search) < 24:
-            rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
-            # 1 - e^(-0.0001 * (x + 16) ** (2))
-
-            vector = SearchVector('text')
-            query = SearchQuery(piece)
-            results_of_rank = Verses.objects.annotate(rank=SearchRank(
-                vector, query)).filter(translation=translation, rank__gt=(0.05)).order_by('-rank')
-
-            results_of_search = []
-            if len(results_of_rank) < 24:
-                results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
-                    'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
-
-                results_of_search = list(results_of_similarity) + \
-                    list(set(results_of_rank) - set(results_of_similarity))
-
-
-            results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
-
-            if len(results_of_exec_search) > 0:
-                results_of_search = list(results_of_exec_search) + \
-                    list(set(results_of_search) - set(results_of_exec_search))
+        if match_whole:
+            if match_case:
+                results_of_search = Verses.objects.filter(translation=translation, text__contains=piece).order_by('book', 'chapter', 'verse')
+            else:
+                results_of_search = Verses.objects.filter(translation=translation, text__icontains=piece).order_by('book', 'chapter', 'verse')
         else:
-            results_of_search = results_of_exec_search
+            query_set = []
+
+            for word in piece.split():
+                if match_case:
+                    query_set.append("Q(translation=\"" + translation + "\", text__contains=" + json.dumps(word) + ")")
+                else:
+                    query_set.append("Q(translation=\"" + translation + "\", text__icontains=" + json.dumps(word) + ")")
+
+            query = ' & '.join(query_set)
+
+            results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
+
+            if len(results_of_exec_search) < 24:
+                rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
+                # 1 - e^(-0.0001 * (x + 16) ** (2))
+
+                vector = SearchVector('text')
+                query = SearchQuery(piece)
+                results_of_rank = Verses.objects.annotate(rank=SearchRank(
+                    vector, query)).filter(translation=translation, rank__gt=(0.05)).order_by('-rank')
+
+                results_of_search = []
+                if len(results_of_rank) < 24:
+                    results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
+                        'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
+
+                    results_of_search = list(results_of_similarity) + \
+                        list(set(results_of_rank) - set(results_of_similarity))
+
+
+                results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+
+                if len(results_of_exec_search) > 0:
+                    results_of_search = list(results_of_exec_search) + \
+                        list(set(results_of_search) - set(results_of_exec_search))
+            else:
+                results_of_search = results_of_exec_search
 
         def highlightHeadline(text):
             highlighted_text = text
-            for word in piece.split():
-                mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
-                highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
+            if match_whole:
+                mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
+                highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
+            else:
+                for word in piece.split():
+                    mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
+                    highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
             return highlighted_text
 
         for obj in results_of_search[0:1024]:

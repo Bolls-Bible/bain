@@ -344,6 +344,8 @@ export tag bible-reader
 			bookid_of_results: []
 			translation: settings.translation
 			suggestions: {}
+			match_case: getCookie('match_case') == 'true'
+			match_whole: getCookie('match_whole') == 'true'
 		let bookmarks-to-delete = JSON.parse(getCookie("bookmarks-to-delete"))
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
@@ -901,7 +903,7 @@ export tag bible-reader
 			loading = yes
 
 			search.translation = searchTranslation!
-			const url = '/search/' + search.translation + '/?search=' + window.encodeURIComponent(query)
+			const url = '/search/' + search.translation + '/?search=' + window.encodeURIComponent(query) + '&match_case=' + search.match_case + '&match_whole=' + search.match_whole
 
 			search_verses = {}
 			try
@@ -1227,7 +1229,8 @@ export tag bible-reader
 				return ''
 
 	def getBookmark verse, bookmarks
-		return self[bookmarks].find(do |element| return element.verse == verse)
+		if state.user.username
+			return self[bookmarks].find(do |element| return element.verse == verse)
 
 	def getParallelHighlight verse
 		if choosenid.length && choosenid.find(do |element| return element == verse)
@@ -2187,42 +2190,49 @@ export tag bible-reader
 				if show_list_of_translations
 					<div[m:16px 0 @off:0 p:8px h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:256px @off:0 y@off:-16px] ease>
 						for language in languages
-							<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
-								language.language
-								<svg.arrow_next[margin-left:auto min-width:16px] width="16" height="10" viewBox="0 0 8 5">
-									<title> data.lang.open
-									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
-								for translation in language.translations
-									<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
-										<span @click=changeTranslation(translation.short_name)>
-											<b> translation.short_name
-											', '
-											translation.full_name
-										if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
-											<svg[size:20px min-width:20px min-height:20px ml:16px] viewBox="0 0 24 24">
-												<title> translation.info
-												<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+							<div $key=language.language>
+								<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
+									language.language
+									<svg.arrow_next[margin-left:auto min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.open
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								if language.language == show_language_of
+									<ul [o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+										for translation in language.translations
+											<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
+												<span @click=changeTranslation(translation.short_name)>
+													<b> translation.short_name
+													', '
+													translation.full_name
+												if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
+													<svg[size:20px min-width:20px min-height:20px ml:16px] viewBox="0 0 24 24">
+														<title> translation.info
+														<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
 
 				<$books.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
-					if settingsp.display && settingsp.edited_version == settingsp.translation
-						<>
-							for book in settingsp.filtered_books
-								<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid)> book.name
-								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
-									for i in [0 ... book.chapters]
-										<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1)> i+1
-						if !settingsp.filtered_books.length
-							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-					else
-						<>
-							for book in settings.filtered_books
-								<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid)> book.name
-								<ul.list_of_chapters dir="auto" .show_list_of_chapters=(book.bookid == show_chapters_of)>
-									for i in [0 ... book.chapters]
-										<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
-						if !settings.filtered_books.length
-							<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
+					<>
+						if settingsp.display && settingsp.edited_version == settingsp.translation
+							<>
+								for book in settingsp.filtered_books
+									<div $key=book.bookid>
+										<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid)> book.name
+										if book.bookid == show_chapters_of
+											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+												for i in [0 ... book.chapters]
+													<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1)> i+1
+							if !settingsp.filtered_books.length
+								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
+						else
+							<>
+								for book in settings.filtered_books
+									<div $key=book.bookid>
+										<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid)> book.name
+										if book.bookid == show_chapters_of
+											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+												for i in [0 ... book.chapters]
+													<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
+							if !settings.filtered_books.length
+								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
 				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
@@ -2625,30 +2635,32 @@ export tag bible-reader
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 							<article.search_body>
 								for language in languages
-									<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
-										language.language
-										<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
-											<title> data.lang.open
-											<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+									<div $key=language.language>
+										<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
+											language.language
+											<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
+												<title> data.lang.open
+												<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-									<ul.list_of_chapters dir="auto" .show_list_of_chapters=(language.language == show_language_of)>
-										for tr in language.translations
-											if window.navigator.onLine || data.downloaded_translations().indexOf(tr.short_name) != -1
-												<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$btn-bg-hover fill:$text-color @hover:$accent-hover-color rd:8px] @click=offlineTranslationAction(tr)>
-													if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
-														<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-															<title> data.lang.loading
-															<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
-													elif data.downloaded_translations.indexOf(tr.short_name) != -1
-														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
-															<title> data.lang.delete
-															<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-													else
-														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-															<title> data.lang.download
-															<g transform="matrix(1.5 0 0 1.5 0 128)">
-																<path d=svg_paths.download>
-													<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
+										if language.language == show_language_of
+											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+												for tr in language.translations
+													if window.navigator.onLine || data.downloaded_translations().indexOf(tr.short_name) != -1
+														<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$btn-bg-hover fill:$text-color @hover:$accent-hover-color rd:8px] @click=offlineTranslationAction(tr)>
+															if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+																<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
+																	<title> data.lang.loading
+																	<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
+															elif data.downloaded_translations.indexOf(tr.short_name) != -1
+																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
+																	<title> data.lang.delete
+																	<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+															else
+																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
+																	<title> data.lang.download
+																	<g transform="matrix(1.5 0 0 1.5 0 128)">
+																		<path d=svg_paths.download>
+															<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
 								<.freespace>
 
 						elif what_to_show_in_pop_up_block == 'show_support'
@@ -2708,6 +2720,19 @@ export tag bible-reader
 									<path[m: auto] d=svg_paths.close>
 
 								<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
+
+								# TODO LOCALIZE THIS
+
+								<svg.search_option .search_option_on=search.match_case @click=(search.match_case = !search.match_case, setCookie("match_case", search.match_case)) width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+									<title> data.lang.match_case
+									<path d="M8.85352 11.7021H7.85449L7.03809 9.54297H3.77246L3.00439 11.7021H2L4.9541 4H5.88867L8.85352 11.7021ZM6.74268 8.73193L5.53418 5.4502C5.49479 5.34277 5.4554 5.1709 5.41602 4.93457H5.39453C5.35872 5.15299 5.31755 5.32487 5.271 5.4502L4.07324 8.73193H6.74268Z">
+									<path d="M13.756 11.7021H12.8752V10.8428H12.8537C12.4706 11.5016 11.9066 11.8311 11.1618 11.8311C10.6139 11.8311 10.1843 11.686 9.87273 11.396C9.56479 11.106 9.41082 10.721 9.41082 10.2412C9.41082 9.21354 10.016 8.61556 11.2262 8.44727L12.8752 8.21631C12.8752 7.28174 12.4974 6.81445 11.7419 6.81445C11.0794 6.81445 10.4815 7.04004 9.94793 7.49121V6.58887C10.4886 6.24512 11.1117 6.07324 11.8171 6.07324C13.1097 6.07324 13.756 6.75716 13.756 8.125V11.7021ZM12.8752 8.91992L11.5485 9.10254C11.1403 9.15983 10.8324 9.26188 10.6247 9.40869C10.417 9.55192 10.3132 9.80794 10.3132 10.1768C10.3132 10.4453 10.4081 10.6655 10.5978 10.8374C10.7912 11.0057 11.0472 11.0898 11.3659 11.0898C11.8027 11.0898 12.1626 10.9377 12.4455 10.6333C12.7319 10.3254 12.8752 9.93685 12.8752 9.46777V8.91992Z">
+
+								<svg.search_option .search_option_on=search.match_whole @click=(search.match_whole = !search.match_whole, setCookie("match_whole", search.match_whole)) width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+									<title> data.lang.match_whole
+									<path fill-rule="evenodd" clip-rule="evenodd" d="M0 11H1V13H15V11H16V14H15H1H0V11Z">
+									<path d="M6.84048 11H5.95963V10.1406H5.93814C5.555 10.7995 4.99104 11.1289 4.24625 11.1289C3.69839 11.1289 3.26871 10.9839 2.95718 10.6938C2.64924 10.4038 2.49527 10.0189 2.49527 9.53906C2.49527 8.51139 3.10041 7.91341 4.3107 7.74512L5.95963 7.51416C5.95963 6.57959 5.58186 6.1123 4.82632 6.1123C4.16389 6.1123 3.56591 6.33789 3.03238 6.78906V5.88672C3.57307 5.54297 4.19612 5.37109 4.90152 5.37109C6.19416 5.37109 6.84048 6.05501 6.84048 7.42285V11ZM5.95963 8.21777L4.63297 8.40039C4.22476 8.45768 3.91682 8.55973 3.70914 8.70654C3.50145 8.84977 3.39761 9.10579 3.39761 9.47461C3.39761 9.74316 3.4925 9.96338 3.68228 10.1353C3.87564 10.3035 4.13166 10.3877 4.45035 10.3877C4.8872 10.3877 5.24706 10.2355 5.52994 9.93115C5.8164 9.62321 5.95963 9.2347 5.95963 8.76562V8.21777Z">
+									<path d="M9.3475 10.2051H9.32601V11H8.44515V2.85742H9.32601V6.4668H9.3475C9.78076 5.73633 10.4146 5.37109 11.2489 5.37109C11.9543 5.37109 12.5057 5.61816 12.9032 6.1123C13.3042 6.60286 13.5047 7.26172 13.5047 8.08887C13.5047 9.00911 13.2809 9.74674 12.8333 10.3018C12.3857 10.8532 11.7734 11.1289 10.9964 11.1289C10.2695 11.1289 9.71989 10.821 9.3475 10.2051ZM9.32601 7.98682V8.75488C9.32601 9.20964 9.47282 9.59635 9.76644 9.91504C10.0636 10.2301 10.4396 10.3877 10.8944 10.3877C11.4279 10.3877 11.8451 10.1836 12.1458 9.77539C12.4502 9.36719 12.6024 8.79964 12.6024 8.07275C12.6024 7.46045 12.4609 6.98063 12.1781 6.6333C11.8952 6.28597 11.512 6.1123 11.0286 6.1123C10.5166 6.1123 10.1048 6.29134 9.7933 6.64941C9.48177 7.00391 9.32601 7.44971 9.32601 7.98682Z">
 
 								<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
 									<title> data.lang.bible_search
@@ -2922,7 +2947,7 @@ export tag bible-reader
 
 			if store.show_history
 				<menu-popup bind=store.show_history scrollinview=no ease>
-					<section.small_box [pos:fixed b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75)]>
+					<section.small_box.filters [pos:fixed b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75)]>
 						<[m: 0 c:inherit].nighttheme.flex>
 							<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2969,6 +2994,7 @@ export tag bible-reader
 			if loading
 				<loading-animation [pos:fixed t:50% l:50% zi:100 o@off:0] ease>
 
+
 			if settings.verse_picker and (show_verse_picker || show_parallel_verse_picker)
 				<section.small_box [pos:fixed t:8vh l:48px w:300px p:12px pt:8px zi:100  max-height:86% origin:top left scale@off:0.96 y@off:-16px o@off:0] ease>
 					<.flex>
@@ -2976,7 +3002,7 @@ export tag bible-reader
 						<svg[m: 0 8px].close_search @click=hideVersePicker viewBox="0 0 20 20">
 							<title> data.lang.close
 							<path d=svg_paths.close>
-					<[m: 0].list_of_chapters.show_list_of_chapters>
+					<div>
 						if show_verse_picker
 							<>
 								for i in [0 ... verses.length]
@@ -3082,7 +3108,6 @@ export tag bible-reader
 		zi:2 cursor:pointer
 		bdt@lt-lg:1px solid $btn-bg
 
-
 	css #navigation > div
 		padding:3vw @lt-lg:4px
 		width:calc(100% / 3) @lg:calc(32px + 6vw)
@@ -3109,3 +3134,12 @@ export tag bible-reader
 		rd:16px
 		ofy:auto
 		-webkit-overflow-scrolling:touch
+
+	css .search_option
+		w:24px min-width:24px mr:8px
+		o:0.5 @hover: 0.75
+		h:auto
+		cursor:pointer
+
+	css .search_option_on
+		o:1 @hover:1

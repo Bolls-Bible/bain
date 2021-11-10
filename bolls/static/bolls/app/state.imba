@@ -1,7 +1,6 @@
 import languages from "./views/languages.json"
 import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
 
-
 export class State
 	downloaded_translations
 	downloaded_comentaries	# new

@@ -13,6 +13,9 @@ export tag note-up
 	#show = no
 
 	def setBorders event
+		unless (event.originalTarget == self or event.originalTarget == children[0])
+			return
+
 		#show = !#show
 		event.originalTarget ||= event.target
 
@@ -21,9 +24,6 @@ export tag note-up
 			offsetX = event.layerX
 		else
 			offsetX = event.clientX
-
-		if event.originalTarget.nodeName == 'P' or event.originalTarget.nodeName == 'DIV'
-			return
 
 		if containerHeight - event.clientY < 720
 			#vertclass = 'bottom'
@@ -87,12 +87,13 @@ export tag note-up
 			bg:$background-color
 			min-width:16em
 			max-height:256px
-			us:select
+			us:text
 			white-space: break-spaces;
 
 		p
 			overflow:auto
 			max-height:232px
+			cursor:text
 
 
 		.bottom

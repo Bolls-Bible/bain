@@ -1,16 +1,16 @@
 html[data-light="dark"] {
   --background-color: rgb(4, 6, 12);
   --text-color: rgb(255, 238, 238);
-  --btn-bg: rgba(136, 136, 255, 0.25);
-  --btn-bg-hover: rgba(136, 136, 255, 0.4);
+  --btn-bg: #252749;
+  --btn-bg-hover: #383a6d;
   --disabled: rgb(168, 162, 159);
 }
 
 html[data-light="light"] {
-  --background-color: rgb(255, 238, 238);
+  --background-color: hsl(0, 100%, 97%);
   --text-color: rgb(4, 6, 12);
-  --btn-bg: rgba(68, 119, 255, 0.25);
-  --btn-bg-hover: rgba(68, 119, 255, 0.1);
+  --btn-bg: hsl(276, 100%, 90%);
+  --btn-bg-hover: hsl(276, 100%, 94%);
   --disabled: rgb(86, 82, 78);
 }
 
@@ -79,10 +79,12 @@ html[data-theme="redlight"] {
 }
 
 html[data-transitions="true"] * {
-  transition-timing-function: ease;
+  transition-timing-function: cubic-bezier(0.77, 0, 0.18, 1);
   transition-delay: 0;
-  transition-duration: 300ms;
-  transition-property: color, background, width, height, transform, opacity, max-height, max-width, top, left, bottom, right, visibility, fill, stroke, margin, padding, font-size;
+  transition-duration: 500ms;
+  transition-property: color, background, width, height, transform, opacity,
+    max-height, max-width, top, left, bottom, right, visibility, fill, stroke,
+    margin, padding, font-size, border-color;
 }
 
 html[data-pukaka="yes"] * {
@@ -168,8 +170,8 @@ input {
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] .bookmark_in_list {
-  -webkit-animation: text-came 250ms ease;
-  animation: text-came 250ms ease;
+  -webkit-animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1);
+  animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1);
 }
 
 html[data-transitions="true"] .collection,
@@ -182,8 +184,8 @@ html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] main section article {
-  -webkit-animation: text-came 250ms ease forwards;
-  animation: text-came 250ms ease forwards;
+  -webkit-animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
 }
 
 button {
@@ -227,8 +229,8 @@ button {
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
 html[data-transitions="true"] .help:hover .helpsvg {
-  -webkit-animation: shake 250ms ease forwards;
-  animation: shake 250ms ease forwards;
+  -webkit-animation: shake 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  animation: shake 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
 }
 
 body {
@@ -317,22 +319,6 @@ body {
   font: inherit;
 }
 
-.list_of_chapters {
-  display: block;
-  max-height: 0px;
-  visibility: hidden;
-  opacity: 0;
-  overflow: hidden;
-  margin: -24px 0 24px;
-}
-
-.show_list_of_chapters {
-  margin: 0 0 16px;
-  max-height: 2400px;
-  visibility: visible;
-  opacity: 1;
-}
-
 .chapter_number {
   cursor: pointer;
   display: inline-block;
@@ -405,7 +391,6 @@ nav input[type="text"] {
   opacity: 1;
 }
 
-
 h1 {
   font-size: 1.5em;
 }
@@ -461,8 +446,8 @@ html[data-transitions="true"] .helpFAQ a:hover {
 }
 
 .verse:hover {
-  background:var(--btn-bg-hover);
-  color:var(--accent-hover-color);
+  background: var(--btn-bg-hover);
+  color: var(--accent-hover-color);
 }
 
 .close_colorPicker {
@@ -528,7 +513,8 @@ html[data-transitions="true"] .helpFAQ a:hover {
   display: flex;
   margin: -8px auto 0;
   justify-content: center;
-  flex-wrap:wrap
+  flex-wrap: wrap;
+  user-select: none;
 }
 
 #addbuttons div {
@@ -554,7 +540,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
   #addbuttons {
     justify-content: space-around;
     width: 320px;
-}
+  }
 
   #addbuttons p {
     display: none;
@@ -739,7 +725,7 @@ aside {
   display: inline-block;
   text-align: center;
   background-color: transparent;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .cbtn:hover {
@@ -812,7 +798,7 @@ img,
 }
 
 .popup_menu .butt:hover {
-    background: var(--btn-bg-hover);
+  background: var(--btn-bg-hover);
 }
 
 .font_icon {
@@ -965,7 +951,7 @@ img,
   height: 50px;
   padding: 12px 0;
   cursor: pointer;
-  margin-left:8px;
+  margin-left: 8px;
 }
 
 .filter_search_hover {
@@ -1377,7 +1363,7 @@ html[data-light="light"] .Notifications p {
   border: none;
   border-bottom: 1px solid royalblue;
   color: inherit;
-  font-size: 1.2em
+  font-size: 1.2em;
 }
 
 .add_new_collection {
@@ -1400,10 +1386,7 @@ footer a {
   color: var(--disabled);
   font-size: 12px;
   display: inline-block;
-  background-image: linear-gradient(
-    var(--disabled) 0px,
-    var(--disabled) 100%
-  );
+  background-image: linear-gradient(var(--disabled) 0px, var(--disabled) 100%);
 }
 
 footer a:hover {
@@ -1502,7 +1485,6 @@ note-up a:hover {
   fill: var(--accent-hover-color);
 }
 
-
 .emojify {
   font-family: "Apple Color Emoji", "Droid Sans Fallback", "Noto Color Emoji",
     "Segoe UI Emoji";
@@ -1511,7 +1493,7 @@ note-up a:hover {
 
 #page_search input {
   width: auto;
-  min-width:64px;
+  min-width: 64px;
   height: 36px;
   margin: 0;
 }
@@ -1542,7 +1524,8 @@ note-up a:hover {
 }
 
 .current_occurence {
-  background-color: var(--accent-hover-color);
+  background-color: var(--btn-bg);
+  filter:saturate(4);
   position: absolute;
 }
 
@@ -1550,7 +1533,6 @@ note-up a:hover {
   background-color: var(--btn-bg-hover);
   position: absolute;
 }
-
 
 .daf button {
   font-size: 16px;
@@ -1563,7 +1545,7 @@ note-up a:hover {
 
 .daf button:hover {
   background: firebrick;
-  color:white;
+  color: white;
 }
 
 .daf button:active {
@@ -1643,7 +1625,6 @@ editing-area p {
   padding: 8px 0px 4px;
 }
 
-
 .show {
   visibility: visible;
   opacity: 1;
@@ -1659,5 +1640,63 @@ mark {
 @media all and (display-mode: standalone) {
   #pwa {
     display: none;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  main,
+  main h1 {
+    overflow-wrap: break-word;
+  }
+  .filters {
+    padding: 12px 4px;
+  }
+  .verse_picker {
+    padding: 0 4px;
+    left: 3.125%;
+  }
+  .history {
+    top: auto;
+  }
+  .book_in_filter {
+    max-width: 240px;
+  }
+  .parallel_text {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 0;
+  }
+  .parallel {
+    height: 50%;
+    width: 100%;
+  }
+  .show_parallel {
+    border-top: 2px solid var(--btn-bg-hover);
+  }
+  .platform-item {
+    width: 100%;
+  }
+  .exhortation {
+    margin: 4vw 8px;
+    font-size: 1.5em;
+  }
+  .change_password span {
+    display: none;
+  }
+  .change_password svg {
+    height: 24px;
+    width: 24px;
+  }
+  .noscroll {
+    padding-right: 0;
+  }
+  #page_search .close_search {
+    margin: 0 8px 0 auto;
+  }
+  #page_search p {
+    margin: 0 8px 0 -8px;
   }
 }

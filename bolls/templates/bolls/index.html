@@ -23,14 +23,11 @@
 	{% endif %}
 {% endif %}
 	</script>
-
 	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
 	<script src="{% static 'bolls/dist/public/__assets__/app/client.js' %}" async></script>
 
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}">
-	<!-- <link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/__styles__.css' %}"> -->
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/mobile_index.css' %}" media="(max-width: 639px)">
 	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
 
 	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
@@ -43,7 +40,6 @@
 	<meta property="og:site_name" content="Bolls Bible">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=5,initial-scale=1">
-	<!-- <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no"> -->
 {% if description %}
 	<meta name="description" content="{{ description }}">
 	<meta property="og:description" content="{{ description }}">
