@@ -256,7 +256,7 @@
 			{
 				"short_name": "OL",
 				"full_name": "O Livro",
-				"updated": 1591781197652
+				"updated": 1636583761597
 			},
 			{
 				"short_name": "NVIPT",
@@ -268,7 +268,7 @@
 				"short_name": "NVT",
 				"full_name": "Bíblia Sagrada, Nova Versão Transformadora, 2016",
 				"info": "https://pt.wikipedia.org/wiki/Nova_Vers%C3%A3o_Transformadora",
-				"updated": 1626349711821
+				"updated": 1636583761597
 			},
 			{
 				"short_name": "NTLH",
@@ -375,7 +375,7 @@
 				"short_name": "NBS",
 				"full_name": "Nouvelle Bible Segond, 2002",
 				"info": "https://fr.wikipedia.org/wiki/Bible_Segond",
-				"updated": 1626349711821
+				"updated": 1636583761597
 			}
 		]
 	},
@@ -385,7 +385,7 @@
 			{
 				"short_name": "SUV",
 				"full_name": "Swahili Union Version, 1997",
-				"updated": 1626349711821
+				"updated": 1636583761597
 			}
 		]
 	},
