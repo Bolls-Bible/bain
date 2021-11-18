@@ -242,11 +242,6 @@ body {
   overflow: hidden !important;
 }
 
-.noscroll {
-  overflow-y: hidden !important;
-  padding-right: 12px;
-}
-
 .chronological_order {
   fill: var(--text-color);
   width: 64px;
@@ -726,13 +721,13 @@ aside {
   text-align: center;
   background-color: transparent;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .cbtn:hover {
   fill: var(--accent-hover-color);
   color: var(--accent-hover-color);
   background-color: var(--btn-bg-hover);
-  border-radius: 8px;
 }
 
 .cbtn:active {
@@ -1689,9 +1684,6 @@ mark {
   .change_password svg {
     height: 24px;
     width: 24px;
-  }
-  .noscroll {
-    padding-right: 0;
   }
   #page_search .close_search {
     margin: 0 8px 0 auto;

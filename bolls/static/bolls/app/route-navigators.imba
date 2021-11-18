@@ -21,5 +21,5 @@ export tag chapter-navigator
 	def routed params
 		unless window.location.pathname.split('/').length == 5
 			const bible = document.getElementsByTagName("BIBLE-READER")
-			if bible[0]
+			if bible[0] and not window.location.pathname.endsWith('/0/')
 				bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter))

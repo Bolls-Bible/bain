@@ -321,6 +321,7 @@ export tag bible-reader
 			catch err
 				console.error('Error: ', err)
 				data.showNotification('error')
+		history = JSON.parse(getCookie("history")) || []
 		if window.message
 			data.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
@@ -350,6 +351,8 @@ export tag bible-reader
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
+
+
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -550,7 +553,8 @@ export tag bible-reader
 					topScroll -= (window.innerHeight * 0.05)
 
 				if settingsp.display
-					verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
+					# verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
+					scrollToY(verse.parentNode.parentNode, topScroll)
 				else
 					scrollToY(self, topScroll)
 				if highlight then highlightLinkedVerses(id, endverse)
@@ -1925,7 +1929,7 @@ export tag bible-reader
 		toggleBibleMenu()
 
 	def changeHeadersSizeOnScroll e
-		if e.target.classList.contains('firstparallel')
+		if e.target.classList.contains('ref--firstparallel')
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
 				chapter_headers.fontsize1 = 12 / settings.font.size
@@ -2167,7 +2171,7 @@ export tag bible-reader
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=what_to_show_in_pop_up_block>
+		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(what_to_show_in_pop_up_block or inzone or onzone)>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>

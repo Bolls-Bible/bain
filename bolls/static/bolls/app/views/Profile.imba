@@ -389,7 +389,7 @@ export tag profile-page
 
 
 			if !window.navigator.onLine
-				<div[pposition: fixed bottom: 16px left: 16px color: var(--text-color) background: var(--background-color) padding: 8px border-radius: 8px text-align: center border: 1px solid var(--btn-bg-hover) z-index: 1000]>
+				<div[position: fixed bottom: 16px left: 16px color: var(--text-color) background: var(--background-color) padding: 8px 16px border-radius: 8px text-align: center border: 1px solid var(--btn-bg-hover) z-index: 1000]>
 					data.lang.offline
 					<svg[transform: translateY(0.2em) fill: $text-color] width="1.25em" height="1.26em" viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z">
