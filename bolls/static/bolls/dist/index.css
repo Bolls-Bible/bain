@@ -44,43 +44,43 @@ html[data-theme="white"]{
 
 html[data-accent="bluedark"]{
   --acc-color: hsl(240, 100%, 75%);
-  --acc-color-hover: hsl(219, 100%, 77%);
+  --acc-color-hover: hsla(219, 100%, 77%, 0.996);
 }
 html[data-accent="bluelight"]{
   --acc-color: hsl(240, 100%, 24%);
-  --acc-color-hover: hsl(200, 100%, 32%);
+  --acc-color-hover: hsla(200, 100%, 32%, 0.996);
 }
 html[data-accent="greendark"]{
   --acc-color: hsl(80, 100%, 70%);
-  --acc-color-hover: hsl(80, 100%, 76%);
+  --acc-color-hover: hsla(80, 100%, 76%, 0.996);
 }
 html[data-accent="greenlight"]{
   --acc-color: hsl(80, 100%, 24%);
-  --acc-color-hover: hsl(80, 100%, 32%);
+  --acc-color-hover: hsla(80, 100%, 32%, 0.996);
 }
 html[data-accent="purpledark"]{
   --acc-color: hsl(291, 100%, 70%);
-  --acc-color-hover: hsl(291, 100%, 76%);
+  --acc-color-hover: hsla(291, 100%, 76%, 0.996);
 }
 html[data-accent="purplelight"]{
   --acc-color: hsl(291, 100%, 24%);
-  --acc-color-hover: hsl(291, 100%, 32%);
+  --acc-color-hover: hsla(291, 100%, 32%, 0.996);
 }
 html[data-accent="golddark"]{
   --acc-color: hsl(43, 100%, 70%);
-  --acc-color-hover: hsl(43, 100%, 76%);
+  --acc-color-hover: hsla(43, 100%, 76%, 0.996);
 }
 html[data-accent="goldlight"]{
   --acc-color: hsl(43, 100%, 24%);
-  --acc-color-hover: hsl(43, 100%, 32%);
+  --acc-color-hover: hsla(43, 100%, 32%, 0.996);
 }
 html[data-accent="reddark"]{
   --acc-color: hsl(0, 100%, 70%);
-  --acc-color-hover: hsl(0, 100%, 76%);
+  --acc-color-hover: hsla(0, 100%, 76%, 0.996);
 }
 html[data-accent="redlight"]{
   --acc-color: hsl(0, 100%, 24%);
-  --acc-color-hover: hsl(0, 100%, 32%);
+  --acc-color-hover: hsla(0, 100%, 32%, 0.996);
 }
 
 html[data-transitions="true"] * {

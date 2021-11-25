@@ -1795,7 +1795,7 @@ export tag bible-reader
 			setCookie('font-weight', settings.font.weight)
 
 	def boxShadow grade
-		settings.theme == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
+		settings.light == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
 
 	### Used only for books filtering ###
 	# Compute a search relevance score for an item.
@@ -2363,7 +2363,7 @@ export tag bible-reader
 							<path d="M0 0h24v24H0z" fill="none">
 							<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
 						<a.username [w:100%] route-to='/profile/'> data.getUserName()
-						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
+						<a.prof_btn [ws:pre] @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
 					else
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
 						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> data.lang.signin

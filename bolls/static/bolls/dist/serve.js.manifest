@@ -366,7 +366,7 @@
   "public": true,
   "path": "public/__assets__/all.css",
   "asset": "$$41$$",
-  "hash": "5RGLZJYI",
+  "hash": "QBHRPIPO",
   "originalPath": "all.__dist__.css",
   "url": "/__assets__/all.css"
 },
@@ -458,7 +458,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 773231,
+  "bytes": 773240,
   "source": "$$50$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -466,7 +466,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "XCZ0FME6"
+  "hash": "IFJYIPTM"
 },
 "$$45$$":{
   "imports": [],
@@ -748,7 +748,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "XCZ0FME6",
+  "hash": "IFJYIPTM",
   "originalPath": "app/client.__dist__.js"
 },
 "$$46$$":{
@@ -772,7 +772,7 @@
     ],
     [
       "$$121$$",
-      21356
+      21395
     ],
     [
       "$$122$$",
@@ -835,7 +835,7 @@
       0
     ]
   ],
-  "bytes": 33421,
+  "bytes": 33460,
   "source": "$$137$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -843,7 +843,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "NMYUQR9Q",
+  "hash": "RZY6YYYR",
   "originalPath": "app/client.__dist__.css"
 },
 "$$47$$":{
@@ -1316,13 +1316,13 @@
   "path": "app/views/smooth_scrolling.imba"
 },
 "$$105$$":{
-  "bytes": 23908,
+  "bytes": 23952,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
 },
 "$$106$$":{
-  "bytes": 807293,
+  "bytes": 807305,
   "imports": [
     "$$79$$",
     "$$83$$",
@@ -1427,7 +1427,7 @@
     ],
     [
       "$$105$$",
-      21367
+      21406
     ],
     [
       "$$109$$",
@@ -1474,7 +1474,7 @@
       1252
     ]
   ],
-  "bytes": 33443,
+  "bytes": 33482,
   "source": "$$50$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -1482,7 +1482,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "WTTFS7FV",
+  "hash": "1T1KADCS",
   "originalPath": "app/client.__dist__.css"
 },
 "$$117$$":{
@@ -1510,7 +1510,7 @@
   "path": "styles:app/state.imba"
 },
 "$$121$$":{
-  "bytes": 23908,
+  "bytes": 23952,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1672,7 +1672,7 @@
   "path": "app/state.imba"
 },
 "$$141$$":{
-  "bytes": 807293,
+  "bytes": 807305,
   "imports": [
     "$$156$$",
     "$$154$$",
@@ -1955,7 +1955,7 @@
     "/__assets__/all.css": "$$41$$"
   },
   "mappings": {},
-  "hash": "1ML0PLLN",
+  "hash": "DMIMVODN",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",
