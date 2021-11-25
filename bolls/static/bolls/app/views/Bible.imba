@@ -46,8 +46,6 @@ for language in languages
 let settings =
 	theme: 'light'
 	accent: 'blue'
-	sepia: yes
-	gray: no
 	translation: 'YLT'
 	book: 1
 	chapter: 1
@@ -67,10 +65,16 @@ let settings =
 	filtered_books: []
 	parallel_synch: yes
 
+	get light
+		if this.theme == 'dark' or this.theme == 'black'
+			return 'dark'
+		return 'light'
+
+
+
 # Detect dark mode
-if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && window.localStorage.getItem('sepia') != 'true' && window.localStorage.getItem('gray') != 'true'
+if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 	settings.theme = 'dark'
-	settings.sepia = no
 	settings.accent = 'gold'
 
 
@@ -109,6 +113,7 @@ let store =
 	compare_translations_search: ''
 	show_fonts: no
 	show_history: no
+	show_themes: no
 
 let page_search =
 	d: no
@@ -162,41 +167,41 @@ const fonts = [
 		code: "'Roboto Slab', sans-serif"
 	},
 	{
-		name: "Monospace",
-		code: "monospace"
+		name: "JetBrains Mono",
+		code: "'JetBrains Mono', monospace"
 	},
 	{
 		name: "Deutsch Gothic",
-		code: "Deutsch Gothic, sans-serif"
+		code: "'Deutsch Gothic', sans-serif"
 	},
 ]
 
 const accents = [
 	{
-		name: "green",
-		light: '#9acd32',
-		dark: '#9acd32'
-	},
+		name:"blue"
+		light:'hsl(219,100%,77%)'
+		dark:'hsl(200,100%,32%)'
+	}
 	{
-		name: "blue",
-		light: '#8080FF',
-		dark: '#417690'
-	},
+		name:"green"
+		light:'hsl(80,100%,76%)'
+		dark:'hsl(80,100%,32%)'
+	}
 	{
-		name: "purple",
-		light: '#984da5',
-		dark: '#994EA6'
-	},
+		name:"purple"
+		light:'hsl(291,100%,76%)'
+		dark:'hsl(291,100%,32%)'
+	}
 	{
-		name: "gold",
-		light: '#DAA520',
-		dark: '#E1AF33'
-	},
+		name:"gold"
+		light:'hsl(43,100%,76%)'
+		dark:'hsl(43,100%,32%)'
+	}
 	{
-		name: "red",
-		light: '#DE5454',
-		dark: '#D93A3A'
-	},
+		name:"red"
+		light:'hsl(0,100%,76%)'
+		dark:'hsl(0,100%,32%)'
+	}
 ]
 
 export tag bible-reader
@@ -224,7 +229,7 @@ export tag bible-reader
 			if event.matches
 				changeTheme('dark')
 			else
-				turnSepia!
+				changeTheme('light')
 		)
 
 		# Focus the reader tag in order to enable keyboard navigation
@@ -257,19 +262,21 @@ export tag bible-reader
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
+
+			### This legacy should be removed in future ###
 			const sepiaaa = getCookie('sepia') == 'true'
 			const grayyy = getCookie('gray') == 'true'
-			changeTheme(settings.theme)
 			if sepiaaa
-				turnSepia!
+				settings.theme = 'sepia'
 			if grayyy
-				turnGray!
+				settings.theme = 'gray'
+			window.localStorage.removeItem('sepia')
+			window.localStorage.removeItem('gray')
+			### ### ### ### ### ### ### ### ### ### ### ###
+			changeTheme(settings.theme)
 
 		else
-			if settings.theme == 'dark'
-				changeTheme(settings.theme)
-			else
-				turnSepia!
+			changeTheme(settings.theme)
 
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
@@ -463,7 +470,9 @@ export tag bible-reader
 				loading = no
 				imba.commit()
 				console.error('Error: ', error)
-				data.showNotification('error')
+				if window.navigator.onLine
+					data.showNotification('error')
+
 			if settings.parallel_synch && settingsp.display && changeParallel
 				getParallelText settingsp.translation, book, chapter, verse, yes
 			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
@@ -1049,61 +1058,20 @@ export tag bible-reader
 
 	def changeTheme theme
 		html.dataset.pukaka = 'yes'
-
-		settings.sepia = no
-		settings.gray = no
 		settings.theme = theme
-		html.dataset.theme = settings.accent + settings.theme
-		html.dataset.light = settings.theme
-		html.dataset.sepia = no
-		html.dataset.gray = no
 
-		setCookie('theme', theme)
-		setCookie('sepia', settings.sepia)
-		setCookie('gray', settings.gray)
+		html.dataset.accent = settings.accent + settings.light
+		html.dataset.theme = settings.theme
+
+		state.setCookie('theme', theme)
 
 		setTimeout(&, 75) do
 			imba.commit!.then do html.dataset.pukaka = 'no'
 
-	def turnSepia
-		html.dataset.pukaka = 'yes'
-
-		settings.sepia = yes
-		settings.gray = no
-		settings.theme = 'light'
-
-		html.dataset.theme = settings.accent + settings.theme
-		html.dataset.light = settings.theme
-		html.dataset.sepia = 'yes'
-		html.dataset.gray = 'no'
-
-		setCookie('sepia', settings.sepia)
-		setCookie('gray', settings.gray)
-
-		setTimeout(&, 75) do
-			imba.commit!.then do html.dataset.pukaka = 'no'
-
-	def turnGray
-		html.dataset.pukaka = 'yes'
-
-		settings.sepia = no
-		settings.gray = yes
-		settings.theme = 'light'
-
-		html.dataset.theme = settings.accent + settings.theme
-		html.dataset.light = settings.theme
-		html.dataset.sepia = 'no'
-		html.dataset.gray = 'yes'
-
-		setCookie('sepia', settings.sepia)
-		setCookie('gray', settings.gray)
-
-		setTimeout(&, 75) do
-			imba.commit!.then do html.dataset.pukaka = 'no'
 
 	def changeAccent accent
 		settings.accent = accent
-		html.dataset.theme = settings.accent + settings.theme
+		html.dataset.accent = settings.accent + settings.light
 		setCookie('accent', accent)
 		show_accents = no
 
@@ -2202,16 +2170,22 @@ export tag bible-reader
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								if language.language == show_language_of
 									<ul [o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+										let no_translation_downloaded = yes
 										for translation in language.translations
-											<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
-												<span @click=changeTranslation(translation.short_name)>
-													<b> translation.short_name
-													', '
-													translation.full_name
-												if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
-													<svg[size:20px min-width:20px min-height:20px ml:16px] viewBox="0 0 24 24">
-														<title> translation.info
-														<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+											if window.navigator.onLine || data.downloaded_translations.indexOf(translation.short_name) != -1
+												no_translation_downloaded = no
+												<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
+													<span @click=changeTranslation(translation.short_name)>
+														<b> translation.short_name
+														', '
+														translation.full_name
+													if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
+														<svg[size:20px min-width:20px min-height:20px ml:16px] viewBox="0 0 24 24">
+															<title> translation.info
+															<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+										if no_translation_downloaded
+											<p.book_in_list> data.lang["no_translation_downloaded"]
+
 
 				<$books.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
 					<>
@@ -2244,7 +2218,7 @@ export tag bible-reader
 
 
 			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
-				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
+				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
@@ -2292,7 +2266,7 @@ export tag bible-reader
 
 								if verse.comment
 									<note-up style=super_style parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
-										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
+										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
 
 								if settings.verse_break
 									<br>
@@ -2313,7 +2287,10 @@ export tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 					elif not loading
-						<p.in_offline> data.lang.unexisten_chapter
+						<p.in_offline>
+							data.lang.unexisten_chapter
+							<br>
+							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 
 				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
@@ -2347,7 +2324,7 @@ export tag bible-reader
 
 								if parallel_verse.comment
 									<note-up style=super_style parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
-										<span[c:$accent-color @hover:$accent-hover-color]> '✦'
+										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
 
 								if settings.verse_break
 									<br>
@@ -2366,27 +2343,26 @@ export tag bible-reader
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
 			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
-				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$accent-color] width="16" height="10" viewBox="0 0 8 5">
+				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.other
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{MOBILE_PLATFORM ? settings_menu_left : settings_menu_left ? settings_menu_left : settings_menu_left + 12}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
-				<p[fs:24px h:32px ta:center c:default d:flex jc:space-between ai:center $fill-on-hover:$text-color @hover:$accent-hover-color]>
+				<p[fs:24px h:32px d:flex jc:space-between ai:center]>
 					data.lang.other
 					<.current_accent .enlarge_current_accent=show_accents>
 						<.visible_accent @click=(do show_accents = !show_accents)>
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
-				<[d:flex m:24px 0 ai:center $fill-on-hover:$text-color @hover:$accent-hover-color]>
+				<[d:flex m:24px 0 ai:center $fill-on-hover:$c @hover:$acc-color-hover]>
 					if data.getUserName()
-						<svg.helpsvg route-to.exact='/profile/' viewBox="0 0 70.000000 70.000000" preserveAspectRatio="xMidYMid meet">
+						<svg.helpsvg route-to='/profile/' xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px">
 							<title> data.getUserName()
-							<g transform="translate(0.000000,70.000000) scale(0.100000,-0.100000)" stroke="none">
-								<path d="M400 640 c-19 -7 -13 -8 22 -4 95 12 192 -38 234 -118 41 -78 12 -200 -65 -277 -26 -26 -41 -50 -41 -66 0 -21 -10 -30 -66 -55 -37 -16 -68 -30 -70 -30 -2 0 -4 21 -6 48 l-3 47 -40 3 c-43 3 -65 23 -65 56 0 12 -7 34 -15 50 -12 23 -13 32 -3 43 7 8 15 44 19 79 6 63 17 91 26 67 11 -32 63 -90 96 -107 31 -17 39 -18 61 -7 59 32 79 -30 24 -73 -18 -14 -28 -26 -22 -26 6 0 23 9 38 21 56 44 19 133 -40 94 -21 -14 -27 -14 -53 -1 -35 18 -73 62 -90 105 -8 17 -17 31 -21 31 -13 0 -30 -59 -30 -102 0 -21 -7 -53 -16 -70 -12 -23 -14 -36 -6 -48 5 -9 13 -35 17 -58 8 -49 34 -72 82 -72 33 0 33 0 33 -50 0 -34 4 -50 13 -50 6 0 44 17 82 38 54 29 71 43 74 62 1 14 18 42 37 62 122 136 105 316 -37 388 -44 23 -133 33 -169 20z">
-								<path d="M320 606 c-19 -13 -46 -43 -60 -66 -107 -179 -149 -214 -229 -186 -23 8 -24 7 -19 -38 7 -57 47 -112 100 -136 24 -11 46 -30 57 -51 33 -62 117 -101 178 -83 24 7 19 9 -32 13 -69 7 -108 28 -130 71 -14 27 -14 31 0 36 8 3 15 12 15 19 0 19 -30 27 -37 10 -13 -35 -97 19 -124 79 -27 60 -25 64 25 59 41 -5 47 -2 90 37 25 23 63 74 85 113 38 70 75 113 116 135 11 6 15 12 10 12 -6 0 -26 -11 -45 -24z">
-						<a.username [c:$fill-on-hover] route-to.exact='/profile/'> data.getUserName()
+							<path d="M0 0h24v24H0z" fill="none">
+							<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
+						<a.username [w:100%] route-to='/profile/'> data.getUserName()
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
 					else
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
@@ -2407,49 +2383,50 @@ export tag bible-reader
 						<path d="M0 0h24v24H0z" fill="none">
 						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
 					data.lang.history
+
+				<menu-popup bind=store.show_themes>
+					<.btnbox.cbtn.aside_button.popup_menu_box [d:flex transform@important:none ai:center pos:relative] @click=(do store.show_themes = !store.show_themes)>
+						<svg[size:24px ml:4px mr:16px] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+							<title> 'Clair de lune'
+							<path d="M167.02 309.34c-40.12 2.58-76.53 17.86-97.19 72.3-2.35 6.21-8 9.98-14.59 9.98-11.11 0-45.46-27.67-55.25-34.35C0 439.62 37.93 512 128 512c75.86 0 128-43.77 128-120.19 0-3.11-.65-6.08-.97-9.13l-88.01-73.34zM457.89 0c-15.16 0-29.37 6.71-40.21 16.45C213.27 199.05 192 203.34 192 257.09c0 13.7 3.25 26.76 8.73 38.7l63.82 53.18c7.21 1.8 14.64 3.03 22.39 3.03 62.11 0 98.11-45.47 211.16-256.46 7.38-14.35 13.9-29.85 13.9-45.99C512 20.64 486 0 457.89 0z">
+						state.lang.theme
+						if store.show_themes
+							<.popup_menu.themes_popup [l:0 y@off:-32px o@off:0] ease>
+								<button.butt[bgc:black c:white bdr:32px solid white] @click=changeTheme('black')> 'Black'
+								<button.butt[bgc:rgb(4, 6, 12) c:rgb(255, 238, 238) bdr:32px solid rgb(255, 238, 238)] @click=changeTheme('dark')> data.lang.nighttheme
+								<button.butt[bgc:#f1f1f1 c:black bdr:32px solid black] @click=changeTheme('gray')> 'Gray'
+								<button.butt[bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:32px solid rgb(46, 39, 36)] @click=changeTheme('sepia')> 'Sepia'
+								<button.butt[bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:32px solid rgb(4, 6, 12)] @click=changeTheme('light')> data.lang.lighttheme
+								<button.butt[bgc:white c:black bdr:32px solid black] @click=changeTheme('white')> 'White'
+
 				<.btnbox>
-					<svg.cbtn[p:8px w:25%] @click=changeTheme('dark') enable-background="new 0 0 24 24" viewBox="0 0 24 24" >
-						<title> data.lang.nighttheme
-						<g>
-							<path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z">
-						<path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z">
-					<svg.cbtn[w:25%] @click=turnGray viewBox="0 0 8 8">
-						<title> 'gray'
-						<rect x=1 y=2 width=6 height=4 rx=1 fill='#888'>
-					<svg.cbtn[w:25%] @click=turnSepia viewBox="0 0 8 8">
-						<title> 'sepia'
-						<rect x=1 y=2 width=6 height=4 rx=1 fill='#DEBB68'>
-					<svg.cbtn[w:25%] @click=changeTheme('light') [p: 8px] viewBox="0 0 20 20">
-						<title> data.lang.lighttheme
-						<path d="M10 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM9 1a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V1zm6.65 1.94a1 1 0 1 1 1.41 1.41l-1.4 1.4a1 1 0 1 1-1.41-1.41l1.4-1.4zM18.99 9a1 1 0 1 1 0 2h-1.98a1 1 0 1 1 0-2h1.98zm-1.93 6.65a1 1 0 1 1-1.41 1.41l-1.4-1.4a1 1 0 1 1 1.41-1.41l1.4 1.4zM11 18.99a1 1 0 1 1-2 0v-1.98a1 1 0 1 1 2 0v1.98zm-6.65-1.93a1 1 0 1 1-1.41-1.41l1.4-1.4a1 1 0 1 1 1.41 1.41l-1.4 1.4zM1.01 11a1 1 0 1 1 0-2h1.98a1 1 0 1 1 0 2H1.01zm1.93-6.65a1 1 0 1 1 1.41-1.41l1.4 1.4a1 1 0 1 1-1.41 1.41l-1.4-1.4z">
+					<button[p:12px fs:20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
+					<button[p:8px fs:24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
 				<.btnbox>
-					<button[p: 12px fs: 20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
-					<button[p: 8px fs: 24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
+					<button.cbtn [p:8px fs:24px fw:100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
+					<button.cbtn [p:8px fs:24px fw:900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
-					<button.cbtn [padding: 8px font-size: 24px font-weight: 100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
-					<button.cbtn [padding: 8px font-size: 24px font-weight: 900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
-				<.btnbox>
-					<svg.cbtn @click.changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [padding: 16px 0]>
+					<svg.cbtn @click.changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [p:16px 0]>
 						<title> data.lang.decrease_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="6" width="38" height="2">
 						<rect x="0" y="12" width="18" height="2">
-					<svg.cbtn @click.changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [padding: 10px 0]>
+					<svg.cbtn @click.changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [p:10px 0]>
 						<title> data.lang.increase_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="11" width="38" height="2">
 						<rect x="0" y="22" width="18" height="2">
 				if window.chrome
 					<.btnbox>
-						<svg.cbtn @click=changeAlign(yes) viewBox="0 0 20 20" [padding: 10px 0]>
+						<svg.cbtn @click=changeAlign(yes) viewBox="0 0 20 20" [p:10px 0]>
 							<title> data.lang.auto_align
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
-						<svg.cbtn @click=changeAlign(no) viewBox="0 0 20 20" [padding: 10px 0]>
+						<svg.cbtn @click=changeAlign(no) viewBox="0 0 20 20" [p:10px 0]>
 							<title> data.lang.align_justified
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
 				if window.innerWidth > 639
 					<.btnbox>
-						<svg.cbtn @click=changeMaxWidth(no) width="42" height="16" viewBox="0 0 42 16" fill="context-fill" [padding: calc(42px - 28px) 0]>
+						<svg.cbtn @click=changeMaxWidth(no) width="42" height="16" viewBox="0 0 42 16" fill="context-fill" [p: calc(42px - 28px) 0]>
 							<title> data.lang.increase_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z">
 							<path d="M38.5,7 L32.75,1.25 L34,6.58831647e-15 L42,8 L41.375,8.625 L34,16 L32.75,14.75 L38.5,9 L24,9 L24,7 L38.5,7 Z" transform="translate(33.000000, 8.000000) scale(-1, 1) translate(-33.000000, -8.000000)">
@@ -2549,7 +2526,7 @@ export tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p>
-						"©", <time dateTime='2021-11-11T21:11'> "2019"
+						"©", <time dateTime='2021-11-25T20:41'> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
@@ -2557,7 +2534,7 @@ export tag bible-reader
 			if what_to_show_in_pop_up_block.length
 				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 3}] @click=(do unless state.intouch then clearSpace!) ease>
 
-					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
+					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
 
 						if what_to_show_in_pop_up_block == 'show_help'
 							<article.search_hat>
@@ -2572,7 +2549,7 @@ export tag bible-reader
 											<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
 											<path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
 							<article.helpFAQ.search_body>
-								<p[color: $accent-hover-color font-size: 0.9em]> data.lang.faqmsg
+								<p[color: $acc-color-hover font-size: 0.9em]> data.lang.faqmsg
 								<h3> data.lang.content
 								<ul>
 									for q in data.lang.HB
@@ -2597,7 +2574,7 @@ export tag bible-reader
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
 								<h1> highlighted_title
-								<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke:$text-color stroke-width:2px]>
+								<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke:$c stroke-width:2px]>
 									<title> data.lang.compare
 									<line x1="0" y1="10" x2="20" y2="10">
 									<line x1="10" y1="0" x2="10" y2="20">
@@ -2605,7 +2582,7 @@ export tag bible-reader
 									<[z-index: 1100 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
 										if compare_translations.length == translations.length
 											<p[padding: 12px 8px]> data.lang.nothing_else
-										<div[d:hflex bg:$background-color pos:sticky t:-8px]>
+										<div[d:hflex bg:$bgc pos:sticky t:-8px]>
 											<input.search [p:0 8px] bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
 											<svg.close_search [mr:-16px @lt-sm:8px h:42px p:0px] @click=(show_translations_for_comparison = no) viewBox="0 0 20 20">
 												<title> data.lang.close
@@ -2632,7 +2609,7 @@ export tag bible-reader
 								if data.deleting_of_all_transllations
 									<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
 										<title> data.lang.loading
-										<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
+										<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 								else
 									<svg.close_search @click=(do data.clearVersesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
 										<title> data.lang.remove_all_translations
@@ -2648,13 +2625,15 @@ export tag bible-reader
 
 										if language.language == show_language_of
 											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+												let no_translation_downloaded = yes
 												for tr in language.translations
-													if window.navigator.onLine || data.downloaded_translations().indexOf(tr.short_name) != -1
-														<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$btn-bg-hover fill:$text-color @hover:$accent-hover-color rd:8px] @click=offlineTranslationAction(tr)>
+													if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
+														no_translation_downloaded = no
+														<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr)>
 															if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
 																<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
 																	<title> data.lang.loading
-																	<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$text-color]>
+																	<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 															elif data.downloaded_translations.indexOf(tr.short_name) != -1
 																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
 																	<title> data.lang.delete
@@ -2665,6 +2644,9 @@ export tag bible-reader
 																	<g transform="matrix(1.5 0 0 1.5 0 128)">
 																		<path d=svg_paths.download>
 															<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
+
+												if no_translation_downloaded
+													data.lang["no_translation_downloaded"]
 								<.freespace>
 
 						elif what_to_show_in_pop_up_block == 'show_support'
@@ -2704,7 +2686,7 @@ export tag bible-reader
 							if search_verses.length
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
-										<div[d:hflex bg:$background-color ai:center jc:space-between p:0 8px pos:sticky t:-8px]>
+										<div[d:hflex bg:$bgc ai:center jc:space-between p:0 8px pos:sticky t:-8px]>
 											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> data.lang.addfilter
 											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
 												<title> data.lang.close
@@ -2723,7 +2705,7 @@ export tag bible-reader
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
 
-								<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $btn-bg bxs:none] bind=search.search_input minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
+								<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none] bind=search.search_input minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
 
 								# TODO LOCALIZE THIS
 
@@ -2743,7 +2725,7 @@ export tag bible-reader
 									<path d=svg_paths.search>
 
 								if search_verses.length
-									<svg.filter_search [min-width:24px] .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
+									<svg.filter_search [min-width:24px] ease .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
 										<title> data.lang.addfilter
 										<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
@@ -2793,7 +2775,7 @@ export tag bible-reader
 
 
 			if show_collections || show_share_box || choosenid.length
-				<section [pos:fixed b:0 l:0 r:0 w:100% bgc:$background-color bdt:1px solid $btn-bg ta:center p:{show_collections || show_share_box ? "0" : "16px 0"} zi:1100 y@off:100%] ease>
+				<section [pos:fixed b:0 l:0 r:0 w:100% bgc:$bgc bdt:1px solid $acc-bgc ta:center p:{show_collections || show_share_box ? "0" : "16px 0"} zi:1100 y@off:100%] ease>
 					if show_collections
 						<.collectionshat>
 							<svg.svgBack viewBox="0 0 20 20" @click=turnCollections>
@@ -2976,7 +2958,7 @@ export tag bible-reader
 
 
 			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
-				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:54px @lg:0px bgc@lt-lg:$background-color d:flex jc:space-between] ease>
+				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:54px @lg:0px bgc@lt-lg:$bgc d:flex jc:space-between] ease>
 					<div[transform: translateY({menu_icons_transform}%) translateX({bibleIconTransform!}px)] @click=toggleBibleMenu>
 						<svg viewBox="0 0 16 16">
 							<title> data.lang.change_book
@@ -3021,11 +3003,11 @@ export tag bible-reader
 				<section#welcome.small_box [pos:fixed zi:9999 r:16px b:16px p:16px o@off:0 scale@off:0.75 origin:bottom right w:300px] ease>
 					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
 					<p[mb:8px text-indent:1.5em lh:1.5 fs:0.9em]> data.lang.welcome_msg, <span.emojify> ' 😉'
-					<button [w:100% h:32px bg:$btn-bg @hover:$btn-bg-hover c:$text-color @hover:$accent-hover-color ta:center border:none fs:1em rd:4px cursor:pointer] @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
+					<button [w:100% h:32px bg:$acc-bgc @hover:$acc-bgc-hover c:$c @hover:$acc-color-hover ta:center border:none fs:1em rd:4px cursor:pointer] @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
 
 
 			if page_search.d
-				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $btn-bg p:2px 8px zi:1100] ease>
+				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $acc-bgc p:2px 8px zi:1100] ease>
 					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.find_in_chapter>
 					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
 						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>
@@ -3081,17 +3063,19 @@ export tag bible-reader
 	css .height_auto
 		max-height@important:76px
 		mb:auto
-		border-bottom:1px solid $btn-bg-hover
+		border-bottom:1px solid $acc-bgc-hover
 
 
 	css .aside_button
-		w:100% h:46px bg:transparent @hover:$btn-bg-hover d:flex ai:center font:inherit p:0 12px
+		w:100% h:46px bg:transparent @hover:$acc-bgc-hover d:flex ai:center font:inherit p:0 12px
 
 	css .search_suggestions
 		d:flex fld:column p:8px
+		max-height:calc(72vh - 50px)
+		of:auto
 		pos:absolute t:100% r:0 l:0 zi:1
-		bg:$background-color
-		border:1px solid $btn-bg-hover bdt:none rdbl:8px rdbr:8px
+		bg:$bgc
+		border:1px solid $acc-bgc-hover bdt:none rdbl:8px rdbr:8px
 		visibility:hidden
 		o:0
 
@@ -3110,14 +3094,14 @@ export tag bible-reader
 		left: 0px
 		w:100%
 		zi:2 cursor:pointer
-		bdt@lt-lg:1px solid $btn-bg
+		bdt@lt-lg:1px solid $acc-bgc
 
 	css #navigation > div
 		padding:3vw @lt-lg:4px
 		width:calc(100% / 3) @lg:calc(32px + 6vw)
 		height:54px @lg:calc(32px + 6vw)
-		c@hover:$accent-hover-color
-		fill:$accent-color @hover:$accent-hover-color @lt-lg:$text-color
+		c@hover:$acc-color-hover
+		fill:$acc-color @hover:$acc-color-hover @lt-lg:$c
 		d@lt-lg:vflex jc:center ai:center
 
 	css #navigation svg
@@ -3133,8 +3117,8 @@ export tag bible-reader
 		fs:12px
 
 	css .small_box
-		bgc:$background-color
-		bd:1px solid $btn-bg
+		bgc:$bgc
+		bd:1px solid $acc-bgc
 		rd:16px
 		ofy:auto
 		-webkit-overflow-scrolling:touch

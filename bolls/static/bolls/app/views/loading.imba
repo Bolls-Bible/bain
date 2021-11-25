@@ -83,7 +83,7 @@ export tag loading-animation
 		svg
 			height: 8px
 			width: 8px
-			fill: var(--text-color)
+			fill: $c
 			transition-duration: 300ms
 			transition-timing-function: linear
 			overflow: visible

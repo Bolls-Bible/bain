@@ -18,7 +18,7 @@ export tag downloads-page
 
 	def render
 		<self[d: block h: 100vh ofy: auto]>
-			<a[display: flex; c:inherit @hover:$accent-color fill:$text-color @hover:$accent-color] route-to='/'>
+			<a[display: flex; c:inherit @hover:$acc-color fill:$c @hover:$acc-color] route-to='/'>
 				<svg.svgBack [pos:relative m:auto 16px auto 0 l:8px fill:inherit] xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 					<title> data.lang.back
 					<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
@@ -114,7 +114,7 @@ export tag downloads-page
 		margin: 16px
 		color: inherit
 		cursor: pointer
-		background-color: var(--btn-bg) @hover: var(--btn-bg-hover)
+		background-color: $acc-bgc @hover: $acc-bgc-hover
 
 	css .platform-item p
 		margin: auto 16px
@@ -122,7 +122,7 @@ export tag downloads-page
 		line-height: 1.4
 
 	css .platforms_svg
-		fill: var(--text-color)
+		fill: $c
 		width: 64px
 		height: 64px
 

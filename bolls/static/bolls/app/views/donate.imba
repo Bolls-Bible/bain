@@ -6,13 +6,13 @@ export tag donate
 		<self>
 			<header[d:flex jc:center pos:relative]>
 
-				<a.svgBack [pos:absolute l:0 m:auto 16px auto 0 c:$text-color @hover:$accent-hover-color d:flex ai:center] route-to='/'>
+				<a.svgBack [pos:absolute l:0 m:auto 16px auto 0 c:$c @hover:$acc-color-hover d:flex ai:center] route-to='/'>
 					<arrow-back>
 					state.lang.back
 				<h1[fs:1.2em]> "Donate"
 			<main[py:32px]>
 				<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/6ao79u5rFZ">
-					<h3[d:flex g:8px ai:center fill:$text-color @hover:$accent-hover-color]>
+					<h3[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover]>
 						"🐈 Monobank"
 						<svg[fill:inherit] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
 							<path d="M0 0h24v24H0z" fill="none">
@@ -41,7 +41,7 @@ export tag donate
 
 	css
 		h3
-			c:$text-color @hover:$accent-hover-color
+			c:$c @hover:$acc-color-hover
 			cursor:copy
 			py:8px
 

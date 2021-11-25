@@ -175,7 +175,7 @@ export class State
 					)
 			)
 		)
-		downloaded_translations = checked_translations.filter(do |item| return item != null)
+		downloaded_translations = checked_translations.filter(do |item| return item != null) || []
 		setCookie('downloaded_translations', JSON.stringify(downloaded_translations))
 
 	def checkTranslationsUpdates

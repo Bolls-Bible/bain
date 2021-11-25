@@ -16,8 +16,8 @@ export tag Notifications
 		cursor: pointer
 
 	css p
-		color: var(--background-color)
-		background-color: var(--accent-hover-color)
+		color: $bgc
+		background-color: $acc-color-hover
 		animation: show-notification 500ms cubic-bezier(1, 0, 0, 1) both
 		padding: 16px 32px
 		border-radius: 16px

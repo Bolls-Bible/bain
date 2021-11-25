@@ -119,7 +119,6 @@ def search(request, translation, piece=''):
         piece = request.GET.get('search', '')
     match_case = request.GET.get('match_case', '') == 'true'
     match_whole = request.GET.get('match_whole', '') == 'true'
-    print(match_case, match_whole)
 
     d = []
     piece = piece.strip()
@@ -172,10 +171,9 @@ def search(request, translation, piece=''):
 
         def highlightHeadline(text):
             highlighted_text = text
-            if match_whole:
-                mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
-                highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
-            else:
+            mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
+            highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
+            if not match_whole:
                 for word in piece.split():
                     mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
                     highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
@@ -279,18 +277,17 @@ def getBookmarks(request, translation, book, chapter):
             book=book, chapter=chapter, translation=translation).order_by('verse')
         bookmarks = []
         for obj in all_objects:
-            if list(obj.bookmarks_set.all().filter(user=request.user)):
-                for bookmark in obj.bookmarks_set.all():
-                    note = ''
-                    if bookmark.note is not None:
-                        note = bookmark.note.text
-                    bookmarks.append({
-                        "verse": bookmark.verse.pk,
-                        "date": bookmark.date,
-                        "color": bookmark.color,
-                        "collection": bookmark.collection,
-                        "note": note,
-                    })
+            for bookmark in obj.bookmarks_set.all():
+                note = ''
+                if bookmark.note is not None:
+                    note = bookmark.note.text
+                bookmarks.append({
+                    "verse": bookmark.verse.pk,
+                    "date": bookmark.date,
+                    "color": bookmark.color,
+                    "collection": bookmark.collection,
+                    "note": note,
+                })
         return JsonResponse(bookmarks, safe=False)
     else:
         return JsonResponse([], safe=False)

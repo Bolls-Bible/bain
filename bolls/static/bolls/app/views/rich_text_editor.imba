@@ -120,12 +120,12 @@ export tag rich-text-editor
 		background: transparent
 		font-size: 20px
 		cursor: pointer
-		color: inherit @hover: var(--accent-color)
+		color: inherit @hover: $acc-color
 
 	css .editing-icon > svg
 		width: 20px
 		height: 20px
-		fill: var(--text-color) @hover: var(--accent-color)
+		fill: $c @hover: $acc-color
 
 
 	def render

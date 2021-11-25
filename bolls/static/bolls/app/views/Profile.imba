@@ -353,7 +353,7 @@ export tag profile-page
 
 			if account_action
 				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(account_action = 0) ease>
-					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$background-color bd:1px solid $btn-bg-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
+					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
 						if account_action == 2
 							<form action="/delete-my-account/">
 								<header.search_hat>
@@ -389,9 +389,9 @@ export tag profile-page
 
 
 			if !window.navigator.onLine
-				<div[position: fixed bottom: 16px left: 16px color: var(--text-color) background: var(--background-color) padding: 8px 16px border-radius: 8px text-align: center border: 1px solid var(--btn-bg-hover) z-index: 1000]>
+				<div[position:fixed bottom:16px left:16px color:$c background:$bgc padding:8px 16px border-radius:8px text-align:center border:1px solid $acc-bgc-hover z-index:1000]>
 					data.lang.offline
-					<svg[transform: translateY(0.2em) fill: $text-color] width="1.25em" height="1.26em" viewBox="0 0 24 24">
+					<svg[transform:translateY(0.2em) fill:$c] width="1.25em" height="1.26em" viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z">
 						<path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.32 0-2.55.14-3.69.38L18.43 13.5 23.64 7zM3.41 1.31L2 2.72l2.05 2.05C1.91 5.76.59 6.82.36 7L12 21.5l3.91-4.87 3.32 3.32 1.41-1.41L3.41 1.31z">
 					<a.reload @click=(do window.location.reload(true))> data.lang.reload
@@ -413,9 +413,9 @@ export tag profile-page
 			fs:0.8em
 			c:inherit
 			tt:uppercase
-			bg:transparent @hover:$btn-bg-hover
+			bg:transparent @hover:$acc-bgc-hover
 			bdb:4px solid transparent
 			cursor:pointer
 
 		.active-tab
-			bcb:$accent-hover-color
+			bcb:$acc-color-hover

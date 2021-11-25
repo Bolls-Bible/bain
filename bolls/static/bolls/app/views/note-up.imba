@@ -73,9 +73,9 @@ export tag note-up
 		vertical-align: super
 		white-space: pre
 		us:none
-		fill:$accent-color @hover:$accent-hover-color
-		stroke:$accent-color @hover:$accent-hover-color
-		bg@hover:$btn-bg-hover
+		fill:$acc-color @hover:$acc-color-hover
+		stroke:$acc-color @hover:$acc-color-hover
+		bg@hover:$acc-bgc-hover
 		rd:4px
 
 
@@ -83,8 +83,8 @@ export tag note-up
 			pos:absolute zi:1
 			p:12px
 			rd:12px
-			border:2px solid $btn-bg
-			bg:$background-color
+			border:2px solid $acc-bgc
+			bg:$bgc
 			min-width:16em
 			max-height:256px
 			us:text

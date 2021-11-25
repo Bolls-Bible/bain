@@ -1,90 +1,95 @@
-html[data-light="dark"] {
-  --background-color: rgb(4, 6, 12);
-  --text-color: rgb(255, 238, 238);
-  --btn-bg: #252749;
-  --btn-bg-hover: #383a6d;
+html[data-theme="light"]{
+  --bgc: hsl(0, 100%, 97%);
+  --c: rgb(4, 6, 12);
+  --acc-bgc: hsl(276, 100%, 90%);
+  --acc-bgc-hover: hsl(276, 100%, 94%);
+  --disabled: rgb(86, 82, 78);
+}
+html[data-theme="dark"]{
+  --bgc: rgb(4, 6, 12);
+  --c: rgb(255, 238, 238);
+  --acc-bgc: #252749;
+  --acc-bgc-hover: #383a6d;
   --disabled: rgb(168, 162, 159);
 }
-
-html[data-light="light"] {
-  --background-color: hsl(0, 100%, 97%);
-  --text-color: rgb(4, 6, 12);
-  --btn-bg: hsl(276, 100%, 90%);
-  --btn-bg-hover: hsl(276, 100%, 94%);
+html[data-theme="sepia"]{
+  --bgc: rgb(235, 219, 183);
+  --c: rgb(46, 39, 36);
+  --acc-bgc: rgb(226, 204, 152);
+  --acc-bgc-hover: rgb(230, 211, 167);
+  --disabled: rgb(86, 82, 78);
+}
+html[data-theme="gray"]{
+  --bgc: #f1f1f1;
+  --c: black;
+  --acc-bgc: #d3d3d3;
+  --acc-bgc-hover: #e5e5e5;
+  --disabled: rgb(86, 82, 78);
+}
+html[data-theme="black"]{
+  --bgc: black;
+  --c: white;
+  --acc-bgc: #252749;
+  --acc-bgc-hover: #383a6d;
+  --disabled: rgb(168, 162, 159);
+}
+html[data-theme="white"]{
+  --bgc: white;
+  --c: black;
+  --acc-bgc: hsl(276, 100%, 90%);
+  --acc-bgc-hover: hsl(276, 100%, 94%);
   --disabled: rgb(86, 82, 78);
 }
 
-html[data-sepia="yes"] {
-  --background-color: rgb(235, 219, 183);
-  --text-color: rgb(46, 39, 36);
-  --btn-bg: rgb(226, 204, 152);
-  --btn-bg-hover: rgb(230, 211, 167);
-}
 
-html[data-gray="yes"] {
-  --background-color: #f1f1f1;
-  --text-color: black;
-  --btn-bg: #d3d3d3;
-  --btn-bg-hover: #e5e5e5;
+html[data-accent="bluedark"]{
+  --acc-color: hsl(240, 100%, 75%);
+  --acc-color-hover: hsl(219, 100%, 77%);
 }
-
-html[data-theme="bluedark"] {
-  --accent-color: rgb(128, 128, 255);
-  --accent-hover-color: rgba(150, 182, 243, 0.996);
+html[data-accent="bluelight"]{
+  --acc-color: hsl(240, 100%, 24%);
+  --acc-color-hover: hsl(200, 100%, 32%);
 }
-
-html[data-theme="bluelight"] {
-  --accent-color: navy;
-  --accent-hover-color: rgba(65, 118, 144, 0.996);
+html[data-accent="greendark"]{
+  --acc-color: hsl(80, 100%, 70%);
+  --acc-color-hover: hsl(80, 100%, 76%);
 }
-
-html[data-theme="greendark"] {
-  --accent-color: olivedrab;
-  --accent-hover-color: yellowgreen;
+html[data-accent="greenlight"]{
+  --acc-color: hsl(80, 100%, 24%);
+  --acc-color-hover: hsl(80, 100%, 32%);
 }
-
-html[data-theme="greenlight"] {
-  --accent-color: olivedrab;
-  --accent-hover-color: yellowgreen;
+html[data-accent="purpledark"]{
+  --acc-color: hsl(291, 100%, 70%);
+  --acc-color-hover: hsl(291, 100%, 76%);
 }
-
-html[data-theme="purpledark"] {
-  --accent-color: rgb(152, 77, 165);
-  --accent-hover-color: rgba(177, 113, 188, 0.996);
+html[data-accent="purplelight"]{
+  --acc-color: hsl(291, 100%, 24%);
+  --acc-color-hover: hsl(291, 100%, 32%);
 }
-
-html[data-theme="purplelight"] {
-  --accent-color: rgb(102, 52, 111);
-  --accent-hover-color: rgba(153, 78, 166, 0.996);
+html[data-accent="golddark"]{
+  --acc-color: hsl(43, 100%, 70%);
+  --acc-color-hover: hsl(43, 100%, 76%);
 }
-
-html[data-theme="golddark"] {
-  --accent-color: rgb(218, 165, 32);
-  --accent-hover-color: rgba(231, 193, 95, 0.996);
+html[data-accent="goldlight"]{
+  --acc-color: hsl(43, 100%, 24%);
+  --acc-color-hover: hsl(43, 100%, 32%);
 }
-
-html[data-theme="goldlight"] {
-  --accent-color: rgb(169, 128, 25);
-  --accent-hover-color: rgba(225, 175, 51, 0.996);
+html[data-accent="reddark"]{
+  --acc-color: hsl(0, 100%, 70%);
+  --acc-color-hover: hsl(0, 100%, 76%);
 }
-
-html[data-theme="reddark"] {
-  --accent-color: rgb(222, 84, 84);
-  --accent-hover-color: rgba(230, 122, 122, 0.996);
-}
-
-html[data-theme="redlight"] {
-  --accent-color: rgb(137, 26, 26);
-  --accent-hover-color: rgba(217, 58, 58, 0.996);
+html[data-accent="redlight"]{
+  --acc-color: hsl(0, 100%, 24%);
+  --acc-color-hover: hsl(0, 100%, 32%);
 }
 
 html[data-transitions="true"] * {
-  transition-timing-function: cubic-bezier(0.77, 0, 0.18, 1);
+  transition-timing-function: ease-in-out;
   transition-delay: 0;
-  transition-duration: 500ms;
+  transition-duration: 300ms;
   transition-property: color, background, width, height, transform, opacity,
     max-height, max-width, top, left, bottom, right, visibility, fill, stroke,
-    margin, padding, font-size, border-color;
+    margin, padding, font-size, border-color, box-shadow, border-radius;
 }
 
 html[data-pukaka="yes"] * {
@@ -97,7 +102,7 @@ html[data-transitions="false"] * {
 
 * {
   box-sizing: border-box;
-  scrollbar-color: var(--btn-bg-hover) rgba(0, 0, 0, 0);
+  scrollbar-color: var(--acc-bgc-hover) rgba(0, 0, 0, 0);
   scrollbar-width: auto;
   margin: 0;
   padding: 0;
@@ -105,9 +110,9 @@ html[data-transitions="false"] * {
 }
 
 *::selection {
-  text-decoration-color: var(--background-color);
-  color: var(--background-color);
-  background-color: var(--accent-hover-color);
+  text-decoration-color: var(--bgc);
+  color: var(--bgc);
+  background-color: var(--acc-color-hover);
 }
 
 ::-webkit-scrollbar {
@@ -119,12 +124,12 @@ html[data-transitions="false"] * {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--btn-bg);
+  background: var(--acc-bgc);
 }
 
 :focus {
@@ -136,8 +141,8 @@ body {
   font-family: sans, sans-serif, "Apple Color Emoji", "Droid Sans Fallback",
     "Noto Color Emoji", "Segoe UI Emoji";
   font-size: 18px;
-  background: var(--background-color);
-  color: var(--text-color);
+  background: var(--bgc);
+  color: var(--c);
   overflow: hidden;
   min-height: -webkit-fill-available;
   height: -webkit-fill-available;
@@ -170,8 +175,8 @@ input {
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] .bookmark_in_list {
-  -webkit-animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1);
-  animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1);
+  -webkit-animation: text-came 500ms ease-in-out;
+  animation: text-came 500ms ease-in-out;
 }
 
 html[data-transitions="true"] .collection,
@@ -184,8 +189,8 @@ html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] main section article {
-  -webkit-animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
-  animation: text-came 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  -webkit-animation: text-came 500ms ease-in-out forwards;
+  animation: text-came 500ms ease-in-out forwards;
 }
 
 button {
@@ -193,7 +198,7 @@ button {
 }
 
 .download_translations {
-  fill: var(--text-color);
+  fill: var(--c);
   width: 54px;
   height: 40px;
   display: block;
@@ -223,14 +228,14 @@ button {
 }
 
 .download_translations:hover {
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
 }
 
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
 html[data-transitions="true"] .help:hover .helpsvg {
-  -webkit-animation: shake 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
-  animation: shake 250ms cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  -webkit-animation: shake 500ms ease-in-out forwards;
+  animation: shake 500ms ease-in-out forwards;
 }
 
 body {
@@ -243,7 +248,7 @@ body {
 }
 
 .chronological_order {
-  fill: var(--text-color);
+  fill: var(--c);
   width: 64px;
   height: 38px;
   display: block;
@@ -252,7 +257,7 @@ body {
 }
 
 .chronological_order:hover {
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
 }
 
 .hide_chron_order {
@@ -285,7 +290,7 @@ body {
 }
 
 .current_translation {
-  color: var(--accent-color);
+  color: var(--acc-color);
 }
 
 .books-container {
@@ -310,7 +315,7 @@ body {
   height: auto;
   cursor: pointer;
   width: 100%;
-  fill: var(--text-color);
+  fill: var(--c);
   font: inherit;
 }
 
@@ -328,13 +333,13 @@ body {
 .translation_name:hover,
 .book_in_list:hover,
 .chapter_number:hover {
-  color: var(--accent-hover-color);
-  fill: var(--accent-hover-color);
+  color: var(--acc-color-hover);
+  fill: var(--acc-color-hover);
 }
 
 .selected {
-  color: var(--accent-color);
-  fill: var(--accent-color);
+  color: var(--acc-color);
+  fill: var(--acc-color);
 }
 
 .pressed svg {
@@ -348,7 +353,7 @@ body {
 .main {
   width: calc(100% - max(32px, min(64px, 4vw)));
   padding: 0;
-  color: var(--text-color);
+  color: var(--c);
   margin: auto;
   word-break: break-word;
   touch-action: auto !important;
@@ -376,7 +381,7 @@ nav input[type="text"] {
   width: 26px;
   height: 52px;
   padding: 12px 0;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: pointer;
   opacity: 0.33;
 }
@@ -402,7 +407,7 @@ main header h1 {
   margin: 1em 0;
   padding: 0 4px;
   position: sticky;
-  background-color: var(--background-color);
+  background-color: var(--bgc);
   top: 0px;
   line-height: 1;
   cursor: pointer;
@@ -411,7 +416,7 @@ main header h1 {
 main header {
   position: sticky;
   top: 0;
-  background-color: var(--background-color);
+  background-color: var(--bgc);
   margin: 1em 0;
 }
 
@@ -434,15 +439,15 @@ html[data-transitions="true"] .helpFAQ a:hover {
 
 .verse {
   font-size: 0.68em;
-  color: var(--accent-color);
+  color: var(--acc-color);
   vertical-align: super;
   white-space: pre;
   border-radius: 4px;
 }
 
 .verse:hover {
-  background: var(--btn-bg-hover);
-  color: var(--accent-hover-color);
+  background: var(--acc-bgc-hover);
+  color: var(--acc-color-hover);
 }
 
 .close_colorPicker {
@@ -452,12 +457,12 @@ html[data-transitions="true"] .helpFAQ a:hover {
   padding: 12px;
   width: 48px;
   height: 48px;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: pointer;
-  background: var(--background-color);
+  background: var(--bgc);
   border-radius: 50%;
   margin: 8px;
-  border: 1px solid var(--btn-bg-hover);
+  border: 1px solid var(--acc-bgc-hover);
 }
 
 .mark_grid {
@@ -477,15 +482,15 @@ html[data-transitions="true"] .helpFAQ a:hover {
   margin: 0 0.3em;
   display: inline-flex;
   cursor: pointer;
-  border: 1px solid var(--btn-bg-hover);
+  border: 1px solid var(--acc-bgc-hover);
   --onhoverchangefill: rgba(0, 0, 0, 0);
   --onhoverchangestroke: rgba(0, 0, 0, 0);
 }
 
 .color_mark:hover {
   transform: scale(1.2);
-  --onhoverchangefill: var(--text-color);
-  --onhoverchangestroke: var(--background-color);
+  --onhoverchangefill: var(--c);
+  --onhoverchangestroke: var(--bgc);
 }
 
 .delete_color {
@@ -553,8 +558,8 @@ html[data-transitions="true"] .helpFAQ a:hover {
   width: 26px;
   height: 50px;
   padding: 12px 0;
-  fill: var(--text-color);
-  stroke: var(--text-color);
+  fill: var(--c);
+  stroke: var(--c);
   cursor: pointer;
 }
 
@@ -597,7 +602,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
   align-items: center;
   height: 64px;
   width: 64px;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: pointer;
 }
 
@@ -607,9 +612,9 @@ html[data-transitions="true"] .helpFAQ a:hover {
 }
 
 .arrow:hover {
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
   border-radius: 50%;
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
   transform: rotate(360deg);
 }
 
@@ -622,7 +627,7 @@ html[data-transitions="true"] .helpFAQ a:hover {
 }
 
 aside {
-  border-left: 1px solid var(--btn-bg);
+  border-left: 1px solid var(--acc-bgc);
   padding: 32px 12px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -630,7 +635,7 @@ aside {
 }
 
 nav {
-  border-right: 1px solid var(--btn-bg);
+  border-right: 1px solid var(--acc-bgc);
   padding: 32px 0;
   transition-property: left !important;
 }
@@ -643,7 +648,7 @@ aside {
   width: 300px;
   touch-action: pan-y;
   z-index: 1000;
-  background-color: var(--background-color);
+  background-color: var(--bgc);
 }
 
 .current_accent {
@@ -654,7 +659,7 @@ aside {
 }
 
 .visible_accent {
-  background-color: var(--accent-hover-color);
+  background-color: var(--acc-color-hover);
   border-radius: 23%;
   height: 1em;
   width: 1em;
@@ -693,7 +698,6 @@ aside {
   width: 32px;
   margin: 0 2px 0;
   cursor: pointer;
-  border: 1px solid var(--btn-bg-hover);
 }
 
 .show_accents .accent {
@@ -715,8 +719,8 @@ aside {
 .cbtn {
   width: 50%;
   height: 100%;
-  fill: var(--text-color);
-  color: var(--text-color);
+  fill: var(--c);
+  color: var(--c);
   display: inline-block;
   text-align: center;
   background-color: transparent;
@@ -725,14 +729,14 @@ aside {
 }
 
 .cbtn:hover {
-  fill: var(--accent-hover-color);
-  color: var(--accent-hover-color);
-  background-color: var(--btn-bg-hover);
+  fill: var(--acc-color-hover);
+  color: var(--acc-color-hover);
+  background-color: var(--acc-bgc-hover);
 }
 
 .cbtn:active {
   transform: translateY(4px);
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   border-radius: 8px;
 }
 
@@ -749,17 +753,17 @@ img,
 }
 
 .change_language {
-  color: var(--text-color);
+  color: var(--c);
   padding: 8px 16px;
   margin-left: auto;
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   cursor: pointer;
   font-size: 18px;
   border-radius: 4px;
 }
 
 .change_language:hover {
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
 }
 
 .popup_menu_box {
@@ -767,7 +771,7 @@ img,
 }
 
 .popup_menu {
-  background-color: var(--background-color);
+  background-color: var(--bgc);
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
@@ -778,7 +782,7 @@ img,
 
 .popup_menu .butt {
   background: transparent;
-  color: var(--text-color);
+  color: var(--c);
   cursor: pointer;
   padding: 12px;
   font-size: 16px;
@@ -789,11 +793,11 @@ img,
 }
 
 .popup_menu .active_butt {
-  background: var(--btn-bg);
+  background: var(--acc-bgc);
 }
 
 .popup_menu .butt:hover {
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
 }
 
 .font_icon {
@@ -815,8 +819,8 @@ img,
   width: 100%;
   padding: 4px;
   font-size: 20px;
-  background: var(--btn-bg);
-  border: 1px solid var(--btn-bg);
+  background: var(--acc-bgc);
+  border: 1px solid var(--acc-bgc);
   margin: 24px 0 0;
   color: inherit;
   -webkit-border-radius: 4px;
@@ -830,12 +834,12 @@ img,
 
 .search:focus {
   opacity: 1;
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
 }
 
 .prof_btn {
   margin-left: auto;
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   color: inherit;
   font-size: 16px;
   padding: 8px;
@@ -843,7 +847,7 @@ img,
 }
 
 .prof_btn:hover {
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
 }
 
 .signin {
@@ -858,12 +862,12 @@ img,
 .username {
   padding: 4px 0;
   cursor: pointer;
-  color: var(--text-color);
+  color: var(--c);
   word-break: break-word;
 }
 
 .username:hover {
-  color: var(--accent-hover-color);
+  color: var(--acc-color-hover);
 }
 
 @keyframes link-hover {
@@ -910,7 +914,7 @@ img,
   width: 26px;
   height: 50px;
   padding: 12px 0;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: pointer;
 }
 
@@ -941,7 +945,7 @@ img,
 }
 
 .filter_search {
-  fill: var(--text-color);
+  fill: var(--c);
   width: 26px;
   height: 50px;
   padding: 12px 0;
@@ -950,11 +954,11 @@ img,
 }
 
 .filter_search_hover {
-  fill: var(--accent-color);
+  fill: var(--acc-color);
 }
 
 .filter_search:hover {
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
 }
 
 .search_body {
@@ -984,7 +988,7 @@ img,
 }
 
 .search_res_verse_text:hover {
-  color: var(--accent-hover-color);
+  color: var(--acc-color-hover);
 }
 
 .search_res_verse_header {
@@ -999,7 +1003,7 @@ img,
 
 .more_results {
   color: inherit;
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   cursor: pointer;
   font-size: 18px;
   border-radius: 4px;
@@ -1007,7 +1011,7 @@ img,
 }
 
 .more_results:hover {
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
 }
 
 .filters {
@@ -1020,11 +1024,11 @@ img,
   max-width: calc(100% - 16px);
   width: auto;
   padding: 8px 16px 8px 8px;
-  background: var(--background-color);
+  background: var(--bgc);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 16px;
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--acc-bgc);
 }
 
 html[data-light="light"] .filters,
@@ -1085,7 +1089,7 @@ html[data-light="light"] .Notifications p {
 }
 
 .checkbox_turned {
-  --filling: var(--text-color);
+  --filling: var(--c);
 }
 
 .checkbox_turned span {
@@ -1099,7 +1103,7 @@ html[data-light="light"] .Notifications p {
   display: flex;
   height: 38px;
   margin: 24px 0;
-  --fill-on-hover: var(--text-color);
+  --fill-on-hover: var(--c);
 }
 
 .helpsvg {
@@ -1107,25 +1111,26 @@ html[data-light="light"] .Notifications p {
   fill: var(--fill-on-hover);
   height: 32px;
   width: 32px;
+  min-width:32px;
   cursor: pointer;
 }
 
 .nighttheme:hover {
-  color: var(--accent-hover-color);
+  color: var(--acc-color-hover);
 }
 
 .nighttheme:hover p {
-  border-color: var(--accent-hover-color);
+  border-color: var(--acc-color-hover);
 }
 
 .nighttheme:hover .checkbox span {
-  background-color: var(--accent-hover-color);
+  background-color: var(--acc-color-hover);
 }
 
 .nighttheme:hover,
 .help:hover {
-  --fill-on-hover: var(--accent-hover-color);
-  color: var(--accent-hover-color);
+  --fill-on-hover: var(--acc-color-hover);
+  color: var(--acc-color-hover);
 }
 
 .reload {
@@ -1144,7 +1149,7 @@ html[data-light="light"] .Notifications p {
 .change_password {
   margin: auto 8px auto auto;
   color: inherit;
-  --fill-on-hover: var(--text-color);
+  --fill-on-hover: var(--c);
 }
 
 .change_password svg {
@@ -1152,8 +1157,8 @@ html[data-light="light"] .Notifications p {
 }
 
 .change_password:hover {
-  color: var(--accent-hover-color);
-  --fill-on-hover: var(--accent-hover-color);
+  color: var(--acc-color-hover);
+  --fill-on-hover: var(--acc-color-hover);
 }
 
 .display_none {
@@ -1201,13 +1206,13 @@ html[data-light="light"] .Notifications p {
 ._options {
   height: 1.5em;
   width: 1.5em;
-  fill: var(--btn-bg);
+  fill: var(--acc-bgc);
   cursor: pointer;
   display: inline-block;
 }
 
 ._options:hover {
-  fill: var(--btn-bg-hover);
+  fill: var(--acc-bgc-hover);
 }
 
 .booktitle {
@@ -1220,7 +1225,7 @@ html[data-light="light"] .Notifications p {
   width: 92%;
   margin: 0 4%;
   border: none;
-  border-top: 1px solid var(--btn-bg);
+  border-top: 1px solid var(--acc-bgc);
 }
 
 .profile_hat {
@@ -1229,7 +1234,7 @@ html[data-light="light"] .Notifications p {
 }
 
 .bookmark_search:focus {
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
 }
 
 @keyframes history-came {
@@ -1251,18 +1256,18 @@ html[data-light="light"] .Notifications p {
   width: 32px;
   margin: auto 0 auto 8px;
   padding: 4px;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: pointer;
 }
 
 .open_in_parallel:hover {
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
 }
 
 .addtocollection {
   box-shadow: 0 14px 28px rgba(4, 6, 12, 0.251),
     0 10px 10px rgba(4, 6, 12, 0.22);
-  background: var(--background-color);
+  background: var(--bgc);
   bottom: 0;
   position: fixed;
   width: 100%;
@@ -1275,7 +1280,7 @@ html[data-light="light"] .Notifications p {
   display: flex;
   align-items: center;
   padding: 16px;
-  border-top: 1px solid var(--btn-bg-hover);
+  border-top: 1px solid var(--acc-bgc-hover);
   cursor: default;
   height: 52px;
 }
@@ -1288,7 +1293,7 @@ html[data-light="light"] .Notifications p {
 .svgAdd {
   width: 20px;
   height: 32px;
-  stroke: var(--text-color);
+  stroke: var(--c);
   cursor: pointer;
   margin-left: auto;
   position: absolute;
@@ -1304,8 +1309,8 @@ html[data-light="light"] .Notifications p {
   width: 20px;
   min-width: 20px;
   height: 32px;
-  fill: var(--text-color);
-  color: var(--text-color);
+  fill: var(--c);
+  color: var(--c);
   cursor: pointer;
   margin-left: auto;
   position: absolute;
@@ -1313,17 +1318,17 @@ html[data-light="light"] .Notifications p {
 }
 
 .svgBack:hover {
-  fill: var(--accent-color);
-  color: var(--accent-color);
+  fill: var(--acc-color);
+  color: var(--acc-color);
 }
 
 .collection {
   display: inline-block;
   margin: 4px;
-  background: var(--btn-bg);
+  background: var(--acc-bgc);
   padding: 4px 8px;
   cursor: pointer;
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--acc-bgc);
   border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -1332,7 +1337,7 @@ html[data-light="light"] .Notifications p {
 }
 
 .collection:hover {
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
 }
 
 .cancel {
@@ -1410,7 +1415,7 @@ footer a:hover {
 .helpFAQ h3 {
   margin: 32px 0 12px;
   font-weight: 500;
-  color: var(--accent-color);
+  color: var(--acc-color);
 }
 
 .helpFAQ ul {
@@ -1428,8 +1433,8 @@ footer a:hover {
 .helpFAQ a {
   color: inherit;
   background-image: linear-gradient(
-    var(--text-color) 0px,
-    var(--text-color) 100%
+    var(--c) 0px,
+    var(--c) 100%
   );
 }
 
@@ -1443,12 +1448,12 @@ footer a:hover {
 
 address a,
 note-up a {
-  color: var(--accent-color);
+  color: var(--acc-color);
 }
 
 address a:hover,
 note-up a:hover {
-  color: var(--accent-hover-color);
+  color: var(--acc-color-hover);
 }
 
 .in_offline {
@@ -1472,12 +1477,12 @@ note-up a:hover {
   max-height: 46px;
   width: 32px;
   margin: auto auto auto 0;
-  fill: var(--text-color);
+  fill: var(--c);
   cursor: move;
 }
 
 .drag_handle:hover {
-  fill: var(--accent-hover-color);
+  fill: var(--acc-color-hover);
 }
 
 .emojify {
@@ -1498,12 +1503,12 @@ note-up a:hover {
   width: 36px;
   min-width: 36px;
   opacity: 0.7;
-  background: var(--btn-bg);
-  border: 1px solid var(--btn-bg);
+  background: var(--acc-bgc);
+  border: 1px solid var(--acc-bgc);
 }
 
 #page_search .arrow:hover {
-  background: var(--btn-bg-hover);
+  background: var(--acc-bgc-hover);
   opacity: 1;
   transform: none;
 }
@@ -1519,13 +1524,13 @@ note-up a:hover {
 }
 
 .current_occurence {
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   filter:saturate(4);
   position: absolute;
 }
 
 .another_occurences {
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
   position: absolute;
 }
 
@@ -1560,7 +1565,7 @@ input:invalid,
 
 .profile_note {
   display: block;
-  background-color: var(--btn-bg);
+  background-color: var(--acc-bgc);
   max-height: 128px;
   font-size: 0.8em;
   margin: 8px 0;
@@ -1596,7 +1601,7 @@ blockquote {
   padding: 4px 16px;
   padding-right: 0;
   margin: 16px 0;
-  box-shadow: var(--accent-hover-color) 3px 0px 0px 0px inset;
+  box-shadow: var(--acc-color-hover) 3px 0px 0px 0px inset;
 }
 
 editing-area ul,
@@ -1629,7 +1634,7 @@ editing-area p {
 
 mark {
   color: inherit;
-  background-color: var(--btn-bg-hover);
+  background-color: var(--acc-bgc-hover);
 }
 
 @media all and (display-mode: standalone) {
@@ -1669,7 +1674,7 @@ mark {
     width: 100%;
   }
   .show_parallel {
-    border-top: 2px solid var(--btn-bg-hover);
+    border-top: 2px solid var(--acc-bgc-hover);
   }
   .platform-item {
     width: 100%;
