@@ -2358,11 +2358,12 @@ export tag bible-reader
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
 				<[d:flex m:24px 0 ai:center $fill-on-hover:$c @hover:$acc-color-hover]>
 					if data.getUserName()
-						<svg.helpsvg route-to='/profile/' xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px">
-							<title> data.getUserName()
-							<path d="M0 0h24v24H0z" fill="none">
-							<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
-						<a.username [w:100%] route-to='/profile/'> data.getUserName()
+						<[w:100% d:flex ai:center] route-to='/profile/'>
+							<svg.helpsvg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px">
+								<title> data.getUserName()
+								<path d="M0 0h24v24H0z" fill="none">
+								<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
+							<a.username [c:$fill-on-hover]> data.getUserName()
 						<a.prof_btn [ws:pre] @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
 					else
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
@@ -2391,13 +2392,13 @@ export tag bible-reader
 							<path d="M167.02 309.34c-40.12 2.58-76.53 17.86-97.19 72.3-2.35 6.21-8 9.98-14.59 9.98-11.11 0-45.46-27.67-55.25-34.35C0 439.62 37.93 512 128 512c75.86 0 128-43.77 128-120.19 0-3.11-.65-6.08-.97-9.13l-88.01-73.34zM457.89 0c-15.16 0-29.37 6.71-40.21 16.45C213.27 199.05 192 203.34 192 257.09c0 13.7 3.25 26.76 8.73 38.7l63.82 53.18c7.21 1.8 14.64 3.03 22.39 3.03 62.11 0 98.11-45.47 211.16-256.46 7.38-14.35 13.9-29.85 13.9-45.99C512 20.64 486 0 457.89 0z">
 						state.lang.theme
 						if store.show_themes
-							<.popup_menu.themes_popup [l:0 y@off:-32px o@off:0] ease>
-								<button.butt[bgc:black c:white bdr:32px solid white] @click=changeTheme('black')> 'Black'
-								<button.butt[bgc:rgb(4, 6, 12) c:rgb(255, 238, 238) bdr:32px solid rgb(255, 238, 238)] @click=changeTheme('dark')> data.lang.nighttheme
-								<button.butt[bgc:#f1f1f1 c:black bdr:32px solid black] @click=changeTheme('gray')> 'Gray'
-								<button.butt[bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:32px solid rgb(46, 39, 36)] @click=changeTheme('sepia')> 'Sepia'
-								<button.butt[bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:32px solid rgb(4, 6, 12)] @click=changeTheme('light')> data.lang.lighttheme
-								<button.butt[bgc:white c:black bdr:32px solid black] @click=changeTheme('white')> 'White'
+							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
+								<button.butt[fw:900 bgc:black c:white bdr:32px solid white] @click=changeTheme('black')> 'Black'
+								<button.butt[fw:900 bgc:rgb(4, 6, 12) c:rgb(255, 238, 238) bdr:32px solid rgb(255, 238, 238)] @click=changeTheme('dark')> data.lang.nighttheme
+								<button.butt[fw:900 bgc:#f1f1f1 c:black bdr:32px solid black] @click=changeTheme('gray')> 'Gray'
+								<button.butt[fw:900 bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:32px solid rgb(46, 39, 36)] @click=changeTheme('sepia')> 'Sepia'
+								<button.butt[fw:900 bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:32px solid rgb(4, 6, 12)] @click=changeTheme('light')> data.lang.lighttheme
+								<button.butt[fw:900 bgc:white c:black bdr:32px solid black] @click=changeTheme('white')> 'White'
 
 				<.btnbox>
 					<button[p:12px fs:20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
@@ -2811,11 +2812,11 @@ export tag bible-reader
 							<p.saveto> data.lang.share_via
 						<.mark_grid[py:8px]>
 							<.share_box @click=(do data.shareCopying(getShareObj()) && clearSpace())>
-								<svg.share_btn viewBox="0 0 561 561" alt=data.lang.copy fill="var(--text-color)">
+								<svg.share_btn viewBox="0 0 561 561" alt=data.lang.copy fill="var(--c)">
 									<title> data.lang.copy
 									<path d=svg_paths.copy>
 							<.share_box @click=(do data.internationalShareCopying(getShareObj()) && clearSpace())>
-								<svg.share_btn height="24" viewBox="0 0 24 24" width="24" fill="var(--text-color)">
+								<svg.share_btn height="24" viewBox="0 0 24 24" width="24" fill="var(--c)">
 									<title> data.lang.copy_international
 									<path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z">
 							if canShareViaTelegram() then <.share_box @click=shareTelegram()>
@@ -3007,7 +3008,7 @@ export tag bible-reader
 
 
 			if page_search.d
-				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--background-color)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $acc-bgc p:2px 8px zi:1100] ease>
+				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--bgc)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $acc-bgc p:2px 8px zi:1100] ease>
 					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.find_in_chapter>
 					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
 						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>

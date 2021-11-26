@@ -86,7 +86,7 @@ html[data-accent="redlight"]{
 html[data-transitions="true"] * {
   transition-timing-function: ease-in-out;
   transition-delay: 0;
-  transition-duration: 300ms;
+  transition-duration: 450ms;
   transition-property: color, background, width, height, transform, opacity,
     max-height, max-width, top, left, bottom, right, visibility, fill, stroke,
     margin, padding, font-size, border-color, box-shadow, border-radius;

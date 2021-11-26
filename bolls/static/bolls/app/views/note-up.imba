@@ -13,11 +13,11 @@ export tag note-up
 	#show = no
 
 	def setBorders event
-		unless (event.originalTarget == self or event.originalTarget == children[0])
+		unless (event.target == self or event.target == children[0])
 			return
 
 		#show = !#show
-		event.originalTarget ||= event.target
+		event.target ||= event.target
 
 		let offsetX = 0
 		if parallelMode
