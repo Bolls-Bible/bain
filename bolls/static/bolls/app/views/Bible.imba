@@ -273,10 +273,7 @@ export tag bible-reader
 			window.localStorage.removeItem('sepia')
 			window.localStorage.removeItem('gray')
 			### ### ### ### ### ### ### ### ### ### ### ###
-			changeTheme(settings.theme)
-
-		else
-			changeTheme(settings.theme)
+		changeTheme(settings.theme)
 
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
@@ -2134,6 +2131,18 @@ export tag bible-reader
 		else
 			data.downloadTranslation(tr.short_name)
 
+	def nextVerseHasTheSameBookmark verse_index
+		let current_bukmark = getBookmark(verses[verse_index].pk, 'bookmarks')
+		if current_bukmark
+			const next_verse = verses[verse_index + 1]
+			if next_verse
+				let next_bookmark = getBookmark(next_verse.pk, 'bookmarks')
+				if next_bookmark
+					if next_bookmark.collection == current_bukmark.collection and next_bookmark.note == current_bukmark.note
+						# log next_bookmark, current_bukmark
+						return yes
+		return no
+
 
 	def render
 		if applemob
@@ -2242,7 +2251,7 @@ export tag bible-reader
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
-							for verse in verses
+							for verse, verse_index in verses
 								let bukmark = getBookmark(verse.pk, 'bookmarks')
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
 
@@ -2257,7 +2266,7 @@ export tag bible-reader
 										@click=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
-								if bukmark
+								if bukmark and not nextVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
 										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 											<svg viewBox="0 0 20 20" alt=data.lang.note>
@@ -2355,10 +2364,10 @@ export tag bible-reader
 						<.visible_accent @click=(do show_accents = !show_accents)>
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
-								<.accent @click=changeAccent(accent.name) [background-color: {settings.theme == 'dark' ? accent.light : accent.dark}]>
-				<[d:flex m:24px 0 ai:center $fill-on-hover:$c @hover:$acc-color-hover]>
+								<.accent @click=changeAccent(accent.name) [background-color: {settings.light == 'dark' ? accent.light : accent.dark}]>
+				<[d:flex m:24px 0 ai:center]>
 					if data.getUserName()
-						<[w:100% d:flex ai:center] route-to='/profile/'>
+						<[w:100% d:flex ai:center $fill-on-hover:$c @hover:$acc-color-hover cursor:pointer] route-to='/profile/'>
 							<svg.helpsvg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px">
 								<title> data.getUserName()
 								<path d="M0 0h24v24H0z" fill="none">
@@ -3031,27 +3040,27 @@ export tag bible-reader
 
 
 
-			<global
-				@hotkey('mod+shift+f').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
-				@hotkey('mod+k').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
-				@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
-				@hotkey('escape').capture.prevent.stop=clearSpace
-				@hotkey('mod+y').prevent.stop=fixDrawers
-				@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
+			if window.location.pathname != '/profile/'
+				<global
+					@hotkey('mod+shift+f').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('mod+k').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
+					@hotkey('escape').capture.prevent.stop=clearSpace
+					@hotkey('mod+y').prevent.stop=fixDrawers
+					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
 
-				@hotkey('mod+right').prevent.stop=nextChapter()
-				@hotkey('mod+left').prevent.stop=prevChapter()
-				@hotkey('alt+n').prevent.stop=nextBook()
-				@hotkey('alt+p').prevent.stop=prevBook()
-				@hotkey('mod+n').prevent.stop=nextBook()
-				@hotkey('mod+p').prevent.stop=prevBook()
-				@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
-				@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
+					@hotkey('mod+right').prevent.stop=nextChapter()
+					@hotkey('mod+left').prevent.stop=prevChapter()
+					@hotkey('alt+n').prevent.stop=nextBook()
+					@hotkey('alt+p').prevent.stop=prevBook()
+					@hotkey('mod+n').prevent.stop=nextBook()
+					@hotkey('mod+p').prevent.stop=prevBook()
+					@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
+					@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
 
-				@hotkey('alt+right').prevent.stop=window.history.forward!
-				@hotkey('alt+left').prevent.stop=window.history.back!
-
-				>
+					@hotkey('alt+right').prevent.stop=window.history.forward!
+					@hotkey('alt+left').prevent.stop=window.history.back!
+					>
 
 	css
 		height: 100vh

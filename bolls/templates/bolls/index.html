@@ -8,8 +8,7 @@
 	<title>Bolls Bible</title>
 	<script>
 {% if message %}
-	window.message = "{{ message }}";
-{% endif %}
+	window.message = "{{ message }}";{% endif %}
 {%if translation %}
 	window.translation = "{{ translation }}";
 	window.book = {{ book}};
@@ -18,10 +17,7 @@
 	{% if verse %}
 		window.verse = {{ verse }};
 		{% if endverse %}
-			window.endverse = {{ endverse }};
-		{% endif %}
-	{% endif %}
-{% endif %}
+			window.endverse = {{ endverse }};{% endif %}{% endif %}{% endif %}
 	</script>
 	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
 	<script src="{% static 'bolls/dist/public/__assets__/app/client.js' %}" async></script>
@@ -71,7 +67,7 @@
 			});
 		}
 	</script>
-	<noscript><p style="color: var(--text-color)">{% trans "Unfortunately, this site requires JavaScript that is disabled in your browser :(" %}</p></noscript>
+	<noscript><p style="color: var(--c)">{% trans "Unfortunately, this site requires JavaScript that is disabled in your browser :(" %}</p></noscript>
 </body>
 
 </html>

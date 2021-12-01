@@ -12,11 +12,11 @@ export def scrollToY(scrollblock, scrollTargetY)
 	let speed = 300
 	let currentTime = 0
 
-	# min time .1, max time .8 seconds
-	let time = Math.max(0.1, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1));
+	# min time .3, max time .8 seconds
+	let time = Math.max(0.75, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1.75));
 
 	# easing equations from https://github.com/danro/easing-js/blob/master/easing.js
-	let PI_D2 = Math.PI / 2
+	# let PI_D2 = Math.PI / 2
 
 	def easing(pos)
 		if (pos /= 0.5) < 1

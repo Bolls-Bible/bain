@@ -18,6 +18,8 @@ INSERT inTO bolls_verses(translation, book, chapter, verse, text) values ('RV196
 
 SELECT * FROM bolls_verses ORDER BY BOOK, CHAPTER, VERSE;
 
+select * from bolls_verses where translation='KJA' and book=20 and chapter=1 and verse=8;
+
 SELECT translation, count(id) FROM bolls_verses GROUP BY translation;
 SELECT book, count(chapter) FROM bolls_verses GROUP BY chapter;
 SELECT book, count(chapter) FROM bolls_verses where translation='NDL' GROUP BY chapter;
@@ -26,7 +28,7 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 -- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
-UPDATE bolls_verses SET text = ('And he sendeth, and bringeth him in, and he [is] ruddy, WITH beauty because I tasted a little of thisand Jehovah saith, \"Rise, anoint him, for this [is] he.') where translation = 'YLT' and book = 9 and chapter = 16 and verse = 12;
+UPDATE bolls_verses SET text = ('Filho meu, ouve a instrução de teu pai e não menosprezes o ensino de tua mãe.') where translation='KJA' and book=20 and chapter=1 and verse=8;
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
 YLT/24/36/3/
 

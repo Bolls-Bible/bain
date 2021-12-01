@@ -23,6 +23,9 @@ let store =
 	username: ''
 	name: ''
 	show_options_of: ''
+	collections_search: ''
+
+
 let account_action = 0
 
 let taken_usernames = []
@@ -309,10 +312,13 @@ export tag profile-page
 				<button.tab .active-tab=tab==2 @click=getBookmarksWithNotes> data.lang.notes
 
 			if tab == 1
-				<.collectionsflex [flex-wrap: wrap]>
-					for collection in collections
-						if collection
-							<p.collection .add_new_collection=(collection==query) @click=getSearchedBookmarks(collection)> collection
+				<.collectionsflex [flex-wrap: wrap max-height:24vh of:auto]>
+					if collections.length > 8
+						<input.search placeholder=data.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
+
+					for collection in collections.filter(do(el) return el.toLowerCase!.indexOf(store.collections_search.toLowerCase!) > -1)
+						<p.collection .add_new_collection=(collection==query) @click=getSearchedBookmarks(collection)> collection
+
 					<div [min-width: 16px]>
 
 

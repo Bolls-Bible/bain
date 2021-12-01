@@ -84,7 +84,7 @@ html[data-accent="redlight"]{
 }
 
 html[data-transitions="true"] * {
-  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
   transition-delay: 0;
   transition-duration: 450ms;
   transition-property: color, background, width, height, transform, opacity,
@@ -175,8 +175,8 @@ input {
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] .bookmark_in_list {
-  -webkit-animation: text-came 500ms ease-in-out;
-  animation: text-came 500ms ease-in-out;
+  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+  animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
 }
 
 html[data-transitions="true"] .collection,
@@ -189,8 +189,8 @@ html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] main section article {
-  -webkit-animation: text-came 500ms ease-in-out forwards;
-  animation: text-came 500ms ease-in-out forwards;
+  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
+  animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
 }
 
 button {
@@ -234,8 +234,8 @@ button {
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
 html[data-transitions="true"] .help:hover .helpsvg {
-  -webkit-animation: shake 500ms ease-in-out forwards;
-  animation: shake 500ms ease-in-out forwards;
+  -webkit-animation: shake 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
+  animation: shake 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
 }
 
 body {
