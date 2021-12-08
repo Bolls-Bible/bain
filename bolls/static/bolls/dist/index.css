@@ -179,13 +179,8 @@ html[data-transitions="true"] .bookmark_in_list {
   animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
 }
 
-html[data-transitions="true"] .collection,
 html[data-transitions="true"] .in_offline,
 html html[data-transitions="true"] .online,
-html[data-transitions="true"] .mark_grid,
-html[data-transitions="true"] .collectionshat,
-html[data-transitions="true"] .collectionsflex,
-html[data-transitions="true"] #addbuttons,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] main section article {
