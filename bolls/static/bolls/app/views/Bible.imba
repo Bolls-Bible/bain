@@ -314,14 +314,29 @@ export tag bible-reader
 					data.user.name = userdata.name || ''
 					setCookie('username', data.user.username)
 					setCookie('name', data.user.name)
+
+					# Merge local history and server copy
 					history = JSON.parse(getCookie("history")) || []
 					try
 						history = history.concat(JSON.parse(userdata.history))
 
+						# Remove duplicates
+						let uniqueHistory = []
+						for c in history
+							if not uniqueHistory.find(do |element| return element.chapter == c.chapter && element.book == c.book && element.translation == c.translation && element.parallel == c.parallel)
+								uniqueHistory.push(c)
+
+						history = uniqueHistory
+
+
+					# Remove items exceeding limit
 					if history.length > 256
 						history.length = 256
 
-					if history.length then window.localStorage.setItem("history", JSON.stringify(history))
+					# Update history in localStorage and server
+					if history.length
+						window.localStorage.setItem("history", JSON.stringify(history))
+						saveHistoryToServer!
 				else
 					window.localStorage.removeItem('username')
 					window.localStorage.removeItem('name')
@@ -387,11 +402,19 @@ export tag bible-reader
 
 		if getCookie("history")
 			history = JSON.parse(getCookie("history")) || []
-		if history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation)
-			history.splice(history.indexOf(history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation)), 1)
-		history.push({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
-		window.localStorage.setItem("history", JSON.stringify(history))
+		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.parallel == parallel)
+		if already_recorded
+			history.splice(history.indexOf(already_recorded), 1)
 
+		history.unshift({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
+		if history.length > 256
+			history.length = 256
+
+		window.localStorage.setItem("history", JSON.stringify(history))
+		saveHistoryToServer!
+
+
+	def saveHistoryToServer
 		if data.user.username && window.navigator.onLine
 			window.fetch("/save-history/", {
 				method: "POST",
@@ -406,6 +429,8 @@ export tag bible-reader
 			})
 			.then(do |response| response.json())
 			.catch(do |e| console.log(e))
+
+
 
 	def loadData url
 		let res = await window.fetch(url)
@@ -2981,7 +3006,7 @@ export tag bible-reader
 								<title> data.lang.delete
 								<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
 						<article[of:auto max-height: calc(97vh - 82px)]>
-							for h in history.slice().reverse()
+							for h in history
 								<div[display: flex]>
 									<a.book_in_list @click=backInHistory(h)>
 										getNameOfBookFromHistory(h.translation, h.book) + ' ' + h.chapter
