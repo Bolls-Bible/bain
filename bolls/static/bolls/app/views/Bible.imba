@@ -55,7 +55,7 @@ let settings =
 		name: "Sans Serif"
 		line-height: 1.8
 		weight: 400
-		max-width: 30
+		max-width: 40
 		align: ''
 	verse_number: yes
 	verse_break: no
@@ -1810,10 +1810,10 @@ export tag bible-reader
 		setCookie('align', settings.font.align)
 
 	def changeMaxWidth increase
-		if increase && settings.font.max-width < 120 && (settings.font.max-width - 15) * settings.font.size < window.innerWidth
-			settings.font.max-width += 15
-		elif settings.font.max-width > 15
-			settings.font.max-width -= 15
+		if increase && settings.font.max-width < 120 && (settings.font.max-width - 8) * settings.font.size < window.innerWidth
+			settings.font.max-width += 8
+		elif settings.font.max-width > 16
+			settings.font.max-width -= 8
 		setCookie('max-width', settings.font.max-width)
 
 	def toggleDownloads
@@ -2593,7 +2593,7 @@ export tag bible-reader
 
 
 			if what_to_show_in_pop_up_block.length
-				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 3}] @click=(do unless state.intouch then clearSpace!) ease>
+				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#000A h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 3}] @click=(do unless state.intouch then clearSpace!) ease>
 
 					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
 
@@ -3065,7 +3065,7 @@ export tag bible-reader
 			if welcome != 'false'
 				<section#welcome.small_box [pos:fixed zi:9999 r:16px b:16px p:16px o@off:0 scale@off:0.75 origin:bottom right w:300px] ease>
 					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
-					<p[mb:8px text-indent:1.5em lh:1.5 fs:0.9em]> data.lang.welcome_msg, <span.emojify> ' 😉'
+					<p[mb:8px lh:1.5 fs:0.9em ws:pre-line]> data.lang.welcome_msg, <span.emojify> ' 😉'
 					<button [w:100% h:32px bg:$acc-bgc @hover:$acc-bgc-hover c:$c @hover:$acc-color-hover ta:center border:none fs:1em rd:4px cursor:pointer] @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
 
 

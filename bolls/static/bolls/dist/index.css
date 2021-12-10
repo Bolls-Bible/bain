@@ -93,11 +93,11 @@ html[data-transitions="true"] * {
 }
 
 html[data-pukaka="yes"] * {
-  transition-property: none !important;
+  transition: none !important;
 }
 
 html[data-transitions="false"] * {
-  transition: none;
+  transition: none !important;
 }
 
 * {

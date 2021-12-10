@@ -7,6 +7,11 @@ export def scrollToY(scrollblock, scrollTargetY)
 	# speed: time in pixels per second
 	# easing: easing equation to use
 
+	# If transitions are disables -- don't smooth the scrolling
+	if document.firstElementChild.dataset["transitions"] == 'false'
+		scrollblock.scrollTo(0, scrollTargetY)
+		return
+
 	let scrollY = scrollblock.scrollTop
 	scrollTargetY = scrollTargetY || 0
 	let speed = 300

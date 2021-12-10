@@ -5,6 +5,7 @@ export const thanks_to = [
 	"Silvia Sanchez (Kohane), German localisation."
 	"Rodolfo Schonhals Fischer, contributor, security auditor, Portuguese and Español localisation"
 	"Joel Chackosaji, patron"
+	"Benjamin J. Conway, donator"
 	"Juan Martin, donator"
 	"Ryne4S, tester"
 	"Dj. Crouch, donator"
