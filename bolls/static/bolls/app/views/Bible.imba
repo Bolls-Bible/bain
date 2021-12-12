@@ -145,7 +145,9 @@ let compare_translations = []
 let compare_parallel_of_chapter
 let compare_parallel_of_book
 let highlighted_title = ''
-let scrolling_parallel = 0
+let scroll_timer = null
+let scrolled_block = null
+
 const fonts = [
 	{
 		name: "Sans Serif",
@@ -204,6 +206,7 @@ const accents = [
 		dark:'hsl(0,100%,32%)'
 	}
 ]
+
 
 export tag bible-reader
 	prop verses = []
@@ -573,6 +576,21 @@ export tag bible-reader
 				return yes
 		return no
 
+
+	def setScrolledBlock scroll_time
+		log scroll_time
+		unless scrolled_block
+			let dummyblock = <div[size:0px]>
+			dummyblock.classList.add('ref--firstparallel')
+			dummyblock.classList.add('ref--secondparallel')
+			document.body.appendChild(dummyblock)
+			scrolled_block = dummyblock
+
+			setTimeout(&, scroll_time * 1000) do
+				scrolled_block = null
+				document.body.removeChild(dummyblock)
+
+
 	def findVerse id, endverse, highlight = yes
 		if id == -1 && verses.length > 0
 			id = Math.round(Math.random() * (verses.length - 1) + 1)
@@ -586,13 +604,16 @@ export tag bible-reader
 				else
 					topScroll -= (window.innerHeight * 0.05)
 
+				let scroll_time
 				if settingsp.display
 					# verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
-					scrollToY(verse.parentNode.parentNode, topScroll)
+					scroll_time = scrollToY(verse.parentNode.parentNode, topScroll)
 				else
-					scrollToY(self, topScroll)
+					scroll_time = scrollToY(self, topScroll)
 				if highlight then highlightLinkedVerses(id, endverse)
+				setScrolledBlock scroll_time
 			else findVerse(id, endverse, highlight)
+
 
 	def highlightLinkedVerses verse, endverse
 		if isIOS
@@ -932,8 +953,8 @@ export tag bible-reader
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input
 
-		# If the query is long enough and it is different from the previous query -- do the search again.
-		if search.search_input.length > 2 && (search.search_result_header != query || !search.search_div)
+		# If the query is long enough -- do the search again.
+		if search.search_input.length > 2
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -1900,7 +1921,6 @@ export tag bible-reader
 		})
 
 	def saveCompareChanges arr
-		log arr
 		compare_translations = arr
 		window.localStorage.setItem("compare_translations", JSON.stringify(arr))
 
@@ -1927,9 +1947,47 @@ export tag bible-reader
 		)
 		toggleBibleMenu()
 
+	def calculateTopVerse e
+		if settings.parallel_synch
+			if scroll_timer != null
+				clearTimeout(scroll_timer)
+
+			scroll_timer = setTimeout(&, 1250) do
+				scrolled_block = null
+
+
+			if scrolled_block == null
+				if e.target.classList.contains('ref--firstparallel')
+					scrolled_block = $firstparallel
+				elif e.target.classList.contains('ref--secondparallel')
+					scrolled_block = $secondparallel
+			else
+				if e.target.classList.contains('ref--firstparallel') && scrolled_block != $firstparallel
+					return
+				elif e.target.classList.contains('ref--secondparallel') && scrolled_block != $secondparallel
+					return
+
+			let top_verse = {
+				distance: 10000
+				id: ''
+			}
+
+			for kid in scrolled_block.children[2].children
+				if kid.id
+					let new_distance = Math.abs(kid.offsetTop - scrolled_block.scrollTop)
+					if new_distance < top_verse.distance
+						top_verse.distance = new_distance
+						top_verse.id = kid.id
+
+			if top_verse.id
+				if top_verse.id.startsWith('p')
+					findVerse top_verse.id.slice(1), 0, no
+				else
+					findVerse "p{top_verse.id}", 0, no
+
+
 	def changeHeadersSizeOnScroll e
 		if e.target.classList.contains('ref--firstparallel')
-			scrolling_parallel = 1
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
 				chapter_headers.fontsize1 = 12 / settings.font.size
@@ -1938,7 +1996,6 @@ export tag bible-reader
 			else
 				chapter_headers.fontsize1 = 2
 		else
-			scrolling_parallel = 2
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
 				chapter_headers.fontsize2 = 12 / settings.font.size
@@ -1956,6 +2013,7 @@ export tag bible-reader
 						menu_icons_transform = -100
 					else
 						menu_icons_transform = 100
+		calculateTopVerse e
 		imba.commit()
 
 	def triggerNavigationIcons
@@ -2179,20 +2237,6 @@ export tag bible-reader
 						return yes
 		return no
 
-	def verseIntersection e,  id
-		if settings.parallel_synch
-			if e.target.offsetTop < e.target.offsetParent.scrollTop
-				if e.delta <= 0
-					id += 2
-				elif id > 1
-					id += 1
-
-				findVerse id, 0, no
-				# if parallel
-				# else
-				# 	findVerse ("p{id}"), 0, no
-
-
 
 	def render
 		if applemob
@@ -2372,7 +2416,6 @@ export tag bible-reader
 									<span> ' '
 								<span innerHTML=parallel_verse.text
 									id="p{parallel_verse.verse}"
-									@intersect=verseIntersection(e, parallel_verse.verse)
 									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 								if bukmark
@@ -3114,6 +3157,8 @@ export tag bible-reader
 					@hotkey('alt+right').prevent.stop=window.history.forward!
 					@hotkey('alt+left').prevent.stop=window.history.back!
 					>
+
+
 
 	css
 		height: 100vh

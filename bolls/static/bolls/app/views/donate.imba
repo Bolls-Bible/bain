@@ -26,6 +26,27 @@ export tag donate
 							<path d="M0 0h24v24H0z" fill="none">
 							<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
 
+				<h3 @click=state.copyTextToClipboard("7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq")>
+					<span> "SOL "
+					<b> "7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq"
+
+				<h3 @click=state.copyTextToClipboard("rHDmcgtUmh7Jcc7RmL8PMPowLfNWXokw1y")>
+					<span> "XRP "
+					<b> "rHDmcgtUmh7Jcc7RmL8PMPowLfNWXokw1y"
+
+				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
+					<span> "ETH "
+					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
+
+				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
+					<span> "USDT in ETH network "
+					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
+
+				<h3 @click=state.copyTextToClipboard("bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8")>
+					<span> "BTC "
+					<b> "bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8"
+
+
 				<h2 @click=toggleTransferOption(1)>
 					"SWIFT TRANSFER (USD)"
 					<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate({transfer_option == 1 ? 180 : 0}deg)]>
@@ -80,28 +101,6 @@ export tag donate
 						<b> "Clear Junction Limited"
 						<p> "Bank address"
 						<b> "15 Kingsway, London WC2B 6UN"
-
-
-				<h3 @click=state.copyTextToClipboard("7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq")>
-					<span> "SOL "
-					<b> "7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq"
-
-				<h3 @click=state.copyTextToClipboard("rHDmcgtUmh7Jcc7RmL8PMPowLfNWXokw1y")>
-					<span> "XRP "
-					<b> "rHDmcgtUmh7Jcc7RmL8PMPowLfNWXokw1y"
-
-				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
-					<span> "ETH "
-					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
-
-				<h3 @click=state.copyTextToClipboard("0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d")>
-					<span> "USDT in ETH network "
-					<b> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
-
-				<h3 @click=state.copyTextToClipboard("bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8")>
-					<span> "BTC "
-					<b> "bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8"
-
 
 
 	css

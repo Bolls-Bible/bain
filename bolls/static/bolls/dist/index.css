@@ -1,8 +1,8 @@
 html[data-theme="light"]{
   --bgc: hsl(0, 100%, 97%);
   --c: rgb(4, 6, 12);
-  --acc-bgc: hsl(276, 100%, 90%);
-  --acc-bgc-hover: hsl(276, 100%, 94%);
+  --acc-bgc: hsl(256, 100%, 92%);
+  --acc-bgc-hover: hsl(256, 100%, 96%);
   --disabled: rgb(86, 82, 78);
 }
 html[data-theme="dark"]{
@@ -36,8 +36,8 @@ html[data-theme="black"]{
 html[data-theme="white"]{
   --bgc: white;
   --c: black;
-  --acc-bgc: hsl(276, 100%, 90%);
-  --acc-bgc-hover: hsl(276, 100%, 94%);
+  --acc-bgc: hsl(256, 100%, 92%);
+  --acc-bgc-hover: hsl(256, 100%, 96%);
   --disabled: rgb(86, 82, 78);
 }
 

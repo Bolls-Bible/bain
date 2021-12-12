@@ -16,6 +16,21 @@ export tag downloads-page
 		window.showimage = yes
 		imba.commit!
 
+	def win10plus
+		try
+			window.navigator.userAgentData.getHighEntropyValues(["platformVersion"])
+				.then(do(ua)
+					if (window.navigator.userAgentData.platform === "Windows")
+						const majorPlatformVersion = parseInt(ua.platformVersion.split('.')[0])
+						if (majorPlatformVersion > 0)
+							return yes
+						else
+							return no
+					else
+						return no)
+		catch
+			return no
+
 	def render
 		<self[d: block h: 100vh ofy: auto]>
 			<a[display: flex; c:inherit @hover:$acc-color fill:$c @hover:$acc-color] route-to='/'>
@@ -26,7 +41,7 @@ export tag downloads-page
 			<header[text-align: center]>
 				<img[height: 128px width: 128px] src="/static/logoshield.png" alt="Bolls logo">
 				<h1.exhortation> data.lang.exhortation
-				unless hideInstallPromotion
+				if !(hideInstallPromotion or win10plus!)
 					<div id="pwa">
 						if data.addBtn
 							<button.platform-item @click.prevent.install() [display: inline-flex width: auto animation: text-came 300ms ease]>

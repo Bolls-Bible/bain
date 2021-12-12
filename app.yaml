@@ -1,5 +1,5 @@
 # [START django_app]
-runtime: python37
+runtime: python39
 
 # default_expiration: "4d 5h"
 

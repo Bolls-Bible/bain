@@ -48,6 +48,7 @@ export tag orderable-list
 	def touchend touch
 		#drugging_target = ''
 		#swapped_offset = 0
+		#scroll_direction = 0
 		#initial_parent_scroll = parentNode.scrollTop
 		await imba.commit!
 
@@ -76,6 +77,7 @@ export tag orderable-list
 			#scroll_direction = -1
 		else
 			#scroll_direction = 1
+
 
 	def autoscroll
 		if #scroll_direction == 1
@@ -106,7 +108,7 @@ export tag orderable-list
 		<self[d:block] @mouseup=stopIntersect>
 			for item in list
 				if item[0].text
-					<div.search_item .draggable=(druggable item[0].translation) id=item[0].translation [transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,1)=triggerAutoscroll>
+					<div.search_item .draggable=(druggable item[0].translation) id=item[0].translation [transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,100)=triggerAutoscroll>
 						<div.search_res_verse_text>
 							for aoefv in item
 								<search-text-as-html data=aoefv innerHTML="{aoefv.text + ' '}">
@@ -129,7 +131,7 @@ export tag orderable-list
 								<title> state.lang.delete
 								<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
 				else
-					<div.search_res_verse_header .draggable=(druggable item[0].translation) id=item[0].translation [p: 16px 0px mb:0 display:flex align-items:center transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,1)=triggerAutoscroll>
+					<div.search_res_verse_header .draggable=(druggable item[0].translation) id=item[0].translation [p: 16px 0px mb:0 display:flex align-items:center transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,100)=triggerAutoscroll>
 						<svg.drag_handle [margin-right: 16px] @touch=reorder(e, item[0].translation) xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
 							<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
 

@@ -17,7 +17,7 @@ export def scrollToY(scrollblock, scrollTargetY)
 	let speed = 300
 	let currentTime = 0
 
-	# min time .3, max time .8 seconds
+	# min time .75, max time 1.75 seconds
 	let time = Math.max(0.75, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1.75));
 
 	# easing equations from https://github.com/danro/easing-js/blob/master/easing.js
@@ -41,3 +41,4 @@ export def scrollToY(scrollblock, scrollTargetY)
 		else
 			scrollblock.scrollTo(0, scrollTargetY)
 	tick()
+	return time

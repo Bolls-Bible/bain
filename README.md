@@ -5,7 +5,7 @@
 * clone the repo using git
 
 ``` bash
-git clone https://github.com/Bohooslav/bain.git
+git clone git@github.com:Bohooslav/bain.git
 ```
 
 * enter the directory

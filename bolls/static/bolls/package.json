@@ -14,6 +14,6 @@
   "author": "Pavlyshynets Bohuslav (https://github.com/Bohooslav)",
   "license": "ISC",
   "dependencies": {
-    "imba": "^2.0.0-alpha.141"
+    "imba": "^2.0.0-alpha.186"
   }
 }
