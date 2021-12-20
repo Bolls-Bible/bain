@@ -1,4 +1,4 @@
-export tag color-picker
+tag color-picker
 	prop imgData
 	prop rgba
 

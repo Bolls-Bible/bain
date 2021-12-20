@@ -1,7 +1,7 @@
 import {svg_paths} from "./svg_paths"
 import './search-text-as-html'
 
-export tag orderable-list
+tag orderable-list
 	prop list = []
 	#swapped_offset = 0
 	#dy = 0

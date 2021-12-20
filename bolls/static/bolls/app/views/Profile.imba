@@ -31,7 +31,7 @@ let account_action = 0
 let taken_usernames = []
 let loading = no
 
-export tag profile-page
+tag profile-page
 	bookmarks = []
 	highlights = []
 	notes = []

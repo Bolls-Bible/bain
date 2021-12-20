@@ -284,10 +284,10 @@ def editAccount(request):
 def getBookmarks(request, translation, book, chapter):
     if request.user.is_authenticated:
         all_objects = Verses.objects.filter(
-            book=book, chapter=chapter, translation=translation).order_by('verse')
+            translation=translation, book=book, chapter=chapter).order_by('verse')
         bookmarks = []
         for obj in all_objects:
-            for bookmark in obj.bookmarks_set.all():
+            for bookmark in obj.bookmarks_set.filter(user=request.user):
                 note = ''
                 if bookmark.note is not None:
                     note = bookmark.note.text
@@ -556,20 +556,21 @@ def stripVowels(raw_string):
     res = res.replace('‎', '')
     return res
 
-# translation `international/WLC`
+# Parse Bible links
 def parseLinks(text, translation):
 	if type(text) == float:
 		return ''
 
 	text = re.sub(r'(<[/]?span[^>]*)>', '', text)	# Clean up unneeded spans
 	text = re.sub(r'( class=\'\w+\')', '', text)	# Avoid unneded classes on anchors
+	# text = re.sub(r'( class="\w+")', '', text)	# Avoid unneded classes on anchors
 
 	pieces = text.split("'")
 
 	result = ''
 	for piece in pieces:
 		if piece.startswith('B:'):
-			result += "'/" + translation + '/'
+			result += "'https://bolls.life/" + translation + '/'
 			digits = re.findall(r'\d+', piece)
 			try:
 				result += str(books_map[(digits[0])]) + '/' + digits[1] + '/' + digits[2]
@@ -578,25 +579,26 @@ def parseLinks(text, translation):
 
 			if len(digits) > 3:
 				result += '-' + digits[3]
-			result += "'"
+			result += "' target='_blank'"
 		else:
 			result += piece
 	return result
 
 
 def searchInDictionary(request, dict, query):
-    unaccented_query = stripVowels(query)
-    print(unaccented_query)
+    query = query.strip()
+    unaccented_query = stripVowels(query.lower())
+    print(unaccented_query, query)
 
     # Rank search
     search_vector = SearchVector('lexeme__unaccent')
     search_query = SearchQuery(unaccented_query)
     results_of_rank = Dictionary.objects.annotate(rank=SearchRank(
-        search_vector, search_query)).filter(Q(short_definition__search=query) | Q(topic=query) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
+        search_vector, search_query)).filter(Q(short_definition__search=unaccented_query) | Q(topic=query) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
 
     # SImilarity search
     results_of_similarity = Dictionary.objects.annotate(rank=TrigramSimilarity(
-        'lexeme__unaccent', query)).filter(dictionary=dict, rank__gt=0.3).order_by('-rank')
+        'lexeme__unaccent', unaccented_query)).filter(dictionary=dict, rank__gt=0.5).order_by('-rank')
 
     # Merge both kinds of search
     results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))

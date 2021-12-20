@@ -1,4 +1,4 @@
-export tag loading-animation
+tag loading-animation
 	prop genesis = Date.now()
 	prop speed = 800
 	prop period = 6 * speed

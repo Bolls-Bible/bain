@@ -8,9 +8,9 @@ export def scrollToY(scrollblock, scrollTargetY)
 	# easing: easing equation to use
 
 	# If transitions are disables -- don't smooth the scrolling
-	if document.firstElementChild.dataset["transitions"] == 'false'
+	if document.firstElementChild.dataset["transitions"] == 'false' or scrollTargetY == scrollblock.scrollTop
 		scrollblock.scrollTo(0, scrollTargetY)
-		return
+		return no
 
 	let scrollY = scrollblock.scrollTop
 	scrollTargetY = scrollTargetY || 0
@@ -18,7 +18,7 @@ export def scrollToY(scrollblock, scrollTargetY)
 	let currentTime = 0
 
 	# min time .75, max time 1.75 seconds
-	let time = Math.max(0.75, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1.75));
+	let time = Math.max(0.75, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1.25));
 
 	# easing equations from https://github.com/danro/easing-js/blob/master/easing.js
 	# let PI_D2 = Math.PI / 2

@@ -1,39 +1,39 @@
-html[data-theme="light"]{
+html[data-theme="light"] {
   --bgc: hsl(0, 100%, 97%);
   --c: rgb(4, 6, 12);
   --acc-bgc: hsl(256, 100%, 92%);
   --acc-bgc-hover: hsl(256, 100%, 96%);
   --disabled: rgb(86, 82, 78);
 }
-html[data-theme="dark"]{
+html[data-theme="dark"] {
   --bgc: rgb(4, 6, 12);
   --c: rgb(255, 238, 238);
   --acc-bgc: #252749;
   --acc-bgc-hover: #383a6d;
   --disabled: rgb(168, 162, 159);
 }
-html[data-theme="sepia"]{
+html[data-theme="sepia"] {
   --bgc: rgb(235, 219, 183);
   --c: rgb(46, 39, 36);
   --acc-bgc: rgb(226, 204, 152);
   --acc-bgc-hover: rgb(230, 211, 167);
   --disabled: rgb(86, 82, 78);
 }
-html[data-theme="gray"]{
+html[data-theme="gray"] {
   --bgc: #f1f1f1;
   --c: black;
   --acc-bgc: #d3d3d3;
   --acc-bgc-hover: #e5e5e5;
   --disabled: rgb(86, 82, 78);
 }
-html[data-theme="black"]{
+html[data-theme="black"] {
   --bgc: black;
   --c: white;
   --acc-bgc: #252749;
   --acc-bgc-hover: #383a6d;
   --disabled: rgb(168, 162, 159);
 }
-html[data-theme="white"]{
+html[data-theme="white"] {
   --bgc: white;
   --c: black;
   --acc-bgc: hsl(256, 100%, 92%);
@@ -41,50 +41,49 @@ html[data-theme="white"]{
   --disabled: rgb(86, 82, 78);
 }
 
-
-html[data-accent="bluedark"]{
+html[data-accent="bluedark"] {
   --acc-color: hsl(240, 100%, 75%);
   --acc-color-hover: hsla(219, 100%, 77%, 0.996);
 }
-html[data-accent="bluelight"]{
+html[data-accent="bluelight"] {
   --acc-color: hsl(240, 100%, 24%);
   --acc-color-hover: hsla(200, 100%, 32%, 0.996);
 }
-html[data-accent="greendark"]{
+html[data-accent="greendark"] {
   --acc-color: hsl(80, 100%, 70%);
   --acc-color-hover: hsla(80, 100%, 76%, 0.996);
 }
-html[data-accent="greenlight"]{
+html[data-accent="greenlight"] {
   --acc-color: hsl(80, 100%, 24%);
   --acc-color-hover: hsla(80, 100%, 32%, 0.996);
 }
-html[data-accent="purpledark"]{
+html[data-accent="purpledark"] {
   --acc-color: hsl(291, 100%, 70%);
   --acc-color-hover: hsla(291, 100%, 76%, 0.996);
 }
-html[data-accent="purplelight"]{
+html[data-accent="purplelight"] {
   --acc-color: hsl(291, 100%, 24%);
   --acc-color-hover: hsla(291, 100%, 32%, 0.996);
 }
-html[data-accent="golddark"]{
+html[data-accent="golddark"] {
   --acc-color: hsl(43, 100%, 70%);
   --acc-color-hover: hsla(43, 100%, 76%, 0.996);
 }
-html[data-accent="goldlight"]{
+html[data-accent="goldlight"] {
   --acc-color: hsl(43, 100%, 24%);
   --acc-color-hover: hsla(43, 100%, 32%, 0.996);
 }
-html[data-accent="reddark"]{
+html[data-accent="reddark"] {
   --acc-color: hsl(0, 100%, 70%);
   --acc-color-hover: hsla(0, 100%, 76%, 0.996);
 }
-html[data-accent="redlight"]{
+html[data-accent="redlight"] {
   --acc-color: hsl(0, 100%, 24%);
   --acc-color-hover: hsla(0, 100%, 32%, 0.996);
 }
 
 html[data-transitions="true"] * {
-  transition-timing-function: cubic-bezier(0.455, 0.030, 0.515, 0.955);
+  transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
   transition-delay: 0;
   transition-duration: 450ms;
   transition-property: color, background, width, height, transform, opacity,
@@ -175,8 +174,8 @@ input {
 [data-transitions="true"] .book_in_list,
 html[data-transitions="true"] main section h1,
 html[data-transitions="true"] .bookmark_in_list {
-  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
-  animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955);
+  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  animation: text-came 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 html[data-transitions="true"] .in_offline,
@@ -184,8 +183,9 @@ html html[data-transitions="true"] .online,
 html[data-transitions="true"] img,
 html[data-transitions="true"] .Downloads,
 html[data-transitions="true"] main section article {
-  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
-  animation: text-came 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
+  -webkit-animation: text-came 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955)
+    forwards;
+  animation: text-came 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
 }
 
 button {
@@ -229,8 +229,9 @@ button {
 html[data-transitions="true"] .remove_parallel:hover,
 html[data-transitions="true"] .download_translations:hover,
 html[data-transitions="true"] .help:hover .helpsvg {
-  -webkit-animation: shake 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
-  animation: shake 500ms cubic-bezier(0.455, 0.030, 0.515, 0.955) forwards;
+  -webkit-animation: shake 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955)
+    forwards;
+  animation: shake 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
 }
 
 body {
@@ -1106,7 +1107,7 @@ html[data-light="light"] .Notifications p {
   fill: var(--fill-on-hover);
   height: 32px;
   width: 32px;
-  min-width:32px;
+  min-width: 32px;
   cursor: pointer;
 }
 
@@ -1427,10 +1428,7 @@ footer a:hover {
 #iosinstall a,
 .helpFAQ a {
   color: inherit;
-  background-image: linear-gradient(
-    var(--c) 0px,
-    var(--c) 100%
-  );
+  background-image: linear-gradient(var(--c) 0px, var(--c) 100%);
 }
 
 .helpFAQ p {
@@ -1474,6 +1472,7 @@ note-up a:hover {
   margin: auto auto auto 0;
   fill: var(--c);
   cursor: move;
+  user-select: none;
 }
 
 .drag_handle:hover {
@@ -1520,7 +1519,7 @@ note-up a:hover {
 
 .current_occurence {
   background-color: var(--acc-bgc);
-  filter:saturate(4);
+  filter: saturate(4);
   position: absolute;
 }
 
@@ -1630,6 +1629,30 @@ editing-area p {
 mark {
   color: inherit;
   background-color: var(--acc-bgc-hover);
+}
+
+.bdb_def {
+  margin-top: 32px;
+  margin-bottom: -16px;
+}
+
+.definition a {
+  color: var(--acc-color);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.definition a:hover {
+  color: var(--acc-color-hover);
+}
+
+.definition ol,
+.definition ul {
+  padding-left: 32px;
+  margin: 1em 0;
+}
+
+.definition li > ol {
+  margin: 0;
 }
 
 @media all and (display-mode: standalone) {
