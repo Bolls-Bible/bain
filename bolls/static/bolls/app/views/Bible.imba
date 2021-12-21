@@ -123,6 +123,7 @@ let store =
 	show_history: no
 	show_themes: no
 	definition_search: ''
+	show_dictionaries: no
 
 # Dictionary
 let host_rectangle = null
@@ -2260,11 +2261,11 @@ tag bible-reader
 
 	def showDefOptions
 		let selection = window.getSelection!
-		let selected_text = selection.toString!.trim!
+		store.definition_search = selection.toString!.trim!
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected
-		let hebrew_or_greek = selected_text.match(/[\u0590-\u05FF]/) or  selected_text.match(/[\u0370-\u03FF]/)
-		if selected_text.match(/\s/) or selected_text == '' or not hebrew_or_greek
+		let hebrew_or_greek = store.definition_search.match(/[\u0590-\u05FF]/) or  store.definition_search.match(/[\u0370-\u03FF]/)
+		if store.definition_search.match(/\s/) or store.definition_search == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
 
@@ -2289,6 +2290,13 @@ tag bible-reader
 					host_rectangle.right = window.innerWidth - viewportRectangle.right
 
 
+	def showDictionaryView
+		clearSpace!
+		popUp 'dictionary'
+		loadDefinitions!
+		setTimeout(&, 300) do $dictionarysearch.select!
+
+
 
 
 	def loadDefinitions
@@ -2301,13 +2309,14 @@ tag bible-reader
 			popUp 'dictionary'
 			loading = yes
 			imba.commit!
-			definitions = await loadData("/dictionary-definition/BDBT/{store.definition_search}")
+			definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
 			loading = no
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
 			parseDefinitionsLinks!
 			imba.commit!
 
 	def parseDefinitionsLinks
+		# Parse Strong links
 		let patterns = [
 			/<a href='S:(.*?)'>/g,
 			/<a href=\"S:(.*?)\">/g,
@@ -2319,6 +2328,18 @@ tag bible-reader
 				for match in matches
 					definition.definition = definition.definition.replace(match[0], "<a onclick='javascript:strongDefinition(\"{match[1]}\");'>")
 
+		# Unlink TWOT links
+		patterns = [
+			/<a class="T" href='S:(.*?)'>/g,
+			/<a class="T" href=\"S:(.*?)\">/g,
+			/<a class="T" href=S:(.*?)>/g
+		]
+		for definition, index in definitions
+			for pattern in patterns
+				let matches = [... definition.definition.matchAll(pattern)]
+				for match in matches
+					definition.definition = definition.definition.replace(match[0], match[1])
+
 		log definitions
 
 
@@ -2327,6 +2348,12 @@ tag bible-reader
 			expanded_definition = -1
 		else
 			expanded_definition = index
+
+	def currentDictionary
+		if state.dictionary == 'RUSD'
+			return "Полный лексикон по Стронгу и Дворецкому, 2019"
+		else
+			return "Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions"
 
 
 	def render
@@ -2418,7 +2445,7 @@ tag bible-reader
 
 			if host_rectangle
 				<button
-					[pos:absolute l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:4px 8px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
+					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:4px 8px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
 					@click=loadDefinitions
 					ease
 					> data.lang.definition
@@ -2696,9 +2723,14 @@ tag bible-reader
 					<a.help href='/downloads/' target="_blank" @click=install>
 						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
-					<a.help href='https://bohuslav.me/Dictionary/' target='_blank'>
+					<a.help @click=showDictionaryView>
 						<span.font_icon> 'א'
 						'Dictionary'
+						<a[ml:auto] href='https://bohuslav.me/Dictionary/' target='_blank'>
+							<svg.helpsvg[p:4px] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+								<path d="M0 0h24v24H0z" fill="none">
+								<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
+
 				<a.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
@@ -2893,7 +2925,7 @@ tag bible-reader
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
 
-								<input$lexiconsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
+								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
 									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
 									@keydown.enter=loadDefinitions>
 
@@ -2903,6 +2935,18 @@ tag bible-reader
 
 							unless loading
 								<article.search_body>
+									<menu-popup bind=store.show_dictionaries>
+										<.popup_menu_box
+											[transform@important:none pos:relative p:8px 0px c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer]
+											@click=(do store.show_dictionaries = !store.show_dictionaries)>
+											currentDictionary!
+
+											if store.show_dictionaries
+												<.popup_menu [l:0 y@off:-32px o@off:0] ease>
+													<button.butt .active_butt=(state.dictionary=='BDBT') @click=(state.dictionary='BDBT';loadDefinitions!)> "Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions"
+													<button.butt .active_butt=(state.dictionary=='RUSD') @click=(state.dictionary='RUSD';loadDefinitions!)> "Полный лексикон по Стронгу и Дворецкому, 2019"
+
+
 									for definition, index in definitions
 										<div.definition .expanded=(expanded_definition == index)>
 											<p @click=expandDefinition(index)>
@@ -2913,7 +2957,7 @@ tag bible-reader
 
 
 											if expanded_definition == index
-												<div[fs:1.2em p:16px 0px @off:0 h:auto @off:0px overflow:hidden bg:$bg o@off:0] innerHTML=definition.definition ease>
+												<div[p:16px 0px @off:0 h:auto @off:0px overflow:hidden bg:$bg o@off:0] innerHTML=definition.definition ease>
 
 									unless definitions.length
 										<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
@@ -3091,7 +3135,7 @@ tag bible-reader
 											<path d="M45.775 39.367c-.732-.589-1.514-1.118-2.284-1.658-1.535-1.078-2.94-1.162-4.085.573-.644.974-1.544 1.017-2.486.59-2.596-1.178-4.601-2.992-5.775-5.63-.52-1.168-.513-2.215.702-3.04.644-.437 1.292-.954 1.24-1.908-.067-1.244-3.088-5.402-4.281-5.84-.494-.182-.985-.17-1.488-.002-2.797.94-3.955 3.241-2.846 5.965 3.31 8.127 9.136 13.784 17.155 17.237.457.197.965.275 1.222.346 1.826.018 3.964-1.74 4.582-3.486.595-1.68-.662-2.346-1.656-3.147zm-8.991-16.08c5.862.9 8.566 3.688 9.312 9.593.07.545-.134 1.366.644 1.381.814.016.618-.793.625-1.339.068-5.56-4.78-10.716-10.412-10.906-.425.061-1.304-.293-1.359.66-.036.641.704.536 1.19.61z">
 											<path d="M37.93 24.905c-.564-.068-1.308-.333-1.44.45-.137.82.692.737 1.225.856 3.621.81 4.882 2.127 5.478 5.719.087.524-.086 1.339.804 1.203.66-.1.421-.799.476-1.207.03-3.448-2.925-6.586-6.543-7.02z">
 											<path d="M38.263 27.725c-.377.01-.746.05-.884.452-.208.601.229.745.674.816 1.485.239 2.267 1.114 2.415 2.596.04.402.295.727.684.682.538-.065.587-.544.57-.998.027-1.665-1.854-3.588-3.46-3.548z">
-							<button.cancel @click=(do show_share_box = no, imba.commit!)> data.lang.cancel
+							<button.cancel @click=(do show_share_box = no; imba.commit!)> data.lang.cancel
 					else
 						<div[o@off:0 h:auto @off:0px of@off:hidden] ease>
 							<p[pt:16px]>
@@ -3383,8 +3427,7 @@ tag bible-reader
 		.definition
 			p
 				m:0
-				p:12px 12px 12px 0
-				fs:1.2em
+				p:8px 8px 8px 0
 				fw:bold
 				d:flex
 				jc:space-between

@@ -3,7 +3,6 @@ import {english, ukrainian, russian, portuguese, espanol, german} from './langda
 
 export class State
 	downloaded_translations
-	downloaded_comentaries	# new
 	db_is_available
 	db
 	translations_in_downloading
@@ -21,6 +20,14 @@ export class State
 	timeoutID = undefined
 	pswv = no # Play Store Web View
 	intouch = no
+
+	set dictionary new_value
+		#dictionary = new_value
+		setCookie('dictionary', new_value)
+
+	get dictionary
+		return #dictionary
+
 
 	def constructor
 		for lngg in languages
@@ -106,6 +113,14 @@ export class State
 					language = 'eng'
 					document.lastChild.lang = "en"
 			setLanguage(language)
+		if getCookie('dictionary')
+			dictionary = getCookie('dictionary')
+		else
+			if language == 'ru' or language = 'ukr'
+				dictionary = 'RUSD'
+			else
+				dictionary = 'BDBT'
+
 		checkDownloadedTranslations()
 		checkSavedBookmarks()
 
