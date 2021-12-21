@@ -277,7 +277,7 @@ def getBookmarks(request, translation, book, chapter):
             book=book, chapter=chapter, translation=translation).order_by('verse')
         bookmarks = []
         for obj in all_objects:
-            for bookmark in obj.bookmarks_set.all():
+            for bookmark in obj.bookmarks_set.filter(user=request.user):
                 note = ''
                 if bookmark.note is not None:
                     note = bookmark.note.text
