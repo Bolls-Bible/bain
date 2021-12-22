@@ -278,6 +278,7 @@ tag bible-reader
 					document.title += ':' + window.verse
 					findVerse(window.verse, window.endverse)
 				document.title += ' ' + window.translation + " Bolls Bible"
+
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
@@ -319,10 +320,13 @@ tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
+
 		if !verses.length
 			getChapter(settings.translation, settings.book, settings.chapter)
+
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
+
 		if window.navigator.onLine
 			try
 				let userdata = await loadData("/user-logged/")
@@ -336,7 +340,7 @@ tag bible-reader
 					# Merge local history and server copy
 					history = JSON.parse(getCookie("history")) || []
 					try
-						history = history.concat(JSON.parse(userdata.history))
+						history = JSON.parse(userdata.history).concat(history)
 
 						# Remove duplicates
 						let uniqueHistory = []
@@ -345,7 +349,6 @@ tag bible-reader
 								uniqueHistory.push(c)
 
 						history = uniqueHistory
-
 
 					# Remove items exceeding limit
 					if history.length > 256
@@ -362,6 +365,7 @@ tag bible-reader
 			catch err
 				console.error('Error: ', err)
 				data.showNotification('error')
+
 		history = JSON.parse(getCookie("history")) || []
 		if window.message
 			data.showNotification(window.message)
@@ -2311,6 +2315,7 @@ tag bible-reader
 			imba.commit!
 			definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
 			loading = no
+			expanded_definition = 0
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
 			parseDefinitionsLinks!
 			imba.commit!
@@ -2937,9 +2942,13 @@ tag bible-reader
 								<article.search_body>
 									<menu-popup bind=store.show_dictionaries>
 										<.popup_menu_box
-											[transform@important:none pos:relative p:8px 0px c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer]
+											[transform@important:none pos:relative p:8px 0px c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:flex]
 											@click=(do store.show_dictionaries = !store.show_dictionaries)>
 											currentDictionary!
+											<span[p:0 8px m:auto 0 auto auto]>
+												<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+													<title> 'expand'
+													<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 											if store.show_dictionaries
 												<.popup_menu [l:0 y@off:-32px o@off:0] ease>
@@ -2957,12 +2966,12 @@ tag bible-reader
 
 
 											if expanded_definition == index
-												<div[p:16px 0px @off:0 h:auto @off:0px overflow:hidden bg:$bg o@off:0] innerHTML=definition.definition ease>
+												<div[p:16px 0px 64px @off:0 h:auto @off:0px overflow:hidden bg:$bg o@off:0] innerHTML=definition.definition ease>
 
 									unless definitions.length
-										<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
+										<div[display:flex flex-direction:column pt:25% lh:1.6]>
 											<p> data.lang.nothing
-									<.freespace>
+											<p[pt:16px]> data.lang.dictionary_help
 
 						else	# MAIN SEARCH
 							if search_verses.length

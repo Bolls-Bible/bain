@@ -43,6 +43,7 @@
 		<li><a href='#Get a translation'>Get a translation</a></li>
 		<li><a href='#compare'>Compare versions</a></li>
 		<li><a href='#Fetch a verse'>Fetch a verse</a></li>
+		<li><a href='#dictionary'>Dictionary definition for Hebrew and Greek words</a></li>
 		<li><a href='#Notes'>Notes</a></li>
 		<li><a href='#contact_me'>Contact me</a></li>
 	</ul>
@@ -284,21 +285,93 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Lo, he [is] in thy hand; only his life take care of.'"
     }
   ]
-]	</pre>
+]</pre>
 	<p>As you see it is the same as <a href='#compare'>Compare translation API</a>. More detailes about the fields of
 		this request see the <a href='#compare'>Compare translation API</a>.</p>
+
+
+	<h2 id="dictionary">Dictionary definition for Hebrew and Greek words</h2>
+	<p class='last-update'> New from 23 December 2021.</p>
+	<p> This API is used to get a list of definitions for a Hebrew or Greek word, if such do exist in a dictionary.
+		If there are no definitions for requested query -- an empty array is returned.
+		The API looks in the next way:
+	</p>
+	<pre>https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</pre>
+	<p>Where: <code>dict</code> is an abbreviation of dictionary that should be used.
+		At this moment there are available only to dictionaries:
+		<code>BDBT</code> - <em>Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions</em>
+		and <code>RUSD</code> - <em>Полный лексикон по Стронгу и Дворецкому, 2019</em>.
+		<code>query</code> is a string -- anything in Greek or Hebrew.
+		You may also search for English/Russian words and it will return <em>some</em> relative Hebrew/Greek words and their definitions.
+		<code>query</code> also may be a strong number like <code>H125</code> or <code>G523</code>
+		- it will return a particular definition under that Strong number.
+		In result you will get a JSON array - empty or with definitions XD. For example the next request will return an array of definitions for the Hebrew word <code>אֹ֑ור</code> (light):
+	</p>
+	<pre><a target="_blank" href="https://bolls.life/dictionary-definition/BDBT/אֹ֑ור">https://bolls.life/dictionary-definition/BDBT/אֹ֑ור</a></pre>
+	<p>Result:</p>
+	<pre>
+[
+  {
+    "topic": "H215",
+    "definition": "Original: &lt;b>&lt;he>אור&lt;/he>&lt;/b> &lt;p />Transliteration: &lt;b>ôr&lt;/b> &lt;p />Phonetic: &lt;b>ore&lt;/b> &lt;p class=\"bdb_def\">&lt;b>BDB Definition&lt;/b>:&lt;/p>&lt;ol>&lt;li>to be or become light, shine&lt;ol type=a>&lt;li>(Qal)&lt;ol>&lt;li>to become light (day)&lt;/li>&lt;li>to shine (of the sun)&lt;/li>&lt;li>to become bright&lt;/li>&lt;/ol>&lt;li>(Niphal)&lt;ol>&lt;li>to be illuminated&lt;/li>&lt;li>to become lighted up&lt;/li>&lt;/ol>&lt;li>(Hiphil)&lt;ol>&lt;li>to give light, shine (of sun, moon, and stars)&lt;/li>&lt;li>to illumine, light up, cause to shine, shine&lt;/li>&lt;li>to kindle, light (candle, wood)&lt;/li>&lt;li>lighten (of the eyes, his law, etc)&lt;/li>&lt;li>to make shine (of the face)&lt;/li>&lt;/ol>&lt;/li>&lt;/ol>&lt;/li>&lt;/ol> &lt;p />Origin: a primitive root &lt;p />TWOT entry: &lt;a class=\"T\" href=\"S:0052 - or\">52&lt;/a> &lt;p />Part(s) of speech: Verb ",
+    "lexeme": "אֹור",
+    "transliteration": "ʼôwr",
+    "pronunciation": "ore",
+    "short_definition": "[idiom] break of day",
+    "weight": 1
+  },
+  {
+    "topic": "H216",
+    "definition": "Original: &lt;b>&lt;he>אור&lt;/he>&lt;/b> &lt;p />Transliteration: &lt;b>ôr&lt;/b> &lt;p />Phonetic: &lt;b>ore&lt;/b> &lt;p class=\"bdb_def\">&lt;b>BDB Definition&lt;/b>:&lt;/p>&lt;ol>&lt;li>light&lt;ol type=a>&lt;li>light of day&lt;/li>&lt;li>light of heavenly luminaries (moon, sun, stars)&lt;/li>&lt;li>day-break, dawn, morning light&lt;/li>&lt;li>daylight&lt;/li>&lt;li>lightning&lt;/li>&lt;li>light of lamp&lt;/li>&lt;li>light of life&lt;/li>&lt;li>light of prosperity&lt;/li>&lt;li>light of instruction&lt;/li>&lt;li>light of face (figuratively)&lt;/li>&lt;li>Jehovah as Israels light&lt;/li>&lt;/ol>&lt;/li>&lt;/ol> &lt;p />Origin: from &lt;a href=S:H215>H215&lt;/a> &lt;p />TWOT entry: &lt;a class=\"T\" href=\"S:0052 - or\">52a&lt;/a> &lt;p />Part(s) of speech: Noun Feminine ",
+    "lexeme": "אֹור",
+    "transliteration": "ʼôwr",
+    "pronunciation": "ore",
+    "short_definition": "bright",
+    "weight": 1
+  },
+  {
+    "topic": "H217",
+    "definition": "Original: &lt;b>&lt;he>אוּר&lt;/he>&lt;/b> &lt;p />Transliteration: &lt;b>ûr&lt;/b> &lt;p />Phonetic: &lt;b>ore&lt;/b> &lt;p class=\"bdb_def\">&lt;b>BDB Definition&lt;/b>:&lt;/p>&lt;ol>&lt;li>flame, light of fire&lt;/li>&lt;/ol> &lt;p />Origin: from &lt;a href=S:H215>H215&lt;/a> &lt;p />TWOT entry: &lt;a class=\"T\" href=\"S:0052 - or\">52d&lt;/a> &lt;p />Part(s) of speech: Noun Masculine ",
+    "lexeme": "אוּר",
+    "transliteration": "ʼûwr",
+    "pronunciation": "ore",
+    "short_definition": "fire",
+    "weight": 1
+  },
+  {
+    "topic": "H218",
+    "definition": "Original: &lt;b>&lt;he>אוּר&lt;/he>&lt;/b> &lt;p />Transliteration: &lt;b>ûr&lt;/b> &lt;p />Phonetic: &lt;b>oor&lt;/b> &lt;p class=\"bdb_def\">&lt;b>BDB Definition&lt;/b>:&lt;/p> Ur = \"flame\" &lt;ol>&lt;li>city in southern Babylonia, city of the Chaldeans, centre of moon worship, home of Abrahams father, Terah, and departure point for the Abrahams migration to Mesopotamia and Canaan&lt;/li>&lt;/ol> &lt;p />Origin: the same as &lt;a href=S:H217>H217&lt;/a> &lt;p />TWOT entry: None &lt;p />Part(s) of speech: Proper Name Location ",
+    "lexeme": "אוּר",
+    "transliteration": "ʼÛwr",
+    "pronunciation": "oor",
+    "short_definition": "Ur",
+    "weight": 1
+  }
+]
+	</pre>
+	<p>Every definition contains next fields:</p>
+	<ul>
+		<li><code>topic</code> - a Strong number.</li>
+		<li><code>definition</code> - an HTML string with the definition text.</li>
+		<li><code>lexeme</code> - the found word itself.</li>
+		<li><code>transliteration</code> - transliteration of the found word.</li>
+		<li><code>pronunciation</code> - pronunciation of the found word</li>
+		<li><code>short_definition</code> - short definition of the word, by which, between, the word can be found with English/Russian query</li>
+		<li><code>weight</code> - a number indicating how close is the matched word to the query on the scale from 0 to 1</li>
+	</ul>
+
 
 	<h3 id='Notes'>Notes</h3>
 	<ul>
 		<li>Every verse text should be interpreted as an html string. There may appear some tags like
-			<code><span><</span>/br></code> or <code><span><</span>i><span><</span>/i></code>. Or display the text
+			<code>&lt;/br></code> or <code>&lt;i>&lt;/i></code>. Or display the text
 			as HTML or clean up the text.</li>
 	</ul>
 
 	<footer id='contact_me' style="padding-bottom: 256px;">
 		<h3>Contact me</h3>
 		<address>
-			<p>If you have any further questions <a href="mailto:bpavlisinec@gmail.com">you can write to me</a></p>
+			<p>If you have any further questions <a href="mailto:bpavlisinec@gmail.com">you can mail me</a> or <a target="_blank" href="https://t.me/Boguslavv">text me in Telegram</a></p>
 		</address>
 	</footer>
 </body>

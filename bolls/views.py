@@ -538,8 +538,9 @@ def handler500(request, *args, **argv):
     response.status_code = 500
     return response
 
+
+
 def stripVowels(raw_string):
-    # raw_string = raw_string.lower()
     res = ''
     if len(re.findall('[α-ωΑ-Ω]', raw_string)):
         nfkd_form = unicodedata.normalize('NFKD', raw_string)
@@ -552,9 +553,9 @@ def stripVowels(raw_string):
         res = res.replace('שׁ', 'ש')
         res = res.replace('שׂ', 'ש')
 
-
     res = res.replace('‎', '')
     return res
+
 
 # Parse Bible links
 def parseLinks(text, translation):
@@ -563,7 +564,7 @@ def parseLinks(text, translation):
 
 	text = re.sub(r'(<[/]?span[^>]*)>', '', text)	# Clean up unneeded spans
 	text = re.sub(r'( class=\'\w+\')', '', text)	# Avoid unneded classes on anchors
-	# text = re.sub(r'( class="\w+")', '', text)	# Avoid unneded classes on anchors
+	# text = re.sub(r'( class="\w+")', '', text)	# I need some classes
 
 	pieces = text.split("'")
 
@@ -588,7 +589,6 @@ def parseLinks(text, translation):
 def searchInDictionary(request, dict, query):
     query = query.strip()
     unaccented_query = stripVowels(query.lower())
-    print(unaccented_query, query)
 
     # Rank search
     search_vector = SearchVector('lexeme__unaccent')
@@ -605,12 +605,14 @@ def searchInDictionary(request, dict, query):
     results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
 
 
+    # for farther refactoring of inner Bible links
     translation = ""
     if dict == 'RUSD':
         translation = 'international/SYNOD'
     else:
         translation = 'international/KJV'
 
+    # Serialize final data
     d = []
     for result in results_of_search:
         d.append({
@@ -625,6 +627,8 @@ def searchInDictionary(request, dict, query):
     return JsonResponse(d, safe=False)
 
 
+
+# When translation is fully replaced -- this may be helpful
 # def fixBookmarks(request):
 #     # rename KJV to OKJC
 #     # push new KJV to the db
