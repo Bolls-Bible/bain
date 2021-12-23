@@ -122,18 +122,21 @@ let store =
 	show_fonts: no
 	show_history: no
 	show_themes: no
-	definition_search: ''
 	show_dictionaries: no
+	definition_search: ''
 
 # Dictionary
 let host_rectangle = null
 let definitions = []
+let definitions_history = []
+let definitions_history_index = -1
 let expanded_definition = 0
 document.onselectionchange = do
 	setTimeout(&, 150) do
 		let selection = document.getSelection()
 		if selection.isCollapsed
 			host_rectangle = null
+
 
 
 # Some messy stuff
@@ -367,6 +370,8 @@ tag bible-reader
 				data.showNotification('error')
 
 		history = JSON.parse(getCookie("history")) || []
+		history.sort(do(a, b) return a.date - b.date)
+
 		if window.message
 			data.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
@@ -432,7 +437,9 @@ tag bible-reader
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
 
-		history.unshift({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
+		history.sort(do(a, b) return a.date - b.date)
+
+		history.unshift({translation: translation, book: book, chapter: chapter, verse: verse, parallel: parallel, date:Date.now!})
 		if history.length > 256
 			history.length = 256
 
@@ -2310,6 +2317,10 @@ tag bible-reader
 
 		definitions = []
 		if window.navigator.onLine && store.definition_search
+			if definitions_history.indexOf(store.definition_search) == -1
+				definitions_history_index += 1
+				definitions_history[definitions_history_index] = store.definition_search
+				definitions_history.length = definitions_history_index + 1
 			popUp 'dictionary'
 			loading = yes
 			imba.commit!
@@ -2345,8 +2356,18 @@ tag bible-reader
 				for match in matches
 					definition.definition = definition.definition.replace(match[0], match[1])
 
-		log definitions
 
+	def prevDefinition
+		if definitions_history_index > 0
+			definitions_history_index -= 1
+			store.definition_search = definitions_history[definitions_history_index]
+			loadDefinitions!
+
+	def nextDefinition
+		if definitions_history_index < definitions_history.length - 1
+			definitions_history_index += 1
+			store.definition_search = definitions_history[definitions_history_index]
+			loadDefinitions!
 
 	def expandDefinition index
 		if expanded_definition == index
@@ -2455,7 +2476,8 @@ tag bible-reader
 					ease
 					> data.lang.definition
 
-			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [pos:relative ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
+			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
+				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll @pointerup=showDefOptions dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
@@ -2730,7 +2752,7 @@ tag bible-reader
 						data.lang.install_app
 					<a.help @click=showDictionaryView>
 						<span.font_icon> 'א'
-						'Dictionary'
+						data.lang.dictionary
 						<a[ml:auto] href='https://bohuslav.me/Dictionary/' target='_blank'>
 							<svg.helpsvg[p:4px] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
 								<path d="M0 0h24v24H0z" fill="none">
@@ -2925,10 +2947,19 @@ tag bible-reader
 							<rich-text-editor bind=store dir="auto">
 
 						elif big_modal_block_content == "dictionary"
-							<article.search_hat#gs_hat [pos:relative]>
+							<article#dict_hat.search_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
+								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0) title=data.lang.back>
+									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.back
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								<button.arrow @click=nextDefinition() .disabled=(definitions_history.length - 1 == definitions_history_index) title=data.lang.next>
+									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.next
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
 
 								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
 									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
@@ -3379,6 +3410,16 @@ tag bible-reader
 		visibility:visible
 		o:1
 
+	css
+		#dict_hat
+			button
+				bgc:transparent
+				w:32px
+				min-width:26px
+				h:50px
+				p:8px 0
+
+
 	css note-up svg
 		size:0.68em
 		fill:inherit
@@ -3452,3 +3493,7 @@ tag bible-reader
 
 		.expanded
 			$svg-transform:rotate(180deg)
+
+		.disabled
+			o:0.5
+			transform:nonel

@@ -13,7 +13,7 @@ export def scrollToY(scrollblock, scrollTargetY)
 		return no
 
 	let scrollY = scrollblock.scrollTop
-	scrollTargetY = scrollTargetY || 0
+	scrollTargetY = Math.min(scrollblock.scrollHeight - scrollblock.clientHeight, scrollTargetY) || 0
 	let speed = 300
 	let currentTime = 0
 

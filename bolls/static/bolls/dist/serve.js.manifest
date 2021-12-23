@@ -378,7 +378,7 @@
   "public": true,
   "path": "public/__assets__/all.css",
   "asset": "$$42$$",
-  "hash": "MRT0KTBO",
+  "hash": "KC7WEKOC",
   "originalPath": "all.__dist__.css",
   "url": "/__assets__/all.css"
 },
@@ -470,7 +470,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 813305,
+  "bytes": 817459,
   "source": "$$51$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -478,7 +478,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "RA8SYSLS"
+  "hash": "VHUFCOKP"
 },
 "$$46$$":{
   "imports": [],
@@ -615,11 +615,11 @@
     ],
     [
       "$$84$$",
-      83317
+      83529
     ],
     [
       "$$85$$",
-      16091
+      16272
     ],
     [
       "$$86$$",
@@ -707,7 +707,7 @@
     ],
     [
       "$$107$$",
-      412
+      452
     ],
     [
       "$$108$$",
@@ -715,7 +715,7 @@
     ],
     [
       "$$109$$",
-      232119
+      234545
     ],
     [
       "$$110$$",
@@ -758,7 +758,7 @@
       2234
     ]
   ],
-  "bytes": 850083,
+  "bytes": 852942,
   "map": "$$45$$",
   "source": "$$51$$",
   "css": "$$119$$",
@@ -768,7 +768,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "RA8SYSLS",
+  "hash": "VHUFCOKP",
   "originalPath": "app/client.__dist__.js"
 },
 "$$47$$":{
@@ -792,7 +792,7 @@
     ],
     [
       "$$124$$",
-      27080
+      27258
     ],
     [
       "$$125$$",
@@ -855,7 +855,7 @@
       0
     ]
   ],
-  "bytes": 40911,
+  "bytes": 41089,
   "source": "$$140$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -863,7 +863,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "Z9MNQXEX",
+  "hash": "HZKJLUDT",
   "originalPath": "app/client.__dist__.css"
 },
 "$$48$$":{
@@ -1178,13 +1178,13 @@
   "path": "app/views/languages.json"
 },
 "$$84$$":{
-  "bytes": 150685,
+  "bytes": 151229,
   "imports": [],
   "_": "input",
   "path": "app/langdata.imba"
 },
 "$$85$$":{
-  "bytes": 88388,
+  "bytes": 89591,
   "imports": [
     "$$82$$",
     "$$83$$",
@@ -1352,19 +1352,19 @@
   "path": "app/views/thanks_to.imba"
 },
 "$$107$$":{
-  "bytes": 5311,
+  "bytes": 5557,
   "imports": [],
   "_": "input",
   "path": "app/views/smooth_scrolling.imba"
 },
 "$$108$$":{
-  "bytes": 29986,
+  "bytes": 30208,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
 },
 "$$109$$":{
-  "bytes": 843473,
+  "bytes": 852573,
   "imports": [
     "$$82$$",
     "$$86$$",
@@ -1469,7 +1469,7 @@
     ],
     [
       "$$108$$",
-      27091
+      27283
     ],
     [
       "$$112$$",
@@ -1516,7 +1516,7 @@
       1359
     ]
   ],
-  "bytes": 40933,
+  "bytes": 41125,
   "source": "$$51$$",
   "_": "output",
   "path": "public/__assets__/app/client.css",
@@ -1524,7 +1524,7 @@
   "url": "/__assets__/app/client.css",
   "type": "css",
   "dependencies": [],
-  "hash": "MAVJTTFD",
+  "hash": "VAGNARYK",
   "originalPath": "app/client.__dist__.css"
 },
 "$$120$$":{
@@ -1552,7 +1552,7 @@
   "path": "styles:app/state.imba"
 },
 "$$124$$":{
-  "bytes": 29986,
+  "bytes": 30208,
   "imports": [],
   "_": "input",
   "path": "styles:app/views/Bible.imba"
@@ -1704,7 +1704,7 @@
   "path": "node_modules/imba/src/imba/imba.imba"
 },
 "$$143$$":{
-  "bytes": 88407,
+  "bytes": 89610,
   "imports": [
     "$$156$$",
     "$$157$$",
@@ -1714,7 +1714,7 @@
   "path": "app/state.imba"
 },
 "$$144$$":{
-  "bytes": 843473,
+  "bytes": 852573,
   "imports": [
     "$$158$$",
     "$$156$$",
@@ -1830,7 +1830,7 @@
   "path": "app/views/languages.json"
 },
 "$$157$$":{
-  "bytes": 150704,
+  "bytes": 151248,
   "imports": [
     "$$127$$"
   ],
@@ -1918,7 +1918,7 @@
   "path": "app/views/svg_paths.imba"
 },
 "$$168$$":{
-  "bytes": 5330,
+  "bytes": 5576,
   "imports": [
     "$$136$$"
   ],
@@ -1987,7 +1987,7 @@
     "/__assets__/all.css": "$$42$$"
   },
   "mappings": {},
-  "hash": "ZZJWOMGR",
+  "hash": "6HB7URQH",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

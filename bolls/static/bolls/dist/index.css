@@ -415,6 +415,9 @@ main header {
   background-color: var(--bgc);
   margin: 1em 0;
 }
+main section .arrow {
+  transition-property: fill, color, background, transform, border-radius;
+}
 
 #iosinstall a,
 footer a,

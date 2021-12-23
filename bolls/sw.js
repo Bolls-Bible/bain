@@ -31,6 +31,7 @@ self.addEventListener("fetch", (event) => {
             if (
               event.request.url.includes("get-text/") ||
               event.request.url.includes("search/") ||
+              event.request.url.includes("dictionary-definition/") ||
               event.request.destination == "font"
             ) {
               caches.open(CACHE_NAME).then((cache) => {

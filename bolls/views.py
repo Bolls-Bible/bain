@@ -564,7 +564,6 @@ def parseLinks(text, translation):
 
 	text = re.sub(r'(<[/]?span[^>]*)>', '', text)	# Clean up unneeded spans
 	text = re.sub(r'( class=\'\w+\')', '', text)	# Avoid unneded classes on anchors
-	# text = re.sub(r'( class="\w+")', '', text)	# I need some classes
 
 	pieces = text.split("'")
 
@@ -625,6 +624,39 @@ def searchInDictionary(request, dict, query):
             "weight": result.rank
         })
     return JsonResponse(d, safe=False)
+
+onse
+
+
+def getDictionary(request, dictionary):
+    all_verses = Verses.objects.filter(
+        translation=translation).order_by('book', 'chapter', 'verse')
+    all_commentaries = Commentary.objects.filter(
+        translation=translation).order_by('book', 'chapter', 'verse')
+
+    def serializeVerse(obj):
+        verse = {
+            "pk": obj.pk,
+            "translation": obj.translation,
+            "book": obj.book,
+            "chapter": obj.chapter,
+            "verse": obj.verse,
+            "text": obj.text
+        }
+        comment = ''
+        for item in all_commentaries:
+            if item.verse == obj.verse and item.chapter == obj.chapter and item.book == obj.book:
+                if len(comment) > 0:
+                    comment = "%s<br>" % (comment)
+                comment = "%s%s" % (comment, item.text)
+
+        if len(comment) > 0:
+            verse["comment"] = comment
+        return(verse)
+
+    verses = [serializeVerse(obj) for obj in all_verses]
+    return cross_origin(JsonResponse(verses, safe=False))
+
 
 
 

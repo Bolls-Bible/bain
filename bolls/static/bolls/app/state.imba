@@ -47,6 +47,11 @@ export class State
 			return tx.table("bookmarks").toCollection().modify (do |bookmark|
 				bookmark.collections = bookmark.notes
 				delete bookmark.notes))
+		db.version(3).stores({
+			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+			bookmarks: '&verse, *collections'
+			dictionaries: '&pk, dictionary'
+		})
 
 		# To know as fast as possible if the user possibly is logged in.
 		user.username = getCookie('username') || ''

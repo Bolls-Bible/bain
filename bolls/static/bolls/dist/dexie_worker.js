@@ -55,3 +55,46 @@ function search(search) {
 		throw (translation);
 	})
 }
+
+
+
+function stripVowels(rawString){
+	// Clear Hebrew
+	let res =  rawString.replace(/[\u0591-\u05C7]/g,"");
+	// Replace some letters, which are not present in a given unicode range, manually.
+	res = res.replace('שׁ', 'ש');
+	res = res.replace('שׂ', 'ש');
+	res = res.replace('‎', '');
+
+	// Clear Greek
+	res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+	return res
+}
+
+function dictionarySearch(search) {
+	let query = stripVowels(search.query);
+	db.transaction("r", db.dictionary, () => {
+		db.dictionary.where("dictionary")
+		.equals(search.dictionary)
+		.filter((definition) => {
+			let uppercase_query = search.query.toUpperCase()
+			if (definition.topic.toUpperCase() == uppercase_query) {
+				return true;
+			}
+
+			let short_definition = definition.short_definition.toUpperCase();
+			if (uppercase_query.includes(short_definition) || short_definition.includes(uppercase_query)) {
+				return true;
+			}
+
+			let lexeme = stripVowels(definition.lexeme)
+			if (uppercase_query.includes(lexeme) || lexeme.includes(uppercase_query)) {
+				return true;
+			} else
+				return false;
+		}
+		).toArray().then(data => { postMessage(['search', data]); });
+	}).catch((e) => {
+		throw (translation);
+	})
+}
