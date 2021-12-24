@@ -41,6 +41,7 @@ urlpatterns = [
          views.getProfileBookmarks),
 
     path('dictionary-definition/<slug:dict>/<str:query>/', views.searchInDictionary),
+    path('get-dictionary/<slug:dictionary>/', views.getDictionary),
 
 	# AAA
     path('<slug:translation>/<str:piece>/', views.search),

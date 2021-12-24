@@ -1,5 +1,6 @@
 import *  as BOOKS from "./translations_books.json"
 import languages from "./languages.json"
+import dictionaries from "./dictionaries.json"
 import './Profile'
 import "./loading.imba"
 import "./downloads.imba"
@@ -131,6 +132,7 @@ let definitions = []
 let definitions_history = []
 let definitions_history_index = -1
 let expanded_definition = 0
+let download_menu = no
 document.onselectionchange = do
 	setTimeout(&, 150) do
 		let selection = document.getSelection()
@@ -2243,20 +2245,37 @@ tag bible-reader
 
 
 	def translationDownloadStatus translation
-		if data.translations_in_downloading.find(do |tr| return tr == translation.short_name)
+		if data.translations_in_downloading.find(do |tr| return tr == translation)
 			return 'processing'
-		elif data.downloaded_translations.indexOf(translation.short_name) != -1
+		elif data.downloaded_translations.indexOf(translation) != -1
+			return 'delete'
+		else
+			return 'download'
+
+	def dictionaryDownloadStatus dictionary
+		if data.dictionaries_in_downloading.find(do |tr| return tr == dictionary)
+			return 'processing'
+		elif data.downloaded_dictionaries.indexOf(dictionary) != -1
 			return 'delete'
 		else
 			return 'download'
 
 	def offlineTranslationAction tr
-		if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+		if data.translations_in_downloading.find(do |translation| return translation == tr)
 			return
-		elif data.downloaded_translations.indexOf(tr.short_name) != -1
-			data.deleteTranslation(tr.short_name)
+		elif data.downloaded_translations.indexOf(tr) != -1
+			data.deleteTranslation(tr)
 		else
-			data.downloadTranslation(tr.short_name)
+			data.downloadTranslation(tr)
+
+	def offlineDictionaryAction dict
+		if data.dictionaries_in_downloading.find(do |translation| return translation == dict)
+			return
+		elif data.downloaded_dictionaries.indexOf(dict) != -1
+			data.deleteDictionary(dict)
+		else
+			data.downloadDictionary(dict)
+
 
 	def nextVerseHasTheSameBookmark verse_index
 		let current_bukmark = getBookmark(verses[verse_index].pk, 'bookmarks')
@@ -2316,7 +2335,7 @@ tag bible-reader
 			store.definition_search = selected_text
 
 		definitions = []
-		if window.navigator.onLine && store.definition_search
+		if store.definition_search && window.navigator.onLine
 			if definitions_history.indexOf(store.definition_search) == -1
 				definitions_history_index += 1
 				definitions_history[definitions_history_index] = store.definition_search
@@ -2324,7 +2343,11 @@ tag bible-reader
 			popUp 'dictionary'
 			loading = yes
 			imba.commit!
-			definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
+			if window.navigator.onLine
+				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
+			elif state.dictionary in state.downloaded_dictionaries
+				definitions = await state.searchDefinitionsOffline {dictionary:state.dictionary, query:store.definition_search}
+			log definitions
 			loading = no
 			expanded_definition = 0
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
@@ -2376,10 +2399,9 @@ tag bible-reader
 			expanded_definition = index
 
 	def currentDictionary
-		if state.dictionary == 'RUSD'
-			return "Полный лексикон по Стронгу и Дворецкому, 2019"
-		else
-			return "Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions"
+		for dictionary in dictionaries
+			if dictionary.abbr == state.dictionary
+				return dictionary.name
 
 
 	def render
@@ -2869,49 +2891,84 @@ tag bible-reader
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1> data.lang.download_translations
-								if data.deleting_of_all_transllations
+								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px p:16px 0 jc:center]>
+									# @click=(download_menu = !download_menu)>
+									<span>
+										if download_menu
+											data.lang.download_dictionaries
+										else
+											data.lang.download_translations
+									# <span[p:0 8px m:auto 0]>
+									# 	<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+									# 		<title> 'expand'
+									# 		<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
+								if data.deleting_of_all_dictionaries
 									<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
 										<title> data.lang.loading
 										<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 								else
-									<svg.close_search @click=(do data.clearVersesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
-										<title> data.lang.remove_all_translations
+									<svg.close_search @click=(do data.clearDictionariesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
+										<title> data.lang.remove_all_dictionaries
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 							<article.search_body>
-								for language in languages
-									<div key=language.language>
-										<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
-											language.language
-											<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
-												<title> data.lang.open
-												<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								if download_menu
+									<div>
+										# let no_dictionary_downloaded = yes
+										for dictionary in dictionaries
+											if window.navigator.onLine || data.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+												# no_dictionary_downloaded = no
+												<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineDictionaryAction(dictionary.abbr)>
+													if state.dictionaries_in_downloading.find(do |dict| return dict == dictionary.abbr)
+														<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
+															<title> state.lang.loading
+															<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
+													elif state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=state.lang.delete>
+															<title> state.lang.delete
+															<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+													else
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
+															<title> state.lang.download
+															<g transform="matrix(1.5 0 0 1.5 0 128)">
+																<path d=svg_paths.download>
+													<span> "{state.lang[dictionaryDownloadStatus(dictionary.abbr)]} {<b> dictionary.abbr}, {dictionary.name}"
 
-										if language.language == show_language_of
-											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
-												let no_translation_downloaded = yes
-												for tr in language.translations
-													if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
-														no_translation_downloaded = no
-														<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr)>
-															if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
-																<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-																	<title> data.lang.loading
-																	<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
-															elif data.downloaded_translations.indexOf(tr.short_name) != -1
-																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
-																	<title> data.lang.delete
-																	<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-															else
-																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-																	<title> data.lang.download
-																	<g transform="matrix(1.5 0 0 1.5 0 128)">
-																		<path d=svg_paths.download>
-															<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
+								else
+									<div>
+										for language in languages
+											<div key=language.language>
+												<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
+													language.language
+													<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
+														<title> data.lang.open
+														<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-												if no_translation_downloaded
-													data.lang["no_translation_downloaded"]
-								<.freespace>
+												if language.language == show_language_of
+													<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+														let no_translation_downloaded = yes
+														for tr in language.translations
+															if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
+																no_translation_downloaded = no
+																<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr.short_name)>
+																	if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+																		<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
+																			<title> data.lang.loading
+																			<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
+																	elif data.downloaded_translations.indexOf(tr.short_name) != -1
+																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
+																			<title> data.lang.delete
+																			<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+																	else
+																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
+																			<title> data.lang.download
+																			<g transform="matrix(1.5 0 0 1.5 0 128)">
+																				<path d=svg_paths.download>
+																	<span> "{data.lang[translationDownloadStatus(tr.short_name)]} {<b> tr.short_name}, {tr.full_name}"
+
+														if no_translation_downloaded
+															data.lang["no_translation_downloaded"]
+										<.freespace>
 
 						elif big_modal_block_content == 'show_support'
 							<article.search_hat>
@@ -2960,7 +3017,6 @@ tag bible-reader
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-
 								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
 									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
 									@keydown.enter=loadDefinitions>
@@ -2983,8 +3039,8 @@ tag bible-reader
 
 											if store.show_dictionaries
 												<.popup_menu [l:0 y@off:-32px o@off:0] ease>
-													<button.butt .active_butt=(state.dictionary=='BDBT') @click=(state.dictionary='BDBT';loadDefinitions!)> "Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions"
-													<button.butt .active_butt=(state.dictionary=='RUSD') @click=(state.dictionary='RUSD';loadDefinitions!)> "Полный лексикон по Стронгу и Дворецкому, 2019"
+													for dictionary in dictionaries
+														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
 
 
 									for definition, index in definitions

@@ -625,37 +625,24 @@ def searchInDictionary(request, dict, query):
         })
     return JsonResponse(d, safe=False)
 
-onse
-
 
 def getDictionary(request, dictionary):
-    all_verses = Verses.objects.filter(
-        translation=translation).order_by('book', 'chapter', 'verse')
-    all_commentaries = Commentary.objects.filter(
-        translation=translation).order_by('book', 'chapter', 'verse')
+    definitions = Dictionary.objects.filter(
+        dictionary=dictionary)
 
-    def serializeVerse(obj):
-        verse = {
-            "pk": obj.pk,
-            "translation": obj.translation,
-            "book": obj.book,
-            "chapter": obj.chapter,
-            "verse": obj.verse,
-            "text": obj.text
-        }
-        comment = ''
-        for item in all_commentaries:
-            if item.verse == obj.verse and item.chapter == obj.chapter and item.book == obj.book:
-                if len(comment) > 0:
-                    comment = "%s<br>" % (comment)
-                comment = "%s%s" % (comment, item.text)
+    d = []
+    for definition in definitions:
+        d.append({
+            "dictionary": definition.dictionary,
+            "topic": definition.topic,
+            "definition": definition.definition,
+            "lexeme": definition.lexeme,
+            "transliteration": definition.transliteration,
+            "pronunciation": definition.pronunciation,
+            "short_definition": definition.short_definition,
+        })
 
-        if len(comment) > 0:
-            verse["comment"] = comment
-        return(verse)
-
-    verses = [serializeVerse(obj) for obj in all_verses]
-    return cross_origin(JsonResponse(verses, safe=False))
+    return cross_origin(JsonResponse(d, safe=False))
 
 
 

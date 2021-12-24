@@ -1,24 +1,34 @@
 import languages from "./views/languages.json"
+import dictionaries from "./views/dictionaries.json"
 import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
 
 export class State
-	downloaded_translations
 	db_is_available
 	db
+
+	downloaded_translations
 	translations_in_downloading
 	deleting_of_all_transllations
+	translations_current_state = {}
+
+	dictionaries_in_downloading
+	downloaded_dictionaries
+	deleting_of_all_dictionaries
+	dictionaries_current_state = {}
+
 	show_languages
 	language
 	lang
 	notifications = []
 	user = {}
-	translations_current_state = {}
+
 	addBtn = no
 	hideInstallPromotion = no
 	deferredPrompt
+	pswv = no # Play Store Web View
+
 	translations = []
 	timeoutID = undefined
-	pswv = no # Play Store Web View
 	intouch = no
 
 	set dictionary new_value
@@ -32,11 +42,18 @@ export class State
 	def constructor
 		for lngg in languages
 			translations = translations.concat(lngg.translations)
+
+		show_languages = no
 		db_is_available = yes
+
 		downloaded_translations = []
 		translations_in_downloading = []
 		deleting_of_all_transllations = no
-		show_languages = no
+
+		downloaded_dictionaries = []
+		dictionaries_in_downloading = []
+		deleting_of_all_dictionaries = no
+
 
 		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
 		db = new Dexie('versesdb')
@@ -49,8 +66,8 @@ export class State
 				delete bookmark.notes))
 		db.version(3).stores({
 			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
-			bookmarks: '&verse, *collections'
-			dictionaries: '&pk, dictionary'
+			bookmarks: '&verse, *collections',
+			dictionaries: '++, dictionary'
 		})
 
 		# To know as fast as possible if the user possibly is logged in.
@@ -126,7 +143,7 @@ export class State
 			else
 				dictionary = 'BDBT'
 
-		checkDownloadedTranslations()
+		checkDownloadedData()
 		checkSavedBookmarks()
 
 		# Update obsole translations if such exist.
@@ -182,7 +199,8 @@ export class State
 		let res = await window.fetch url
 		return res.json
 
-	def checkDownloadedTranslations
+
+	def checkDownloadedData
 		downloaded_translations = JSON.parse(getCookie('downloaded_translations')) || []
 		let checked_translations = await Promise.all(
 			translations.map(
@@ -190,13 +208,30 @@ export class State
 					db.transaction('r', db.verses, do
 						const resd = await db.verses.get({translation: translation.short_name})
 						return resd.translation
-					).catch(do |e|
+					).catch(do
 						return null
 					)
 			)
 		)
 		downloaded_translations = checked_translations.filter(do |item| return item != null) || []
 		setCookie('downloaded_translations', JSON.stringify(downloaded_translations))
+
+		downloaded_dictionaries = JSON.parse(getCookie('downloaded_dictionaries')) || []
+		let checked_dictionaries = await Promise.all(
+			dictionaries.map(
+				do |dictionary|
+					db.transaction('r', db.dictionaries, do
+						const resd = await db.dictionaries.get({dictionary: dictionary.abbr})
+						return resd.dictionary
+					).catch(do
+						return null
+					)
+			)
+		)
+		downloaded_dictionaries = checked_dictionaries.filter(do |item| return item != null) || []
+		setCookie('downloaded_dictionaries', JSON.stringify(downloaded_dictionaries))
+		imba.commit()
+
 
 	def checkTranslationsUpdates
 		let stored_translations_updates = JSON.parse(window.localStorage.getItem('stored_translations_updates'))
@@ -212,6 +247,7 @@ export class State
 		else
 			stored_translations_updates = translations_current_state
 			window.localStorage.setItem('stored_translations_updates', JSON.stringify(translations_current_state))
+
 
 	def checkSavedBookmarks
 		db.transaction('rw', db.bookmarks, do
@@ -365,6 +401,134 @@ export class State
 				console.error(e)
 			)
 
+
+	def downloadDictionary dictionary
+		if (downloaded_dictionaries.indexOf(dictionary) < 0 && window.navigator.onLine)
+			dictionaries_in_downloading.push(dictionary)
+			let begtime = Date.now()
+			let url = '/static/dictionaries/' + dictionary + '.json'
+
+			def resolveDownload dictionary
+				db_is_available = yes
+				downloaded_dictionaries.push(dictionary)
+				setCookie('downloaded_dictionaries', JSON.stringify(downloaded_dictionaries))
+				dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(dictionary), 1)
+				dictionaries_current_state[dictionary] = Date.now()
+				setCookie('stored_dictionaries_updates', JSON.stringify(dictionaries_current_state))
+				console.log("Dictionary ", dictionary, " is saved. Time: ", (Date.now() - begtime) / 1000, "s")
+				imba.commit!
+
+			if window.Worker
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage(url)
+
+				dexieWorker.addEventListener('message', do |event|
+					if event.data[0] == 'downloaded_dictionary'
+						resolveDownload(event.data[1]))
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					handleDownloadingDictError(dictionary))
+			else
+				let array_of_verses = null
+				try
+					array_of_verses = await loadData(url)
+					console.log("Translation is downloaded. Time: ", (Date.now() - begtime) / 1000, "s")
+				catch e
+					console.error(e)
+					handleDownloadingDictError(dictionary)
+				if array_of_verses
+					db_is_available = no
+					db.transaction("rw", db.verses, do
+						await db.verses.bulkPut(array_of_verses)
+						resolveDownload()
+					).catch (do |e|
+						handleDownloadingDictError(dictionary)
+						console.error(e)
+					)
+
+	def handleDownloadingDictError dictionary
+		dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(dictionary), 1)
+		showNotification('error')
+
+	def deleteDictionary dictionary, update = no
+		downloaded_dictionaries.splice(downloaded_dictionaries.indexOf(dictionary), 1)
+		dictionaries_in_downloading.push(dictionary)
+		let begtime = Date.now()
+		db_is_available = no
+
+		def resolveDeletion deleteCount
+			db_is_available = yes
+			console.log("Deleted ", deleteCount[1], " objects of ",  deleteCount[0], ". Time: ", (Date.now() - begtime) / 1000)
+			dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(deleteCount[1]), 1)
+			delete dictionaries_current_state[deleteCount[1]]
+			setCookie('stored_dictionaries_updates', JSON.stringify(dictionaries_current_state))
+			imba.commit!
+			if update
+				deleteDictionary(dictionary)
+
+		if window.Worker
+			let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+			dexieWorker.postMessage({action:'delete', dictionary:dictionary})
+
+			dexieWorker.addEventListener('message', do |event|
+				if event.data[1] == dictionary
+					resolveDeletion(event.data))
+
+			dexieWorker.addEventListener('error', do |event|
+				console.error('error received from dexieWorker => ', event)
+				handleDownloadingError(dictionary))
+		else
+			db.transaction("rw", db.verses, do
+				db.verses.where({dictionary: dictionary}).delete().then(do |deleteCount|
+					resolveDeletion(deleteCount)
+					return 1
+				)
+			).catch(do |e|
+				console.error(e)
+			)
+
+	def searchDefinitionsOffline search
+		console.log 'here'
+		let begtime = Date.now()
+		db_is_available = no
+
+		def resolveSearch data
+			db_is_available = yes
+			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
+			if data.length
+				return data
+			else
+				return []
+
+		if window.Worker
+			return new Promise(do |resolveSearch|
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage(search)
+
+				dexieWorker.addEventListener('message', do |event|
+					if event.data[0] == 'search'
+						resolveSearch(event.data[1]))
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					return [])).then(do |data| resolveSearch(data))
+		else
+			db.transaction("r", db.verses, do
+				let data = await db.verses.where({translation: search.search_result_translation}).filter(do |verse|
+					return verse.text.includes(search.dictionary)
+				).toArray()
+				resolveSearch(data)
+			).catch(do |e|
+				console.error(e)
+				return []
+			)
+
+
+
 	def deleteBookmark pks
 		let begtime = Date.now()
 		db.transaction("rw", db.bookmarks, do
@@ -388,6 +552,19 @@ export class State
 		).catch(do |e|
 			console.error(e)
 		)
+
+	def clearDictionariesTable
+		deleting_of_all_dictionaries = yes
+		db.transaction("rw", db.dictionaries, do
+			await db.dictionaries.clear()
+			downloaded_dictionaries = []
+			dictionaries_in_downloading = []
+			deleting_of_all_dictionaries = no
+			imba.commit!
+		).catch(do |e|
+			console.error(e)
+		)
+
 
 	def saveBookmarksToStorageUntillOnline bookmarkobj
 		let bookmarks_array = []
@@ -458,7 +635,7 @@ export class State
 
 		def resolveSearch data
 			db_is_available = yes
-			console.log("Finded ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
+			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data.length
 				return data
 			else
