@@ -15,17 +15,16 @@ db.version(3).stores({
 })
 
 self.onmessage = function (msg) {
-	console.log(msg.data)
 	if (msg.data.search_input) {
 		search(msg.data);
 	} else if (msg.data.action == 'delete') {
 		deleteDictionary(msg.data.dictionary)
+	} else if (msg.data.action == 'download_dictionary') {
+		downloadDictionary(msg.data);
 	} else if (msg.data.query) {
 		dictionarySearch(msg.data)
 	} else if (msg.data.includes('/static/translations/')) {
 		downloadTranslation(msg.data);
-	} else if (msg.data.includes('/static/dictionaries/')) {
-		downloadDictionary(msg.data);
 	} else {
 		deleteTranslation(msg.data);
 	}
@@ -72,22 +71,24 @@ function search(search) {
 
 
 
-function downloadDictionary(url) {
-	fetch(url)
+function downloadDictionary(request) {
+	fetch(request.url)
 		.then(response => response.json())
 		.then(data => {
+			for (let i = 0; i < data.length; i++) {
+				data[i].dictionary = request.dictionary;
+			}
 			db.transaction("rw", db.dictionaries, () => {
 				db.dictionaries.bulkPut(data)
 					.then(() => {
-						postMessage(['downloaded_dictionary', url.substring(21, url.length - 5)])
+						postMessage(['downloaded_dictionary', request.dictionary])
 					}
-				);
+					);
 			}).catch((e) => {
-				throw (url.substring(21, url.length - 5));
-			}
-			)
+				throw (request.dictionary);
+			})
 		}).catch((e) => {
-			throw (url.substring(21, url.length - 5));
+			throw (request.dictionary);
 		})
 }
 
@@ -100,21 +101,7 @@ function deleteDictionary(dictionary) {
 	})
 }
 
-function stripVowels(rawString) {
-	// Clear Hebrew
-	let res = rawString.replace(/[\u0591-\u05C7]/g, "");
-	// Replace some letters, which are not present in a given unicode range, manually.
-	res = res.replace('שׁ', 'ש');
-	res = res.replace('שׂ', 'ש');
-	res = res.replace('‎', '');
-
-	// Clear Greek
-	res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-	return res
-}
-
 function dictionarySearch(search) {
-	let query = stripVowels(search.query);
 	let uppercase_query = search.query.toUpperCase()
 	db.transaction("r", db.dictionaries, () => {
 		db.dictionaries.where({ dictionary: search.dictionary })
@@ -123,19 +110,20 @@ function dictionarySearch(search) {
 					return true;
 				}
 
-				let short_definition = definition.short_definition.toUpperCase();
-				if (uppercase_query.includes(short_definition) || short_definition.includes(uppercase_query)) {
-					return true;
+				if (definition.short_definition) {
+					let short_definition = definition.short_definition.toUpperCase();
+					if (uppercase_query.indexOf(short_definition) > -1 || short_definition.indexOf(uppercase_query) > -1) {
+						return true;
+					}
 				}
 
-				let lexeme = stripVowels(definition.lexeme)
-				if (query.includes(lexeme) || lexeme.includes(query)) {
+				if (search.query.includes(definition.lexeme) || definition.lexeme.includes(search.query)) {
 					return true;
 				} else
 					return false;
-			}
-			).toArray().then(data => {console.log(data); postMessage(['search', data]); });
-	}).catch((e) => {
+			})
+			.toArray().then(data => { postMessage(['search', data]); });
+	}).catch((e) => {v
 		throw (search);
 	})
 }

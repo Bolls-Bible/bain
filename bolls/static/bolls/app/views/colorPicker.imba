@@ -42,6 +42,7 @@ tag color-picker
 	def render
 		<self>
 			<canvas @touch.fit=pickAColor>
+			<global @click.outside=emit("closecp")>
 	css
 		position: fixed
 		bottom: 0

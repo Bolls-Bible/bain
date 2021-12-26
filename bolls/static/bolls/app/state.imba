@@ -421,7 +421,7 @@ export class State
 			if window.Worker
 				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
 
-				dexieWorker.postMessage(url)
+				dexieWorker.postMessage({action:'download_dictionary', url:url, dictionary:dictionary})
 
 				dexieWorker.addEventListener('message', do |event|
 					if event.data[0] == 'downloaded_dictionary'
@@ -491,7 +491,6 @@ export class State
 			)
 
 	def searchDefinitionsOffline search
-		console.log 'here'
 		let begtime = Date.now()
 		db_is_available = no
 

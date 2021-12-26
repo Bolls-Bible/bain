@@ -1,3 +1,4 @@
+from django.db.models import F, Func
 import re
 import os
 import ast
@@ -539,7 +540,6 @@ def handler500(request, *args, **argv):
     return response
 
 
-
 def stripVowels(raw_string):
     res = ''
     if len(re.findall('[α-ωΑ-Ω]', raw_string)):
@@ -562,8 +562,9 @@ def parseLinks(text, translation):
 	if type(text) == float:
 		return ''
 
-	text = re.sub(r'(<[/]?span[^>]*)>', '', text)	# Clean up unneeded spans
-	text = re.sub(r'( class=\'\w+\')', '', text)	# Avoid unneded classes on anchors
+	text = re.sub(r'(<[/]?span[^>]*)>', '', text)  # Clean up unneeded spans
+	# Avoid unneded classes on anchors
+	text = re.sub(r'( class=\'\w+\')', '', text)
 
 	pieces = text.split("'")
 
@@ -600,9 +601,10 @@ def searchInDictionary(request, dict, query):
         'lexeme__unaccent', unaccented_query)).filter(dictionary=dict, rank__gt=0.5).order_by('-rank')
 
     # Merge both kinds of search
-    results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
+    results_of_search = list(results_of_similarity) + \
+                             list(set(results_of_rank) -
+                                  set(results_of_similarity))
     results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
-
 
     # for farther refactoring of inner Bible links
     translation = ""
@@ -627,16 +629,14 @@ def searchInDictionary(request, dict, query):
 
 
 def getDictionary(request, dictionary):
-    definitions = Dictionary.objects.filter(
-        dictionary=dictionary)
+    definitions = Dictionary.objects.annotate(unaccented_lexeme=Func(F("lexeme"), function="unaccent")).filter(dictionary=dictionary)
 
-    d = []
+    d=[]
     for definition in definitions:
         d.append({
-            "dictionary": definition.dictionary,
             "topic": definition.topic,
             "definition": definition.definition,
-            "lexeme": definition.lexeme,
+            "lexeme": definition.unaccented_lexeme,
             "transliteration": definition.transliteration,
             "pronunciation": definition.pronunciation,
             "short_definition": definition.short_definition,

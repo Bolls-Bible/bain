@@ -1610,8 +1610,8 @@ tag bible-reader
 		store.show_history = !store.show_history
 		settings_menu_left = -300
 		if store.show_history && data.user.username && window.navigator.onLine
-			history = await loadData('/get-history')
-			history = JSON.parse(history)
+			let cloud_history = await loadData('/get-history')
+			history = JSON.parse(cloud_history)
 			imba.commit!
 
 	def clearHistory
@@ -2328,6 +2328,53 @@ tag bible-reader
 
 
 
+	def stripVowels rawString
+		# Clear Hebrew
+		let res =  rawString.replace(/[\u0591-\u05C7]/g,"")
+		# Replace some letters, which are not present in a given unicode range, manually.
+		res = res.replace('שׁ', 'ש')
+		res = res.replace('שׂ', 'ש')
+		res = res.replace('‎', '')
+
+		# Clear Greek
+		res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+		return res
+
+
+	# Compute a search relevance score for an item.
+	def scoreDefinition thename, query
+		query = stripVowels(query.toLowerCase!)
+		# console.log thename, query
+		let score = 0
+		let p = 0 # Position within the `item`
+		# Look through each character of the query string, stopping at the end(s)...
+
+		for i in [0 ... query.length]
+			# Figure out if the current letter is found in the rest of the `item`.
+			const index = thename.indexOf(query[i], p)
+			# If not, stop here.
+			if index < 0
+				break
+			#  If it is, add to the score...
+			score += 1
+			if (index - p) < 2
+				score++
+			#  ... and skip the position within `item` forward.
+			p = index
+
+		if thename.indexOf(query) > -1
+			score += 8
+			if thename.length - query.length < 2
+				score += 8
+		if thename.length == query.length
+			score += 1
+
+		# log score
+		if score > query.length
+			return score
+		return 0
+
+
 
 	def loadDefinitions
 		let selected_text = window.getSelection!.toString!.trim!
@@ -2346,8 +2393,17 @@ tag bible-reader
 			if window.navigator.onLine
 				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
 			elif state.dictionary in state.downloaded_dictionaries
-				definitions = await state.searchDefinitionsOffline {dictionary:state.dictionary, query:store.definition_search}
-			log definitions
+				let unvoweled_query = stripVowels(store.definition_search)
+				search_results = await state.searchDefinitionsOffline {dictionary:state.dictionary, query:unvoweled_query}
+				definitions = []
+				for definition in search_results
+					const score = scoreSearch(definition.lexeme, unvoweled_query)
+					if score or definition.topic == store.definition_search.toUpperCase!
+						definitions.push({
+							... definition
+							score: score
+						})
+				definitions = definitions.sort(do |a, b| b.score - a.score)
 			loading = no
 			expanded_definition = 0
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
@@ -2397,11 +2453,18 @@ tag bible-reader
 			expanded_definition = -1
 		else
 			expanded_definition = index
+			for kid, i in $definitions.children
+				if i + 1 == index
+					$definitions.children[i+1].scrollIntoView()
 
 	def currentDictionary
 		for dictionary in dictionaries
 			if dictionary.abbr == state.dictionary
 				return dictionary.name
+
+
+	def closecp
+		store.show_color_picker = no
 
 
 	def render
@@ -2891,17 +2954,17 @@ tag bible-reader
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px p:16px 0 jc:center]>
-									# @click=(download_menu = !download_menu)>
+								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px p:16px 0 jc:center]
+									@click=(download_menu = !download_menu)>
 									<span>
 										if download_menu
 											data.lang.download_dictionaries
 										else
 											data.lang.download_translations
-									# <span[p:0 8px m:auto 0]>
-									# 	<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
-									# 		<title> 'expand'
-									# 		<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+									<span[p:0 8px m:auto 0]>
+										<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+											<title> 'expand'
+											<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 								if data.deleting_of_all_dictionaries
 									<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
@@ -3008,7 +3071,7 @@ tag bible-reader
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0) title=data.lang.back>
+								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0 or definitions_history.length == 0) title=data.lang.back>
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.back
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -3026,7 +3089,7 @@ tag bible-reader
 									<path d=svg_paths.search>
 
 							unless loading
-								<article.search_body>
+								<article$definitions.search_body>
 									<menu-popup bind=store.show_dictionaries>
 										<.popup_menu_box
 											[transform@important:none pos:relative p:8px 0px c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:flex]
@@ -3304,12 +3367,11 @@ tag bible-reader
 									<p> data.lang.create
 							if store.show_color_picker
 								<svg.close_colorPicker
-										@click=(do store.show_color_picker = no)
 										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
 										[scale@off:0.75 o@off:0] ease>
 									<title> data.lang.close
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-								<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
+								<color-picker bind=store @closecp=closecp .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
 
 
 			if store.show_history
