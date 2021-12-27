@@ -123,7 +123,7 @@ function dictionarySearch(search) {
 					return false;
 			})
 			.toArray().then(data => { postMessage(['search', data]); });
-	}).catch((e) => {v
+	}).catch((e) => {
 		throw (search);
 	})
 }

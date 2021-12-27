@@ -144,11 +144,11 @@ export class State
 				dictionary = 'BDBT'
 
 		checkDownloadedData()
-		checkSavedBookmarks()
 
 		# Update obsole translations if such exist.
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
+			checkSavedBookmarks()
 
 		window.addEventListener('beforeinstallprompt', do(e)
 			e.preventDefault()
@@ -250,41 +250,37 @@ export class State
 
 
 	def checkSavedBookmarks
+		let offline_bookmarks = []
 		db.transaction('rw', db.bookmarks, do
 			const stored_bookmarks_count = await db.bookmarks.count()
-			if stored_bookmarks_count > 0 &&  window.navigator.onLine
-				const bookmarks_in_offline = await db.bookmarks.toArray()
-				let verses = []
-				let bookmarks = []
-				let date = bookmarks_in_offline[0].date
-				let color = bookmarks_in_offline[0].color
-				let collections = ''
-				let note = bookmarks_in_offline[0].note
-				for category, key in bookmarks_in_offline[0].collections
-					collections += category
-					if key + 1 < bookmarks_in_offline[0].collections.length
-						collections += " | "
-				let bkmrk = {
-					verses: verses,
-					date: date,
-					color: color,
-					collections: collections
-					note: note
-				}
-				for bookmark in bookmarks_in_offline
-					if bookmark.date == date
-						verses.push(bookmark.verse)
+			if stored_bookmarks_count > 0 && window.navigator.onLine
+				offline_bookmarks = await db.bookmarks.toArray()
+				console.log offline_bookmarks
+
+				unless offline_bookmarks.length
+					console.log 'Nothing to save'
+					return
+
+				let bookmarks = [{
+					verses: [offline_bookmarks[0].verse]
+					date: offline_bookmarks[0].date
+					color: offline_bookmarks[0].color
+					collections: offline_bookmarks[0].collections.join(' | ')
+					note: offline_bookmarks[0].note
+				}]
+
+				for offline_bookmark in offline_bookmarks
+					if offline_bookmark.date == bookmarks[-1].date
+						bookmarks[-1].verses.push(offline_bookmark.verse)
 					else
-						bookmarks.push(bkmrk)
-						verses = [bookmark.verse]
-						date = bookmark.date
-						color = bookmark.color
-						for category, key in bookmark.collections
-							collections += category
-							if key + 1 < bookmark.collections.length
-								collections += " | "
-					if bookmark == bookmarks_in_offline[bookmarks_in_offline.length - 1]
-						bookmarks.push(bkmrk)
+						bookmarks.push({
+							verses: [offline_bookmark.verse]
+							date: offline_bookmark.date
+							color: offline_bookmark.color
+							collections: offline_bookmark.collections.join(' | ')
+							note: offline_bookmark.note
+						})
+
 				bookmarks.map(do |bookmark|
 					window.fetch("/save-bookmarks/", {
 						method: "POST",
@@ -302,12 +298,10 @@ export class State
 						}),
 					})
 					.then(do |response| response.json())
-					.then(do |data| undefined)
-					.catch(do |e| console.error(e))
+					.catch(do |e| console.error("sending offline bokmarks to server", e))
 				)
 				db.transaction('rw', db.bookmarks, do
-					db.bookmarks.clear()
-				)
+					db.bookmarks.clear())
 		).catch(do |e|
 			db_is_available = no
 			console.error('Uh oh : ' + e)
@@ -528,7 +522,7 @@ export class State
 
 
 
-	def deleteBookmark pks
+	def deleteBookmarks pks
 		let begtime = Date.now()
 		db.transaction("rw", db.bookmarks, do
 			const res = await Promise.all(pks.map(do |pk|
@@ -566,7 +560,7 @@ export class State
 
 
 	def saveBookmarksToStorageUntillOnline bookmarkobj
-		let bookmarks_array = []
+		let bookmarks_to_save = []
 		let bookmarks = await db.transaction("r", db.bookmarks, do
 			return db.bookmarks.toArray()
 		).catch (do |e|
@@ -574,9 +568,11 @@ export class State
 		)
 
 		for verse in bookmarkobj.verses
+			# If a bookmark already exist -- first remove it, then add a new version
+			console.log bookmarkobj
 			if bookmarks.find(do |element| return element.verse == verse)
-				deleteBookmark([verse])
-			bookmarks_array.push({
+				deleteBookmarks([verse])
+			bookmarks_to_save.push({
 				verse: verse,
 				date: bookmarkobj.date,
 				color: bookmarkobj.color,
@@ -584,19 +580,24 @@ export class State
 				note: bookmarkobj.note
 			})
 		db.transaction("rw", db.bookmarks, do
-			await db.bookmarks.bulkPut(bookmarks_array)
+			await db.bookmarks.bulkPut(bookmarks_to_save)
 		).catch (do |e|
 			console.error(e)
 		)
 
-	def getChapterBookmarksFromStorage bookmarks_array
+	def getChapterBookmarksFromStorage pks
 		db.transaction("r", db.bookmarks, do
-			let some_array = await Promise.all(
-				bookmarks_array.map(do |versepk|
+			let offline_bookmarks = await Promise.all(
+				pks.map(do |versepk|
 					await db.bookmarks.get(versepk)
 				)
 			)
-			return some_array.filter(do |item| return item != undefined)
+			let bookmarks = []
+			for bookmark in offline_bookmarks
+				if bookmark
+					bookmark.collection = bookmark.collections.join(' | ')
+					bookmarks.push bookmark
+			return bookmarks
 		).catch (do |e|
 			console.error(e)
 		)
@@ -664,6 +665,7 @@ export class State
 				return []
 			)
 
+	# Used at Profile page
 	def getBookmarksFromStorage
 		db.transaction("r", db.bookmarks, db.verses, do
 			let bookmarks = await db.bookmarks.toArray()
@@ -769,6 +771,7 @@ export class State
 
 
 	def requestDeleteBookmark pks
+		deleteBookmarks(pks)
 		if window.navigator.onLine
 			window.fetch("/delete-bookmarks/", {
 				method: "POST",
@@ -782,11 +785,16 @@ export class State
 				}),
 			})
 			.then(do |response| response.json())
-			.then(do |data| showNotification('deleted'))
-		else
-			# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-			deleteBookmark(pks)
-			setCookie('bookmarks-to-delete', JSON.stringify(pks))
+			.then(do showNotification('deleted'))
+			.catch(do |err|
+				console.log err
+				deleteLater (pks)
+			)
+		else deleteLater (pks)
+
+	def deleteLater pks
+		let bookmarks-to-delete = getCookie('bookmarks-to-delete')
+		setCookie('bookmarks-to-delete', JSON.stringify(bookmarks-to-delete.concat(pks)))
 
 	def getUserName
 		if user.username

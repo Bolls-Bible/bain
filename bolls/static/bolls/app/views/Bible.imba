@@ -472,15 +472,19 @@ tag bible-reader
 		return res.json()
 
 	def getBookmarks url, type
-		this[type] = []
+		let server_bookmarks = []
+		let offline_bookmarks = []
 		try
-			this[type] = await loadData(url)
+			server_bookmarks = await loadData(url)
 		catch error
-			if data.db_is_available
-				if type == 'bookmarks'
-					this[type] = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
-				else
-					this[type] = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+			log error
+
+		if data.db_is_available
+			if type == 'bookmarks'
+				offline_bookmarks = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
+			else
+				offline_bookmarks = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+		this[type] = offline_bookmarks.concat(server_bookmarks)
 		imba.commit()
 
 	def getText translation, book, chapter, verse
@@ -1427,6 +1431,16 @@ tag bible-reader
 			window.location.pathname = "/signup/"
 			return
 
+		def saveOffline
+			if data.db_is_available
+				data.saveBookmarksToStorageUntillOnline({
+					verses: choosenid,
+					color: store.highlight_color,
+					date: Date.now(),
+					collections: choosen_categories
+					note: store.note
+				})
+
 		if window.navigator.onLine
 			window.fetch("/save-bookmarks/", {
 				method: "POST",
@@ -1444,26 +1458,13 @@ tag bible-reader
 				}),
 			})
 			.then(do |response| response.json())
-			.then(do |resdata| data.showNotification('saved'))
+			.then(do data.showNotification('saved'))
 			.catch(do |e|
 				console.log(e)
 				data.showNotification('error')
-				if data.db_is_available
-					data.saveBookmarksToStorageUntillOnline({
-						verses: choosenid,
-						color: store.highlight_color,
-						date: Date.now(),
-						collections: choosen_categories
-						note: store.note
-					}))
-		elif data.db_is_available
-			data.saveBookmarksToStorageUntillOnline({
-				verses: choosenid,
-				color: store.highlight_color,
-				date: Date.now(),
-				collections: choosen_categories
-				note: store.note
-			})
+				saveOffline!)
+		else saveOffline!
+
 		if choosen_parallel == 'second'
 			for verse in choosenid
 				if parallel_bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1474,8 +1475,7 @@ tag bible-reader
 					color: store.highlight_color,
 					collection: collections
 					note: store.note
-					}
-				)
+				})
 		else
 			for verse in choosenid
 				if bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1496,14 +1496,7 @@ tag bible-reader
 		window.localStorage.setItem("highlights", JSON.stringify(highlights))
 
 	def deleteBookmarks pks
-		let should_to_delete = no
-		let indexes_of_bookmarks = parallel_bookmarks.map(do |x| x.verse)
-		indexes_of_bookmarks = indexes_of_bookmarks.concat(bookmarks.map(do |x| x.verse))
-		for pk in pks
-			if indexes_of_bookmarks.indexOf(pk) != -1
-				should_to_delete = yes
-				break
-		if data.user.username && should_to_delete
+		if data.user.username
 			data.requestDeleteBookmark(pks)
 			if choosen_parallel == 'second'
 				for verse in choosenid
@@ -1753,7 +1746,6 @@ tag bible-reader
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
 	def popUp what
-		clearSpace!
 		big_modal_block_content = what
 		window.history.pushState(no, what)
 		router.go("/{settings.translation}/{settings.book}/{settings.chapter}/0/")
@@ -2387,6 +2379,7 @@ tag bible-reader
 				definitions_history_index += 1
 				definitions_history[definitions_history_index] = store.definition_search
 				definitions_history.length = definitions_history_index + 1
+			clearSpace!
 			popUp 'dictionary'
 			loading = yes
 			imba.commit!
