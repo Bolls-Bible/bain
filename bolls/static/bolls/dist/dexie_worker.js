@@ -1,4 +1,5 @@
 importScripts("/static/bolls/dist/dexie.min.js");
+importScripts("/static/bolls/dist/jszip.min.js");
 
 Dexie = Dexie.default
 
@@ -72,24 +73,39 @@ function search(search) {
 
 
 function downloadDictionary(request) {
-	fetch(request.url)
-		.then(response => response.json())
-		.then(data => {
-			for (let i = 0; i < data.length; i++) {
-				data[i].dictionary = request.dictionary;
-			}
-			db.transaction("rw", db.dictionaries, () => {
-				db.dictionaries.bulkPut(data)
-					.then(() => {
-						postMessage(['downloaded_dictionary', request.dictionary])
-					}
-					);
-			}).catch((e) => {
-				throw (request.dictionary);
-			})
+	fetch(request.url)       // 1) fetch the url
+	.then(function (response) {                       // 2) filter on 200 OK
+		if (response.status === 200 || response.status === 0) {
+			return Promise.resolve(response.blob());
+		} else {
+			return Promise.reject(new Error(response.statusText));
+		}
+	})
+	.then(JSZip.loadAsync)                            // 3) chain with the zip promise
+	.then(function (zip) {
+		return zip.file(request.dictionary + '.json').async("string"); // 4) chain with the text content promise
+	})
+	.then(function success(text) {
+		let data = JSON.parse(text)
+
+		for (let i = 0; i < data.length; i++) {
+			data[i].dictionary = request.dictionary;
+		}
+
+		db.transaction("rw", db.dictionaries, () => {
+			db.dictionaries.bulkPut(data)
+				.then(() => {
+					postMessage(['downloaded_dictionary', request.dictionary])
+				}
+				);
 		}).catch((e) => {
+			console.log(e)
 			throw (request.dictionary);
 		})
+	}, function error(e) {
+		console.log(e)
+		throw (request.dictionary);
+	});
 }
 
 function deleteDictionary(dictionary) {

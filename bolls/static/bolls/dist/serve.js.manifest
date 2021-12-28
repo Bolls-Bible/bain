@@ -470,7 +470,7 @@
   "imports": [],
   "exports": [],
   "inputs": [],
-  "bytes": 836194,
+  "bytes": 836317,
   "source": "$$51$$",
   "_": "output",
   "path": "public/__assets__/app/client.js.map",
@@ -478,7 +478,7 @@
   "url": "/__assets__/app/client.js.map",
   "type": "map",
   "dependencies": [],
-  "hash": "WEJTWQMR"
+  "hash": "CMJHVGSL"
 },
 "$$46$$":{
   "imports": [],
@@ -623,7 +623,7 @@
     ],
     [
       "$$86$$",
-      21165
+      21164
     ],
     [
       "$$87$$",
@@ -719,7 +719,7 @@
     ],
     [
       "$$110$$",
-      239445
+      239533
     ],
     [
       "$$111$$",
@@ -762,7 +762,7 @@
       2234
     ]
   ],
-  "bytes": 864674,
+  "bytes": 864761,
   "map": "$$45$$",
   "source": "$$51$$",
   "css": "$$120$$",
@@ -772,7 +772,7 @@
   "url": "/__assets__/app/client.js",
   "type": "js",
   "dependencies": [],
-  "hash": "WEJTWQMR",
+  "hash": "CMJHVGSL",
   "originalPath": "app/client.__dist__.js"
 },
 "$$47$$":{
@@ -1194,7 +1194,7 @@
   "path": "app/langdata.imba"
 },
 "$$86$$":{
-  "bytes": 114166,
+  "bytes": 114165,
   "imports": [
     "$$82$$",
     "$$83$$",
@@ -1375,7 +1375,7 @@
   "path": "styles:app/views/Bible.imba"
 },
 "$$110$$":{
-  "bytes": 875356,
+  "bytes": 875681,
   "imports": [
     "$$82$$",
     "$$87$$",
@@ -1716,7 +1716,7 @@
   "path": "node_modules/imba/src/imba/imba.imba"
 },
 "$$144$$":{
-  "bytes": 114185,
+  "bytes": 114184,
   "imports": [
     "$$157$$",
     "$$158$$",
@@ -1727,7 +1727,7 @@
   "path": "app/state.imba"
 },
 "$$145$$":{
-  "bytes": 875356,
+  "bytes": 875681,
   "imports": [
     "$$160$$",
     "$$157$$",
@@ -2007,7 +2007,7 @@
     "/__assets__/all.css": "$$42$$"
   },
   "mappings": {},
-  "hash": "E0AZVSIT",
+  "hash": "LE0YGRYR",
   "srcdir": "..",
   "outdir": ".",
   "path": "serve.js.manifest",

@@ -400,7 +400,7 @@ export class State
 		if (downloaded_dictionaries.indexOf(dictionary) < 0 && window.navigator.onLine)
 			dictionaries_in_downloading.push(dictionary)
 			let begtime = Date.now()
-			let url = '/static/dictionaries/' + dictionary + '.json'
+			let url = '/static/dictionaries/' + dictionary + '.zip'
 
 			def resolveDownload dictionary
 				db_is_available = yes

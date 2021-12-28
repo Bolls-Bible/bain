@@ -2292,7 +2292,7 @@ tag bible-reader
 			return imba.commit!
 
 		# The feature is not available offline
-		if window.navigator.onLine
+		if window.navigator.onLine or state.downloaded_dictionaries.length
 			let range = selection.getRangeAt(0)
 			let rangeContainer = range.commonAncestorContainer
 
@@ -2374,7 +2374,7 @@ tag bible-reader
 			store.definition_search = selected_text
 
 		definitions = []
-		if store.definition_search && window.navigator.onLine
+		if store.definition_search && (window.navigator.onLine or state.downloaded_dictionaries.length)
 			if definitions_history.indexOf(store.definition_search) == -1
 				definitions_history_index += 1
 				definitions_history[definitions_history_index] = store.definition_search
