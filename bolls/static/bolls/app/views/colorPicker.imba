@@ -1,4 +1,4 @@
-export tag color-picker
+tag color-picker
 	prop imgData
 	prop rgba
 
@@ -42,6 +42,7 @@ export tag color-picker
 	def render
 		<self>
 			<canvas @touch.fit=pickAColor>
+			<global @click.outside=emit("closecp")>
 	css
 		position: fixed
 		bottom: 0

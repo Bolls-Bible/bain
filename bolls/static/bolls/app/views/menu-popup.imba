@@ -1,5 +1,5 @@
 # Used to hide it on global click and scroll into view when selected
-export tag menu-popup
+tag menu-popup
 	prop show = no
 	prop scrollinview = yes
 
