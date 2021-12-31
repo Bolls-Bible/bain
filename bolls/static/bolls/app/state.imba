@@ -1,35 +1,59 @@
 import languages from "./views/languages.json"
+import dictionaries from "./views/dictionaries.json"
 import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
 
 export class State
-	downloaded_translations
-	downloaded_comentaries	# new
 	db_is_available
 	db
+
+	downloaded_translations
 	translations_in_downloading
 	deleting_of_all_transllations
+	translations_current_state = {}
+
+	dictionaries_in_downloading
+	downloaded_dictionaries
+	deleting_of_all_dictionaries
+	dictionaries_current_state = {}
+
 	show_languages
 	language
 	lang
 	notifications = []
 	user = {}
-	translations_current_state = {}
+
 	addBtn = no
 	hideInstallPromotion = no
 	deferredPrompt
+	pswv = no # Play Store Web View
+
 	translations = []
 	timeoutID = undefined
-	pswv = no # Play Store Web View
 	intouch = no
+
+	set dictionary new_value
+		#dictionary = new_value
+		setCookie('dictionary', new_value)
+
+	get dictionary
+		return #dictionary
+
 
 	def constructor
 		for lngg in languages
 			translations = translations.concat(lngg.translations)
+
+		show_languages = no
 		db_is_available = yes
+
 		downloaded_translations = []
 		translations_in_downloading = []
 		deleting_of_all_transllations = no
-		show_languages = no
+
+		downloaded_dictionaries = []
+		dictionaries_in_downloading = []
+		deleting_of_all_dictionaries = no
+
 
 		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
 		db = new Dexie('versesdb')
@@ -40,6 +64,11 @@ export class State
 			return tx.table("bookmarks").toCollection().modify (do |bookmark|
 				bookmark.collections = bookmark.notes
 				delete bookmark.notes))
+		db.version(3).stores({
+			verses: '&pk, translation, [translation+book+chapter], [translation+book+chapter+verse]',
+			bookmarks: '&verse, *collections',
+			dictionaries: '++, dictionary'
+		})
 
 		# To know as fast as possible if the user possibly is logged in.
 		user.username = getCookie('username') || ''
@@ -106,12 +135,20 @@ export class State
 					language = 'eng'
 					document.lastChild.lang = "en"
 			setLanguage(language)
-		checkDownloadedTranslations()
-		checkSavedBookmarks()
+		if getCookie('dictionary')
+			dictionary = getCookie('dictionary')
+		else
+			if language == 'ru' or language = 'ukr'
+				dictionary = 'RUSD'
+			else
+				dictionary = 'BDBT'
+
+		checkDownloadedData()
 
 		# Update obsole translations if such exist.
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
+			checkSavedBookmarks()
 
 		window.addEventListener('beforeinstallprompt', do(e)
 			e.preventDefault()
@@ -162,7 +199,8 @@ export class State
 		let res = await window.fetch url
 		return res.json
 
-	def checkDownloadedTranslations
+
+	def checkDownloadedData
 		downloaded_translations = JSON.parse(getCookie('downloaded_translations')) || []
 		let checked_translations = await Promise.all(
 			translations.map(
@@ -170,13 +208,30 @@ export class State
 					db.transaction('r', db.verses, do
 						const resd = await db.verses.get({translation: translation.short_name})
 						return resd.translation
-					).catch(do |e|
+					).catch(do
 						return null
 					)
 			)
 		)
 		downloaded_translations = checked_translations.filter(do |item| return item != null) || []
 		setCookie('downloaded_translations', JSON.stringify(downloaded_translations))
+
+		downloaded_dictionaries = JSON.parse(getCookie('downloaded_dictionaries')) || []
+		let checked_dictionaries = await Promise.all(
+			dictionaries.map(
+				do |dictionary|
+					db.transaction('r', db.dictionaries, do
+						const resd = await db.dictionaries.get({dictionary: dictionary.abbr})
+						return resd.dictionary
+					).catch(do
+						return null
+					)
+			)
+		)
+		downloaded_dictionaries = checked_dictionaries.filter(do |item| return item != null) || []
+		setCookie('downloaded_dictionaries', JSON.stringify(downloaded_dictionaries))
+		imba.commit()
+
 
 	def checkTranslationsUpdates
 		let stored_translations_updates = JSON.parse(window.localStorage.getItem('stored_translations_updates'))
@@ -193,42 +248,39 @@ export class State
 			stored_translations_updates = translations_current_state
 			window.localStorage.setItem('stored_translations_updates', JSON.stringify(translations_current_state))
 
+
 	def checkSavedBookmarks
+		let offline_bookmarks = []
 		db.transaction('rw', db.bookmarks, do
 			const stored_bookmarks_count = await db.bookmarks.count()
-			if stored_bookmarks_count > 0 &&  window.navigator.onLine
-				const bookmarks_in_offline = await db.bookmarks.toArray()
-				let verses = []
-				let bookmarks = []
-				let date = bookmarks_in_offline[0].date
-				let color = bookmarks_in_offline[0].color
-				let collections = ''
-				let note = bookmarks_in_offline[0].note
-				for category, key in bookmarks_in_offline[0].collections
-					collections += category
-					if key + 1 < bookmarks_in_offline[0].collections.length
-						collections += " | "
-				let bkmrk = {
-					verses: verses,
-					date: date,
-					color: color,
-					collections: collections
-					note: note
-				}
-				for bookmark in bookmarks_in_offline
-					if bookmark.date == date
-						verses.push(bookmark.verse)
+			if stored_bookmarks_count > 0 && window.navigator.onLine
+				offline_bookmarks = await db.bookmarks.toArray()
+				console.log offline_bookmarks
+
+				unless offline_bookmarks.length
+					console.log 'Nothing to save'
+					return
+
+				let bookmarks = [{
+					verses: [offline_bookmarks[0].verse]
+					date: offline_bookmarks[0].date
+					color: offline_bookmarks[0].color
+					collections: offline_bookmarks[0].collections.join(' | ')
+					note: offline_bookmarks[0].note
+				}]
+
+				for offline_bookmark in offline_bookmarks
+					if offline_bookmark.date == bookmarks[-1].date
+						bookmarks[-1].verses.push(offline_bookmark.verse)
 					else
-						bookmarks.push(bkmrk)
-						verses = [bookmark.verse]
-						date = bookmark.date
-						color = bookmark.color
-						for category, key in bookmark.collections
-							collections += category
-							if key + 1 < bookmark.collections.length
-								collections += " | "
-					if bookmark == bookmarks_in_offline[bookmarks_in_offline.length - 1]
-						bookmarks.push(bkmrk)
+						bookmarks.push({
+							verses: [offline_bookmark.verse]
+							date: offline_bookmark.date
+							color: offline_bookmark.color
+							collections: offline_bookmark.collections.join(' | ')
+							note: offline_bookmark.note
+						})
+
 				bookmarks.map(do |bookmark|
 					window.fetch("/save-bookmarks/", {
 						method: "POST",
@@ -246,12 +298,10 @@ export class State
 						}),
 					})
 					.then(do |response| response.json())
-					.then(do |data| undefined)
-					.catch(do |e| console.error(e))
+					.catch(do |e| console.error("sending offline bokmarks to server", e))
 				)
 				db.transaction('rw', db.bookmarks, do
-					db.bookmarks.clear()
-				)
+					db.bookmarks.clear())
 		).catch(do |e|
 			db_is_available = no
 			console.error('Uh oh : ' + e)
@@ -345,7 +395,134 @@ export class State
 				console.error(e)
 			)
 
-	def deleteBookmark pks
+
+	def downloadDictionary dictionary
+		if (downloaded_dictionaries.indexOf(dictionary) < 0 && window.navigator.onLine)
+			dictionaries_in_downloading.push(dictionary)
+			let begtime = Date.now()
+			let url = '/static/dictionaries/' + dictionary + '.zip'
+
+			def resolveDownload dictionary
+				db_is_available = yes
+				downloaded_dictionaries.push(dictionary)
+				setCookie('downloaded_dictionaries', JSON.stringify(downloaded_dictionaries))
+				dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(dictionary), 1)
+				dictionaries_current_state[dictionary] = Date.now()
+				setCookie('stored_dictionaries_updates', JSON.stringify(dictionaries_current_state))
+				console.log("Dictionary ", dictionary, " is saved. Time: ", (Date.now() - begtime) / 1000, "s")
+				imba.commit!
+
+			if window.Worker
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage({action:'download_dictionary', url:url, dictionary:dictionary})
+
+				dexieWorker.addEventListener('message', do |event|
+					if event.data[0] == 'downloaded_dictionary'
+						resolveDownload(event.data[1]))
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					handleDownloadingDictError(dictionary))
+			else
+				let array_of_verses = null
+				try
+					array_of_verses = await loadData(url)
+					console.log("Translation is downloaded. Time: ", (Date.now() - begtime) / 1000, "s")
+				catch e
+					console.error(e)
+					handleDownloadingDictError(dictionary)
+				if array_of_verses
+					db_is_available = no
+					db.transaction("rw", db.verses, do
+						await db.verses.bulkPut(array_of_verses)
+						resolveDownload()
+					).catch (do |e|
+						handleDownloadingDictError(dictionary)
+						console.error(e)
+					)
+
+	def handleDownloadingDictError dictionary
+		dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(dictionary), 1)
+		showNotification('error')
+
+	def deleteDictionary dictionary, update = no
+		downloaded_dictionaries.splice(downloaded_dictionaries.indexOf(dictionary), 1)
+		dictionaries_in_downloading.push(dictionary)
+		let begtime = Date.now()
+		db_is_available = no
+
+		def resolveDeletion deleteCount
+			db_is_available = yes
+			console.log("Deleted ", deleteCount[1], " objects of ",  deleteCount[0], ". Time: ", (Date.now() - begtime) / 1000)
+			dictionaries_in_downloading.splice(dictionaries_in_downloading.indexOf(deleteCount[1]), 1)
+			delete dictionaries_current_state[deleteCount[1]]
+			setCookie('stored_dictionaries_updates', JSON.stringify(dictionaries_current_state))
+			imba.commit!
+			if update
+				deleteDictionary(dictionary)
+
+		if window.Worker
+			let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+			dexieWorker.postMessage({action:'delete', dictionary:dictionary})
+
+			dexieWorker.addEventListener('message', do |event|
+				if event.data[1] == dictionary
+					resolveDeletion(event.data))
+
+			dexieWorker.addEventListener('error', do |event|
+				console.error('error received from dexieWorker => ', event)
+				handleDownloadingError(dictionary))
+		else
+			db.transaction("rw", db.verses, do
+				db.verses.where({dictionary: dictionary}).delete().then(do |deleteCount|
+					resolveDeletion(deleteCount)
+					return 1
+				)
+			).catch(do |e|
+				console.error(e)
+			)
+
+	def searchDefinitionsOffline search
+		let begtime = Date.now()
+		db_is_available = no
+
+		def resolveSearch data
+			db_is_available = yes
+			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
+			if data.length
+				return data
+			else
+				return []
+
+		if window.Worker
+			return new Promise(do |resolveSearch|
+				let dexieWorker = new Worker('/static/bolls/dist/dexie_worker.js')
+
+				dexieWorker.postMessage(search)
+
+				dexieWorker.addEventListener('message', do |event|
+					if event.data[0] == 'search'
+						resolveSearch(event.data[1]))
+
+				dexieWorker.addEventListener('error', do |event|
+					console.error('error received from dexieWorker => ', event)
+					return [])).then(do |data| resolveSearch(data))
+		else
+			db.transaction("r", db.verses, do
+				let data = await db.verses.where({translation: search.search_result_translation}).filter(do |verse|
+					return verse.text.includes(search.dictionary)
+				).toArray()
+				resolveSearch(data)
+			).catch(do |e|
+				console.error(e)
+				return []
+			)
+
+
+
+	def deleteBookmarks pks
 		let begtime = Date.now()
 		db.transaction("rw", db.bookmarks, do
 			const res = await Promise.all(pks.map(do |pk|
@@ -369,8 +546,21 @@ export class State
 			console.error(e)
 		)
 
+	def clearDictionariesTable
+		deleting_of_all_dictionaries = yes
+		db.transaction("rw", db.dictionaries, do
+			await db.dictionaries.clear()
+			downloaded_dictionaries = []
+			dictionaries_in_downloading = []
+			deleting_of_all_dictionaries = no
+			imba.commit!
+		).catch(do |e|
+			console.error(e)
+		)
+
+
 	def saveBookmarksToStorageUntillOnline bookmarkobj
-		let bookmarks_array = []
+		let bookmarks_to_save = []
 		let bookmarks = await db.transaction("r", db.bookmarks, do
 			return db.bookmarks.toArray()
 		).catch (do |e|
@@ -378,9 +568,11 @@ export class State
 		)
 
 		for verse in bookmarkobj.verses
+			# If a bookmark already exist -- first remove it, then add a new version
+			console.log bookmarkobj
 			if bookmarks.find(do |element| return element.verse == verse)
-				deleteBookmark([verse])
-			bookmarks_array.push({
+				deleteBookmarks([verse])
+			bookmarks_to_save.push({
 				verse: verse,
 				date: bookmarkobj.date,
 				color: bookmarkobj.color,
@@ -388,19 +580,24 @@ export class State
 				note: bookmarkobj.note
 			})
 		db.transaction("rw", db.bookmarks, do
-			await db.bookmarks.bulkPut(bookmarks_array)
+			await db.bookmarks.bulkPut(bookmarks_to_save)
 		).catch (do |e|
 			console.error(e)
 		)
 
-	def getChapterBookmarksFromStorage bookmarks_array
+	def getChapterBookmarksFromStorage pks
 		db.transaction("r", db.bookmarks, do
-			let some_array = await Promise.all(
-				bookmarks_array.map(do |versepk|
+			let offline_bookmarks = await Promise.all(
+				pks.map(do |versepk|
 					await db.bookmarks.get(versepk)
 				)
 			)
-			return some_array.filter(do |item| return item != undefined)
+			let bookmarks = []
+			for bookmark in offline_bookmarks
+				if bookmark
+					bookmark.collection = bookmark.collections.join(' | ')
+					bookmarks.push bookmark
+			return bookmarks
 		).catch (do |e|
 			console.error(e)
 		)
@@ -438,7 +635,7 @@ export class State
 
 		def resolveSearch data
 			db_is_available = yes
-			console.log("Finded ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
+			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			if data.length
 				return data
 			else
@@ -468,6 +665,7 @@ export class State
 				return []
 			)
 
+	# Used at Profile page
 	def getBookmarksFromStorage
 		db.transaction("r", db.bookmarks, db.verses, do
 			let bookmarks = await db.bookmarks.toArray()
@@ -573,6 +771,7 @@ export class State
 
 
 	def requestDeleteBookmark pks
+		deleteBookmarks(pks)
 		if window.navigator.onLine
 			window.fetch("/delete-bookmarks/", {
 				method: "POST",
@@ -586,11 +785,16 @@ export class State
 				}),
 			})
 			.then(do |response| response.json())
-			.then(do |data| showNotification('deleted'))
-		else
-			# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-			deleteBookmark(pks)
-			setCookie('bookmarks-to-delete', JSON.stringify(pks))
+			.then(do showNotification('deleted'))
+			.catch(do |err|
+				console.log err
+				deleteLater (pks)
+			)
+		else deleteLater (pks)
+
+	def deleteLater pks
+		let bookmarks-to-delete = getCookie('bookmarks-to-delete')
+		setCookie('bookmarks-to-delete', JSON.stringify(bookmarks-to-delete.concat(pks)))
 
 	def getUserName
 		if user.username

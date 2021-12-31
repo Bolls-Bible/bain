@@ -11,7 +11,10 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/
 \copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
 
 
+ALTER TABLE dictionary
+  ADD dictionary TEXT DEFAULT "BDBT" NOT NULL;
 
+\copy bolls_dictionary(topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '/home/bohuslav/projects/bolls_data/eng.csv' DELIMITER ',' CSV HEADER;
 
 INSERT inTO bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
 

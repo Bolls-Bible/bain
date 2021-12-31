@@ -1,4 +1,4 @@
-export tag note-up
+tag note-up
 	prop text = ''
 	prop containerHeight = 0
 	prop containerWidth = 0

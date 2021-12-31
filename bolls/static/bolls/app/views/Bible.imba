@@ -1,5 +1,6 @@
 import *  as BOOKS from "./translations_books.json"
 import languages from "./languages.json"
+import dictionaries from "./dictionaries.json"
 import './Profile'
 import "./loading.imba"
 import "./downloads.imba"
@@ -103,6 +104,14 @@ let choosenid = []
 let highlights = []
 let show_collections = no
 let choosen_parallel = no
+
+let page_search =
+	d: no
+	query: ''
+	matches: []
+	current_occurence: 1
+	rects: []
+
 let store =
 	newcollection: ''
 	book_search: ''
@@ -114,14 +123,25 @@ let store =
 	show_fonts: no
 	show_history: no
 	show_themes: no
+	show_dictionaries: no
+	definition_search: ''
 
-let page_search =
-	d: no
-	query: ''
-	matches: []
-	current_occurence: 1
-	rects: []
+# Dictionary
+let host_rectangle = null
+let definitions = []
+let definitions_history = []
+let definitions_history_index = -1
+let expanded_definition = 0
+let download_menu = no
+document.onselectionchange = do
+	setTimeout(&, 150) do
+		let selection = document.getSelection()
+		if selection.isCollapsed
+			host_rectangle = null
 
+
+
+# Some messy stuff
 let addcollection = no
 let choosen_categories = []
 window.on_pops_tate = no
@@ -134,7 +154,7 @@ let show_language_of = ''
 let show_verse_picker = no
 let show_parallel_verse_picker = no
 let show_share_box = no
-let what_to_show_in_pop_up_block = ''
+let big_modal_block_content = ''
 let choosen_for_comparison = []
 let comparison_parallel = []
 let show_delete_bookmark = no
@@ -208,7 +228,7 @@ const accents = [
 ]
 
 
-export tag bible-reader
+tag bible-reader
 	prop verses = []
 	prop search_verses = {}
 	prop parallel_bookmarks = []
@@ -263,6 +283,7 @@ export tag bible-reader
 					document.title += ':' + window.verse
 					findVerse(window.verse, window.endverse)
 				document.title += ' ' + window.translation + " Bolls Bible"
+
 		if getCookie('theme')
 			settings.theme = getCookie('theme')
 			settings.accent = getCookie('accent') || settings.accent
@@ -304,10 +325,13 @@ export tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
+
 		if !verses.length
 			getChapter(settings.translation, settings.book, settings.chapter)
+
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
+
 		if window.navigator.onLine
 			try
 				let userdata = await loadData("/user-logged/")
@@ -321,7 +345,7 @@ export tag bible-reader
 					# Merge local history and server copy
 					history = JSON.parse(getCookie("history")) || []
 					try
-						history = history.concat(JSON.parse(userdata.history))
+						history = JSON.parse(userdata.history).concat(history)
 
 						# Remove duplicates
 						let uniqueHistory = []
@@ -330,7 +354,6 @@ export tag bible-reader
 								uniqueHistory.push(c)
 
 						history = uniqueHistory
-
 
 					# Remove items exceeding limit
 					if history.length > 256
@@ -347,7 +370,10 @@ export tag bible-reader
 			catch err
 				console.error('Error: ', err)
 				data.showNotification('error')
+
 		history = JSON.parse(getCookie("history")) || []
+		history.sort(do(a, b) return a.date - b.date)
+
 		if window.message
 			data.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
@@ -378,6 +404,10 @@ export tag bible-reader
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
 
+		window.strongDefinition = do(topic)
+			store.definition_search = topic
+			loadDefinitions!
+			imba.commit!
 
 
 	def searchPagination e
@@ -409,7 +439,9 @@ export tag bible-reader
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
 
-		history.unshift({"translation": translation, "book": book, "chapter": chapter, "verse": verse, "parallel": parallel})
+		history.sort(do(a, b) return a.date - b.date)
+
+		history.unshift({translation: translation, book: book, chapter: chapter, verse: verse, parallel: parallel, date:Date.now!})
 		if history.length > 256
 			history.length = 256
 
@@ -440,15 +472,19 @@ export tag bible-reader
 		return res.json()
 
 	def getBookmarks url, type
-		this[type] = []
+		let server_bookmarks = []
+		let offline_bookmarks = []
 		try
-			this[type] = await loadData(url)
+			server_bookmarks = await loadData(url)
 		catch error
-			if data.db_is_available
-				if type == 'bookmarks'
-					this[type] = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
-				else
-					this[type] = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+			log error
+
+		if data.db_is_available
+			if type == 'bookmarks'
+				offline_bookmarks = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
+			else
+				offline_bookmarks = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+		this[type] = offline_bookmarks.concat(server_bookmarks)
 		imba.commit()
 
 	def getText translation, book, chapter, verse
@@ -578,7 +614,6 @@ export tag bible-reader
 
 
 	def setScrolledBlock scroll_time
-		log scroll_time
 		unless scrolled_block
 			let dummyblock = <div[size:0px]>
 			dummyblock.classList.add('ref--firstparallel')
@@ -650,8 +685,8 @@ export tag bible-reader
 
 	def clearSpace
 		# If user write a note then instead of clearing everything just hide the note panel.
-		if what_to_show_in_pop_up_block == "show_note"
-			what_to_show_in_pop_up_block = ''
+		if big_modal_block_content == "show_note"
+			big_modal_block_content = ''
 			return
 
 		# Clean all the variables in order to free space around the text
@@ -666,6 +701,7 @@ export tag bible-reader
 		search.counter = 50
 		choosen = []
 		choosenid = []
+		definitions = []
 		addcollection = no
 		store.show_color_picker = no
 		show_collections = no
@@ -677,16 +713,17 @@ export tag bible-reader
 		show_verse_picker = no
 		show_share_box = no
 		choosen_categories = []
+		host_rectangle = null
 
 		# unless the user is typing something focus the reader in order to enable arrow navigation on the text
 		unless page_search.d
 			focus()
-		if page_search.d || what_to_show_in_pop_up_block
+		if page_search.d || big_modal_block_content
 			page_search.d = no
 			page_search.matches = []
 			page_search.rects = []
 		window.getSelection().removeAllRanges()
-		what_to_show_in_pop_up_block = ''
+		big_modal_block_content = ''
 		imba.commit()
 
 
@@ -735,7 +772,7 @@ export tag bible-reader
 
 		# if the query is not an emty string lets clean it up for regex
 		let regex_compatible_query
-		unless what_to_show_in_pop_up_block
+		unless big_modal_block_content
 			regex_compatible_query = page_search.query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
 		else
 			regex_compatible_query = search.search_input.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
@@ -876,14 +913,14 @@ export tag bible-reader
 
 
 	def turnHelpBox
-		if what_to_show_in_pop_up_block == "show_help"
+		if big_modal_block_content == "show_help"
 			clearSpace()
 		else
 			clearSpace()
 			popUp 'show_help'
 
 	def turnSupport
-		if what_to_show_in_pop_up_block == "show_support"
+		if big_modal_block_content == "show_support"
 			clearSpace()
 		else
 			clearSpace()
@@ -1279,67 +1316,67 @@ export tag bible-reader
 
 	def addToChosen pk, id, parallel
 		unless document.getSelection().isCollapsed
-			return
+			return no
 		if !settings_menu_left || !bible_menu_left
 			return clearSpace()
 		store.highlight_color = getRandomColor()
-		if document.getSelection().isCollapsed
-			# # If the verse is in area under bottom section
-			# scroll to it, to see the full verse
-			if !settingsp.display
-				const verse = document.getElementById(id)
-				const top_offset_of_verse = verse.offsetHeight + verse.offsetTop + 200 - scrollTop
-				if top_offset_of_verse > window.innerHeight
-					scrollToY(self, scrollTop - (window.innerHeight - top_offset_of_verse))
+		# # If the verse is in area under bottom section
+		# scroll to it, to see the full verse
+		if !settingsp.display
+			const verse = document.getElementById(id)
+			const top_offset_of_verse = verse.offsetHeight + verse.offsetTop + 200 - scrollTop
+			if top_offset_of_verse > window.innerHeight
+				scrollToY(self, scrollTop - (window.innerHeight - top_offset_of_verse))
+		else
+			let verse
+			if parallel == 'first'
+				verse = document.getElementById(id)
 			else
-				let verse
-				if parallel == 'first'
-					verse = document.getElementById(id)
-				else
-					verse = document.getElementById("p{id}")
-				const top_offset = verse.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
-				if top_offset > verse.parentNode.parentNode.clientHeight
-					scrollToY(verse.parentNode.parentNode, verse.parentNode.parentNode.scrollTop - (verse.parentNode.parentNode.clientHeight - top_offset))
+				verse = document.getElementById("p{id}")
+			const top_offset = verse.offsetHeight + verse.offsetTop + 200 - verse.parentNode.parentNode.scrollTop
+			if top_offset > verse.parentNode.parentNode.clientHeight
+				scrollToY(verse.parentNode.parentNode, verse.parentNode.parentNode.scrollTop - (verse.parentNode.parentNode.clientHeight - top_offset))
 
-			# # Handle the first click
-			# initial setup of "Choosing" verses
-			if !choosen_parallel
-				choosen_parallel = parallel
+		# # Handle the first click
+		# initial setup of "Choosing" verses
+		if !choosen_parallel
+			choosen_parallel = parallel
+			choosenid.push(pk)
+			choosen.push(id)
+			pushCollectionIfExist(pk)
+			window.history.pushState({
+					translation: settings.translation,
+					book: settings.book,
+					chapter: settings.chapter,
+					verse: id,
+					parallel: parallel != 'first',
+					parallel_display: settingsp.display
+					parallel-translation: settingsp.translation,
+					parallel-book: settingsp.book,
+					parallel-chapter: settingsp.chapter,
+					parallel-verse: id,
+				}
+				'',
+				window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
+
+		# Check if the user choosed a verse in the same parallel scope
+		elif choosen_parallel == parallel
+			if choosenid.find(do |element| return element == pk)
+				choosenid.splice(choosenid.indexOf(pk), 1)
+				choosen.splice(choosen.indexOf(id), 1)
+				let collection = getCollectionOfChoosen(pk)
+				if collection
+					for piece in collection.split(' | ')
+						if piece != ''
+							choosen_categories.splice(choosen_categories.indexOf(choosen_categories.find(do |element| return element == piece)), 1)
+			else
 				choosenid.push(pk)
 				choosen.push(id)
 				pushCollectionIfExist(pk)
-				window.history.pushState({
-						translation: settings.translation,
-						book: settings.book,
-						chapter: settings.chapter,
-						verse: id,
-						parallel: parallel != 'first',
-						parallel_display: settingsp.display
-						parallel-translation: settingsp.translation,
-						parallel-book: settingsp.book,
-						parallel-chapter: settingsp.chapter,
-						parallel-verse: id,
-					}
-					'',
-					window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
+			if !choosenid.length
+				clearSpace()
+			show_collections = no
 
-			# Check if the user choosed a verse in the same parallel scope
-			elif choosen_parallel == parallel
-				if choosenid.find(do |element| return element == pk)
-					choosenid.splice(choosenid.indexOf(pk), 1)
-					choosen.splice(choosen.indexOf(id), 1)
-					let collection = getCollectionOfChoosen(pk)
-					if collection
-						for piece in collection.split(' | ')
-							if piece != ''
-								choosen_categories.splice(choosen_categories.indexOf(choosen_categories.find(do |element| return element == piece)), 1)
-				else
-					choosenid.push(pk)
-					choosen.push(id)
-					pushCollectionIfExist(pk)
-				if !choosenid.length
-					clearSpace()
-				show_collections = no
 		if choosenid.length
 			if choosen_parallel == 'first'
 				highlighted_title = getHighlightedRow(settings.translation, settings.book, settings.chapter, choosen)
@@ -1394,6 +1431,16 @@ export tag bible-reader
 			window.location.pathname = "/signup/"
 			return
 
+		def saveOffline
+			if data.db_is_available
+				data.saveBookmarksToStorageUntillOnline({
+					verses: choosenid,
+					color: store.highlight_color,
+					date: Date.now(),
+					collections: choosen_categories
+					note: store.note
+				})
+
 		if window.navigator.onLine
 			window.fetch("/save-bookmarks/", {
 				method: "POST",
@@ -1411,26 +1458,13 @@ export tag bible-reader
 				}),
 			})
 			.then(do |response| response.json())
-			.then(do |resdata| data.showNotification('saved'))
+			.then(do data.showNotification('saved'))
 			.catch(do |e|
 				console.log(e)
 				data.showNotification('error')
-				if data.db_is_available
-					data.saveBookmarksToStorageUntillOnline({
-						verses: choosenid,
-						color: store.highlight_color,
-						date: Date.now(),
-						collections: choosen_categories
-						note: store.note
-					}))
-		elif data.db_is_available
-			data.saveBookmarksToStorageUntillOnline({
-				verses: choosenid,
-				color: store.highlight_color,
-				date: Date.now(),
-				collections: choosen_categories
-				note: store.note
-			})
+				saveOffline!)
+		else saveOffline!
+
 		if choosen_parallel == 'second'
 			for verse in choosenid
 				if parallel_bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1441,8 +1475,7 @@ export tag bible-reader
 					color: store.highlight_color,
 					collection: collections
 					note: store.note
-					}
-				)
+				})
 		else
 			for verse in choosenid
 				if bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1463,14 +1496,7 @@ export tag bible-reader
 		window.localStorage.setItem("highlights", JSON.stringify(highlights))
 
 	def deleteBookmarks pks
-		let should_to_delete = no
-		let indexes_of_bookmarks = parallel_bookmarks.map(do |x| x.verse)
-		indexes_of_bookmarks = indexes_of_bookmarks.concat(bookmarks.map(do |x| x.verse))
-		for pk in pks
-			if indexes_of_bookmarks.indexOf(pk) != -1
-				should_to_delete = yes
-				break
-		if data.user.username && should_to_delete
+		if data.user.username
 			data.requestDeleteBookmark(pks)
 			if choosen_parallel == 'second'
 				for verse in choosenid
@@ -1577,8 +1603,8 @@ export tag bible-reader
 		store.show_history = !store.show_history
 		settings_menu_left = -300
 		if store.show_history && data.user.username && window.navigator.onLine
-			history = await loadData('/get-history')
-			history = JSON.parse(history)
+			let cloud_history = await loadData('/get-history')
+			history = JSON.parse(cloud_history)
 			imba.commit!
 
 	def clearHistory
@@ -1720,13 +1746,13 @@ export tag bible-reader
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
 	def popUp what
-		what_to_show_in_pop_up_block = what
+		big_modal_block_content = what
 		window.history.pushState(no, what)
 		router.go("/{settings.translation}/{settings.book}/{settings.chapter}/0/")
 
 	def makeNote
-		if what_to_show_in_pop_up_block
-			what_to_show_in_pop_up_block = ''
+		if big_modal_block_content
+			big_modal_block_content = ''
 		else
 			popUp 'show_note'
 
@@ -1740,7 +1766,7 @@ export tag bible-reader
 			compare_parallel_of_book = settings.book
 		if compare_translations.indexOf(settings.translation) == -1
 			compare_translations.unshift(settings.translation)
-		if what_to_show_in_pop_up_block == "show_compare"
+		if big_modal_block_content == "show_compare"
 			clearSpace()
 			popUp 'show_compare'
 		else clearSpace()
@@ -2014,6 +2040,7 @@ export tag bible-reader
 					else
 						menu_icons_transform = 100
 		calculateTopVerse e
+		host_rectangle = null
 		imba.commit()
 
 	def triggerNavigationIcons
@@ -2210,20 +2237,37 @@ export tag bible-reader
 
 
 	def translationDownloadStatus translation
-		if data.translations_in_downloading.find(do |tr| return tr == translation.short_name)
+		if data.translations_in_downloading.find(do |tr| return tr == translation)
 			return 'processing'
-		elif data.downloaded_translations.indexOf(translation.short_name) != -1
+		elif data.downloaded_translations.indexOf(translation) != -1
+			return 'delete'
+		else
+			return 'download'
+
+	def dictionaryDownloadStatus dictionary
+		if data.dictionaries_in_downloading.find(do |tr| return tr == dictionary)
+			return 'processing'
+		elif data.downloaded_dictionaries.indexOf(dictionary) != -1
 			return 'delete'
 		else
 			return 'download'
 
 	def offlineTranslationAction tr
-		if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+		if data.translations_in_downloading.find(do |translation| return translation == tr)
 			return
-		elif data.downloaded_translations.indexOf(tr.short_name) != -1
-			data.deleteTranslation(tr.short_name)
+		elif data.downloaded_translations.indexOf(tr) != -1
+			data.deleteTranslation(tr)
 		else
-			data.downloadTranslation(tr.short_name)
+			data.downloadTranslation(tr)
+
+	def offlineDictionaryAction dict
+		if data.dictionaries_in_downloading.find(do |translation| return translation == dict)
+			return
+		elif data.downloaded_dictionaries.indexOf(dict) != -1
+			data.deleteDictionary(dict)
+		else
+			data.downloadDictionary(dict)
+
 
 	def nextVerseHasTheSameBookmark verse_index
 		let current_bukmark = getBookmark(verses[verse_index].pk, 'bookmarks')
@@ -2233,16 +2277,194 @@ export tag bible-reader
 				let next_bookmark = getBookmark(next_verse.pk, 'bookmarks')
 				if next_bookmark
 					if next_bookmark.collection == current_bukmark.collection and next_bookmark.note == current_bukmark.note
-						# log next_bookmark, current_bukmark
 						return yes
 		return no
+
+
+	def showDefOptions
+		let selection = window.getSelection!
+		store.definition_search = selection.toString!.trim!
+
+		# Trigger the definition popup only when a single hebrew or greekword is selected
+		let hebrew_or_greek = store.definition_search.match(/[\u0590-\u05FF]/) or  store.definition_search.match(/[\u0370-\u03FF]/)
+		if store.definition_search.match(/\s/) or store.definition_search == '' or not hebrew_or_greek
+			host_rectangle = null
+			return imba.commit!
+
+		# The feature is not available offline
+		if window.navigator.onLine or state.downloaded_dictionaries.length
+			let range = selection.getRangeAt(0)
+			let rangeContainer = range.commonAncestorContainer
+
+			if $main.contains(rangeContainer)
+				let viewportRectangle = range.getBoundingClientRect()
+				host_rectangle = {
+					top: viewportRectangle.top + settings.font.size * settings.font.line-height
+					left: 'auto'
+					right: 'auto'
+					width: viewportRectangle.width
+					height: viewportRectangle.height
+				}
+				# Prevent overflowing
+				if viewportRectangle.left <= window.innerWidth / 2
+					host_rectangle.left = viewportRectangle.left
+				else
+					host_rectangle.right = window.innerWidth - viewportRectangle.right
+
+
+	def showDictionaryView
+		clearSpace!
+		popUp 'dictionary'
+		loadDefinitions!
+		setTimeout(&, 300) do $dictionarysearch.select!
+
+
+
+	def stripVowels rawString
+		# Clear Hebrew
+		let res =  rawString.replace(/[\u0591-\u05C7]/g,"")
+		# Replace some letters, which are not present in a given unicode range, manually.
+		res = res.replace('שׁ', 'ש')
+		res = res.replace('שׂ', 'ש')
+		res = res.replace('‎', '')
+
+		# Clear Greek
+		res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+		return res
+
+
+	# Compute a search relevance score for an item.
+	def scoreDefinition thename, query
+		query = stripVowels(query.toLowerCase!)
+		# console.log thename, query
+		let score = 0
+		let p = 0 # Position within the `item`
+		# Look through each character of the query string, stopping at the end(s)...
+
+		for i in [0 ... query.length]
+			# Figure out if the current letter is found in the rest of the `item`.
+			const index = thename.indexOf(query[i], p)
+			# If not, stop here.
+			if index < 0
+				break
+			#  If it is, add to the score...
+			score += 1
+			if (index - p) < 2
+				score++
+			#  ... and skip the position within `item` forward.
+			p = index
+
+		if thename.indexOf(query) > -1
+			score += 8
+			if thename.length - query.length < 2
+				score += 8
+		if thename.length == query.length
+			score += 1
+
+		# log score
+		if score > query.length
+			return score
+		return 0
+
+
+
+	def loadDefinitions
+		let selected_text = window.getSelection!.toString!.trim!
+		if selected_text
+			store.definition_search = selected_text
+
+		definitions = []
+		if store.definition_search && (window.navigator.onLine or state.downloaded_dictionaries.length)
+			if definitions_history.indexOf(store.definition_search) == -1
+				definitions_history_index += 1
+				definitions_history[definitions_history_index] = store.definition_search
+				definitions_history.length = definitions_history_index + 1
+			clearSpace!
+			popUp 'dictionary'
+			loading = yes
+			imba.commit!
+			if window.navigator.onLine
+				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
+			elif state.dictionary in state.downloaded_dictionaries
+				let unvoweled_query = stripVowels(store.definition_search)
+				search_results = await state.searchDefinitionsOffline {dictionary:state.dictionary, query:unvoweled_query}
+				definitions = []
+				for definition in search_results
+					const score = scoreSearch(definition.lexeme, unvoweled_query)
+					if score or definition.topic == store.definition_search.toUpperCase!
+						definitions.push({
+							... definition
+							score: score
+						})
+				definitions = definitions.sort(do |a, b| b.score - a.score)
+			loading = no
+			expanded_definition = 0
+			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
+			parseDefinitionsLinks!
+			imba.commit!
+
+	def parseDefinitionsLinks
+		# Parse Strong links
+		let patterns = [
+			/<a href='S:(.*?)'>/g,
+			/<a href=\"S:(.*?)\">/g,
+			/<a href=S:(.*?)>/g
+		]
+		for definition, index in definitions
+			for pattern in patterns
+				let matches = [... definition.definition.matchAll(pattern)]
+				for match in matches
+					definition.definition = definition.definition.replace(match[0], "<a onclick='javascript:strongDefinition(\"{match[1]}\");'>")
+
+		# Unlink TWOT links
+		patterns = [
+			/<a class="T" href='S:(.*?)'>/g,
+			/<a class="T" href=\"S:(.*?)\">/g,
+			/<a class="T" href=S:(.*?)>/g
+		]
+		for definition, index in definitions
+			for pattern in patterns
+				let matches = [... definition.definition.matchAll(pattern)]
+				for match in matches
+					definition.definition = definition.definition.replace(match[0], match[1])
+
+
+	def prevDefinition
+		if definitions_history_index > 0
+			definitions_history_index -= 1
+			store.definition_search = definitions_history[definitions_history_index]
+			loadDefinitions!
+
+	def nextDefinition
+		if definitions_history_index < definitions_history.length - 1
+			definitions_history_index += 1
+			store.definition_search = definitions_history[definitions_history_index]
+			loadDefinitions!
+
+	def expandDefinition index
+		if expanded_definition == index
+			expanded_definition = -1
+		else
+			expanded_definition = index
+			for kid, i in $definitions.children
+				if i + 1 == index
+					$definitions.children[i+1].scrollIntoView()
+
+	def currentDictionary
+		for dictionary in dictionaries
+			if dictionary.abbr == state.dictionary
+				return dictionary.name
+
+
+	def closecp
+		store.show_color_picker = no
 
 
 	def render
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(what_to_show_in_pop_up_block or inzone or onzone)>
+		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2320,15 +2542,24 @@ export tag bible-reader
 					<path[m: auto] d=svg_paths.close>
 
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}] @click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-			<main$main .main [pos:{page_search.d ? 'static' : 'relative'}] @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display [font-family: {settings.font.family} font-size: {settings.font.size}px line-height:{settings.font.line-height} font-weight:{settings.font.weight} text-align: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
-					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and what_to_show_in_pop_up_block == ''
+			if host_rectangle
+				<button
+					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:4px 8px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
+					@click=loadDefinitions
+					ease
+					> data.lang.definition
+
+			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
+				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll @pointerup=showDefOptions dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
+					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+
 					if verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
 							#main_header_arrow_size = "min(64px, max({max_header_font}em, {chapter_headers.fontsize1}em))"
@@ -2357,7 +2588,7 @@ export tag bible-reader
 									<span> ' '
 								<span innerHTML=verse.text
 								 		id=verse.verse
-										@click=addToChosen(verse.pk, verse.verse, 'first')
+										@click.wait(200ms)=addToChosen(verse.pk, verse.verse, 'first')
 										[background-image: {getHighlight(verse.pk, 'bookmarks')}]
 									>
 								if bukmark and not nextVerseHasTheSameBookmark(verse_index)
@@ -2395,7 +2626,7 @@ export tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll @pointerup=showDefOptions dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -2416,7 +2647,7 @@ export tag bible-reader
 									<span> ' '
 								<span innerHTML=parallel_verse.text
 									id="p{parallel_verse.verse}"
-									@click=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
+									@click.wait(200ms)=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 								if bukmark
 									if bukmark.collection || bukmark.note
@@ -2445,7 +2676,7 @@ export tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{what_to_show_in_pop_up_block ? -1 : 2}] @click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}] @click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.other
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2597,9 +2828,14 @@ export tag bible-reader
 					<a.help href='/downloads/' target="_blank" @click=install>
 						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
-					<a.help href='https://bohuslav.me/Dictionary/' target='_blank'>
+					<a.help @click=showDictionaryView>
 						<span.font_icon> 'א'
-						'Dictionary'
+						data.lang.dictionary
+						<a[ml:auto] href='https://bohuslav.me/Dictionary/' target='_blank'>
+							<svg.helpsvg[p:4px] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+								<path d="M0 0h24v24H0z" fill="none">
+								<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
+
 				<a.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
@@ -2635,12 +2871,14 @@ export tag bible-reader
 
 
 
-			if what_to_show_in_pop_up_block.length
-				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#000A h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{what_to_show_in_pop_up_block == "show_note" ? 1200 : 3}] @click=(do unless state.intouch then clearSpace!) ease>
+			if big_modal_block_content.length
+				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#000A h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{big_modal_block_content == "show_note" ? 1200 : 3}]
+					@click=(do unless state.intouch then clearSpace!) ease>
 
-					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75] .height_auto=(!search.search_result_header && what_to_show_in_pop_up_block=='search') @click.stop>
+					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75]
+						.height_auto=((!search.search_result_header && big_modal_block_content=='search') or (big_modal_block_content=='dictionary' && loading)) @click.stop>
 
-						if what_to_show_in_pop_up_block == 'show_help'
+						if big_modal_block_content == 'show_help'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2672,7 +2910,7 @@ export tag bible-reader
 									data.lang.still_have_questions
 									<a target="_blank" href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
 
-						elif what_to_show_in_pop_up_block == 'show_compare'
+						elif big_modal_block_content == 'show_compare'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2704,56 +2942,91 @@ export tag bible-reader
 								unless compare_translations.length
 									<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
 
-						elif what_to_show_in_pop_up_block == 'show_downloads'
+						elif big_modal_block_content == 'show_downloads'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1> data.lang.download_translations
-								if data.deleting_of_all_transllations
+								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px p:16px 0 jc:center]
+									@click=(download_menu = !download_menu)>
+									<span>
+										if download_menu
+											data.lang.download_dictionaries
+										else
+											data.lang.download_translations
+									<span[p:0 8px m:auto 0]>
+										<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+											<title> 'expand'
+											<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
+								if data.deleting_of_all_dictionaries
 									<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
 										<title> data.lang.loading
 										<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 								else
-									<svg.close_search @click=(do data.clearVersesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
-										<title> data.lang.remove_all_translations
+									<svg.close_search @click=(do data.clearDictionariesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
+										<title> data.lang.remove_all_dictionaries
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 							<article.search_body>
-								for language in languages
-									<div key=language.language>
-										<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
-											language.language
-											<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
-												<title> data.lang.open
-												<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								if download_menu
+									<div>
+										# let no_dictionary_downloaded = yes
+										for dictionary in dictionaries
+											if window.navigator.onLine || data.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+												# no_dictionary_downloaded = no
+												<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineDictionaryAction(dictionary.abbr)>
+													if state.dictionaries_in_downloading.find(do |dict| return dict == dictionary.abbr)
+														<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
+															<title> state.lang.loading
+															<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
+													elif state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=state.lang.delete>
+															<title> state.lang.delete
+															<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+													else
+														<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
+															<title> state.lang.download
+															<g transform="matrix(1.5 0 0 1.5 0 128)">
+																<path d=svg_paths.download>
+													<span> "{state.lang[dictionaryDownloadStatus(dictionary.abbr)]} {<b> dictionary.abbr}, {dictionary.name}"
 
-										if language.language == show_language_of
-											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
-												let no_translation_downloaded = yes
-												for tr in language.translations
-													if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
-														no_translation_downloaded = no
-														<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr)>
-															if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
-																<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-																	<title> data.lang.loading
-																	<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
-															elif data.downloaded_translations.indexOf(tr.short_name) != -1
-																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
-																	<title> data.lang.delete
-																	<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-															else
-																<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-																	<title> data.lang.download
-																	<g transform="matrix(1.5 0 0 1.5 0 128)">
-																		<path d=svg_paths.download>
-															<span> "{data.lang[translationDownloadStatus(tr)]} {<b> tr.short_name}, {tr.full_name}"
+								else
+									<div>
+										for language in languages
+											<div key=language.language>
+												<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
+													language.language
+													<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
+														<title> data.lang.open
+														<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-												if no_translation_downloaded
-													data.lang["no_translation_downloaded"]
-								<.freespace>
+												if language.language == show_language_of
+													<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
+														let no_translation_downloaded = yes
+														for tr in language.translations
+															if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
+																no_translation_downloaded = no
+																<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr.short_name)>
+																	if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+																		<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
+																			<title> data.lang.loading
+																			<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
+																	elif data.downloaded_translations.indexOf(tr.short_name) != -1
+																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
+																			<title> data.lang.delete
+																			<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
+																	else
+																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
+																			<title> data.lang.download
+																			<g transform="matrix(1.5 0 0 1.5 0 128)">
+																				<path d=svg_paths.download>
+																	<span> "{data.lang[translationDownloadStatus(tr.short_name)]} {<b> tr.short_name}, {tr.full_name}"
 
-						elif what_to_show_in_pop_up_block == 'show_support'
+														if no_translation_downloaded
+															data.lang["no_translation_downloaded"]
+										<.freespace>
+
+						elif big_modal_block_content == 'show_support'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2773,7 +3046,7 @@ export tag bible-reader
 								<ul> for text in thanks_to
 									<li> <span innerHTML=text>
 
-						elif what_to_show_in_pop_up_block == "show_note"
+						elif big_modal_block_content == "show_note"
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
@@ -2786,7 +3059,64 @@ export tag bible-reader
 								<p id="note_placeholder"> data.lang.write_something_awesone
 							<rich-text-editor bind=store dir="auto">
 
-						else	# search
+						elif big_modal_block_content == "dictionary"
+							<article#dict_hat.search_hat [pos:relative]>
+								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
+									<title> data.lang.close
+									<path[m: auto] d=svg_paths.close>
+								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0 or definitions_history.length == 0) title=data.lang.back>
+									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.back
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								<button.arrow @click=nextDefinition() .disabled=(definitions_history.length - 1 == definitions_history_index) title=data.lang.next>
+									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.next
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
+								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
+									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
+									@keydown.enter=loadDefinitions>
+
+								<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=loadDefinitions>
+									<title> data.lang.search
+									<path d=svg_paths.search>
+
+							unless loading
+								<article$definitions.search_body>
+									<menu-popup bind=store.show_dictionaries>
+										<.popup_menu_box
+											[transform@important:none pos:relative p:8px 0px c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:flex]
+											@click=(do store.show_dictionaries = !store.show_dictionaries)>
+											currentDictionary!
+											<span[p:0 8px m:auto 0 auto auto]>
+												<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+													<title> 'expand'
+													<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
+											if store.show_dictionaries
+												<.popup_menu [l:0 y@off:-32px o@off:0] ease>
+													for dictionary in dictionaries
+														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
+
+
+									for definition, index in definitions
+										<div.definition .expanded=(expanded_definition == index)>
+											<p @click=expandDefinition(index)>
+												definition.lexeme + ' · ' + definition.pronunciation + ' · ' + definition.transliteration + ' · ' + definition.short_definition
+												<svg [fill:$c min-width:16px] width="16" height="10" viewBox="0 0 8 5">
+													<title> 'expand'
+													<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+
+
+											if expanded_definition == index
+												<div[p:16px 0px 64px @off:0 h:auto @off:0px overflow:hidden bg:$bg o@off:0] innerHTML=definition.definition ease>
+
+									unless definitions.length
+										<div[display:flex flex-direction:column pt:25% lh:1.6]>
+											<p> data.lang.nothing
+											<p[pt:16px]> data.lang.dictionary_help
+
+						else	# MAIN SEARCH
 							if search_verses.length
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
@@ -2893,6 +3223,7 @@ export tag bible-reader
 										<title> data.lang.addcollection
 										<line x1="0" y1="10" x2="20" y2="10">
 										<line x1="10" y1="0" x2="10" y2="20">
+
 							<.mark_grid [pt:0 pb:8px]>
 								if addcollection
 									<input.newcollectioninput placeholder=data.lang.newcollection id="newcollectioninput" bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
@@ -2956,7 +3287,7 @@ export tag bible-reader
 											<path d="M45.775 39.367c-.732-.589-1.514-1.118-2.284-1.658-1.535-1.078-2.94-1.162-4.085.573-.644.974-1.544 1.017-2.486.59-2.596-1.178-4.601-2.992-5.775-5.63-.52-1.168-.513-2.215.702-3.04.644-.437 1.292-.954 1.24-1.908-.067-1.244-3.088-5.402-4.281-5.84-.494-.182-.985-.17-1.488-.002-2.797.94-3.955 3.241-2.846 5.965 3.31 8.127 9.136 13.784 17.155 17.237.457.197.965.275 1.222.346 1.826.018 3.964-1.74 4.582-3.486.595-1.68-.662-2.346-1.656-3.147zm-8.991-16.08c5.862.9 8.566 3.688 9.312 9.593.07.545-.134 1.366.644 1.381.814.016.618-.793.625-1.339.068-5.56-4.78-10.716-10.412-10.906-.425.061-1.304-.293-1.359.66-.036.641.704.536 1.19.61z">
 											<path d="M37.93 24.905c-.564-.068-1.308-.333-1.44.45-.137.82.692.737 1.225.856 3.621.81 4.882 2.127 5.478 5.719.087.524-.086 1.339.804 1.203.66-.1.421-.799.476-1.207.03-3.448-2.925-6.586-6.543-7.02z">
 											<path d="M38.263 27.725c-.377.01-.746.05-.884.452-.208.601.229.745.674.816 1.485.239 2.267 1.114 2.415 2.596.04.402.295.727.684.682.538-.065.587-.544.57-.998.027-1.665-1.854-3.588-3.46-3.548z">
-							<button.cancel @click=(do show_share_box = no)> data.lang.cancel
+							<button.cancel @click=(do show_share_box = no; imba.commit!)> data.lang.cancel
 					else
 						<div[o@off:0 h:auto @off:0px of@off:hidden] ease>
 							<p[pt:16px]>
@@ -3029,12 +3360,11 @@ export tag bible-reader
 									<p> data.lang.create
 							if store.show_color_picker
 								<svg.close_colorPicker
-										@click=(do store.show_color_picker = no)
 										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
 										[scale@off:0.75 o@off:0] ease>
 									<title> data.lang.close
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-								<color-picker bind=store .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
+								<color-picker bind=store @closecp=closecp .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
 
 
 			if store.show_history
@@ -3063,7 +3393,7 @@ export tag bible-reader
 								<p[padding: 12px]> data.lang.empty_history
 
 
-			if menuicons and not (what_to_show_in_pop_up_block && window.innerWidth < 640)
+			if menuicons and not (big_modal_block_content && window.innerWidth < 640)
 				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:54px @lg:0px bgc@lt-lg:$bgc d:flex jc:space-between] ease>
 					<div[transform: translateY({menu_icons_transform}%) translateX({bibleIconTransform!}px)] @click=toggleBibleMenu>
 						<svg viewBox="0 0 16 16">
@@ -3191,6 +3521,16 @@ export tag bible-reader
 		visibility:visible
 		o:1
 
+	css
+		#dict_hat
+			button
+				bgc:transparent
+				w:32px
+				min-width:26px
+				h:50px
+				p:8px 0
+
+
 	css note-up svg
 		size:0.68em
 		fill:inherit
@@ -3237,5 +3577,34 @@ export tag bible-reader
 		h:auto
 		cursor:pointer
 
-	css .search_option_on
-		o:1 @hover:1
+	css
+		.search_option_on
+			o:1 @hover:1
+
+		.definition
+			overflow:hidden
+			lh:1.6
+
+		.definition
+			p
+				m:0
+				p:8px 8px 8px 0
+				fw:bold
+				d:flex
+				jc:space-between
+				ai:center
+				cursor:pointer
+				pos:sticky
+				t:0px
+				bg:$bg
+				bdt:1px solid $acc-bgc
+
+			svg
+				transform:$svg-transform
+
+		.expanded
+			$svg-transform:rotate(180deg)
+
+		.disabled
+			o:0.5
+			transform:nonel

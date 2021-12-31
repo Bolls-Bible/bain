@@ -1,4 +1,4 @@
-export tag downloads-page
+tag downloads-page
 	def setup
 		window.showimage = no
 

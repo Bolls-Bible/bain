@@ -36,3 +36,12 @@ class Bookmarks(models.Model):
 class History(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	history = models.TextField(default=None)
+
+class Dictionary(models.Model):
+	dictionary = models.CharField(max_length=8)
+	topic = models.TextField()
+	definition = models.TextField()
+	lexeme = models.TextField()
+	transliteration = models.TextField()
+	pronunciation = models.TextField()
+	short_definition = models.TextField(null=True)

@@ -1,6 +1,6 @@
 let transfer_option = 0
 
-export tag donate
+tag donate
 	def mount
 		document.title = 'Bolls Bible · ' + state.lang.donate
 

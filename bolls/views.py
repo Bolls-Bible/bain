@@ -1,10 +1,12 @@
+from django.db.models import F, Func
 import re
 import os
 import ast
-import math
+# import math
+import unicodedata
 import json
 from django.db.models import Count, Q
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity, TrigramWordSimilarity
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import is_password_usable
 from django.contrib.auth.models import User
@@ -14,30 +16,29 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import JsonResponse, HttpResponse
 
+from bolls.books_map import *
 from bolls.forms import SignUpForm
 
-from .models import Verses, Bookmarks, History, Note, Commentary
+from .models import Verses, Bookmarks, History, Note, Commentary, Dictionary
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def errRes(code, text=''):
-    response = HttpResponse
+bolls_index = 'bolls/index.html'
 
 
 def index(request):
     if request.user.is_authenticated:
         print(request.user.id)
-    return render(request, 'bolls/index.html')
+    return render(request, bolls_index)
 
 
-def crossOrigin(response):
+def cross_origin(response):
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
-
 
 
 def getTranslation(request, translation):
@@ -67,8 +68,7 @@ def getTranslation(request, translation):
         return(verse)
 
     verses = [serializeVerse(obj) for obj in all_verses]
-    return crossOrigin(JsonResponse(verses, safe=False))
-
+    return cross_origin(JsonResponse(verses, safe=False))
 
 
 def getChapter(translation, book, chapter):
@@ -83,8 +83,10 @@ def getChapter(translation, book, chapter):
         })
     return d
 
+
 def getText(request, translation, book, chapter):
-    return crossOrigin(JsonResponse(getChapter(translation, book, chapter), safe=False))
+    return cross_origin(JsonResponse(getChapter(translation, book, chapter), safe=False))
+
 
 def getChapterWithCommentaries(translation, book, chapter):
     all_verses = Verses.objects.filter(
@@ -111,8 +113,10 @@ def getChapterWithCommentaries(translation, book, chapter):
         d.append(verse)
     return d
 
+
 def getChapterWithComments(request, translation, book, chapter):
-    return crossOrigin(JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False))
+    return cross_origin(JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False))
+
 
 def search(request, translation, piece=''):
     if len(piece) == 0:
@@ -127,26 +131,28 @@ def search(request, translation, piece=''):
         results_of_search = []
         if match_whole:
             if match_case:
-                results_of_search = Verses.objects.filter(translation=translation, text__contains=piece).order_by('book', 'chapter', 'verse')
+                results_of_search = Verses.objects.filter(
+                    translation=translation, text__contains=piece).order_by('book', 'chapter', 'verse')
             else:
-                results_of_search = Verses.objects.filter(translation=translation, text__icontains=piece).order_by('book', 'chapter', 'verse')
+                results_of_search = Verses.objects.filter(
+                    translation=translation, text__icontains=piece).order_by('book', 'chapter', 'verse')
         else:
             query_set = []
 
             for word in piece.split():
                 if match_case:
-                    query_set.append("Q(translation=\"" + translation + "\", text__contains=" + json.dumps(word) + ")")
+                    query_set.append(
+                        "Q(translation=\"" + translation + "\", text__contains=" + json.dumps(word) + ")")
                 else:
-                    query_set.append("Q(translation=\"" + translation + "\", text__icontains=" + json.dumps(word) + ")")
+                    query_set.append(
+                        "Q(translation=\"" + translation + "\", text__icontains=" + json.dumps(word) + ")")
 
             query = ' & '.join(query_set)
 
-            results_of_exec_search = Verses.objects.filter(eval(query)).order_by('book', 'chapter', 'verse')
+            results_of_exec_search = Verses.objects.filter(
+                eval(query)).order_by('book', 'chapter', 'verse')
 
             if len(results_of_exec_search) < 24:
-                rank_threshold = 1 - math.exp(-0.0001 * (len(piece) + 16) ** (2))
-                # 1 - e^(-0.0001 * (x + 16) ** (2))
-
                 vector = SearchVector('text')
                 query = SearchQuery(piece)
                 results_of_rank = Verses.objects.annotate(rank=SearchRank(
@@ -154,29 +160,33 @@ def search(request, translation, piece=''):
 
                 results_of_search = []
                 if len(results_of_rank) < 24:
-                    results_of_similarity = Verses.objects.annotate(rank=TrigramSimilarity(
-                        'text', piece)).filter(translation=translation, rank__gt=rank_threshold).order_by('-rank')
+                    results_of_similarity = Verses.objects.annotate(rank=TrigramWordSimilarity(
+                        piece, 'text')).filter(translation=translation, rank__gt=0.5).order_by('-rank')
 
                     results_of_search = list(results_of_similarity) + \
                         list(set(results_of_rank) - set(results_of_similarity))
 
-
-                results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+                results_of_search.sort(
+                    key=lambda verse: verse.rank, reverse=True)
 
                 if len(results_of_exec_search) > 0:
                     results_of_search = list(results_of_exec_search) + \
-                        list(set(results_of_search) - set(results_of_exec_search))
+                        list(set(results_of_search) -
+                             set(results_of_exec_search))
             else:
                 results_of_search = results_of_exec_search
 
         def highlightHeadline(text):
             highlighted_text = text
             mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
-            highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
+            highlighted_text = mark_replacement.sub(
+                "<mark>" + piece + "</mark>", highlighted_text)
             if not match_whole:
                 for word in piece.split():
-                    mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
-                    highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
+                    mark_replacement = re.compile(
+                        re.escape(word), re.IGNORECASE)
+                    highlighted_text = mark_replacement.sub(
+                        "<mark>" + word + "</mark>", highlighted_text)
             return highlighted_text
 
         for obj in results_of_search[0:1024]:
@@ -190,13 +200,14 @@ def search(request, translation, piece=''):
             })
     else:
         d = [{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}]
-    return crossOrigin(JsonResponse(d, safe=False))
+    return cross_origin(JsonResponse(d, safe=False))
 
 
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
     cleantext = re.sub(cleanr, '', raw_html)
     return cleantext
+
 
 def getDescription(verses, verse, endverse):
     if verse <= len(verses) and len(verses) > 0:
@@ -213,17 +224,17 @@ def getDescription(verses, verse, endverse):
 
 def linkToVerse(request, translation, book, chapter, verse):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
+    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
 
 
 def linkToVerses(request, translation, book, chapter, verse, endverse):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
+    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
 
 
 def linkToChapter(request, translation, book, chapter):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, 'bolls/index.html', {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
+    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
 
 
 def signUp(request):
@@ -249,9 +260,9 @@ def deleteAccount(request):
             message = "account_deleted"
 
         except Exception as e:
-            return render(request, 'bolls/index.html', {'message': e.message})
+            return render(request, bolls_index, {'message': e.message})
     print(message)
-    return render(request, 'bolls/index.html', {"message": message})
+    return render(request, bolls_index, {"message": message})
 
 
 def editAccount(request):
@@ -274,7 +285,7 @@ def editAccount(request):
 def getBookmarks(request, translation, book, chapter):
     if request.user.is_authenticated:
         all_objects = Verses.objects.filter(
-            book=book, chapter=chapter, translation=translation).order_by('verse')
+            translation=translation, book=book, chapter=chapter).order_by('verse')
         bookmarks = []
         for obj in all_objects:
             for bookmark in obj.bookmarks_set.filter(user=request.user):
@@ -327,13 +338,15 @@ def getProfileBookmarks(request, range_from, range_to):
 
 def getSearchedProfileBookmarks(request, query, range_from, range_to):
     user = request.user
-    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(collection__icontains=query).order_by('-date', 'verse')[range_from:range_to]),
+    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(
+        collection__icontains=query).order_by('-date', 'verse')[range_from:range_to]),
     return JsonResponse(bookmarks, safe=False)
 
 
 def getBookmarksWithNotes(request, range_from, range_to):
     user = request.user
-    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(note__isnull=False).order_by('-date', 'verse')[range_from:range_to]),
+    bookmarks = mapBookmarks(user.bookmarks_set.all().filter(
+        note__isnull=False).order_by('-date', 'verse')[range_from:range_to]),
     return JsonResponse(bookmarks, safe=False)
 
 
@@ -405,7 +418,6 @@ def saveBookmarks(request):
     if request.method != 'POST':
         return HttpResponse(status=405)
 
-
     received_json_data = json.loads(request.body)
     user = request.user
 
@@ -450,8 +462,7 @@ def saveBookmarks(request):
 
         except Verses.DoesNotExist:
             return HttpResponse(status=418)
-    return JsonResponse({"status_code":200}, safe=False)
-
+    return JsonResponse({"status_code": 200}, safe=False)
 
 
 def saveHistory(request):
@@ -476,16 +487,17 @@ def saveHistory(request):
 def deleteBookmarks(request):
     if request.user.is_authenticated:
         received_json_data = json.loads(request.body)
-        removeBookmarks(request.user, ast.literal_eval(received_json_data["verses"]))
+        removeBookmarks(request.user, ast.literal_eval(
+            received_json_data["verses"]))
         return JsonResponse({"response": "200"}, safe=False)
     else:
         return HttpResponse(status=401)
+
 
 def removeBookmarks(user, verses):
     for verseid in verses:
         verse = Verses.objects.get(pk=verseid)
         user.bookmarks_set.filter(verse=verse).delete()
-
 
 
 def historyOf(user):
@@ -501,6 +513,7 @@ def historyOf(user):
     else:
         return []
 
+
 def getHistory(request):
     return JsonResponse(historyOf(request.user), safe=False)
 
@@ -510,17 +523,9 @@ def userLogged(request):
         return JsonResponse({"username": request.user.username, "name": request.user.first_name, "is_password_usable": is_password_usable(request.user.password), "history": historyOf(request.user)}, safe=False)
     return JsonResponse({"username": ""}, safe=False)
 
+
 def api(request):
     return render(request, 'bolls/api.html')
-
-
-# def sw(request):
-#     sw_file = open(BASE_DIR + '/bolls/static/bolls/dist/sw.js', 'rb')
-#     # sw_file = open(BASE_DIR + '/static/bolls/dist/sw.js', 'rb')
-#     response = HttpResponse(content=sw_file)
-#     response['Content-Type'] = 'application/javascript'
-#     response['Content-Disposition'] = 'attachment; filename="%s.js"' % 'sw'
-#     return response
 
 
 def handler404(request, *args, **argv):
@@ -535,6 +540,114 @@ def handler500(request, *args, **argv):
     return response
 
 
+def stripVowels(raw_string):
+    res = ''
+    if len(re.findall('[α-ωΑ-Ω]', raw_string)):
+        nfkd_form = unicodedata.normalize('NFKD', raw_string)
+        res = u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+    else:
+        res = re.sub(r'[\u0591-\u05C7]', '', raw_string)
+
+        # Replace some letters, which are not present in a given unicode range, manually.
+        res = res.replace('שׁ', 'ש')
+        res = res.replace('שׂ', 'ש')
+
+    res = res.replace('‎', '')
+    return res
+
+
+# Parse Bible links
+def parseLinks(text, translation):
+	if type(text) == float:
+		return ''
+
+	text = re.sub(r'(<[/]?span[^>]*)>', '', text)  # Clean up unneeded spans
+	# Avoid unneded classes on anchors
+	text = re.sub(r'( class=\'\w+\')', '', text)
+
+	pieces = text.split("'")
+
+	result = ''
+	for piece in pieces:
+		if piece.startswith('B:'):
+			result += "'https://bolls.life/" + translation + '/'
+			digits = re.findall(r'\d+', piece)
+			try:
+				result += str(books_map[(digits[0])]) + '/' + digits[1] + '/' + digits[2]
+			except:
+				print(piece)
+
+			if len(digits) > 3:
+				result += '-' + digits[3]
+			result += "' target='_blank'"
+		else:
+			result += piece
+	return result
+
+
+def searchInDictionary(request, dict, query):
+    query = query.strip()
+    unaccented_query = stripVowels(query.lower())
+
+    # Rank search
+    search_vector = SearchVector('lexeme__unaccent')
+    search_query = SearchQuery(unaccented_query)
+    results_of_rank = Dictionary.objects.annotate(rank=SearchRank(
+        search_vector, search_query)).filter(Q(short_definition__search=unaccented_query) | Q(topic=query) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
+
+    # SImilarity search
+    results_of_similarity = Dictionary.objects.annotate(rank=TrigramSimilarity(
+        'lexeme__unaccent', unaccented_query)).filter(dictionary=dict, rank__gt=0.5).order_by('-rank')
+
+    # Merge both kinds of search
+    results_of_search = list(results_of_similarity) + \
+                             list(set(results_of_rank) -
+                                  set(results_of_similarity))
+    results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+
+    # for farther refactoring of inner Bible links
+    translation = ""
+    if dict == 'RUSD':
+        translation = 'international/SYNOD'
+    else:
+        translation = 'international/KJV'
+
+    # Serialize final data
+    d = []
+    for result in results_of_search:
+        d.append({
+            "topic": result.topic,
+            "definition": parseLinks(result.definition, translation),
+            "lexeme": result.lexeme,
+            "transliteration": result.transliteration,
+            "pronunciation": result.pronunciation,
+            "short_definition": result.short_definition,
+            "weight": result.rank
+        })
+    return JsonResponse(d, safe=False)
+
+
+def getDictionary(request, dictionary):
+    definitions = Dictionary.objects.annotate(unaccented_lexeme=Func(F("lexeme"), function="unaccent")).filter(dictionary=dictionary)
+
+    d=[]
+    for definition in definitions:
+        d.append({
+            "topic": definition.topic,
+            "definition": definition.definition,
+            "lexeme": definition.unaccented_lexeme,
+            "transliteration": definition.transliteration,
+            "pronunciation": definition.pronunciation,
+            "short_definition": definition.short_definition,
+        })
+
+    return cross_origin(JsonResponse(d, safe=False))
+
+
+
+
+# When translation is fully replaced -- this may be helpful
 # def fixBookmarks(request):
 #     # rename KJV to OKJC
 #     # push new KJV to the db

@@ -1,11 +1,15 @@
-html[data-theme="dark"] {
+html[data-theme="dark"],
+html[data-theme="black"] {
   --background-color: rgb(4, 6, 12);
   --text-color: rgb(255, 238, 238);
   --btn-bg-hover: rgba(138, 138, 255, 0.4);
   --btn-bg: hsla(240, 100%, 77%, 0.1);
-  --a-background: rgb(65, 118, 144);
+  --a-background: hsl(200, 38%, 50%);
 }
 
+html[data-theme="sepia"],
+html[data-theme="gray"],
+html[data-theme="white"],
 html[data-theme="light"] {
   --background-color: rgb(255, 238, 238);
   --text-color: rgb(4, 6, 12);
@@ -158,7 +162,7 @@ input[type="submit"] {
   width: 100%;
   display: block;
   text-align: center;
-  font-weight: normal;
+  font-weight: bold;
   font-family: inherit;
   font-size: 18px;
   line-height: 1.15;
@@ -179,6 +183,7 @@ input[type="submit"]:hover {
   width: 50%;
   color: var(--a-background);
   margin: 0;
+  font-weight: bold;
 }
 
 .with svg {

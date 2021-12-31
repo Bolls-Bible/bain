@@ -97,7 +97,7 @@ tag editing-area
 	def render
 		<self @keydown=handlekeydown @input=handleinput @paste=handlepaste contentEditable='true'>
 
-export tag rich-text-editor
+tag rich-text-editor
 	def exec command, value = null
 		document.execCommand(command, no, value)
 		document.getElementsByTagName("editing-area")[0].focus()

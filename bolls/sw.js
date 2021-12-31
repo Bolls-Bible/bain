@@ -1,4 +1,4 @@
-var CACHE_NAME = "v2.1.66";
+var CACHE_NAME = "v2.1.68";
 var urlsToCache = [
   "/",
   "/static/bolls/dist/public/__assets__/app/client.js",
@@ -31,6 +31,7 @@ self.addEventListener("fetch", (event) => {
             if (
               event.request.url.includes("get-text/") ||
               event.request.url.includes("search/") ||
+              event.request.url.includes("dictionary-definition/") ||
               event.request.destination == "font"
             ) {
               caches.open(CACHE_NAME).then((cache) => {

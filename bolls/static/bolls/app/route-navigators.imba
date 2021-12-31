@@ -1,4 +1,4 @@
-export tag verse-navigator
+tag verse-navigator
 	def unmount
 		const bible = document.getElementsByTagName("BIBLE-READER")
 		if bible[0]
@@ -17,7 +17,7 @@ export tag verse-navigator
 				bible[0].getChapter(params.translation, parseInt(params.book), parseInt(params.chapter), verse)
 
 
-export tag chapter-navigator
+tag chapter-navigator
 	def routed params
 		unless window.location.pathname.split('/').length == 5
 			const bible = document.getElementsByTagName("BIBLE-READER")
