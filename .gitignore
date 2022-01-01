@@ -159,6 +159,9 @@ migrations/
 # Sphinx documentation
 docs/_build/
 
+translations/*.json
+dictionaries/*.json
+
 
 bolls/static/bolls/package-lock.json
 bolls/static/bolls/dist/public/
