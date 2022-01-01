@@ -31,23 +31,41 @@ self.onmessage = function (msg) {
 	}
 }
 
-function downloadTranslation(url) {
-	fetch(url)
-		.then(response => response.json())
-		.then(data => {
-			db.transaction("rw", db.verses, () => {
-				db.verses.bulkPut(data)
-					.then(() => {
-						postMessage(['downloaded', url.substring(21, url.length - 5)])
-					}
-					);
-			}).catch((e) => {
-				throw (url.substring(21, url.length - 5));
+
+
+async function downloadZip(url, filename) {
+	let data = await fetch(url)		// 1) fetch the url
+		.then(function (response) {		// 2) filter on 200 OK
+			if (response.status === 200 || response.status === 0) {
+				return Promise.resolve(response.blob());
+			} else {
+				return Promise.reject(new Error(response.statusText));
 			}
-			)
-		}).catch((e) => {
-			throw (url.substring(21, url.length - 5));
 		})
+		.then(JSZip.loadAsync)	// 3) chain with the zip promise
+		.then(function (zip) {
+			return zip.file(filename + '.json').async("string");	// 4) chain with the text content promise
+		})
+		.then(function success(text) {
+			return JSON.parse(text)
+		}, function error(e) {
+			console.log(e)
+			throw (filename);
+		});
+	return data
+}
+
+async function downloadTranslation(url) {
+	let tranlslation = url.substring(21, url.length - 4)
+	let data = await downloadZip(url, tranlslation)
+	db.transaction("rw", db.verses, () => {
+		db.verses.bulkPut(data)
+			.then(() => {
+				postMessage(['downloaded', tranlslation])
+			});
+	}).catch((e) => {
+		throw (tranlslation);
+	})
 }
 
 function deleteTranslation(translation) {
@@ -71,41 +89,22 @@ function search(search) {
 
 
 
+async function downloadDictionary(request) {
+	let data = await downloadZip(request.url, request.dictionary)
+	for (let i = 0; i < data.length; i++) {
+		data[i].dictionary = request.dictionary;
+	}
 
-function downloadDictionary(request) {
-	fetch(request.url)       // 1) fetch the url
-	.then(function (response) {                       // 2) filter on 200 OK
-		if (response.status === 200 || response.status === 0) {
-			return Promise.resolve(response.blob());
-		} else {
-			return Promise.reject(new Error(response.statusText));
-		}
-	})
-	.then(JSZip.loadAsync)                            // 3) chain with the zip promise
-	.then(function (zip) {
-		return zip.file(request.dictionary + '.json').async("string"); // 4) chain with the text content promise
-	})
-	.then(function success(text) {
-		let data = JSON.parse(text)
-
-		for (let i = 0; i < data.length; i++) {
-			data[i].dictionary = request.dictionary;
-		}
-
-		db.transaction("rw", db.dictionaries, () => {
-			db.dictionaries.bulkPut(data)
-				.then(() => {
-					postMessage(['downloaded_dictionary', request.dictionary])
-				}
-				);
-		}).catch((e) => {
-			console.log(e)
-			throw (request.dictionary);
-		})
-	}, function error(e) {
+	db.transaction("rw", db.dictionaries, () => {
+		db.dictionaries.bulkPut(data)
+			.then(() => {
+				postMessage(['downloaded_dictionary', request.dictionary])
+			}
+			);
+	}).catch((e) => {
 		console.log(e)
 		throw (request.dictionary);
-	});
+	})
 }
 
 function deleteDictionary(dictionary) {

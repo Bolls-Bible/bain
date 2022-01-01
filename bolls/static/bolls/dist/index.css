@@ -1376,14 +1376,13 @@ html[data-light="light"] .Notifications p {
 
 footer {
   color: var(--disabled);
-  font-size: 12px;
   padding-bottom: 8px;
   text-align: center;
 }
 
 footer a {
   color: var(--disabled);
-  font-size: 12px;
+  font-size: 14px;
   display: inline-block;
   background-image: linear-gradient(var(--disabled) 0px, var(--disabled) 100%);
 }

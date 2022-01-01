@@ -104,6 +104,7 @@ let choosenid = []
 let highlights = []
 let show_collections = no
 let choosen_parallel = no
+let lock_panel = no
 
 let page_search =
 	d: no
@@ -227,6 +228,19 @@ const accents = [
 	}
 ]
 
+def hidePanels event
+	if(event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
+		onzone = no
+		inzone = no
+		bible_menu_left = -300
+		settings_menu_left = -300
+		imba.commit!
+
+
+window.onblur = hidePanels
+document.body.onmouseleave = hidePanels
+document.onmouseleave = hidePanels
+window.onmouseout = hidePanels
 
 tag bible-reader
 	prop verses = []
@@ -1264,8 +1278,11 @@ tag bible-reader
 			elif e.x > window.innerWidth - 32
 				settings_menu_left = 0
 			elif 300 < e.x < window.innerWidth - 300
-				bible_menu_left = -300
+				bible_menu_left = -300 unless lock_panel
 				settings_menu_left = -300
+
+			if 300 > e.x
+				lock_panel = no
 
 		if e.y < 32 && not MOBILE_PLATFORM
 			max_header_font = 1.2
@@ -1866,6 +1883,12 @@ tag bible-reader
 	def toggleDownloads
 		clearSpace()
 		popUp 'show_downloads'
+		download_menu = no
+
+	def openDictionaryDownloads
+		toggleDownloads!
+		download_menu = yes
+
 
 	def changeFontWeight value
 		if settings.font.weight + value < 1000 && settings.font.weight + value > 0
@@ -1971,6 +1994,7 @@ tag bible-reader
 			"Welcome 🤗",
 			window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/'
 		)
+		lock_panel = yes
 		toggleBibleMenu()
 
 	def calculateTopVerse e
@@ -2865,7 +2889,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
-					<p>
+					<p[fs:12px]>
 						"©", <time dateTime='2021-11-25T20:41'> "2019"
 						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -2876,7 +2900,7 @@ tag bible-reader
 					@click=(do unless state.intouch then clearSpace!) ease>
 
 					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75]
-						.height_auto=((!search.search_result_header && big_modal_block_content=='search') or (big_modal_block_content=='dictionary' && loading)) @click.stop>
+						.height_auto=((!search.search_result_header && big_modal_block_content=='search') or (big_modal_block_content=='dictionary' && (loading or !definitions_history.length))) @click.stop>
 
 						if big_modal_block_content == 'show_help'
 							<article.search_hat>
@@ -3081,7 +3105,12 @@ tag bible-reader
 									<title> data.lang.search
 									<path d=svg_paths.search>
 
-							unless loading
+								<svg.close_search [min-width:28px] @click=openDictionaryDownloads viewBox="0 0 212.646728515625 159.98291015625">
+									<title> data.lang.download
+									<g transform="matrix(1.5 0 0 1.5 0 128)">
+										<path d=svg_paths.download>
+
+							if !loading && definitions_history.length
 								<article$definitions.search_body>
 									<menu-popup bind=store.show_dictionaries>
 										<.popup_menu_box
@@ -3203,7 +3232,7 @@ tag bible-reader
 										<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
 											<p> data.lang.nothing
 											<p[padding:32px 0px 8px]> data.lang.translation, ' ', search.translation
-											<button.more_results @click=showTranslations> data.lang.change_translation
+											<button.more_results @click=(lock_panel = yes;showTranslations!)> data.lang.change_translation
 									<.freespace>
 
 

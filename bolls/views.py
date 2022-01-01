@@ -594,7 +594,7 @@ def searchInDictionary(request, dict, query):
     search_vector = SearchVector('lexeme__unaccent')
     search_query = SearchQuery(unaccented_query)
     results_of_rank = Dictionary.objects.annotate(rank=SearchRank(
-        search_vector, search_query)).filter(Q(short_definition__search=unaccented_query) | Q(topic=query) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
+        search_vector, search_query)).filter(Q(short_definition__search=unaccented_query) | Q(topic=query.upper()) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
 
     # SImilarity search
     results_of_similarity = Dictionary.objects.annotate(rank=TrigramSimilarity(

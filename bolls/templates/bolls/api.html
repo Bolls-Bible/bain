@@ -33,7 +33,7 @@
 <body>
 	<header>
 		<h1><a href="/" style="color:inherit; --hover-color: var(--text-color);">Bolls</a> API Documentation</h1>
-		<p> This documentation is called to provide an available API for creating a functioning client.</p>
+		<p> This documentation is called to provide available API for creating a functioning client.</p>
 	</header>
 	<h2>Table of contents</h2>
 	<ul>
@@ -49,37 +49,38 @@
 	</ul>
 	<h2 id='Before fetching Bible text'>Before fetching Bible text</h2>
 	<p class='last-update'> Updated at: 17 February 2021.</p>
-	<p>Firstly, to fetch Bible text, you need to get <a target="_blank"
+	<p>First of all get <a target="_blank"
 			href="https://bolls.life/static/bolls/app/views/languages.json">a list of available
 			translations</a> and <a target="_blank"
 			href="https://bolls.life/static/bolls/app/views/translations_books.json">an object with their
-			books</a>. The translations list contain nodes, which have the next properties:
+			books</a>. The translations list contain nodes with following properties:
 	</p>
 	<ul>
 		<li> The <code>short_name</code> field is an id of the translation in database. Use it for forming a url.</li>
 		<li> The <code>full_name</code> field is a full name of its translation.</li>
-		<li> The <code>commentaries</code> field indicates whether there is translators commentary to the translation.</li>
+		<li> The <code>commentaries</code> field indicates whether there is a translators commentary to the translation.</li>
 		<li> The <code>updated</code> field is a date number when the translation was updated in the last time.</li>
+		<li> The <code>info</code> field sometimes may contain a link to translation description.</li>
 	</ul>
 
-	<p>The books object (or list) contains books, which contain nodes, which have the next properties:</p>
+	<p>The books list contains books with the next properties:</p>
 	<ul>
 		<li> The <code>bookid</code> field is an id of the book in database.</li>
-		<li> The <code>chronorder</code> field is a number of the book in chronological order (just a smoll feature).</li>
-		<li> The <code>name</code> field is a name of this book.</li>
-		<li> The <code>chapters</code> field is a number of chapters of this book.</li>
+		<li> The <code>chronorder</code> field is a chronological order book number according to Robert Young (just a small feature).</li>
+		<li> The <code>name</code> field is a book name.</li>
+		<li> The <code>chapters</code> field is a number of book chapters.</li>
 	</ul>
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre>
 	<h2 id='Fetch a chapter'>Fetch a chapter</h2>
-	<p>Then, using that data, you can form a url for fetching a chapter of certain translation and book. You may fetch the chapter with translator commentarie or without them. The url constructor is the next:
+	<p>Using that data, you can form a url to fetch a chapter. You may fetch the chapter with translator commentaries or without them. The url constructor:
 
 	<pre>https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # Without commentaries</pre>
 	<pre>https://bolls.life/get-chapter/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # With commentaries</pre>
 
 	<p>Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation like <code>YLT</code> or
-		<code>UBIO</code> or <code>SYNOD</code>, and where <code>&lt;int:book&gt;</code>
-		and<code>&lt;int:chapter&gt;</code> is just a number of a book and a number of a chapter. For example by the
+		<code>UBIO</code> or <code>SYNOD</code>, and <code>&lt;int:book&gt;</code>
+		with <code>&lt;int:chapter&gt;</code> are numbers of a book and and chapter. For example by the
 		next
 		url you will got an eight chapter of Song of Solomon book:
 	</p>
@@ -98,7 +99,7 @@
 		<li> The <code>text</code> field contains an html text of this verse.</li>
 		<li> The optional <code>comment</code> field contains an html text of translators comment or references.</li>
 	</ul>
-	<p><b>NOTE!</b> To fetch a single verse or a few verses of one or more translations use <a href='#compare'>Compare
+	<p><strong>NOTE!</strong> To fetch a single verse or a few verses of one or more translations use <a href='#compare'>Compare
 			versions API</a></p>
 
 	<h2 id='Search'>Search</h2>
@@ -115,8 +116,8 @@
 
 	<pre><a target="_blank" href="https://bolls.life/search/YLT/?search=haggi">https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true</a></pre>
 
-	<p>The result of this request will be a list of ALL found verses in the given translation, where every verse will
-		has some several fields:</p>
+	<p>The result of this request will be a list of top 1024 found verses in the given translation, where every verse will
+		have some several fields:</p>
 	<ul id="verse_fields">
 		<li> The <code>pk</code> field is an id of the verse in database.</li>
 		<li> The <code>translation</code> field is a translation in which was the search.</li>
@@ -129,9 +130,10 @@
 	<p>Curl code</p>
 	<pre>curl --location --request GET 'https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true'</pre>
 	<h2 id='Get a translation'>Get a translation</h2>
-	<p>You can get full translation just quering in the next manner:</p>
+	<p>You can get a full translation in json or zip:</p>
 	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre>
-	<p>The result of it will be an array of all verses, that belongs to the given translation. For example you can try
+	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.zip</pre>
+	<p>The result will be an array of all translation verses. For example you can try
 		the next link:</p>
 	<pre><a target="_blank"
 			href="https://bolls.life/static/translations/YLT.json">https://bolls.life/static/translations/YLT.json</a></pre>

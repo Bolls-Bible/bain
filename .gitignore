@@ -158,3 +158,8 @@ migrations/
 
 # Sphinx documentation
 docs/_build/
+
+
+bolls/static/bolls/package-lock.json
+bolls/static/bolls/dist/public/
+bolls/static/bolls/dist/serve.js.manifest
