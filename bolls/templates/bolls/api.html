@@ -80,9 +80,8 @@
 
 	<p>Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation like <code>YLT</code> or
 		<code>UBIO</code> or <code>SYNOD</code>, and <code>&lt;int:book&gt;</code>
-		with <code>&lt;int:chapter&gt;</code> are numbers of a book and and chapter. For example by the
-		next
-		url you will got an eight chapter of Song of Solomon book:
+		with <code>&lt;int:chapter&gt;</code> are numbers of a book and chapter. For example by the
+		next url you will get the eight chapter of Song of Solomon in YLT or NKJV translation:
 	</p>
 
 	<pre><a target="_blank" href="https://bolls.life/get-text/YLT/22/8/">https://bolls.life/get-text/YLT/22/8/</a></pre>
@@ -91,8 +90,7 @@
 	<pre>curl --location --request GET 'https://bolls.life/get-text/YLT/22/8/'</pre>
 	<pre>curl --location --request GET 'https://bolls.life/get-chapter/NKJV/22/8/'</pre>
 
-	<p>The result of this request will be a list of verses of that chapter, where every verse will has some several
-		fields.</p>
+	<p>The result of this request will be a list of verses of that chapter, with the next fields:</p>
 	<ul>
 		<li> The <code>pk</code> field is an id of the verse in database.</li>
 		<li> The <code>verse</code> field is a number of the verse in its chapter.</li>
@@ -107,7 +105,7 @@
 
 	<pre>https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=&lt;bool:match_case&gt;&match_whole=&lt;bool:match_whole&gt;</pre>
 
-	<p>Where <code>&lt;slug:translation&gt;</code> is a translation in which you want to find something. The
+	<p>Where <code>&lt;slug:translation&gt;</code> is an abbreviation of the translation in which you want to find something. The
 		<code>&lt;str:piece&gt;</code> is a piece of text which can be a slug or a string which you look for. It is`not
 		case sensitive, and it can be anything on any language: <code>.../WLC?search=שָּׁמַ֖יִם וְאֵ֥ת</code>, <code>.../LXX?search=ὁ
 				θεὸς τὸν</code>, <code>.../UBIO?search=Небо та землю</code>, <code>.../CUV?search=淵 面 黑 暗</code>.</p>
@@ -120,11 +118,11 @@
 		have some several fields:</p>
 	<ul id="verse_fields">
 		<li> The <code>pk</code> field is an id of the verse in database.</li>
-		<li> The <code>translation</code> field is a translation in which was the search.</li>
+		<li> The <code>translation</code> field is a translation of search.</li>
 		<li> The <code>book</code> field is a book of the verse.</li>
-		<li> The <code>chapter</code> field is a chapter of the book.</li>
-		<li> The <code>verse</code> field is a number of the verse in the chapter.</li>
-		<li> The <code>text</code> field contains a text of this verse.</li>
+		<li> The <code>chapter</code> field is a chapter of the book in which the verse is found.</li>
+		<li> The <code>verse</code> field is a number of the verse in its chapter.</li>
+		<li> The <code>text</code> field contains html text of the verse.</li>
 		<li> The optional <code>comment</code> field contains translators commentary to the verse if such exist.</li>
 	</ul>
 	<p>Curl code</p>
@@ -142,20 +140,20 @@
 	<pre>curl --location --request GET 'https://bolls.life/static/translations/YLT.json'</pre>
 
 	<h2 id="compare">Compare versions</h2>
-	<p>You can make a request for peculiar verses in peculiar translations. For example if you wanna see some exact
-		verse or verses in different translation to compare them you can use this api. The request should POST, and you
+	<p>You can make a request for peculiar verses in peculiar translations. If you wanna see some exact
+		verse or verses in different translation to compare them you can use this api. The request should be <code>POST</code>, and you
 		should pass in the body an object with some fields. The request url -=>
-		<code>https://bolls.life/get-paralel-verses/</code>
+		<code>https://bolls.life/get-paralel-verses/</code>, The body of the <code>POST</code> request must have the nest fields:
 	</p>
 	<ul>
-		<li> The <code>translations</code> field should be an array of codes of translations like:
+		<li> The <code>translations</code> field should be an array of abbreviations of translations like:
 			<code>JSON.stringify(["YLT", "HOM", "WLCC"])</code>.
 		<li> The <code>verses</code> field should be an array of numbers of verses to compare like:
-			<code>JSON.stringify([1, 2, 3, 6, 45])</code> (order does mean).
-		<li> The <code>chapter</code> field should be a chapter of the books.
+			<code>JSON.stringify([1, 2, 3, 6, 45])</code> <em>(order does mean)</em>.
+		<li> The <code>chapter</code> field should be a chapter of the book.
 		<li> The <code>book</code> field should be a book of the verses.
 	</ul>
-	<p>Imba example.</p>
+	<p>You may request different verses in different translations only of one chapter. Imba example.</p>
 	<pre>
 window.fetch("/get-paralel-verses/", {
 	method: "POST",
@@ -179,9 +177,9 @@ window.fetch("/get-paralel-verses/", {
 .then(do |resdata|
 	translations_with_verses = resdata
 	console.log console.log
-)	</pre>
+)</pre>
 	<p>The result of this request will be an array of translations where every translation is an array of requested
-		verses, where every verse has <a href="#verse_fields">this fields</a>. Here is the example of the result:</p>
+		verses, where every verse has <a href="#verse_fields">these fields</a>. Here is the example of the result:</p>
 	<pre>[
   [
     {
@@ -235,9 +233,9 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Hast thou set thy heart unto My servant Job because there is none like him in the land, a man perfect and upright, fearing God and turning aside from evil? and still he is keeping hold on his integrity, and thou dost move Me against him to swallow him up for nought!'"
     }
   ]
-]	</pre>
+]</pre>
 
-	<h2 id="Fetch a verse">Fetch a verse</h2>
+	<h2 id="Fetch a verse">Fetch a verse(s)</h2>
 	<p>You may need this a lot. To fetch a single verse of a few verses of a single translation you should use the
 		compare API as I mantion it above. Just pass the translation code as array with single item, chapter number,
 		book code and array with verse
@@ -264,8 +262,8 @@ window.fetch("/get-paralel-verses/", {
 .then(do |response| response.json())
 .then(do |resdata|
 	translations_with_verses = resdata
-	console.log console.log
-)	</pre>
+	console.log(resdata)
+)</pre>
 	<p>Curl code</p>
 	<pre>curl --location --request POST 'https://bolls.life/get-paralel-verses/' \
 --header 'Content-Type: application/json' \

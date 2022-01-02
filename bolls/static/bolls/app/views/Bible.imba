@@ -11,7 +11,7 @@ import "./note-up"
 import "./menu-popup"
 import './orderable-list'
 import {thanks_to} from './thanks_to'
-import {svg_paths} from "./svg_paths"
+import {svg_paths, swirl} from "./svg_paths"
 import {scrollToY} from './smooth_scrolling'
 
 let html = document.documentElement
@@ -229,7 +229,7 @@ const accents = [
 ]
 
 def hidePanels event
-	if(event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
+	if !fixdrawers && (event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
 		onzone = no
 		inzone = no
 		bible_menu_left = -300
@@ -710,7 +710,7 @@ tag bible-reader
 		onzone = no
 		inzone = no
 		store.show_history = no
-		search.filter = no
+		search.filter = ''
 		search.show_filters = no
 		search.counter = 50
 		choosen = []
@@ -759,6 +759,7 @@ tag bible-reader
 		for book in BOOKS[translation]
 			if book.bookid == bookid
 				return book.name
+		return bookid.toUpperCase!
 
 
 	def pageSearch event
@@ -1000,6 +1001,11 @@ tag bible-reader
 		searchSuggestions!
 		setTimeout(&, 300) do $generalsearch.select!
 
+	def ntBook bookid
+		if 43 < bookid < 67
+			return yes
+		return no
+
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input
@@ -1019,21 +1025,25 @@ tag bible-reader
 			try
 				search_verses = await loadData(url)
 				search.bookid_of_results = []
-				for verse in search_verses
-					if !search.bookid_of_results.find(do |element| return element == verse.book)
-						search.bookid_of_results.push verse.book
 			catch error
 				console.error error
 				if data.db_is_available && data.downloaded_translations.indexOf(search.translation) != -1
 					search_verses = await data.getSearchedTextFromStorage(search)
 					search.bookid_of_results = []
-					for verse in search_verses
-						if !search.bookid_of_results.find(do |element| return element == verse.book)
-							search.bookid_of_results.push verse.book
 
 			search.results = 0
-			for result in search_verses
-				search.results += (result.text.match(/<mark>/g) || []).length
+			search.nt = no
+			search.ot = no
+			for verse in search_verses
+				if !search.bookid_of_results.find(do |element| return element == verse.book)
+					search.bookid_of_results.push verse.book
+
+				search.results += (verse.text.match(/<mark>/g) || []).length
+				if ntBook(verse.book)
+					search.nt = yes
+				else
+					search.ot = yes
+
 			closeSearch!
 			imba.commit!
 
@@ -1145,9 +1155,15 @@ tag bible-reader
 		search.show_filters = no
 		search.counter = 50
 
+
 	def getFilteredASearchVerses
 		if search.filter
-			return search_verses.filter(do |verse| verse.book == search.filter)
+			if search.filter == "ot"
+				return search_verses.filter(do |verse| !ntBook(verse.book))
+			elif search.filter == "nt"
+				return search_verses.filter(do |verse| ntBook(verse.book))
+			else
+				return search_verses.filter(do |verse| verse.book == search.filter)
 		else
 			return search_verses
 
@@ -2216,7 +2232,7 @@ tag bible-reader
 			addNewCollection(store.newcollection)
 
 	def tDir translation
-		if translation in ['WLC', 'WLCC', 'POV']
+		if translation in ['WLC', 'WLCC', 'POV', 'HAC']
 			return 'rtl'
 		return 'ltr'
 
@@ -2542,6 +2558,9 @@ tag bible-reader
 							<>
 								for book in settingsp.filtered_books
 									<div key=book.bookid>
+										if book.bookid == 40
+											<div[d:flex jc:center]>
+												swirl
 										<p.book_in_list dir="auto" .selected=(book.bookid == settingsp.book) @click=showChapters(book.bookid)> book.name
 										if book.bookid == show_chapters_of
 											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
@@ -2553,6 +2572,9 @@ tag bible-reader
 							<>
 								for book in settings.filtered_books
 									<div key=book.bookid>
+										if book.bookid == 40
+											<div[d:flex jc:center]>
+												swirl
 										<p.book_in_list dir="auto" .selected=(book.bookid == settings.book) @click=showChapters(book.bookid)> book.name
 										if book.bookid == show_chapters_of
 											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
@@ -2878,13 +2900,13 @@ tag bible-reader
 					data.lang.random
 				<footer>
 					<p.footer_links>
-						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
+						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						unless data.pswv
 							<a route-to="/donate/"> '🔥 ', data.lang.donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
-						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/en/3.0/"> "Django"
+						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
@@ -2971,7 +2993,7 @@ tag bible-reader
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px p:16px 0 jc:center]
+								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px jc:center ai:center]
 									@click=(download_menu = !download_menu)>
 									<span>
 										if download_menu
@@ -3154,21 +3176,33 @@ tag bible-reader
 											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
 												<title> data.lang.close
 												<path[m: auto] d=svg_paths.close>
+										if search.filter
+											<button.book_in_list @click=dropFilter> data.lang.drop_filter
+
+										if search.ot
+											<button.book_in_list[ta:left] @click=addFilter("ot")> data.lang.ot
+
+										if search.nt
+											<button.book_in_list[ta:left] @click=addFilter("nt")> data.lang.nt
+
 										if settingsp.edited_version == settingsp.translation && settingsp.display
-											if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
 											<>
-												for book in parallel_books
+												for book in parallel_books when search.bookid_of_results.find(do |element| return element == book.bookid)
 													<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
 										else
-											if search.filter then <button.book_in_list @click=dropFilter> data.lang.drop_filter
-											for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
-												<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
+											<>
+												for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
+													<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
+
 							<article.search_hat#gs_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
 
-								<input$generalsearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none] bind=search.search_input minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search @keydown.enter=getSearchText @input=searchSuggestions>
+								<input$generalsearch
+									[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
+									minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search
+									bind=search.search_input @keydown.enter=getSearchText @input=searchSuggestions>
 
 								if window.navigator.onLine
 									<svg.search_option .search_option_on=search.match_case @click=(search.match_case = !search.match_case, setCookie("match_case", search.match_case)) width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
@@ -3208,10 +3242,11 @@ tag bible-reader
 
 							if search.search_result_header
 								<article.search_body id="search_body" @scroll=searchPagination>
-									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  getFilteredASearchVerses().length, ' ', data.lang.totalyresultsofsearch
+									let filtered_books = getFilteredASearchVerses()
+									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  filtered_books.length, ' ', data.lang.totalyresultsofsearch
 
 									<>
-										for verse, key in getFilteredASearchVerses()
+										for verse, key in filtered_books
 											<a.search_item>
 												<search-text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
 												<.search_res_verse_header>
@@ -3225,7 +3260,7 @@ tag bible-reader
 														<title> data.lang.open_in_parallel
 														<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 										if search.filter then <div[p:12px 0px ta:center]>
-											data.lang.filter_name, ' ', nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
+											data.lang.filter_name + ' ' + nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
 											<br>
 											<button[d: inline-block; mt: 12px].more_results @click=dropFilter> data.lang.drop_filter
 									unless search_verses.length

@@ -1383,6 +1383,7 @@ footer {
 footer a {
   color: var(--disabled);
   font-size: 14px;
+  background-size: 100% 0.2em;
   display: inline-block;
   background-image: linear-gradient(var(--disabled) 0px, var(--disabled) 100%);
 }
