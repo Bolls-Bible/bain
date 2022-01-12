@@ -356,27 +356,7 @@ tag bible-reader
 					setCookie('username', data.user.username)
 					setCookie('name', data.user.name)
 
-					# Merge local history and server copy
-					history = JSON.parse(getCookie("history")) || []
-					try
-						history = JSON.parse(userdata.history).concat(history)
-
-						# Remove duplicates
-						let uniqueHistory = []
-						for c in history
-							if not uniqueHistory.find(do |element| return element.chapter == c.chapter && element.book == c.book && element.translation == c.translation && element.parallel == c.parallel)
-								uniqueHistory.push(c)
-
-						history = uniqueHistory
-
-					# Remove items exceeding limit
-					if history.length > 256
-						history.length = 256
-
-					# Update history in localStorage and server
-					if history.length
-						window.localStorage.setItem("history", JSON.stringify(history))
-						saveHistoryToServer!
+					syncHistory!
 				else
 					window.localStorage.removeItem('username')
 					window.localStorage.removeItem('name')
@@ -445,7 +425,8 @@ tag bible-reader
 
 	def saveToHistory translation, book, chapter, verse, parallel
 		if data.user.username && window.navigator.onLine
-			history = await loadData('/get-history')
+			history = await loadData('/history')
+			log history
 
 		if getCookie("history")
 			history = JSON.parse(getCookie("history")) || []
@@ -453,7 +434,7 @@ tag bible-reader
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
 
-		history.sort(do(a, b) return a.date - b.date)
+		history.sort(do(a, b) return b.date - a.date)
 
 		history.unshift({translation: translation, book: book, chapter: chapter, verse: verse, parallel: parallel, date:Date.now!})
 		if history.length > 256
@@ -462,11 +443,40 @@ tag bible-reader
 		window.localStorage.setItem("history", JSON.stringify(history))
 		saveHistoryToServer!
 
+	def syncHistory
+		if data.user.username && window.navigator.onLine
+			let cloud_history = await loadData('/history')
+
+			# Merge local history and server copy
+			history = JSON.parse(getCookie("history")) || []
+			try
+				history = JSON.parse(cloud_history.history).concat(history)
+
+				# Remove duplicates
+				let unique_history = []
+				for c in history
+					let unique = unique_history.find(do |element| return element.chapter == c.chapter && element.book == c.book && element.translation == c.translation && element.parallel == c.parallel)
+					if !unique && c.date >= cloud_history.purge_date
+						unique_history.push(c)
+
+				history = unique_history
+
+			# Remove items exceeding limit
+			if history.length > 256
+				history.length = 256
+
+			imba.commit!
+
+			# Update history in localStorage and server
+			if history.length
+				window.localStorage.setItem("history", JSON.stringify(history))
+				saveHistoryToServer!
+
 
 	def saveHistoryToServer
 		if data.user.username && window.navigator.onLine
-			window.fetch("/save-history/", {
-				method: "POST",
+			window.fetch("/history/", {
+				method: "PUT",
 				cache: "no-cache",
 				headers: {
 					'X-CSRFToken': data.get_cookie('csrftoken'),
@@ -478,6 +488,7 @@ tag bible-reader
 			})
 			.then(do |response| response.json())
 			.catch(do |e| console.log(e))
+			# .then(do |data| log data)
 
 
 
@@ -710,7 +721,6 @@ tag bible-reader
 		onzone = no
 		inzone = no
 		store.show_history = no
-		search.filter = ''
 		search.show_filters = no
 		search.counter = 50
 		choosen = []
@@ -1635,18 +1645,16 @@ tag bible-reader
 	def turnHistory
 		store.show_history = !store.show_history
 		settings_menu_left = -300
-		if store.show_history && data.user.username && window.navigator.onLine
-			let cloud_history = await loadData('/get-history')
-			history = JSON.parse(cloud_history)
-			imba.commit!
+		if store.show_history
+			syncHistory!
 
 	def clearHistory
 		turnHistory()
 		history = []
 		window.localStorage.setItem("history", "[]")
 		if data.user.username
-			window.fetch("/save-history/", {
-				method: "POST",
+			window.fetch("/history/", {
+				method: "DELETE",
 				cache: "no-cache",
 				headers: {
 					'X-CSRFToken': data.get_cookie('csrftoken'),
@@ -1654,13 +1662,14 @@ tag bible-reader
 				},
 				body: JSON.stringify({
 						history: "[]",
+						purge_date: Date.now!
 					})
 			})
 			.then(do |response| response.json())
-			.then(do |data| undefined)
 			.catch(do |error|
 				console.error(error)
 				data.showNotification('error'))
+			# .then(do |data| log data)
 
 	def turnCollections
 		if addcollection
@@ -2515,9 +2524,13 @@ tag bible-reader
 						<title> data.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 					if settingsp.edited_version == settingsp.translation && settingsp.display
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)> settingsp.edited_version
+						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+							settingsp.edited_version
+							<span> ' ›'
 					else
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)> settings.translation
+						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+							settings.translation
+							<span> ' ›'
 					if data.db_is_available
 						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625">
 							<title> data.lang.download

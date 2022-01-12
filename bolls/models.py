@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class Verses(models.Model):
@@ -36,6 +37,7 @@ class Bookmarks(models.Model):
 class History(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	history = models.TextField(default=None)
+	purge_date = models.PositiveBigIntegerField(default=0)
 
 class Dictionary(models.Model):
 	dictionary = models.CharField(max_length=8)

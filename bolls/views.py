@@ -513,6 +513,68 @@ def historyOf(user):
     else:
         return []
 
+def historyData(user):
+    if user.is_authenticated:
+        try:
+            obj = user.history_set.get(user=user)
+            return {"history":obj.history, "purge_date":obj.purge_date}
+        except History.MultipleObjectsReturned:
+            user.history_set.filter(user=user).delete()
+            return {"history":[], "purge_date":0}
+        except History.DoesNotExist:
+            return {"history":[], "purge_date":0}
+    else:
+        return {"history":[], "purge_date":0}
+
+
+
+def history(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        if request.method == 'PUT':
+            received_json_data = json.loads(request.body)
+            try:
+                obj = user.history_set.get(user=user)
+                obj.history = received_json_data["history"]
+                obj.save()
+
+            except History.DoesNotExist:
+                user.history_set.create(history=received_json_data["history"])
+
+            except History.MultipleObjectsReturned:
+                user.history_set.all().delete()
+                user.history_set.create(history=received_json_data["history"])
+
+            return JsonResponse({"response": "200"}, safe=False)
+
+        elif request.method == 'DELETE':
+            received_json_data = json.loads(request.body)
+            try:
+                obj = user.history_set.get(user=user)
+                obj.history = received_json_data["history"]
+                obj.purge_date = received_json_data["purge_date"]
+                print(obj.purge_date)
+                obj.save()
+
+            except History.DoesNotExist:
+                user.history_set.create(history=received_json_data["history"])
+
+            except History.MultipleObjectsReturned:
+                user.history_set.all().delete()
+                user.history_set.create(history=received_json_data["history"])
+
+            return JsonResponse({"response": "200"}, safe=False)
+
+        else:
+            return JsonResponse(historyData(request.user), safe=False)
+
+    else:
+        if request.method == 'POST':
+            return HttpResponse(status=405)
+        else:
+            return JsonResponse([], safe=False)
+
 
 def getHistory(request):
     return JsonResponse(historyOf(request.user), safe=False)

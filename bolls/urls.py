@@ -14,6 +14,7 @@ urlpatterns = [
     path('downloads/', views.index),
     path('get-history/', views.getHistory),
     path('save-history/', views.saveHistory),
+    path('history/', views.history),
     path('get-categories/', views.getCategories),
     path('save-bookmarks/', views.saveBookmarks),
     path('delete-bookmarks/', views.deleteBookmarks),

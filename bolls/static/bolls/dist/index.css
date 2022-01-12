@@ -285,6 +285,13 @@ body {
   cursor: pointer;
 }
 
+.translation_name span {
+  display: inline-block;
+  transform: rotate(90deg) translateX(-2px);
+  font-size: 1.5em;
+  line-height: 0;
+}
+
 .current_translation {
   color: var(--acc-color);
 }
