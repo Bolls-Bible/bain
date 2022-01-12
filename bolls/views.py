@@ -28,8 +28,6 @@ bolls_index = 'bolls/index.html'
 
 
 def index(request):
-    if request.user.is_authenticated:
-        print(request.user.id)
     return render(request, bolls_index)
 
 
@@ -582,7 +580,7 @@ def getHistory(request):
 
 def userLogged(request):
     if request.user.is_authenticated:
-        return JsonResponse({"username": request.user.username, "name": request.user.first_name, "is_password_usable": is_password_usable(request.user.password), "history": historyOf(request.user)}, safe=False)
+        return JsonResponse({"username": request.user.username, "name": request.user.first_name, "is_password_usable": is_password_usable(request.user.password)}, safe=False)
     return JsonResponse({"username": ""}, safe=False)
 
 
