@@ -4,11 +4,11 @@ import dictionaries from "./dictionaries.json"
 import './Profile'
 import "./loading.imba"
 import "./downloads.imba"
-import "./rich_text_editor"
 import "./colorPicker.imba"
 import './search-text-as-html'
 import "./note-up"
 import "./menu-popup"
+import "./mark-down"
 import './orderable-list'
 import {thanks_to} from './thanks_to'
 import {svg_paths, swirl} from "./svg_paths"
@@ -426,7 +426,6 @@ tag bible-reader
 	def saveToHistory translation, book, chapter, verse, parallel
 		if data.user.username && window.navigator.onLine
 			history = await loadData('/history')
-			log history
 
 		if getCookie("history")
 			history = JSON.parse(getCookie("history")) || []
@@ -2800,12 +2799,12 @@ tag bible-reader
 					<button.cbtn [p:8px fs:24px fw:100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
 					<button.cbtn [p:8px fs:24px fw:900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
 				<.btnbox>
-					<svg.cbtn @click.changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [p:16px 0]>
+					<svg.cbtn @click=changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [p:16px 0]>
 						<title> data.lang.decrease_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="6" width="38" height="2">
 						<rect x="0" y="12" width="18" height="2">
-					<svg.cbtn @click.changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [p:10px 0]>
+					<svg.cbtn @click=changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [p:10px 0]>
 						<title> data.lang.increase_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="11" width="38" height="2">
@@ -3006,7 +3005,7 @@ tag bible-reader
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> data.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px jc:center ai:center]
+								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px jc:center ai:center us:none]
 									@click=(download_menu = !download_menu)>
 									<span>
 										if download_menu
@@ -3028,7 +3027,7 @@ tag bible-reader
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 							<article.search_body>
 								if download_menu
-									<div>
+									<div[o@off:0] ease>
 										# let no_dictionary_downloaded = yes
 										for dictionary in dictionaries
 											if window.navigator.onLine || data.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
@@ -3114,9 +3113,7 @@ tag bible-reader
 								<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
 									<title> data.lang.create
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-							unless isNoteEmpty()
-								<p id="note_placeholder"> data.lang.write_something_awesone
-							<rich-text-editor bind=store dir="auto">
+							<mark-down store=store lemon=data.lang.write_something_awesone>
 
 						elif big_modal_block_content == "dictionary"
 							<article#dict_hat.search_hat [pos:relative]>

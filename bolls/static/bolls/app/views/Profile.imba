@@ -1,7 +1,9 @@
+import { remark } from './remark'
 import "./loading.imba"
-import *  as BOOKS from "./translations_books.json"
 
-import {svg_paths} from "./svg_paths.imba"
+import * as BOOKS from "./translations_books.json"
+
+import { svg_paths } from "./svg_paths.imba"
 
 let highlights_range = {
 	from: 0,
@@ -109,7 +111,7 @@ tag profile-page
 			newItem.date = new Date(item.date)
 			newItem.color = item.color
 			newItem.collection = item.collection
-			newItem.note = item.note
+			newItem.note = await remark (item.note)
 			newItem.translation = item.verse.translation
 			newItem.book = item.verse.book
 			newItem.chapter = item.verse.chapter
@@ -200,11 +202,13 @@ tag profile-page
 					getProfileBookmarks()
 				else
 					loading = no
+
 			elif tab == 1
 				if collection_range.loaded == collection_range.to
 					getSearchedBookmarks()
 				else
 					loading = no
+
 			else
 				if notes_range.loaded == notes_range.to
 					getBookmarksWithNotes!
@@ -331,7 +335,7 @@ tag profile-page
 							for collection in bookmark.collection.split(' | ')
 								<p.collection @click=getSearchedBookmarks(collection)> collection
 					if bookmark.note
-						<p.profile_note.EditingArea[overflow: auto;] innerHTML=bookmark.note dir="auto">
+						<p.profile_note[overflow: auto;] innerHTML=bookmark.note dir="auto">
 					<p.dataflex.popup_menu_box>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()

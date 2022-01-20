@@ -2,7 +2,6 @@ from django.db.models import F, Func
 import re
 import os
 import ast
-# import math
 import unicodedata
 import json
 from django.db.models import Count, Q
@@ -11,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import is_password_usable
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from django.contrib.messages import get_messages
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import JsonResponse, HttpResponse
@@ -703,27 +701,3 @@ def getDictionary(request, dictionary):
         })
 
     return cross_origin(JsonResponse(d, safe=False))
-
-
-
-
-# When translation is fully replaced -- this may be helpful
-# def fixBookmarks(request):
-#     # rename KJV to OKJC
-#     # push new KJV to the db
-#     # map bookmarks in given range to the new KJV
-
-#     # bookmarks = Bookmarks.objects.all().filter(verse__gte=992272, verse__lte=1023502)
-#     bookmarks = Bookmarks.objects.all()
-#     length = len(bookmarks)
-#     for bookmark in bookmarks:
-#         if bookmark.verse.id >= 992272 and bookmark.verse.id <= 1023502:
-#             print(bookmark.verse.book, bookmark.verse.chapter, bookmark.verse.verse, bookmark.verse.translation)
-#             new_verse = Verses.objects.get(translation="KJV", book=bookmark.verse.book, chapter=bookmark.verse.chapter, verse=bookmark.verse.verse)
-#             if new_verse:
-#                 bookmark.verse = new_verse
-#                 bookmark.save()
-#             else:
-#                 print('AAAAAAAAA')
-
-#    return HttpResponse(length)
