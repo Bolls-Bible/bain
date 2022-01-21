@@ -30,6 +30,8 @@ let store =
 
 let account_action = 0
 
+let expand_note = -1
+
 let taken_usernames = []
 let loading = no
 
@@ -290,6 +292,14 @@ tag profile-page
 			loading = no
 
 
+	def expandNote index\number
+		if document.getSelection().isCollapsed
+			if index == expand_note
+				expand_note = -1
+			else
+				expand_note = index
+
+
 	def render
 		<self @scroll=scroll>
 			<header.profile_hat>
@@ -327,7 +337,7 @@ tag profile-page
 
 
 
-			for bookmark in list_for_display
+			for bookmark, i in list_for_display
 				<article.bookmark_in_list [border-color: {bookmark.color}]>
 					<p.bookmark_text innerHTML=bookmark.text.join(" ") @click=goToBookmark(bookmark) dir="auto">
 					if bookmark.collection
@@ -335,7 +345,7 @@ tag profile-page
 							for collection in bookmark.collection.split(' | ')
 								<p.collection @click=getSearchedBookmarks(collection)> collection
 					if bookmark.note
-						<p.profile_note[overflow: auto;] innerHTML=bookmark.note dir="auto">
+						<p.profile_note[overflow: auto] .expand_note=(i == expand_note) innerHTML=bookmark.note dir="auto" @click=expandNote(i)>
 					<p.dataflex.popup_menu_box>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
@@ -414,6 +424,7 @@ tag profile-page
 		pos: relative
 
 
+	css
 		.nav
 			d:flex
 
@@ -429,3 +440,6 @@ tag profile-page
 
 		.active-tab
 			bcb:$acc-color-hover
+
+		.expand_note
+			max-height:4096px

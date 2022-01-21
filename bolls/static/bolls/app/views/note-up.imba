@@ -60,7 +60,6 @@ tag note-up
 		font-size: 0.68em
 		cursor:pointer
 		vertical-align: super
-		white-space: pre
 		us:none
 		fill:$acc-color @hover:$acc-color-hover
 		stroke:$acc-color @hover:$acc-color-hover
@@ -105,7 +104,6 @@ tag note-body
 		min-width:16em
 		max-height:256px
 		us:text
-		white-space: break-spaces;
 
 	css
 		p

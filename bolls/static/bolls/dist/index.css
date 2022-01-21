@@ -1610,8 +1610,6 @@ input:invalid,
   margin: 8px 0;
   padding: 4px 8px;
   border-radius: 4px;
-  opacity: 0.75;
-  white-space: pre;
 }
 
 #note_placeholder {
@@ -1704,13 +1702,18 @@ mark {
 
 note-body ul, note-body ol,
 .profile_note ul, .profile_note ol {
-  line-height: 1em;
-  padding-left: 2em;
+  line-height: 1.6em;
+  padding: 1em 0 1em 2em;
 }
 
 note-body ul li,
 .profile_note ul li {
   list-style-type: disc;
+}
+
+
+mark-down * {
+  transition: none !important;
 }
 
 

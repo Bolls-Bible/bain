@@ -16,7 +16,6 @@ export const syntaxHighlighting = HighlightStyle.define([
 		fontSize: '2em'
 		fontWeight: 'bold'
 		color:'var(--sky)'
-		lineHeight:'2'
 	}
 	{
 		tag: tags.heading2
