@@ -175,6 +175,10 @@ const fonts = [
 		code: "sans, sans-serif"
 	},
 	{
+		name: "Raleway",
+		code: "'Raleway', sans-serif"
+	},
+	{
 		name: "David Libre",
 		code: "'David Libre', serif"
 	},
@@ -3549,12 +3553,15 @@ tag bible-reader
 					@hotkey('mod+y').prevent.stop=fixDrawers
 					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
 
-					@hotkey('mod+right').prevent.stop=nextChapter()
-					@hotkey('mod+left').prevent.stop=prevChapter()
-					@hotkey('alt+n').prevent.stop=nextBook()
-					@hotkey('alt+p').prevent.stop=prevBook()
-					@hotkey('mod+n').prevent.stop=nextBook()
-					@hotkey('mod+p').prevent.stop=prevBook()
+					@hotkey('mod+[').prevent.stop=decreaseFontSize
+					@hotkey('mod+]').prevent.stop=increaseFontSize
+
+					@hotkey('mod+right').prevent.stop=nextChapter
+					@hotkey('mod+left').prevent.stop=prevChapter
+					@hotkey('alt+n').prevent.stop=nextBook
+					@hotkey('alt+p').prevent.stop=prevBook
+					@hotkey('mod+n').prevent.stop=nextBook
+					@hotkey('mod+p').prevent.stop=prevBook
 					@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
 					@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
 

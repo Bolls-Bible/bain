@@ -694,7 +694,7 @@ export const espanol = {
 		],
 		[
 			"¿Cómo bajar una traducción?",
-			"Como puedes imaginar, esta aplicación web está disponible sin conexión y puedes descargar una traducción para usarla sin conexión. Para hacer esto, ve al menú de la izquierda, busca el ícono de nube en la parte superior y presiónalo (es visible si tu navegador tiene acceso al almacenamiento y no tiene restricciones en la configuración). Luego verás la lista de traducciones disponibles para descargar. Simplemente presiona el ícono de nube en la traducción que deseas descargar, y después de unos segundos, se descargará."
+			"Como puedes imaginar, esta aplicación web está disponible sin conexión y puedes descargar una traducción para usarla de ese modo. Para hacer esto, ve al menú de la izquierda, busca el ícono de nube en la parte superior y presiónalo (es visible si tu navegador tiene acceso al almacenamiento y no tiene restricciones en la configuración). Luego verás la lista de traducciones disponibles para descargar. Simplemente presiona el ícono de nube en la traducción que deseas descargar, y después de unos segundos, se descargará."
 		],
 		[
 			"¿Porqué registrarse?",
@@ -712,7 +712,7 @@ export const espanol = {
 		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traducir la interfaz a un nuevo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='/donate/'>Donar 🐈</a>. Esta aplicación no es gratuita. Siempre hay una necesidad de dinero para alojamiento, desarrollo, distribución de nuevas plataformas y tiempo de desarrollo ..."
 	],
-	"all": "Todo"
+	"all": "Todo",
 	"account_deleted": "Cuenta borrada",
 	"account_edited": "Cuenta editada",
 	"add_translation_btn": "Agregar traducción",
@@ -729,7 +729,7 @@ export const espanol = {
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Esta acción no puede deshacerse. Esto borrará permanentemente tu cuenta y señaladores.",
 	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",
-	"collections": "Colecciones"
+	"collections": "Colecciones",
 	"change_book": "Biblia",
 	"change_password": "Cambiar contraseña",
 	"change_translation": "Cambiar traducción",
@@ -756,8 +756,8 @@ export const espanol = {
 	"download_translations": "Bajar traducciones",
 	"download_dictionaries": "Bajar diccionarios",
 	"drop_filter": "Soltar filtro",
-	"dictionary": "Dicionário",
-	"dictionary_help": "A veces puede ayudar el remover los prefijos y los sufijos de la palabra. Intente buscar únicamente las palabras raíces.",
+	"dictionary": "Diccionario",
+	"dictionary_help": "A veces puede ayudar remover los prefijos y los sufijos de la palabra. Intenta buscar únicamente las palabras raíces.",
 	"edit_account": "Editar cuenta",
 	"edit_name_label": "Nombre",
 	"edit_username_label": "Nombre de usuario",
@@ -766,18 +766,18 @@ export const espanol = {
 	"exhortation": "Una aplicación web para leer la Biblia, con total énfasis en la Palabra de Dios. Sola scriptura!",
 	"faqmsg": "Aquí puedes encontrar respuestas para las preguntas frecuentes",
 	"filter_name": "Filtro:",
-	"find_in_chapter": "Encuentra en el capítulo",
-	"fixdrawers": "Arreglar cajones"
+	"find_in_chapter": "Buscar en el capítulo",
+	"fixdrawers": "Fijar paneles",
 	"help": "Ayuda",
 	"history": "Historial",
 	"ios_install": "Para instalar la aplicación en iOS siga los siguientes pasos",
 	"ios_install_steps": [
-		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
-		'Then press the share button at the middle bottom.',
-		'Scroll down and find the "Add to Home Screen" action.',
-		'Press "Add" to submit.',
-		'Enjoy!',
-	]
+		'Abre Safari y luego ve a <a href="https://bolls.life"> bolls.life.',
+		'Luego presiona el botón Compartir en el medio debajo.',
+		'Desplázate abajo y encuentra la acción "Añadir a la pantalla principal".',
+		'Presiona "Agregar" para enviar.',
+		'Disfruta!',
+	],
 	"i_understand": "Yo entiendo las consecuencias, borra mi cuenta",
 	"increase_font_size": "Aumentar el tamaño de la fuente",
 	"increase_font_weight": "Aumentar el peso de la fuente",
@@ -787,7 +787,7 @@ export const espanol = {
 	"language": "Idioma",
 	"lighttheme": "Tema claro",
 	"loading": "Cargando",
-	"processing": "Procesamiento"
+	"processing": "Procesando",
 	"login": "Conectarse",
 	"logout": "Salir",
 	"match_case": "Caso de coincidencia",
@@ -797,19 +797,19 @@ export const espanol = {
 	"nt": "ESCRITURAS GRIEGAS",
 	"ot": "ESCRITURAS HEBREO-ARAMAICAS",
 	"next": "Pos",
-	"nighttheme": "Tema de la noche",
+	"nighttheme": "Tema nocturno",
 	"note": "Nota",
-	"notes": "Notas"
+	"notes": "Notas",
 	"nothing": "No encontramos nada, Verifica o simplifica la consulta.",
 	"nothing_else": "Nada más",
-	"no_translation_downloaded": "No hay traducción descargada. Mantente en línea para descargar algunos",
-	"offline": "Tu estás offline(",
+	"no_translation_downloaded": "No hay traducción descargada. Mantente en línea para descargar algunas",
+	"offline": "Estás offline(",
 	"open": "Abrir",
 	"open_in_parallel": "Abrir en vista paralela",
 	"other": "Otro",
 	"parallel": "Lectura en paralelo",
 	"parallel_synch": "Sincronización de paralelos",
-	"phrase_not_found": "Frase no encontrad",
+	"phrase_not_found": "Frase no encontrada",
 	"prev": "Ant",
 	"random": "Verso al azar",
 	"reload": "Recargar",
@@ -820,7 +820,7 @@ export const espanol = {
 	"saveto": "Guardar en",
 	"search": "Buscar",
 	"share_via": "Compartir via",
-	"share": "Compartir"
+	"share": "Compartir",
 	"shortcuts": "Atajos",
 	"shortcuts_list": [
 		"Capítulo siguiente: <b>Ctrl + Flecha Derecha</b>",
@@ -830,26 +830,26 @@ export const espanol = {
 		"Volver a la lectura: <b>Esc</b>",
 		"Ocultar íconos del menú: <b>Ctrl + Alt + H</b>",
 		"Pantalla completa: <b>f11</b>",
-		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
+		"No mostrar los paneles laterales al pasar el mouse: <b>Ctrl + Alt + Y</b>"
 	],
 	"signin": "Registrarse",
 	"snapstore": "Obténlo de",
 	"still_have_questions": "¿Todavía tienes preguntas o tienes alguna idea? Escríbeme y te responderé tan pronto como pueda:",
 	"support": "Apoya esta aplicación",
 	"the_verse_is_not_available": "El versículo no está disponible en la traducción:",
-	"thereisnobookmarks": "Aquí ahora no hay nada. Aquí puedes ver tus  lugares destacados de la Biblia",
-	"theme": "Tema"
+	"thereisnobookmarks": " Ahora aquí no hay nada. Aquí podrás ver tus  lugares destacados de la Biblia",
+	"theme": "Tema",
 	"this_translation_is_unavailable": "Esta traducción requiere conexión a Internet",
 	"totalyresultsofsearch": "Resultados",
 	"transitions": "Transiciones",
 	"translation": "Traducción:",
 	"ugch": "Utiliza Chromium!",
-	"use_it_in_browser": "Úselo en el navegador",
-	"username_taken": "nombre de usuario no esta disponible",
+	"use_it_in_browser": "Úsalo en el navegador",
+	"username_taken": "Nombre de usuario no disponible",
 	"usual_reading": "Lectura habitual",
-	"unexisten_chapter": "This chapter doesn't exist"
-	"verse_break": "Envolver verso",
-	"verse_number": "Número de verso"
+	"unexisten_chapter": "Este capítulo no existe",
+	"verse_break": "Envolver versículo",
+	"verse_number": "Número de versículo",
 	"verse_picker": "Selector de versículo",
 	"view_source": "Ver el código fuente",
 	"welcome": "Bienvenido a Bolls :)",
