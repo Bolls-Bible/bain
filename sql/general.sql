@@ -37,7 +37,7 @@ SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter =
 YLT/24/36/3/
 
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
-delete FROM bolls_verses where translation='HOM' and book = 72;
+delete FROM bolls_verses where translation='NJB' and book = 72;
 
 SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_number;
 SELECT count(verse) FROM verses where book_number < 67;
@@ -88,3 +88,11 @@ WHERE  NOT EXISTS (
    ) and translation = 'DELETED';
 
 UPDATE bolls_verses SET translation = ('DELETED') where translation = 'KJV';
+
+
+
+
+
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/NJB.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/FACB.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;

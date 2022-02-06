@@ -45,7 +45,7 @@ I will run it locally, test it, and if everything is workinig fine I will deploy
 
 ### Deploy the translation to production database
 
-Deploy the translation to main database. Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Example you may find in that folder. Otherwise the user will not be able to download it.
+Deploy the translation to main database. Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. Example you may find in that folder. Otherwise the user will not be able to download it.
 
 ### Test it.
 

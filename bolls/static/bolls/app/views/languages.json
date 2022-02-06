@@ -103,6 +103,12 @@
 				"full_name": "New English Translation, 2007",
 				"info": "https://en.wikipedia.org/wiki/New_English_Translation",
 				"updated": 1635188106109
+			},
+			{
+				"short_name": "NJB1985",
+				"full_name": "New Jerusalem Bible, 1985",
+				"info": "https://en.wikipedia.org/wiki/New_Jerusalem_Bible",
+				"updated": 1635188106109
 			}
 		]
 	},
@@ -326,6 +332,12 @@
 				"short_name": "POV",
 				"full_name": "Persian Old Version",
 				"info": "https://en.wikipedia.org/wiki/Bible_translations_into_Persian#Persian_Old_Version_(POV)",
+				"updated": 1626349711821
+			},
+			{
+				"short_name": "FACB",
+				"full_name": "کتاب مقدس، ترجمه تفسیری Farsi Contemporary Bible",
+				"info": "",
 				"updated": 1626349711821
 			}
 		]

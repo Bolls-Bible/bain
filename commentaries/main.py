@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = 'SUV'
+translation = 'FACB'
 
 def parseLinks(text):
 	if type(text) == float:
@@ -34,7 +34,7 @@ def parseLinks(text):
 # print(parseLinks("<a href='B:230 102:25'>Ps. 102:25</a>; <a href='B:290 40:21'>Is. 40:21</a>; (<a href='B:500 1:1-3'>John 1:1–3</a>; <a href='B:650 1:10'>Heb. 1:10</a>)"))
 
 
-df = pd.read_csv('commentaries/mybcommentaries.csv', sep='|')
+df = pd.read_csv('mybcommentaries.csv', sep=',')
 
 del df["chapter_number_to"]
 del df["verse_number_to"]
@@ -49,4 +49,4 @@ col = df.pop("translation")
 df.insert(0, col.name, col)
 # translation,book,chapter,verse,text
 
-df.to_csv('commentaries/commentaries.csv', index=False,)
+df.to_csv('commentaries.csv', index=False,)
