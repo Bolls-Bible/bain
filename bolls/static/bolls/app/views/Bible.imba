@@ -2516,7 +2516,7 @@ tag bible-reader
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
+		<self id="reader" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2529,11 +2529,15 @@ tag bible-reader
 					if settingsp.edited_version == settingsp.translation && settingsp.display
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settingsp.edited_version
-							<span> ' ›'
+							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
+								<title> data.lang.open
+								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					else
 						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settings.translation
-							<span> ' ›'
+							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
+								<title> data.lang.open
+								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					if data.db_is_available
 						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625">
 							<title> data.lang.download
@@ -2604,7 +2608,9 @@ tag bible-reader
 					<path[m: auto] d=svg_paths.close>
 
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}] @click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+			<div
+				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
+				@click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2647,7 +2653,7 @@ tag bible-reader
 										<span> ' '
 									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007' + verse.verse + "\u2007"
 								else
-									<span> ' '
+									<span	> ' '
 								<span innerHTML=verse.text
 								 		id=verse.verse
 										@click.wait(200ms)=addToChosen(verse.pk, verse.verse, 'first')
@@ -2667,7 +2673,7 @@ tag bible-reader
 								if settings.verse_break
 									<br>
 									unless settings.verse_number
-										<span> '	'
+										<span.ws> '	'
 						<.arrows>
 							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
@@ -2738,7 +2744,9 @@ tag bible-reader
 					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
 						<p.in_offline> data.lang.this_translation_is_unavailable
 
-			<div[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}] @click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+			<div
+				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
+				@click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> data.lang.other
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -3472,23 +3480,19 @@ tag bible-reader
 
 
 			if menuicons and not (big_modal_block_content && window.innerWidth < 640)
-				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:54px @lg:0px bgc@lt-lg:$bgc d:flex jc:space-between] ease>
+				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:48px @lg:0px bgc@lt-lg:$bgc d:flex jc:space-between] ease>
 					<div[transform: translateY({menu_icons_transform}%) translateX({bibleIconTransform!}px)] @click=toggleBibleMenu>
 						<svg viewBox="0 0 16 16">
 							<title> data.lang.change_book
 							<path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
-						<p> data.lang.change_book
 					<div[transform: translateY({menu_icons_transform}%) d@lg:none] @click=turnGeneralSearch>
-						<svg.helpsvg [p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
-							<title> data.lang.find_in_chapter
+						<svg.helpsvg [p:2px] viewBox="0 0 12 12" width="24px" height="24px">
+							<title> data.lang.search
 							<path d=svg_paths.search>
-						<p> data.lang.bible_search.split(' ')[0]
 					<div[transform: translateY({menu_icons_transform}%) translateX({settingsIconTransform!}px)] @click=toggleSettingsMenu>
-						<svg enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
 							<title> data.lang.other
-							<g>
-								<path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z">
-						<p> data.lang.other
+							<path d="M7.502 1.019a.996.996 0 0 0-.998.998v.451a5.734 5.734 0 0 0-1.356.566l-.322-.322a.995.995 0 0 0-1.41 0l-.705.705a.995.995 0 0 0 0 1.41l.32.32a5.734 5.734 0 0 0-.56 1.358h-.454a.995.995 0 0 0-.998.996V8.5c0 .553.446.996.998.996h.45a5.734 5.734 0 0 0 .566 1.356l-.322.322a.995.995 0 0 0 0 1.41l.705.705c.39.391 1.02.391 1.41 0l.32-.32a5.734 5.734 0 0 0 1.358.56v.456c0 .552.445.996.998.996h.996a.995.995 0 0 0 .998-.996v-.451a5.734 5.734 0 0 0 1.355-.567l.323.322c.39.391 1.02.391 1.41 0l.705-.705a.995.995 0 0 0 0-1.41l-.32-.32a5.734 5.734 0 0 0 .56-1.358h.453a.995.995 0 0 0 .998-.996v-.998a.995.995 0 0 0-.998-.996h-.449a5.734 5.734 0 0 0-.566-1.355l.322-.323a.995.995 0 0 0 0-1.41l-.705-.705a.995.995 0 0 0-1.41 0l-.32.32a5.734 5.734 0 0 0-1.358-.56v-.455a.996.996 0 0 0-.998-.998zm.515 3.976a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3z" style="marker:none">
 
 
 			if loading
@@ -3627,23 +3631,18 @@ tag bible-reader
 
 	css #navigation > div
 		padding:3vw @lt-lg:4px
-		width:calc(100% / 3) @lg:calc(32px + 6vw)
-		height:54px @lg:calc(32px + 6vw)
+		width:calc(100% / 3) @lg:calc(26px + 6vw)
+		height:48px @lg:calc(26px + 6vw)
 		c@hover:$acc-color-hover
 		fill:$acc-color @hover:$acc-color-hover @lt-lg:$c
 		d@lt-lg:vflex jc:center ai:center
 
 	css #navigation svg
-		width: 32px
-		height: 32px
-		min-height: 32px
+		width: 26px
+		height: 26px
+		min-height: 26px
 		fill:inherit
 		o@lt-lg:0.75 @hover:1
-
-	css #navigation p
-		display:inline-block @lg:none
-		p:0 8px o:0.75 @hover:1
-		fs:12px
 
 	css .small_box
 		bgc:$bgc

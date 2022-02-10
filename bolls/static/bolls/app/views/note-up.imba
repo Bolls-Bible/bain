@@ -1,4 +1,6 @@
 import { remark } from './remark'
+import { scrollToY } from './smooth_scrolling'
+
 
 tag note-up
 	prop text = ''
@@ -43,6 +45,12 @@ tag note-up
 			#left_offset = 'auto'
 			#right_offset = 'auto'
 
+		let reader = document.getElementById('reader')
+		if window.innerHeight - (self.offsetTop - reader.scrollTop) < 256
+			let style = window.getComputedStyle(self, null).getPropertyValue('line-height')
+			let line_height = parseFloat(style)
+			scrollToY(reader, reader.scrollTop + line_height + (288 - (window.innerHeight - (self.offsetTop - reader.scrollTop))))
+
 
 	def render
 		<self @click.stop.prevent=setBorders>
@@ -64,7 +72,6 @@ tag note-up
 		fill:$acc-color @hover:$acc-color-hover
 		stroke:$acc-color @hover:$acc-color-hover
 		bg@hover:$acc-bgc-hover
-		rd:4px
 
 
 		.bottom
