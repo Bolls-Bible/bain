@@ -31,7 +31,7 @@ class Bookmarks(models.Model):
     date = models.BigIntegerField()
     color = models.CharField(max_length=32)
     collection = models.TextField(default=None)
-    note = models.ForeignKey(Note, on_delete=models.CASCADE, null=True)
+    note = models.OneToOneField(Note, on_delete=models.CASCADE, null=True)
 
 
 class History(models.Model):

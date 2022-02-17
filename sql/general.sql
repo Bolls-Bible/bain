@@ -52,7 +52,9 @@ UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 psql    --host=144.126.148.204    --port=5432    --username=bain    --password    --dbname=bain
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/Bible/NVIPT.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER ',' CSV HEADER;
+
 
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/verses.csv' DELIMITER '|' CSV HEADER;
 

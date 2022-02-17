@@ -1242,8 +1242,8 @@ tag bible-reader
 				if book.bookid == settings.book
 					return book.chapters
 
-	def nextChapter parallel
-		if parallel == 'true'
+	def nextChapter parallel=no
+		if parallel
 			if settingsp.chapter + 1 <= chaptersOfCurrentBook parallel
 				getParallelText(settingsp.translation, settingsp.book, settingsp.chapter + 1)
 			else
@@ -1258,8 +1258,8 @@ tag bible-reader
 				if books[current_index + 1]
 					getText(settings.translation, books[current_index + 1].bookid, 1)
 
-	def prevChapter parallel
-		if parallel == 'true'
+	def prevChapter parallel=no
+		if parallel
 			if settingsp.chapter - 1 > 0
 				getParallelText(settingsp.translation, settingsp.book, settingsp.chapter - 1)
 			else
@@ -2177,14 +2177,14 @@ tag bible-reader
 		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !store.show_history && !choosenid.length
 			if window.innerWidth > 600
 				if touch.dx < -32
-					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter("true") : prevChapter()
+					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter("true") : nextChapter()
+					settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
 			else
 				if touch.dx < -32
-					settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter("true") : prevChapter()
+					settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter("true") : nextChapter()
+					settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
 
 		slidetouch = null
 		inzone = no
@@ -2733,11 +2733,11 @@ tag bible-reader
 									unless settings.verse_number
 										<span> '	'
 						<.arrows>
-							<a.arrow @click=prevChapter("true")>
+							<a.arrow @click=prevChapter(yes)>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							<a.arrow @click=nextChapter("true")>
+							<a.arrow @click=nextChapter(yes)>
 								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2936,8 +2936,9 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
 					<p[fs:12px]>
-						"©", <time dateTime='2021-11-25T20:41'> "2019"
-						"-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
+						"©"
+						<time dateTime='2022-02-17T09:28'> "2019-present"
+						" Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
 
@@ -2970,7 +2971,7 @@ tag bible-reader
 										<li> <a href="#shortcuts"> data.lang.shortcuts
 								for q in data.lang.HB
 									<h3 id=q[0] > q[0]
-									<p> q[1]
+									<p innerHTML=q[1]>
 								if window.innerWidth >= 1024
 									<div id="shortcuts">
 										<h3> data.lang.shortcuts
@@ -3547,27 +3548,27 @@ tag bible-reader
 						<path[m: auto] d=svg_paths.close>
 
 
-
 			if window.location.pathname != '/profile/'
 				<global
-					@hotkey('mod+shift+f').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
-					@hotkey('mod+k').capture.prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('mod+shift+f').force.prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('mod+k').force.prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
-					@hotkey('escape').capture.prevent.stop=clearSpace
+					@hotkey('escape').force.prevent.stop=clearSpace
 					@hotkey('mod+y').prevent.stop=fixDrawers
 					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
 
-					@hotkey('mod+[').prevent.stop=decreaseFontSize
-					@hotkey('mod+]').prevent.stop=increaseFontSize
 
-					@hotkey('mod+right').prevent.stop=nextChapter
-					@hotkey('mod+left').prevent.stop=prevChapter
-					@hotkey('alt+n').prevent.stop=nextBook
-					@hotkey('alt+p').prevent.stop=prevBook
+					@hotkey('mod+right').prevent.stop=nextChapter(no)
+					@hotkey('mod+left').prevent.stop=prevChapter(no)
 					@hotkey('mod+n').prevent.stop=nextBook
 					@hotkey('mod+p').prevent.stop=prevBook
-					@hotkey('alt+shift+right').prevent.stop=nextChapter('true')
-					@hotkey('alt+shift+left').prevent.stop=prevChapter('true')
+					@hotkey('alt+n').prevent.stop=nextBook
+					@hotkey('alt+p').prevent.stop=prevBook
+					@hotkey('alt+shift+right').prevent.stop=nextChapter(yes)
+					@hotkey('alt+shift+left').prevent.stop=prevChapter(yes)
+
+					@hotkey('mod+[').prevent.stop=decreaseFontSize
+					@hotkey('mod+]').prevent.stop=increaseFontSize
 
 					@hotkey('alt+right').prevent.stop=window.history.forward!
 					@hotkey('alt+left').prevent.stop=window.history.back!
