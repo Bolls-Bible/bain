@@ -70,3 +70,7 @@ And do not forget to clean expired sessions sometimes
 ``` bash
 python manage.py clearsessions
 ```
+
+# Become a maintainer
+
+You will get full access to Google Cloud project running the app backend, VPS with PostgreSQL database, abd this repo.
