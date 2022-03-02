@@ -54,6 +54,8 @@ services:
       - ./:/quikpad
     expose:
       - 8000
+    ports:
+      - 5432
     environment:
       - DEBUG=DEBUG_SECRET
       - SECRET_KEY=SECRET_KEY_SECRET
