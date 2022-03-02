@@ -40,6 +40,10 @@ services:
     networks:
       - web
       - internal
+    ports:
+      - 80:80
+      - 8080:8080
+      - 8000:8000
     depends_on:
       - web
 
@@ -55,9 +59,7 @@ services:
     expose:
       - 8000
     ports:
-      - 80:80
-      - 8080:8080
-      - 8000:8000
+      - 5432:5432
     environment:
       - DEBUG=DEBUG_SECRET
       - SECRET_KEY=SECRET_KEY_SECRET
