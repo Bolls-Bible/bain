@@ -1,0 +1,97 @@
+version: '3.10'
+
+services:
+  traefik:
+    image: traefik:latest
+    restart: always
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
+    networks:
+      - web
+      - internal
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    build: ./nginx
+    restart: always    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.website.tls=true"
+      - "traefik.http.routers.website.rule=Host(`bolls.life`)"
+      - "traefik.http.routers.website.tls.certresolver=myresolver"
+      - "traefik.webservice.frontend.entryPoints=http,https"
+    volumes:
+      - static_volume:/home/bolls/web/static
+    networks:
+      - internal
+    depends_on:
+      - web
+
+  web:
+    build:
+      context: ./django/
+      dockerfile: Dockerfile
+    restart: always
+    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/home/bolls/web/static
+      - ./:/quikpad
+    expose:
+      - 8000
+    env:
+      - DEBUG: DEBUG_SECRET
+      - SECRET_KEY: SECRET_KEY_SECRET
+      - DJANGO_ALLOWED_HOSTS: DJANGO_ALLOWED_HOSTS_SECRET
+      - SQL_ENGINE: SQL_ENGINE_SECRET
+      - SQL_DATABASE: SQL_DATABASE_SECRET
+      - SQL_USER: SQL_USER_SECRET
+      - SQL_PASSWORD: SQL_PASSWORD_SECRET
+      - SQL_HOST: SQL_HOST_SECRET
+      - SQL_PORT: SQL_PORT_SECRET
+      - DATABASE: DATABASE_SECRET
+      - EMAIL_HOST_PASSWORD: EMAIL_HOST_PASSWORD_SECRET
+      - EMAIL_HOST_USER: EMAIL_HOST_USER_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
+      - SOCIAL_AUTH_GITHUB_KEY: SOCIAL_AUTH_GITHUB_KEY_SECRET
+      - SOCIAL_AUTH_GITHUB_SECRET: SOCIAL_AUTH_GITHUB_SECRET_SECRET
+    networks:
+      - internal
+
+  db:
+    image: postgres:12.0-alpine
+    restart: always
+    env:
+      - POSTGRES_USER: POSTGRES_USER_SECRET
+      - POSTGRES_PASSWORD: POSTGRES_PASSWORD_SECRET
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - internal
+
+
+volumes:
+  static_volume:
+
+
+networks:
+  internal:
+    external: false
+  web:
+    external: true

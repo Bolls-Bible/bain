@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-from .secret_settings import *
 import os
 import psycopg2.extensions
 
@@ -21,16 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljdsuug_5fy&%eyg='
+SECRET_KEY = os.environ.get("SECRET_KEY", '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljdsuug_5fy&%eyg=')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.getenv('GAE_APPLICATION', None):
-    DEBUG = False
-else:
-    DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=1))
 
-ALLOWED_HOSTS = ['*']
+
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,12 +88,12 @@ if DEBUG:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'HOST': CONTABO_POSTGRESQL_DB_HOST,
-            'USER': CONTABO_POSTGRESQL_DB_USERBAME,
-            'PASSWORD': CONTABO_POSTGRESQL_DB_PASSWORD,
-            'NAME': CONTABO_POSTGRESQL_DB_NAME,
-            'PORT': '5432',
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+            "USER": os.environ.get("SQL_USER", ""),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
+            "HOST": os.environ.get("SQL_HOST", ""),
+            "PORT": os.environ.get("SQL_PORT", ""),
         }
     }
 
@@ -124,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'uk-ru-en-us-es-pt'
 
-TIME_ZONE = 'Europe/Kiev'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -135,7 +132,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
 
 ADMINS = [('Bohuslav', 'bpavlisinec@gmail.com')]
@@ -149,7 +146,8 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'bollsbible@gmail.com'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = 587
 
 SESSION_COOKIE_AGE = 2419200
