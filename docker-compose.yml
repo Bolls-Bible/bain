@@ -54,7 +54,7 @@ services:
       - ./:/quikpad
     expose:
       - 8000
-    env:
+    environment:
       - DEBUG: DEBUG_SECRET
       - SECRET_KEY: SECRET_KEY_SECRET
       - DJANGO_ALLOWED_HOSTS: DJANGO_ALLOWED_HOSTS_SECRET
@@ -77,7 +77,7 @@ services:
   db:
     image: postgres:12.0-alpine
     restart: always
-    env:
+    environment:
       - POSTGRES_USER: POSTGRES_USER_SECRET
       - POSTGRES_PASSWORD: POSTGRES_PASSWORD_SECRET
     labels:
