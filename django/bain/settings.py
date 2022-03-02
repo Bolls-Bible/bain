@@ -30,7 +30,6 @@ if DEBUG == 0:
     DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
-CSRF_TRUSTED_ORIGINS = ['bolls.life']
 
 # Application definition
 INSTALLED_APPS = [
