@@ -78,7 +78,7 @@ services:
       - internal
 
   db:
-    image: postgres:12.0-alpine
+    image: postgres:alpine
     restart: always
     environment:
       - POSTGRES_USER=POSTGRES_USER_SECRET

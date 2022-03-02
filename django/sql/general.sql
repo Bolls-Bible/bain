@@ -98,3 +98,4 @@ UPDATE bolls_verses SET translation = ('DELETED') where translation = 'KJV';
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/NJB.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/FACB.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
+
