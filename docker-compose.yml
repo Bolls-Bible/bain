@@ -1,4 +1,4 @@
-version: '3.10'
+version: '3.8'
 
 services:
   traefik:
@@ -15,7 +15,6 @@ services:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-
     networks:
       - web
       - internal
@@ -39,6 +38,7 @@ services:
     volumes:
       - static_volume:/home/bolls/web/static
     networks:
+      - web
       - internal
     depends_on:
       - web
@@ -54,8 +54,6 @@ services:
       - ./:/quikpad
     expose:
       - 8000
-    ports:
-      - 5432
     environment:
       - DEBUG=DEBUG_SECRET
       - SECRET_KEY=SECRET_KEY_SECRET
@@ -74,8 +72,8 @@ services:
       - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
       - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
-      - internal
       - web
+      - internal
 
   db:
     image: postgres:12.0-alpine
