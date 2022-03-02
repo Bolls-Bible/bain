@@ -28,7 +28,7 @@ social-auth-app-django = "5.0.0"
 social-auth-core = "4.2.0"
 sqlparse = "0.4.2"
 urllib3 = "1.26.8"
-
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"

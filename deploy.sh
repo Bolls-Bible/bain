@@ -1,5 +1,6 @@
 #!/bin/bash
 
+exec chmod +x ./django/entrypoint.sh
 mkdir letsencrypt
 docker network create web
 docker-compose up -d --build --force-recreate --remove-orphans

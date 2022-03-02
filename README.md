@@ -63,8 +63,8 @@ After that you should be able to debug it.
 * update sw.js
 * npm run build
 * git pull on server
-* inject-secrets.sh
-* deploy.sh
+* ./inject-secrets.sh
+* ./deploy.sh
 
 And do not forget to clean expired sessions sometimes
 
