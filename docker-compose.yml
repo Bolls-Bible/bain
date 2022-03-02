@@ -73,6 +73,7 @@ services:
       - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
       - internal
+      - web
 
   db:
     image: postgres:12.0-alpine
