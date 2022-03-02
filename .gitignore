@@ -1,2 +1,3 @@
 inject-secrets.sh
-/test
+test/
+letsencrypt/
