@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljds
 DEBUG = int(os.environ.get("DEBUG", default=1))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
-CSRF_TRUSTED_ORIGINS = ['https://bolls.life', 'bolls.life']
+CSRF_TRUSTED_ORIGINS = ['https://bolls.life']
 
 # Application definition
 INSTALLED_APPS = [
