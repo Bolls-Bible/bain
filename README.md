@@ -62,8 +62,9 @@ After that you should be able to debug it.
 
 * update sw.js
 * npm run build
-* python manage.py collectstatic
-* gcloud app deploy
+* git pull on server
+* inject-secrets.sh
+* deploy.sh
 
 And do not forget to clean expired sessions sometimes
 
