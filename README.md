@@ -11,7 +11,7 @@ git clone git@github.com:Bohooslav/bain.git
 * enter the directory
 
 ``` bash
-cd bain/
+cd bain/django/
 ```
 
 * set up local enviroment. This is a very important step. For now I work with python 3.7 because of gcloud works only on that + it is more stable for now.
@@ -46,7 +46,7 @@ python manage.py migrate
 * the next step is to go to `./bolls/static/bolls/` to install Imba dependencies
 
 ``` bash
-cd bolls/static/bolls/
+cd django/bolls/static/bolls/
 npm install
 ```
 
