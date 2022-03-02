@@ -65,4 +65,4 @@ RUN chown -R $bollsuser:$bolls $BOLLS_HOME
 USER $bollsuser
 
 # run entrypoint.sh
-# ENTRYPOINT ["/home/bolls/web/entrypoint.sh"]
+ENTRYPOINT ["/home/bolls/web/entrypoint.sh"]

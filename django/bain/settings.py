@@ -28,6 +28,7 @@ DEBUG = int(os.environ.get("DEBUG", default=1))
 
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
+CSRF_TRUSTED_ORIGINS = ['https://dev.bolls.life']
 
 # Application definition
 INSTALLED_APPS = [
