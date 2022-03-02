@@ -32,7 +32,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.website.tls=true"
-      - "traefik.http.routers.website.rule=Host(`dev.bolls.life`)"
+      - "traefik.http.routers.website.rule=Host(`bolls.life`)"
       - "traefik.http.routers.website.tls.certresolver=myresolver"
       - "traefik.webservice.frontend.entryPoints=http,https"
     volumes:
