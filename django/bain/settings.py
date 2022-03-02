@@ -96,6 +96,7 @@ else:
             "PORT": os.environ.get("SQL_PORT", ""),
         }
     }
+print('\n\n\n===========================================\nTHIS HOLY PASSWORD:', os.environ.get("SQL_PASSWORD", ""))
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
