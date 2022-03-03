@@ -6,7 +6,9 @@
 #       - v**
 
 on:
-  push
+  push:
+    braches:
+      - master
 
 jobs:
   deploy:
