@@ -80,6 +80,7 @@ services:
   db:
     image: postgres:alpine
     restart: always
+    container_name: postgres
     environment:
       - POSTGRES_USER=POSTGRES_USER_SECRET
       - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
