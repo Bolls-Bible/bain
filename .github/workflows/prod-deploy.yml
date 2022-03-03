@@ -60,12 +60,13 @@ jobs:
 
       - name: SSH and Deploy
         uses: appleboy/ssh-action@master
+        env:
+          DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          env:
-            DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
+          envs: DEBUG_SECRET
           script: |
             echo "github was here $DEBUG_SECRET" > file.txt
