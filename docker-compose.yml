@@ -23,7 +23,7 @@ services:
       - 443:443
       - 8080:8080
     volumes:
-      - "./letsencrypt:/letsencrypt"
+      - "./letsencrypt:/letsencrypt" # this should go to a system directory that is not within the folder (i.e. /opt/some/folder), as we will destroy the `bain` folder after we perform the deploy
       - /var/run/docker.sock:/var/run/docker.sock
 
   nginx:
@@ -51,7 +51,7 @@ services:
     command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/bolls/web/static
-      - ./:/quikpad
+      - ./:/quikpad # this should go to a system directory that is not within the folder (i.e. /opt/some/folder), as we will destroy the `bain` folder after we perform the deploy
     expose:
       - 8000
     ports:
