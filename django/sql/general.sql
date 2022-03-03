@@ -48,7 +48,7 @@ SELECT count(verse) FROM bolls_verses where book < 67 and translation='KJV';
 UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 \copy auth_user(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM '/home/b/data-1583933238173.csv' DELIMITER ',' CSV HEADER;
-\copy bolls_bookmarks(id, color, collection, user_id, verse_id, date, note_id) FROM '/home/bohuslav/bookmarks' DELIMITER ',' CSV HEADER;
+\copy bolls_bookmarks(id, color, collection, user_id, verse_id, date, note_id) FROM 'bookmarks.csv' DELIMITER '|' CSV HEADER;
 
 psql    --host=144.126.148.204    --port=5432    --username=bain    --password    --dbname=bain
 
@@ -63,6 +63,7 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 \copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_verses) TO '/home/bohuslav/verses.csv' WITH CSV DELIMITER '|';
 \copy (SELECT calculate_translation_hashes()) TO '/home/b/hashes.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_bookmarks) TO 'bookmarks.csv' WITH CSV DELIMITER '|';
 
 
 -- Fix broken sequences
