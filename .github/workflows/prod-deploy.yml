@@ -1,12 +1,7 @@
-# on:
-#   push:
-#     branches:
-#       - master
-#     tags:
-#       - v**
-
 on:
-  push
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
