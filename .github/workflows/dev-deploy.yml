@@ -1,0 +1,66 @@
+on:
+  push:
+    branches:
+      - feature/**
+    tags:
+      - v**
+
+jobs:
+  deploy:
+    name: Deploy to Prod
+    runs-on: ubuntu-latest
+    environment: Catena-X dev/int
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          # these variables need to be defined. an ssh key needs to be generated like you did yesterday and added to the authorized keys on the VPS
+          # These should be repository secrets? Yes.
+          host: ${{ secrets.SSH_HOST }} # linode ip !!! you can also use domain name if that is pointing at the right IP !!! But I will use subdomain for dev with traefik everything should be arriving at the same IP anyways then traefik handles the multi-host routing
+          username: ${{ secrets.SSH_USERNAME }} # root
+          key: ${{ secrets.SSH_KEY }} # ssh pubkey content (cat id_rsa.pub) ssh-keygen, cat new key, add to authorized keys on VPS (vim /root/.ssh/authorized_keys)
+          port: ${{ secrets.SSH_PORT }} # 22
+
+          # Run ssh-keygen on the VPS??? thats fine too. doesnt matter, there just needs to be a key, and it needs to go in a GH secret and in /root/.ssh/authorized_keys on VPS
+
+
+
+          env:
+            DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
+            SECRET_KEY_SECRET: ${{ secrets.SECRET_KEY_SECRET }}
+            DJANGO_ALLOWED_HOSTS_SECRET: ${{ secrets.DJANGO_ALLOWED_HOSTS_SECRET }}
+            SQL_ENGINE_SECRET: ${{ secrets.SQL_ENGINE_SECRET }}
+            SQL_DATABASE_SECRET: ${{ secrets.SQL_DATABASE_SECRET }}
+            SQL_USER_SECRET: ${{ secrets.SQL_USER_SECRET }}
+            SQL_PASSWORD_SECRET: ${{ secrets.SQL_PASSWORD_SECRET }}
+            SQL_HOST_SECRET: ${{ secrets.SQL_HOST_SECRET }}
+            SQL_PORT_SECRET: ${{ secrets.SQL_PORT_SECRET }}
+            DATABASE_SECRET: ${{ secrets.DATABASE_SECRET }}
+            EMAIL_HOST_PASSWORD_SECRET: ${{ secrets.EMAIL_HOST_PASSWORD_SECRET }}
+            EMAIL_HOST_USER_SECRET: ${{ secrets.EMAIL_HOST_USER_SECRET }}
+            SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET }}
+            SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET }}
+            SOCIAL_AUTH_GITHUB_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_KEY_SECRET }}
+            SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
+          script: |
+            git clone https://github.com/Bolls-Bible/bain
+            cd bain
+            sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.yml
+            sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_ENGINE_SECRET/$SQL_ENGINE_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_DATABASE_SECRET/$SQL_DATABASE_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_USER_SECRET/$SQL_USER_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_PASSWORD_SECRET/$SQL_PASSWORD_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_HOST_SECRET/$SQL_HOST_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_PORT_SECRET/$SQL_PORT_SECRET/g" docker-compose.yml
+            sed -i "s/DATABASE_SECRET/$DATABASE_SECRET/g" docker-compose.yml
+            sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" docker-compose.yml
+            sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" docker-compose.yml
+            docker-compose up -d
+            cd ..
+            rm -fr bain
