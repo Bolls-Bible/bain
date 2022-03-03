@@ -12,7 +12,7 @@ jobs:
   deploy:
     name: Deploy to Prod
     runs-on: ubuntu-latest
-    environment: Bolls-Bible/prod
+    environment: prod
     steps:
       # - name: SSH and Deploy
       #   uses: appleboy/ssh-action@master
@@ -70,6 +70,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-
+          env:
+            DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
           script: |
-            echo 'github was here' > file.txt
+            echo "github was here $DEBUG_SECRET" > file.txt
