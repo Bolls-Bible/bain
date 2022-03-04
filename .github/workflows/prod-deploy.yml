@@ -83,6 +83,7 @@ jobs:
             sed -i "s/NGINX_SERVICE_NAME/$NGINX_SERVICE_NAME/g" docker-compose.yml
             sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" docker-compose.yml
             sed -i "s/PGDATA_SECRET/$PGDATA_SECRET/g" docker-compose.yml
+            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
             echo "Setting up environment..."
             mkdir /var/letsencrypt
             docker network create web

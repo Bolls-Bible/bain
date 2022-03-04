@@ -36,11 +36,6 @@ jobs:
             NGINX_SERVICE_NAME: ${{ secrets.NGINX_SERVICE_NAME }}
             NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
             PGDATA_SECRET: ${{ secrets.PGDATA_SECRET }}
-            
-            # !!! Select ':' and try 'Ctrl + d'
-            # Put multiple cursors and go to the end of line. END button.
-
-
 
     steps:
 
@@ -91,6 +86,7 @@ jobs:
             sed -i "s/NGINX_SERVICE_NAME/$NGINX_SERVICE_NAME/g" docker-compose.yml
             sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" docker-compose.yml
             sed -i "s/PGDATA_SECRET/$PGDATA_SECRET/g" docker-compose.yml
+            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
             cat docker-compose.yml
             echo "Setting up environment..."
             mkdir /var/letsencrypt
