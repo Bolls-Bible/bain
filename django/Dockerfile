@@ -46,7 +46,7 @@ RUN mkdir $BOLLS_HOME/static
 WORKDIR $BOLLS_HOME
 
 # install dependencies
-RUN apt update -y && apt install -y netcat, unzip
+RUN apt update -y && apt install -y netcat unzip
 COPY --from=builder /usr/src/bolls/wheels /wheels
 COPY --from=builder /usr/src/bolls/requirements.txt .
 RUN pip install --no-cache /wheels/*
