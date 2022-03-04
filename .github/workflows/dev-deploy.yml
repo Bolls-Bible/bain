@@ -45,9 +45,8 @@ jobs:
     steps:
 
       - name: Extract branch name
-        if: github.event_name != 'pull_request'
         shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
       - name: SSH and Deploy
@@ -61,8 +60,8 @@ jobs:
           script: |
             rm -fr bain
             git clone https://github.com/Bolls-Bible/bain
-            git checkout $BRANCH_NAME
-            echo "Injecting secrets..."
+            git checkout ${{ steps.extract_branch.outputs.branch }}
+            echo "Injecting secrets..." 
             cd bain
             sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.yml
             sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" docker-compose.yml
