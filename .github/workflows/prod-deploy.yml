@@ -1,72 +1,101 @@
 on:
   push:
-    branches:
-      - master
+    tags:
+      - v**
 
 jobs:
   deploy:
     name: Deploy to Prod
     runs-on: ubuntu-latest
     environment: prod
+    env:
+            DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
+            SECRET_KEY_SECRET: ${{ secrets.SECRET_KEY_SECRET }}
+            DJANGO_ALLOWED_HOSTS_SECRET: ${{ secrets.DJANGO_ALLOWED_HOSTS_SECRET }}
+            SQL_ENGINE_SECRET: ${{ secrets.SQL_ENGINE_SECRET }}
+            POSTGRES_DB_SECRET: ${{ secrets.POSTGRES_DB_SECRET }}
+            SQL_HOST_SECRET: ${{ secrets.SQL_HOST_SECRET }}
+            SQL_PORT_SECRET: ${{ secrets.SQL_PORT_SECRET }}
+            DATABASE_SECRET: ${{ secrets.DATABASE_SECRET }}
+            EMAIL_HOST_PASSWORD_SECRET: ${{ secrets.EMAIL_HOST_PASSWORD_SECRET }}
+            EMAIL_HOST_USER_SECRET: ${{ secrets.EMAIL_HOST_USER_SECRET }}
+            SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET }}
+            SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET }}
+            SOCIAL_AUTH_GITHUB_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_KEY_SECRET }}
+            SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
+            POSTGRES_USER_SECRET: ${{ secrets.POSTGRES_USER_SECRET }}
+            POSTGRES_PASSWORD_SECRET: ${{ secrets.POSTGRES_PASSWORD_SECRET }}
+            NGINX_CONTAINER_NAME: ${{ secrets.NGINX_CONTAINER_NAME }}
+            STATIC_VOLUME_NAME: ${{ secrets.STATIC_VOLUME_NAME }}
+            INTERNAL_NETWORK_NAME: ${{ secrets.INTERNAL_NETWORK_NAME }}
+            WEB_SERVICE_NAME: ${{ secrets.WEB_SERVICE_NAME }}
+            WEB_CONTAINER_NAME: ${{ secrets.WEB_CONTAINER_NAME }}
+            POSTGRES_CONTAINER_NAME: ${{ secrets.POSTGRES_CONTAINER_NAME }}
+            DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
+            DB_SERVICE_NAME: ${{ secrets.DB_SERVICE_NAME }}
+            NGINX_SERVICE_NAME: ${{ secrets.NGINX_SERVICE_NAME }}
+            NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
+            PGDATA_SECRET: ${{ secrets.PGDATA_SECRET }}
+            
+            # !!! Select ':' and try 'Ctrl + d'
+            # Put multiple cursors and go to the end of line. END button.
+
+
+
     steps:
-      # - name: SSH and Deploy
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USERNAME }}
-      #     key: ${{ secrets.SSH_KEY }}
-      #     port: ${{ secrets.SSH_PORT }}
-
-
-      #     env:
-      #       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
-      #       SECRET_KEY_SECRET: ${{ secrets.SECRET_KEY_SECRET }}
-      #       DJANGO_ALLOWED_HOSTS_SECRET: ${{ secrets.DJANGO_ALLOWED_HOSTS_SECRET }}
-      #       SQL_ENGINE_SECRET: ${{ secrets.SQL_ENGINE_SECRET }}
-      #       SQL_DATABASE_SECRET: ${{ secrets.SQL_DATABASE_SECRET }}
-      #       SQL_USER_SECRET: ${{ secrets.SQL_USER_SECRET }}
-      #       SQL_PASSWORD_SECRET: ${{ secrets.SQL_PASSWORD_SECRET }}
-      #       SQL_HOST_SECRET: ${{ secrets.SQL_HOST_SECRET }}
-      #       SQL_PORT_SECRET: ${{ secrets.SQL_PORT_SECRET }}
-      #       DATABASE_SECRET: ${{ secrets.DATABASE_SECRET }}
-      #       EMAIL_HOST_PASSWORD_SECRET: ${{ secrets.EMAIL_HOST_PASSWORD_SECRET }}
-      #       EMAIL_HOST_USER_SECRET: ${{ secrets.EMAIL_HOST_USER_SECRET }}
-      #       SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET }}
-      #       SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET }}
-      #       SOCIAL_AUTH_GITHUB_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_KEY_SECRET }}
-      #       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
-      #     script: |
-      #       git clone https://github.com/Bolls-Bible/bain
-      #       cd bain
-      #       sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.yml
-      #       sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" docker-compose.yml
-      #       sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_ENGINE_SECRET/$SQL_ENGINE_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_DATABASE_SECRET/$SQL_DATABASE_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_USER_SECRET/$SQL_USER_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_PASSWORD_SECRET/$SQL_PASSWORD_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_HOST_SECRET/$SQL_HOST_SECRET/g" docker-compose.yml
-      #       sed -i "s/SQL_PORT_SECRET/$SQL_PORT_SECRET/g" docker-compose.yml
-      #       sed -i "s/DATABASE_SECRET/$DATABASE_SECRET/g" docker-compose.yml
-      #       sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" docker-compose.yml
-      #       sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" docker-compose.yml
-      #       sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" docker-compose.yml
-      #       sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" docker-compose.yml
-      #       sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" docker-compose.yml
-      #       sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" docker-compose.yml
-      #       docker-compose up -d
-      #       cd ..
-      #       rm -fr bain
-
       - name: SSH and Deploy
         uses: appleboy/ssh-action@master
-        env:
-          DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          envs: DEBUG_SECRET
+          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,SQL_ENGINE_SECRET,POSTGRES_DB_SECRET,SQL_HOST_SECRET,SQL_PORT_SECRET,DATABASE_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_CONTAINER_NAME,STATIC_VOLUME_NAME,INTERNAL_NETWORK_NAME,WEB_SERVICE_NAME,WEB_CONTAINER_NAME,POSTGRES_CONTAINER_NAME,DB_CONTAINER_NAME,DB_SERVICE_NAME,NGINX_SERVICE_NAME,NGINX_DOMAIN_NAME,PGDATA_SECRET
           script: |
-            echo "github was here $DEBUG_SECRET" > file.txt
+            rm -fr bain
+            git clone https://github.com/Bolls-Bible/bain
+            echo "Injecting secrets..."
+            cd bain
+            sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.yml
+            sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_ENGINE_SECRET/$SQL_ENGINE_SECRET/g" docker-compose.yml
+            sed -i "s/POSTGRES_DB_SECRET/$POSTGRES_DB_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_HOST_SECRET/$SQL_HOST_SECRET/g" docker-compose.yml
+            sed -i "s/SQL_PORT_SECRET/$SQL_PORT_SECRET/g" docker-compose.yml
+            sed -i "s/DATABASE_SECRET/$DATABASE_SECRET/g" docker-compose.yml
+            sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" docker-compose.yml
+            sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" docker-compose.yml
+            sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" docker-compose.yml
+            sed -i "s/POSTGRES_USER_SECRET/$POSTGRES_USER_SECRET/g" docker-compose.yml
+            sed -i "s/POSTGRES_PASSWORD_SECRET/$POSTGRES_PASSWORD_SECRET/g" docker-compose.yml
+            sed -i "s/NGINX_CONTAINER_NAME/$NGINX_CONTAINER_NAME/g" docker-compose.yml
+            sed -i "s/STATIC_VOLUME_NAME/$STATIC_VOLUME_NAME/g" docker-compose.yml
+            sed -i "s/INTERNAL_NETWORK_NAME/$INTERNAL_NETWORK_NAME/g" docker-compose.yml
+            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" docker-compose.yml
+            sed -i "s/WEB_CONTAINER_NAME/$WEB_CONTAINER_NAME/g" docker-compose.yml
+            sed -i "s/POSTGRES_CONTAINER_NAME/$POSTGRES_CONTAINER_NAME/g" docker-compose.yml
+            sed -i "s/DB_CONTAINER_NAME/$DB_CONTAINER_NAME/g" docker-compose.yml
+            sed -i "s/DB_SERVICE_NAME/$DB_SERVICE_NAME/g" docker-compose.yml
+            sed -i "s/NGINX_SERVICE_NAME/$NGINX_SERVICE_NAME/g" docker-compose.yml
+            sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" docker-compose.yml
+            sed -i "s/PGDATA_SECRET/$PGDATA_SECRET/g" docker-compose.yml
+            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
+            echo "Setting up environment..."
+            for i in $(ls django/bolls/static/translations); do unzip "django/bolls/static/translations/$i" -d django/bolls/static/translations; done
+            for i in $(ls django/bolls/static/dictionaries); do unzip "django/bolls/static/dictionaries/$i" -d django/bolls/static/dictionaries; done
+            mkdir /var/letsencrypt
+            docker network create web
+            docker network create $INTERNAL_NETWORK_NAME
+            echo "Starting deploy..."
+            docker-compose up -d --build --force-recreate
+            docker-compose exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
+            docker-compose exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
+            docker cp ./django/sql/unaccent_plus.rules  $DB_CONTAINER_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+            docker exec -it $DB_CONTAINER_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            echo "Done."
+            cd ..
+            rm -fr bain
