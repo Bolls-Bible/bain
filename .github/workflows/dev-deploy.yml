@@ -89,6 +89,8 @@ jobs:
             sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
             cat docker-compose.yml
             echo "Setting up environment..."
+            for i in $(ls django/bolls/static/translations); do unzip django/bolls/static/translations/$i -d djano/bolls/static/translations; done
+            for i in $(ls django/bolls/static/dictionaries); do unzip django/bolls/static/dictionaries/$i -d djano/bolls/static/dictionaries; done
             mkdir /var/letsencrypt
             docker network create web
             docker network create $INTERNAL_NETWORK_NAME
