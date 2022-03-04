@@ -4,7 +4,7 @@ services:
   traefik:
     image: traefik:latest
     restart: always
-    name: traefik
+    container_name: traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -31,7 +31,7 @@ services:
   NGINX_SERVICE_NAME:
     build: ./nginx
     restart: always
-    name: NGINX_CONTAINER_NAME
+    container_name: NGINX_CONTAINER_NAME
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.website.tls=true"
@@ -52,7 +52,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000
-    name: WEB_CONTAINER_NAME
+    container_name: WEB_CONTAINER_NAME
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static
     expose:
@@ -80,8 +80,7 @@ services:
   DB_SERVICE_NAME:
     image: postgres:alpine
     restart: always
-    container_name: POSTGRES_CONTAINER_NAME
-    name: DB_CONTAINER_NAME
+    container_name: DB_CONTAINER_NAME
     environment:
       - POSTGRES_USER=POSTGRES_USER_SECRET
       - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
