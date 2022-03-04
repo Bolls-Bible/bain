@@ -60,9 +60,10 @@ jobs:
           script: |
             rm -fr bain
             git clone https://github.com/Bolls-Bible/bain
+            cd bain
+            echo "Checking out ${{ steps.extract_branch.outputs.branch }}"
             git checkout ${{ steps.extract_branch.outputs.branch }}
             echo "Injecting secrets..." 
-            cd bain
             sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.yml
             sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" docker-compose.yml
             sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" docker-compose.yml
