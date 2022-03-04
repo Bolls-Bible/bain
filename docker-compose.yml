@@ -4,6 +4,7 @@ services:
   traefik:
     image: traefik:latest
     restart: always
+    name: traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -18,44 +19,44 @@ services:
     networks:
       - web
       - internal
+      - internal_dev
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     volumes:
-      - "./letsencrypt:/letsencrypt" # this should go to a system directory that is not within the folder (i.e. /opt/some/folder), as we will destroy the `bain` folder after we perform the deploy
+      - "/var/letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
-
-  nginx:
+  
+  NGINX_SERVICE_NAME:
     build: ./nginx
-    restart: always    
+    restart: always
+    name: NGINX_CONTAINER_NAME
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.website.tls=true"
-      - "traefik.http.routers.website.rule=Host(`bolls.life`)"
+      - "traefik.http.routers.website.rule=Host(`NGINX_DOMAIN_NAME`)"
       - "traefik.http.routers.website.tls.certresolver=myresolver"
       - "traefik.webservice.frontend.entryPoints=http,https"
     volumes:
-      - static_volume:/home/bolls/web/static
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
     networks:
       - web
-      - internal
+      - INTERNAL_NETWORK_NAME
     depends_on:
-      - web
+      - WEB_SERVICE_NAME
 
-  web:
+  WEB_SERVICE_NAME:
     build:
       context: ./django/
       dockerfile: Dockerfile
     restart: always
     command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000
+    name: WEB_CONTAINER_NAME
     volumes:
-      - static_volume:/home/bolls/web/static
-      - ./:/quikpad # this should go to a system directory that is not within the folder (i.e. /opt/some/folder), as we will destroy the `bain` folder after we perform the deploy
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
     expose:
       - 8000
-    ports:
-      - 5432:5432
     environment:
       - DEBUG=DEBUG_SECRET
       - SECRET_KEY=SECRET_KEY_SECRET
@@ -74,30 +75,32 @@ services:
       - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
       - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
-      - web
-      - internal
+      - INTERNAL_NETWORK_NAME
 
-  db:
+  DB_SERVICE_NAME:
     image: postgres:alpine
     restart: always
-    container_name: postgres
+    container_name: POSTGRES_CONTAINER_NAME
+    name: DB_CONTAINER_NAME
     environment:
       - POSTGRES_USER=POSTGRES_USER_SECRET
       - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
       - POSTGRES_DB=POSTGRES_DB_SECRET
-      - PGDATA=/var/lib/postgresql/data/bolls
+      - PGDATA=PGDATA_SECRET
     labels:
       - "traefik.enable=false"
     networks:
-      - internal
+      - INTERNAL_NETWORK_NAME
 
 
 volumes:
-  static_volume:
+  STATIC_VOLUME_NAME:
 
 
 networks:
   internal:
+    external: false
+  internal_dev:
     external: false
   web:
     external: true
