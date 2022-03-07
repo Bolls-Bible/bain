@@ -42,7 +42,6 @@ services:
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static
     networks:
-      - web
       - INTERNAL_NETWORK_NAME
     depends_on:
       - WEB_SERVICE_NAME
