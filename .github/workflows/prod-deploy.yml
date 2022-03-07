@@ -89,10 +89,10 @@ jobs:
             docker network create $INTERNAL_NETWORK_NAME
             echo "Starting deploy..."
             docker-compose up -d --build --force-recreate
-            docker-compose exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
-            docker-compose exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
+            docker-compose exec -i $WEB_CONTAINER_NAME python manage.py migrate --noinput
+            docker-compose exec -i $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
             docker cp ./django/sql/unaccent_plus.rules  $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-            docker exec -it $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            docker exec -i $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             echo "Done."
             cd ..
             rm -fr bain
