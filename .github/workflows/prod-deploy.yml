@@ -31,7 +31,6 @@ jobs:
             WEB_SERVICE_NAME: ${{ secrets.WEB_SERVICE_NAME }}
             WEB_CONTAINER_NAME: ${{ secrets.WEB_CONTAINER_NAME }}
             POSTGRES_CONTAINER_NAME: ${{ secrets.POSTGRES_CONTAINER_NAME }}
-            DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
             DB_SERVICE_NAME: ${{ secrets.DB_SERVICE_NAME }}
             NGINX_SERVICE_NAME: ${{ secrets.NGINX_SERVICE_NAME }}
             NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
@@ -48,7 +47,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,SQL_ENGINE_SECRET,POSTGRES_DB_SECRET,SQL_HOST_SECRET,SQL_PORT_SECRET,DATABASE_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_CONTAINER_NAME,STATIC_VOLUME_NAME,INTERNAL_NETWORK_NAME,WEB_SERVICE_NAME,WEB_CONTAINER_NAME,POSTGRES_CONTAINER_NAME,DB_CONTAINER_NAME,DB_SERVICE_NAME,NGINX_SERVICE_NAME,NGINX_DOMAIN_NAME,PGDATA_SECRET
+          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,SQL_ENGINE_SECRET,POSTGRES_DB_SECRET,SQL_HOST_SECRET,SQL_PORT_SECRET,DATABASE_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_CONTAINER_NAME,STATIC_VOLUME_NAME,INTERNAL_NETWORK_NAME,WEB_SERVICE_NAME,WEB_CONTAINER_NAME,POSTGRES_CONTAINER_NAME,DB_SERVICE_NAME,NGINX_SERVICE_NAME,NGINX_DOMAIN_NAME,PGDATA_SECRET
           script: |
             rm -fr bain
             git clone https://github.com/Bolls-Bible/bain
@@ -76,7 +75,6 @@ jobs:
             sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" docker-compose.yml
             sed -i "s/WEB_CONTAINER_NAME/$WEB_CONTAINER_NAME/g" docker-compose.yml
             sed -i "s/POSTGRES_CONTAINER_NAME/$POSTGRES_CONTAINER_NAME/g" docker-compose.yml
-            sed -i "s/DB_CONTAINER_NAME/$DB_CONTAINER_NAME/g" docker-compose.yml
             sed -i "s/DB_SERVICE_NAME/$DB_SERVICE_NAME/g" docker-compose.yml
             sed -i "s/NGINX_SERVICE_NAME/$NGINX_SERVICE_NAME/g" docker-compose.yml
             sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" docker-compose.yml
@@ -93,8 +91,8 @@ jobs:
             docker-compose up -d --build --force-recreate
             docker-compose exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
             docker-compose exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
-            docker cp ./django/sql/unaccent_plus.rules  $DB_CONTAINER_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-            docker exec -it $DB_CONTAINER_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            docker cp ./django/sql/unaccent_plus.rules  $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+            docker exec -it $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             echo "Done."
             cd ..
             rm -fr bain
