@@ -81,7 +81,7 @@ services:
   DB_SERVICE_NAME:
     image: postgres:alpine
     restart: always
-    container_name: DB_CONTAINER_NAME
+    container_name: DB_SERVICE_NAME
     environment:
       - POSTGRES_USER=POSTGRES_USER_SECRET
       - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
