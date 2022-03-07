@@ -14,6 +14,7 @@ services:
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     networks:
@@ -34,9 +35,9 @@ services:
     container_name: NGINX_CONTAINER_NAME
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.website.tls=true"
-      - "traefik.http.routers.website.rule=Host(`NGINX_DOMAIN_NAME`)"
-      - "traefik.http.routers.website.tls.certresolver=myresolver"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls=true"
+      - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
       - "traefik.webservice.frontend.entryPoints=http,https"
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static
