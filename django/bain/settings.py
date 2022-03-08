@@ -78,24 +78,17 @@ WSGI_APPLICATION = 'bain.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'bain',
-        },
+
+DATABASES = {
+    'default': {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", 'bain'),
+        "USER": os.environ.get("SQL_USER", ""),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
+        "HOST": os.environ.get("SQL_HOST", ""),
+        "PORT": os.environ.get("SQL_PORT", ""),
     }
-else:
-    DATABASES = {
-        'default': {
-            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-            "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-            "USER": os.environ.get("SQL_USER", ""),
-            "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
-            "HOST": os.environ.get("SQL_HOST", ""),
-            "PORT": os.environ.get("SQL_PORT", ""),
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

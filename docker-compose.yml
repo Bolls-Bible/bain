@@ -1,50 +1,20 @@
 version: '3.8'
 
 services:
-  traefik:
-    image: traefik:latest
+  DB_SERVICE_NAME:
+    image: postgres:alpine
     restart: always
-    container_name: traefik
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    networks:
-      - web
-      - internal
-      - internal_dev
-    ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
-    volumes:
-      - "/var/letsencrypt:/letsencrypt"
-      - /var/run/docker.sock:/var/run/docker.sock
-  
-  NGINX_SERVICE_NAME:
-    build: ./nginx
-    restart: always
-    container_name: NGINX_CONTAINER_NAME
+    container_name: DB_SERVICE_NAME
+    environment:
+      - POSTGRES_USER=POSTGRES_USER_SECRET
+      - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
+      - POSTGRES_DB=POSTGRES_DB_SECRET
+      - PGDATA=PGDATA_SECRET
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.WEBSITE_ROUTER.tls=true"
-      - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
-      - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
-      - "traefik.webservice.frontend.entryPoints=http,https"
-    volumes:
-      - STATIC_VOLUME_NAME:/home/bolls/web/static
+      - "traefik.enable=false"
     networks:
       - INTERNAL_NETWORK_NAME
-    depends_on:
-      - WEB_SERVICE_NAME
+
 
   WEB_SERVICE_NAME:
     build:
@@ -76,20 +46,58 @@ services:
       - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
       - INTERNAL_NETWORK_NAME
+    depends_on:
+      - DB_SERVICE_NAME
 
-  DB_SERVICE_NAME:
-    image: postgres:alpine
+
+  NGINX_SERVICE_NAME:
+    build: ./nginx
     restart: always
-    container_name: DB_SERVICE_NAME
-    environment:
-      - POSTGRES_USER=POSTGRES_USER_SECRET
-      - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
-      - POSTGRES_DB=POSTGRES_DB_SECRET
-      - PGDATA=PGDATA_SECRET
+    container_name: NGINX_CONTAINER_NAME
     labels:
-      - "traefik.enable=false"
+      - "traefik.enable=true"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls=true"
+      - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
+      - "traefik.webservice.frontend.entryPoints=http,https"
+    volumes:
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
     networks:
       - INTERNAL_NETWORK_NAME
+    depends_on:
+      - WEB_SERVICE_NAME
+
+
+
+  traefik:
+    image: traefik:latest
+    restart: always
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    networks:
+      - web
+      - internal
+      - internal_dev
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - "/var/letsencrypt:/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock
+  
+
 
 
 volumes:
