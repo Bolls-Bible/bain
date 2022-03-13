@@ -82,17 +82,17 @@ jobs:
             sed -i "s/WEBSITE_ROUTER/$WEBSITE_ROUTER/g" docker-compose.yml
             sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
             echo "Setting up environment..."
-            for i in $(ls django/bolls/static/translations); do unzip "django/bolls/static/translations/$i" -d django/bolls/static/translations; done
-            for i in $(ls django/bolls/static/dictionaries); do unzip "django/bolls/static/dictionaries/$i" -d django/bolls/static/dictionaries; done
+            for i in $(ls django/bolls/static/translations); do unzip django/bolls/static/translations/$i -d django/bolls/static/translations; done
+            for i in $(ls django/bolls/static/dictionaries); do unzip django/bolls/static/dictionaries/$i -d django/bolls/static/dictionaries; done
             mkdir /var/letsencrypt
             docker network create web
             docker network create $INTERNAL_NETWORK_NAME
             echo "Starting deploy..."
             docker-compose up -d --build --force-recreate
-            docker-compose exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
-            docker-compose exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
-            docker cp ./django/sql/unaccent_plus.rules  $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-            docker exec -it $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            docker-compose exec -T $WEB_CONTAINER_NAME python manage.py migrate --noinput
+            docker-compose exec -T $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
+            docker cp ./django/sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+            docker exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             echo "Done."
             cd ..
-            rm -fr bain
+        # rm -fr bain

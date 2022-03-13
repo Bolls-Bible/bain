@@ -56,7 +56,8 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER ',' CSV HEADER;
 
 
-\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/Documents/Bible/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_commentary FROM '/home/bohuslav/commentary.csv' DELIMITER '|' CSV HEADER;
 
 
 
@@ -64,6 +65,7 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 \copy (SELECT * FROM bolls_verses) TO '/home/bohuslav/verses.csv' WITH CSV DELIMITER '|';
 \copy (SELECT calculate_translation_hashes()) TO '/home/b/hashes.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_bookmarks) TO 'bookmarks.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_commentary) TO '/home/bohuslav/commentary.csv' WITH CSV DELIMITER '|';
 
 
 -- Fix broken sequences

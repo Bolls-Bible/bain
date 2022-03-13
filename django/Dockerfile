@@ -51,9 +51,6 @@ COPY --from=builder /usr/src/bolls/wheels /wheels
 COPY --from=builder /usr/src/bolls/requirements.txt .
 RUN pip install --no-cache /wheels/*
 
-# RUN unzip "django/bolls/static/translations/*.zip" -d django/bolls/static/translations/
-# RUN unzip "django/bolls/static/dictionaries/*.zip" -d django/bolls/static/dictionaries/
-
 # copy entrypoint.sh
 COPY ./entrypoint.sh $BOLLS_HOME
 
