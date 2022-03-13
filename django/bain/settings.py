@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'bain.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),    # Use postgres by default
         "NAME": os.environ.get("SQL_DATABASE", 'bain'),
         "USER": os.environ.get("SQL_USER", ""),
         "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
