@@ -65,11 +65,12 @@ After that you should be able to debug it.
 
 ### Checklist before any deploy
 
+- work is done on a branch name following the next pattern: 'feature/**'
 - update sw.js
 - npm run build
-- git pull on server
-- ./inject-secrets.sh
-- ./deploy.sh
+- push the branch to GitHub. See if the dev deploy is successful
+- If the deploy is successful -- tag the branch with a new version tag (vX.X.X)
+- Open pull request into `master` branch
 
 And do not forget to clean expired sessions sometimes
 
