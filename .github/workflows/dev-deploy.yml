@@ -102,4 +102,4 @@ jobs:
             docker-compose exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             echo "Done."
             cd ..
-            rm -fr bain
+          # rm -fr bain
