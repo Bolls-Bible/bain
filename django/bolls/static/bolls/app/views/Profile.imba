@@ -197,7 +197,7 @@ tag profile-page
 
 
 	def scroll
-		if (clientHeight - 512 < scrollTop + window.innerHeight) && !loading && query == ''
+		if (scrollHeight - 512 < scrollTop + window.innerHeight) && !loading && query == ''
 			loading = yes
 			if tab == 0
 				if highlights_range.loaded == highlights_range.to

@@ -2922,23 +2922,29 @@ tag bible-reader
 						<path fill="none" d="M0 0h25v25H0z">
 						<path d="M17.5 4h-10A3.5 3.5 0 004 7.5v10A3.5 3.5 0 007.5 21h10a3.5 3.5 0 003.5-3.5v-10A3.5 3.5 0 0017.5 4zm-10 1H12v4.414A5.537 5.537 0 0010.973 7.6 2.556 2.556 0 009.1 6.869a2.5 2.5 0 00-1.814.794 2.614 2.614 0 00.2 3.684A3.954 3.954 0 008.671 12H5V7.5A2.5 2.5 0 017.5 5zm4.271 6.846a11.361 11.361 0 01-3.6-1.231 1.613 1.613 0 01-.146-2.271 1.5 1.5 0 011.094-.476h.021a1.7 1.7 0 011.158.464 11.4 11.4 0 011.472 3.514zM5 17.5V13h6.64c-.653 1.149-2.117 3.2-4.4 3.568a.5.5 0 10.158.987A7.165 7.165 0 0012 14.318V20H7.5A2.5 2.5 0 015 17.5zM17.5 20H13v-5.7a7.053 7.053 0 004.6 3.259.542.542 0 00.074.005.5.5 0 00.072-.995c-2.194-.325-3.632-2.253-4.377-3.567H20v4.5A2.5 2.5 0 0117.5 20zm2.5-8h-3.735a4.1 4.1 0 001.251-.678 2.614 2.614 0 00.2-3.684 2.5 2.5 0 00-1.816-.793 2.634 2.634 0 00-1.872.732A5.537 5.537 0 0013 9.389V5h4.5A2.5 2.5 0 0120 7.5zm-6.77-.179a11.405 11.405 0 011.479-3.513 1.694 1.694 0 011.158-.464h.021a1.5 1.5 0 011.094.476 1.613 1.613 0 01-.146 2.271 11.366 11.366 0 01-3.606 1.23z">
 					data.lang.random
+
+				unless data.pswv
+					<a.help route-to="/donate/">
+						<span.font_icon [mr:2px]> '🔥'
+						data.lang.donate
+
 				<footer>
 					<p.footer_links>
 						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
-						unless data.pswv
-							<a route-to="/donate/"> '🔥 ', data.lang.donate, " 🐈"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
-						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Hire me"
+						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px]>
 						"©"
 						<time dateTime='2022-02-17T09:28'> "2019-present"
 						" Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
+					<p[fs:12px pt:12px]>
+						"🍇 v2.1.79 🗓 26.03.2022"
 
 
 

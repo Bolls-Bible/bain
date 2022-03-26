@@ -35,7 +35,7 @@ python manage.py runserver 0:8000
 
 - and go to <http://0.0.0.0:8000/>
 - check if everything is correct and you do not see any error. You will not see any verse, because to do that you should have installed PostreSQL, create bd 'bain', run migrations and fill a table 'bolls_verses' with translations. Ask me to get the translations <https:t.me/Boguslavv>. Using pgAdmin or cmd, create a database, called by default `bain`. 
-- Then fill the database with default data (translations and commentaries) restoring this backup <https://drive.google.com/file/d/1HACNyHbzVi_7rGtv96HYrlutrJP-Lv6x/view?usp=sharing>. Dowload the backup and restore it.
+- Then fill the database with default data (translations and commentaries) restoring this backup <https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump>. Dowload the backup and restore it.
 
 ```bash
 pg_restore -v -d bain < bolls_backup.dump
