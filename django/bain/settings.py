@@ -156,3 +156,39 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'servlogger': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'basiclog.log'),
+            'maxBytes': 1024*1024*15,  # 15MB
+            'backupCount': 10,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins', 'servlogger'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'registration': {
+            'handlers': ['servlogger', ],
+            'level': 'DEBUG',
+        }
+    }
+}
