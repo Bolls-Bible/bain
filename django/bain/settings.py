@@ -28,7 +28,7 @@ DEBUG = int(os.environ.get("DEBUG", default=1))
 
 # Something like: localhost 127.0.0.1 [::1] dev.bolls.life
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
-CSRF_TRUSTED_ORIGINS = ['https://bolls.life']
+CSRF_TRUSTED_ORIGINS = ['https://bolls.life', 'https://dev.bolls.life']
 
 # Application definition
 INSTALLED_APPS = [
