@@ -179,6 +179,8 @@ def search(request, translation, piece=''):
                 "<mark>" + piece + "</mark>", highlighted_text)
             if not match_whole:
                 for word in piece.split():
+                    if word == piece:
+                        break
                     mark_replacement = re.compile(
                         re.escape(word), re.IGNORECASE)
                     highlighted_text = mark_replacement.sub(

@@ -2939,12 +2939,11 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
+					<p[fs:12px pb:12px]>
+						"🍇 v2.1.80 🗓 "
+						<time dateTime='2022-04-03'> "03.04.2022"
 					<p[fs:12px]>
-						"©"
-						<time dateTime='2022-02-17T09:28'> "2019-present"
-						" Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
-					<p[fs:12px pt:12px]>
-						"🍇 v2.1.79 🗓 26.03.2022"
+						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
 
