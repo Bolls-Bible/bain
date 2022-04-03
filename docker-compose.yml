@@ -96,16 +96,6 @@ services:
     volumes:
       - "/var/letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
-  
-
-
-  smtp:
-    image: bytemark/smtp
-    restart: always
-    container_name: "smtp"
-    networks:
-      - INTERNAL_NETWORK_NAME
-      - web
 
 volumes:
   STATIC_VOLUME_NAME:

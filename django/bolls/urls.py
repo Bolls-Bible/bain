@@ -30,6 +30,7 @@ urlpatterns = [
     path('search/<slug:translation>/<str:piece>/', views.search),
     path('search/<slug:translation>/', views.search),
 
+    path('get-books/<slug:translation>/', views.getBooks),
     path('get-text/<slug:translation>/<int:book>/<int:chapter>/',
          views.getText),
     path('get-chapter/<slug:translation>/<int:book>/<int:chapter>/',
@@ -39,10 +40,11 @@ urlpatterns = [
     path('get-profile-bookmarks/<int:range_from>/<int:range_to>/',
          views.getProfileBookmarks),
 
-    path('dictionary-definition/<slug:dict>/<str:query>/', views.searchInDictionary),
+    path('dictionary-definition/<slug:dict>/<str:query>/',
+         views.searchInDictionary),
     path('get-dictionary/<slug:dictionary>/', views.getDictionary),
 
-	# AAA
+    # AAA
     path('<slug:translation>/<str:piece>/', views.search),
 
     path('<slug:translation>/<int:book>/<int:chapter>/',

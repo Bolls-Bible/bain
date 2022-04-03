@@ -701,3 +701,8 @@ def getDictionary(request, dictionary):
         })
 
     return cross_origin(JsonResponse(d, safe=False))
+
+def getBooks(request, translation):
+    with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
+        data = json.load(json_file)
+        return JsonResponse(data[translation], safe=False)
