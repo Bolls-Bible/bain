@@ -19,6 +19,8 @@ urlpatterns = [
     path('edit-account/', views.editAccount),
     path('delete-my-account/', views.deleteAccount),
     path('user-logged/', views.userLogged),
+    path('download-notes/', views.downloadNotes),
+    path('import-notes/', views.importNotes),
 
     path('get-translation/<slug:translation>/',
          views.getTranslation),

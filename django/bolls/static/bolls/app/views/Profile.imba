@@ -26,6 +26,10 @@ let store =
 	name: ''
 	show_options_of: ''
 	collections_search: ''
+	merge_replace: 'false'
+	import_data: []
+
+let extab = yes
 
 
 let account_action = 0
@@ -34,6 +38,7 @@ let expand_note = -1
 
 let taken_usernames = []
 let loading = no
+let importing = no
 
 tag profile-page
 	bookmarks = []
@@ -224,8 +229,10 @@ tag profile-page
 
 
 	def showOptions title
-		if store.show_options_of == title then store.show_options_of = ''
-		else store.show_options_of = title
+		if store.show_options_of == title
+			store.show_options_of = ''
+		else
+			store.show_options_of = title
 
 	def deleteBookmark bookmark
 		data.requestDeleteBookmark(bookmark.pks)
@@ -245,6 +252,10 @@ tag profile-page
 		account_action = 2
 		store.username = ''
 		window.history.pushState({profile: yes}, "Delete Account")
+
+	def showIEport
+		account_action = 3
+		window.history.pushState({profile: yes}, "Export Bookmarks")
 
 	def showEditForm
 		account_action = 1
@@ -288,6 +299,9 @@ tag profile-page
 				elif response.status == 409
 					taken_usernames.push store.username
 					data.showNotification('username_taken')
+			).catch(do |error|
+				data.showNotification('error')
+				console.error(error)
 			)
 			loading = no
 
@@ -299,6 +313,53 @@ tag profile-page
 			else
 				expand_note = index
 
+	def readSingleFile e
+		let file = e.target.files[0]
+		if !file
+			return
+
+		let reader = new FileReader()
+		reader.onload = do(e)
+			let contents = e.target.result
+			try
+				let content = JSON.parse(contents)
+				if typeof content == 'object'
+					# Now check if the data is correct
+					for item in content
+						if !item.verse || !item.date || !item.color
+							throw 'bad file'
+					# log 'good', content
+					store.import_data = content
+					imba.commit!
+
+			catch e
+				log e
+				window.alert('Bad file!')
+			# log contents
+		reader.readAsText(file)
+
+
+	def importNotes
+		console.log store.import_data
+		importing = yes
+		window.fetch('/import-notes/', {
+			method: "POST",
+			cache: "no-cache",
+			headers: {
+				'X-CSRFToken': data.get_cookie('csrftoken'),
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				data: store.import_data,
+				merge_replace: store.merge_replace,
+			}),
+		}).then(do(response)
+			importing = no
+			if response.status == 200
+				window.location.reload!
+		).catch(do(error)
+			console.error error
+		)
 
 	def render
 		<self @scroll=scroll>
@@ -311,14 +372,20 @@ tag profile-page
 					<h1[margin: 1em 4px]> data.getUserName()
 					if window.navigator.onLine
 						<.change_password.help.popup_menu_box>
-							<svg.helpsvg @click=showOptions('account_actions') viewBox="0 0 24 24" width="18px" height="18px">
-								<title> data.lang.edit_account
-								<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z">
+							<svg.helpsvg @click=showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+								<title> "data.lang.edit_account"
+								<g transform="matrix(1.6312057,0,0,1.6312057,-7.2588652,-7.2588652)">
+									<path d="M 11.5,4.45 A 7.05,7.05 0 1 0 18.55,11.5 7.058,7.058 0 0 0 11.5,4.45 Z m 4.415,11.025 c -0.5,-0.917 -2.28,-1.708 -4.415,-1.708 -2.135,0 -3.912,0.791 -4.415,1.708 a 5.95,5.95 0 1 1 8.83,0 z">
+									<ellipse cx="11.5" cy="10" rx="2.375" ry="2.5">
+
 							if store.show_options_of == 'account_actions'
 								<.popup_menu [y@off:-32px o@off:0] ease>
 									<button.butt @click=showEditForm()> data.lang.edit_account
-									if data.user.is_password_usable then <a @click.prevent=(do window.location = "/accounts/password_change/")> <button.butt> data.lang.change_password
-									<button.butt @click=showDeleteForm()> data.lang.delete_account
+									if data.user.is_password_usable
+										<a @click.prevent=(do window.location = "/accounts/password_change/")>
+											<button.butt> data.lang.change_password
+									<button.butt @click=showIEport> 'Import / Export Bookmarks'
+									<button.butt @click=showDeleteForm> data.lang.delete_account
 
 			<div.nav>
 				<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> data.lang.all
@@ -335,8 +402,6 @@ tag profile-page
 
 					<div [min-width: 16px]>
 
-
-
 			for bookmark, i in list_for_display
 				<article.bookmark_in_list [border-color: {bookmark.color}]>
 					<p.bookmark_text innerHTML=bookmark.text.join(" ") @click=goToBookmark(bookmark) dir="auto">
@@ -348,10 +413,11 @@ tag profile-page
 						<p.profile_note[overflow: auto] .expand_note=(i == expand_note) innerHTML=bookmark.note dir="auto" @click=expandNote(i)>
 					<p.dataflex.popup_menu_box>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
-						<time.time time.datetime="bookmark.date"> bookmark.date.toLocaleString()
-						<svg._options @click=showOptions(bookmark.title) viewBox="0 0 20 20">
-							<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
+						<time.time dateTime="bookmark.date"> bookmark.date.toLocaleString()
 						<menu-popup bind=store.show_options_of>
+							<svg._options @pointerdown=showOptions(bookmark.title) viewBox="0 0 20 20">
+								<title> data.lang.options
+								<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
 							if bookmark.title == store.show_options_of
 								<.popup_menu [y@off:-32px o@off:0] ease>
 									<button.butt @click.stop=deleteBookmark(bookmark)> data.lang.delete
@@ -372,9 +438,38 @@ tag profile-page
 
 
 			if account_action
-				<section.daf [pos:fixed t:0 b:0 r:0 l:0 bgc:#0004 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(account_action = 0) ease>
+				<section.daf [pos:fixed t:0 b:0 r:0 l:0 zi:100000 bgc:#0008 h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0] @click=(account_action = 0) ease>
 					<div @click.stop [p:relative max-height:72vh @lt-sm:100vh max-width:468px @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:16px @lt-sm:12px m:auto scale@off:0.75]>
-						if account_action == 2
+						if account_action == 3
+							<header.search_hat [pos:relative]>
+								<svg.close_search [fill@hover:firebrick pos:sticky zi:222] @click=(account_action = 0) viewBox="0 0 20 20">
+									<title> 'Close'
+									<path[m:auto] d=svg_paths.close>
+
+								<div.imex_block>
+									<button.imex_block_btn .active_tab=extab @click=(extab = yes)> data.lang.export
+									<button.imex_block_btn .active_tab=!extab @click=(extab = no)> data.lang.import
+
+							<article#imex>
+								if extab
+									<h1> data.lang.export_bookmarks
+									<a download="notes.json" target="__blank" href='/download-notes'> data.lang.download + ' notes.json'
+								else
+									<h1> data.lang.import_bookmarks
+									<input.file-input type='file' @change=readSingleFile>
+									<p[m:24px 0 8px fw:600]>
+										data.lang.merge_strategy
+
+									<label>
+										<input type="radio" value="false" bind=store.merge_replace>
+										<p> data.lang.skip_conflicts
+									<label>
+										<input type="radio" value="true" bind=store.merge_replace>
+										<p> data.lang.replace_existing
+
+									<button.change_language [mt:16px] disabled=(!store.import_data.length || !importing) @click=importNotes> data.lang.import
+
+						elif account_action == 2
 							<form action="/delete-my-account/">
 								<header.search_hat>
 									<h1[margin:auto]> data.lang.are_you_sure
@@ -388,6 +483,7 @@ tag profile-page
 									<button.change_language> data.lang.i_understand
 								else
 									<button.change_language disabled> data.lang.i_understand
+
 						else
 							<article id="edit_account">
 								<header.search_hat>
@@ -402,11 +498,9 @@ tag profile-page
 								<label> data.lang.edit_name_label
 								<input.search bind=store.name maxlength=30 [margin: 8px 0 border-radius:4px]>
 								if editAccountFormIsValid()
-									<button.change_language @click.editAccount()> data.lang.edit_account
+									<button.change_language @click=editAccount> data.lang.edit_account
 								else
-									<button.change_language disabled @click.editAccount()> data.lang.edit_account
-
-
+									<button.change_language disabled @click=editAccount> data.lang.edit_account
 
 			if !window.navigator.onLine
 				<div[position:fixed bottom:16px left:16px color:$c background:$bgc padding:8px 16px border-radius:8px text-align:center border:1px solid $acc-bgc-hover z-index:1000]>
@@ -443,3 +537,81 @@ tag profile-page
 
 		.expand_note
 			max-height:4096px
+
+
+		.imex_block
+			d:flex jc:center g:8px p:4px m:0 auto
+
+		.imex_block_btn
+			font:inherit
+			c:inherit
+			bgc:$acc-bgc @hover:$acc-bgc-hover
+			p:0 12px
+			rd:4px
+			cursor:pointer
+			fw:bold
+
+		.active_tab
+			bgc:$acc-color-hover
+			c:$bgc
+
+		#imex
+			h1
+				my:16px
+
+			a
+				c:$c fw:bolder
+				d:inline-block
+				td:none
+				p:12px
+				bgc:$acc-bgc
+				rd:4px
+
+			label
+				d:flex a:center
+				cursor:pointer
+				h:36px
+			
+			input[type="radio"]
+				size: 36px
+				appearance: none
+				border:none
+			
+			input[type="radio"]::after
+				d:block
+				w:36px
+				p:0 8px
+				c:$c
+				fs:2.4em
+				content:'○'
+				lh:1
+
+			input[type="radio"]@checked::after
+				content: '●'
+
+
+		.file-input
+			font:inherit
+			w:100% h:46px
+			cursor: pointer
+			appearance:none
+
+		.file-input::-webkit-file-upload-button
+			visibility:hidden
+
+		.file-input::before
+			content: 'bookmaks.json'
+			display: inline-block
+			background:$acc-bgc
+			w:auto ta:center
+			border-radius: 8px
+			padding: 12px 16px
+			outline: none
+			white-space: nowrap
+			-webkit-user-select: none
+
+		.file-input@hover::before
+			bgc:$acc-bgc-hover
+
+		.file-input@active::before
+			bgc:$acc-bgc-hover

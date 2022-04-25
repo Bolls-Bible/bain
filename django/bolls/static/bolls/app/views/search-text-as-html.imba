@@ -11,5 +11,5 @@ tag search-text-as-html
 				router.go route
 
 	def render
-		<self @click=goToVerse>
+		<self [d:inline] @click=goToVerse>
 			<slot>

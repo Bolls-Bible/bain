@@ -1,6 +1,5 @@
 # Used to hide it on global click and scroll into view when selected
 tag menu-popup
-	prop show = no
 	prop scrollinview = yes
 
 	def scrollInView

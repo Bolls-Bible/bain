@@ -20,7 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljdsuug_5fy&%eyg=')
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY", '300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljdsuug_5fy&%eyg=')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -82,7 +83,8 @@ WSGI_APPLICATION = 'bain.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),    # Use postgres by default
+        # Use postgres by default
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
         "NAME": os.environ.get("SQL_DATABASE", 'bain'),
         "USER": os.environ.get("SQL_USER", ""),
         "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
@@ -147,14 +149,16 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = 587
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', '')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', '')
 
 SOCIAL_AUTH_GITHUB_KEY = os.environ.get('SOCIAL_AUTH_GITHUB_KEY', '')
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('SOCIAL_AUTH_GITHUB_SECRET', '')
 
 
-SESSION_COOKIE_AGE = 2419200
+SESSION_COOKIE_AGE = 63072000  # 2 year
 SESSION_SAVE_EVERY_REQUEST = True
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True

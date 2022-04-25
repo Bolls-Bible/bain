@@ -511,19 +511,19 @@ def historyOf(user):
     else:
         return []
 
+
 def historyData(user):
     if user.is_authenticated:
         try:
             obj = user.history_set.get(user=user)
-            return {"history":obj.history, "purge_date":obj.purge_date}
+            return {"history": obj.history, "purge_date": obj.purge_date}
         except History.MultipleObjectsReturned:
             user.history_set.filter(user=user).delete()
-            return {"history":[], "purge_date":0}
+            return {"history": [], "purge_date": 0}
         except History.DoesNotExist:
-            return {"history":[], "purge_date":0}
+            return {"history": [], "purge_date": 0}
     else:
-        return {"history":[], "purge_date":0}
-
+        return {"history": [], "purge_date": 0}
 
 
 def history(request):
@@ -552,7 +552,6 @@ def history(request):
                 obj = user.history_set.get(user=user)
                 obj.history = received_json_data["history"]
                 obj.purge_date = received_json_data["purge_date"]
-                print(obj.purge_date)
                 obj.save()
 
             except History.DoesNotExist:
@@ -619,31 +618,32 @@ def stripVowels(raw_string):
 
 # Parse Bible links
 def parseLinks(text, translation):
-	if type(text) == float:
-		return ''
+    if type(text) == float:
+        return ''
 
-	text = re.sub(r'(<[/]?span[^>]*)>', '', text)  # Clean up unneeded spans
-	# Avoid unneded classes on anchors
-	text = re.sub(r'( class=\'\w+\')', '', text)
+    text = re.sub(r'(<[/]?span[^>]*)>', '', text)  # Clean up unneeded spans
+    # Avoid unneded classes on anchors
+    text = re.sub(r'( class=\'\w+\')', '', text)
 
-	pieces = text.split("'")
+    pieces = text.split("'")
 
-	result = ''
-	for piece in pieces:
-		if piece.startswith('B:'):
-			result += "'https://bolls.life/" + translation + '/'
-			digits = re.findall(r'\d+', piece)
-			try:
-				result += str(books_map[(digits[0])]) + '/' + digits[1] + '/' + digits[2]
-			except:
-				print(piece)
+    result = ''
+    for piece in pieces:
+        if piece.startswith('B:'):
+            result += "'https://bolls.life/" + translation + '/'
+            digits = re.findall(r'\d+', piece)
+            try:
+                result += str(books_map[(digits[0])]) + \
+                    '/' + digits[1] + '/' + digits[2]
+            except:
+                print(piece)
 
-			if len(digits) > 3:
-				result += '-' + digits[3]
-			result += "' target='_blank'"
-		else:
-			result += piece
-	return result
+            if len(digits) > 3:
+                result += '-' + digits[3]
+            result += "' target='_blank'"
+        else:
+            result += piece
+    return result
 
 
 def searchInDictionary(request, dict, query):
@@ -662,8 +662,8 @@ def searchInDictionary(request, dict, query):
 
     # Merge both kinds of search
     results_of_search = list(results_of_similarity) + \
-                             list(set(results_of_rank) -
-                                  set(results_of_similarity))
+        list(set(results_of_rank) -
+             set(results_of_similarity))
     results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
 
     # for farther refactoring of inner Bible links
@@ -689,9 +689,10 @@ def searchInDictionary(request, dict, query):
 
 
 def getDictionary(request, dictionary):
-    definitions = Dictionary.objects.annotate(unaccented_lexeme=Func(F("lexeme"), function="unaccent")).filter(dictionary=dictionary)
+    definitions = Dictionary.objects.annotate(unaccented_lexeme=Func(
+        F("lexeme"), function="unaccent")).filter(dictionary=dictionary)
 
-    d=[]
+    d = []
     for definition in definitions:
         d.append({
             "topic": definition.topic,
@@ -704,7 +705,67 @@ def getDictionary(request, dictionary):
 
     return cross_origin(JsonResponse(d, safe=False))
 
+
 def getBooks(request, translation):
     with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
         data = json.load(json_file)
         return JsonResponse(data[translation], safe=False)
+
+
+def downloadNotes(request):
+    if request.user.is_authenticated:
+        bookmarks = Bookmarks.objects.filter(user=request.user)
+        response = HttpResponse(content_type='text/json')
+        response['Content-Disposition'] = 'attachment; filename="notes.json"'
+        data = []
+        for bookmark in bookmarks:
+            data.append({
+                "verse": bookmark.verse.pk,
+                "date": bookmark.date,
+                "color": bookmark.color,
+                "collection": bookmark.collection,
+                "note": bookmark.note.text if bookmark.note else '',
+            })
+        response.write(json.dumps(data))
+        return response
+    else:
+        return HttpResponse(status=401)
+
+
+def importNotes(request):
+    if request.method == 'POST' and request.user.is_authenticated:
+        received_json_data = json.loads(request.body)
+        existing_bookmarks = request.user.bookmarks_set.all()
+
+        for item in received_json_data["data"]:
+            existing_bookmark_set = existing_bookmarks.filter(verse=item["verse"])
+            if len(existing_bookmark_set) > 0:
+                if received_json_data["merge_replace"] == 'true':
+                    existing_bookmark = existing_bookmark_set[0]
+                    print(existing_bookmark)
+                    if existing_bookmark.note is not None:
+                        if len(item["note"]):
+                            existing_bookmark.note.text = item["note"]
+                            existing_bookmark.note.save()
+                        else:
+                            existing_bookmark.note.delete()
+                            existing_bookmark.note = None
+                    else:
+                        if len(item["note"]):
+                            note = Note.objects.create(
+                                text=item["note"])
+                            existing_bookmark.note = note
+
+                    existing_bookmark.color = item["color"]
+                    existing_bookmark.date = item["date"]
+                    existing_bookmark.collections = item["collection"]
+                    existing_bookmark.save()
+            else:
+                note = None
+                if len(item["note"]):
+                    note = Note.objects.create(text=item["note"])
+                request.user.bookmarks_set.create(
+                    verse=Verses.objects.get(id=item["verse"]), date=item["date"], color=item["color"], collection=item["collection"], note=note)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=405)

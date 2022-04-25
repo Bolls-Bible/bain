@@ -283,7 +283,6 @@ tag bible-reader
 		if window.translation
 			if translations.find(do |element| return element.short_name == window.translation)
 				if window.location.pathname.indexOf('international') > -1
-					console.log("HERE WE GO")
 					window.translation = getCookie('translation') || settings.translation
 					window.verses = []
 				setCookie('translation', window.translation)
@@ -490,7 +489,7 @@ tag bible-reader
 					})
 			})
 			.then(do |response| response.json())
-			.catch(do |e| console.log(e))
+			.catch(do |e| console.error(e))
 			# .then(do |data| log data)
 
 
@@ -1506,7 +1505,7 @@ tag bible-reader
 			.then(do |response| response.json())
 			.then(do data.showNotification('saved'))
 			.catch(do |e|
-				console.log(e)
+				console.error(e)
 				data.showNotification('error')
 				saveOffline!)
 		else saveOffline!
@@ -2516,7 +2515,7 @@ tag bible-reader
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self id="reader" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
+		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
 			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2940,8 +2939,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.80 🗓 "
-						<time dateTime='2022-04-03'> "03.04.2022"
+						"🍇 v2.1.81 🗓 "
+						<time dateTime='2022-04-25'> "25.04.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
