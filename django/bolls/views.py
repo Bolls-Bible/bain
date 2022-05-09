@@ -685,7 +685,7 @@ def searchInDictionary(request, dict, query):
             "short_definition": result.short_definition,
             "weight": result.rank
         })
-    return JsonResponse(d, safe=False)
+    return cross_origin(JsonResponse(d, safe=False))
 
 
 def getDictionary(request, dictionary):
