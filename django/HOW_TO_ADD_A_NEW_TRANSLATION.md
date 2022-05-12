@@ -6,11 +6,11 @@ I prefer sqlite modules from MyBible app. I have a `myBible_concordance.sql` fil
 
 ### Format it.
 
-I download selite module from there, run the code from `myBible_concordance.sql` and export the `verses` and `books` table to csv files. csv format is handy for working with data. Then I format the `verses.csv` table, I delete some unneded tags from there, convert some of that tags ...
+I download sqlite module from there. The downloaded zip may ,contain two sqlite databases. The translation itself and optionally comments (the one with `.commentaries.` in name). In the translation sqlite database run the code from `myBible_concordance.sql`, then export the `verses` and `books` table to csv files. csv format is handy for working with data. Then format the text in `verses.csv`, delete some unneded tags from there, convert some of that tags ...
 
 Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br>` &c to get the text neater. I would say also that you should use some text to make it looks better. Usually I get the text from MyBible modules and there are some patters. The `<J>` tags are incapsulating <i>Jesus words</i>. I delete it. There are `<t>` tags. Delete them. But the closing `</t>` tags change to new line tag `</br>`. There are many tags that I simply delete with regex. But you may find a new use for them. Map `<e>` to `<b>`
 
-Also add before all a new collumn `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c. *It should be unique!*
+Also add before all a new collumn `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c. *It should be unique!*  
 
 ### Prepare Books list for given translation
 
@@ -45,7 +45,9 @@ I will run it locally, test it, and if everything is workinig fine I will deploy
 
 ### Deploy the translation to production database
 
-Deploy the translation to main database. Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. Example you may find in that folder. Otherwise the user will not be able to download it.
+Deploy the translation to main database. Log into linode instance with ssh and copy the csv file(s) to production database running in docker [TODO add instructions here].
+
+Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. Example you may find in that folder. Otherwise the user will not be able to download it.
 
 ### Test it.
 
