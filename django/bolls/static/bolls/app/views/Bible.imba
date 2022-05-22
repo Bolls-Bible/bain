@@ -3215,11 +3215,11 @@ tag bible-reader
 										if settingsp.edited_version == settingsp.translation && settingsp.display
 											<>
 												for book in parallel_books when search.bookid_of_results.find(do |element| return element == book.bookid)
-													<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
+													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) dir="auto" @click=addFilter(book.bookid)> book.name
 										else
 											<>
 												for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
-													<button.book_in_list.book_in_filter dir="auto" @click=addFilter(book.bookid)> book.name
+													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) dir="auto" @click=addFilter(book.bookid)> book.name
 
 							<article.search_hat#gs_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">

@@ -414,7 +414,7 @@ tag profile-page
 					<p.dataflex.popup_menu_box>
 						<span.booktitle dir="auto"> bookmark.title, ' ', bookmark.translation
 						<time.time dateTime="bookmark.date"> bookmark.date.toLocaleString()
-						<menu-popup bind=store.show_options_of>
+						<menu-popup bind=(bookmark.title == store.show_options_of)>
 							<svg._options @pointerdown=showOptions(bookmark.title) viewBox="0 0 20 20">
 								<title> data.lang.options
 								<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">

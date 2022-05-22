@@ -45,9 +45,20 @@ I will run it locally, test it, and if everything is workinig fine I will deploy
 
 ### Deploy the translation to production database
 
-Deploy the translation to main database. Log into linode instance with ssh and copy the csv file(s) to production database running in docker [TODO add instructions here].
+Deploy the translation to main database. Log into linode instance with ssh and copy the csv file(s) to production database running in docker. Example commands for copying trnslation into container and inserting the data into database:
 
-Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. Example you may find in that folder. Otherwise the user will not be able to download it.
+```bash
+docker cp ./KB.csv db_dev:verses.csv
+docker cp ./commentaries.csv db_dev:commentaries.csv
+
+docker exec -i db_dev psql -U django_dev -d cotton -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+
+docker exec -i db_dev psql -U django_dev -d cotton -c "\copy bolls_commentary(translation, book, chapter, verse, text) FROM 'commentaries.csv' DELIMITER ',' CSV HEADER;"
+```
+
+Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. You may find examples in that folder. Otherwise the user will not be able to download it.
+
+If it times out try to get it from inside container, `wget -O KB.json -timeout=0 localhost:8000/get-translation/<translation-abbrevition>/`
 
 ### Test it.
 
