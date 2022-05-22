@@ -21,7 +21,7 @@ services:
       context: ./django/
       dockerfile: Dockerfile
     restart: always
-    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
     container_name: WEB_CONTAINER_NAME
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static

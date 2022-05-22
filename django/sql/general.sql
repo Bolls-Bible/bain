@@ -1,6 +1,6 @@
 ----------- INSERTING OF THE TEXT TO THE DB
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/HAC.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/HAC.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/KB.csv' DELIMITER ',' CSV HEADER;
 
 
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/w.csv' DELIMITER ',' CSV HEADER;
@@ -9,7 +9,11 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/
 
 
 ----------- INSERTING COMMENTARIES TO THE DB
-\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/django/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
+
+
+docker exec -i <database_container> psql -U <database_user> -d <database_name> -c "<sql command>"
+
 
 
 ALTER TABLE dictionary
