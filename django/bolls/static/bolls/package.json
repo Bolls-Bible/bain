@@ -2,10 +2,15 @@
   "name": "bolls",
   "scripts": {
     "start": "imba build --no-hashing -w ./app/index.html",
-    "build": "imba build --no-hashing ./app/index.html"
+    "build": "imba build --no-hashing ./app/index.html",
+    "babel-watch": "npx babel -w dist/public/__assets__/app/client.js -o dist/public/__assets__/app/main.js",
+    "babel-build": "npx babel dist/public/__assets__/app/client.js -o dist/public/__assets__/app/main.js"
   },
   "devDependencies": {
-    "@types/node": "^14.14.37"
+    "@types/node": "^14.14.37",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2"
   },
   "repository": "Bohooslav/bolls",
   "description": "Frontend for Bolls Bible app",
