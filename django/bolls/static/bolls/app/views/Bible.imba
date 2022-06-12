@@ -268,14 +268,17 @@ tag bible-reader
 	def setup
 		# # # Setup some global events
 		# Detect change of dark/light mode
-		if window.matchMedia
-			window.matchMedia('(prefers-color-scheme: dark)')
-			.addEventListener('change', do |event|
-				if event.matches
-					changeTheme('dark')
-				else
-					changeTheme('light')
-			)
+		try
+			if window.matchMedia
+				window.matchMedia('(prefers-color-scheme: dark)')
+				.addEventListener('change', do |event|
+					if event.matches
+						changeTheme('dark')
+					else
+						changeTheme('light')
+				)
+		catch error
+			log error
 
 		# Focus the reader tag in order to enable keyboard navigation
 		document.onfocus = do
