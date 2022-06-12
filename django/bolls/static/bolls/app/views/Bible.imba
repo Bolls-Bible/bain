@@ -74,10 +74,12 @@ let settings =
 
 
 # Detect dark mode
-if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-	settings.theme = 'dark'
-	settings.accent = 'gold'
-
+try
+	if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+		settings.theme = 'dark'
+		settings.accent = 'gold'
+catch error
+	console.log "This browser doesn't support window.matchMedia: ", error
 
 let settingsp = {
 	display: no
@@ -266,13 +268,14 @@ tag bible-reader
 	def setup
 		# # # Setup some global events
 		# Detect change of dark/light mode
-		window.matchMedia('(prefers-color-scheme: dark)')
-		.addEventListener('change', do |event|
-			if event.matches
-				changeTheme('dark')
-			else
-				changeTheme('light')
-		)
+		if window.matchMedia
+			window.matchMedia('(prefers-color-scheme: dark)')
+			.addEventListener('change', do |event|
+				if event.matches
+					changeTheme('dark')
+				else
+					changeTheme('light')
+			)
 
 		# Focus the reader tag in order to enable keyboard navigation
 		document.onfocus = do
