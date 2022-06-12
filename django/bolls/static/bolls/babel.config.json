@@ -11,5 +11,8 @@
 				}
 			}
 		]
+	],
+	"plugins": [
+		"babel-plugin-transform-globalthis"
 	]
 }
