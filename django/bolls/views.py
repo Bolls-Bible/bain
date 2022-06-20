@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-from django.http import JsonResponse, HttpResponse
+from django.http import Http404, JsonResponse, HttpResponse
 
 from bolls.books_map import *
 from bolls.forms import SignUpForm
@@ -688,7 +688,7 @@ def searchInDictionary(request, dict, query):
     return cross_origin(JsonResponse(d, safe=False))
 
 
-def getDictionary(request, dictionary):
+def getDictionary(_, dictionary):
     definitions = Dictionary.objects.annotate(unaccented_lexeme=Func(
         F("lexeme"), function="unaccent")).filter(dictionary=dictionary)
 
@@ -706,10 +706,13 @@ def getDictionary(request, dictionary):
     return cross_origin(JsonResponse(d, safe=False))
 
 
-def getBooks(request, translation):
-    with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
-        data = json.load(json_file)
-        return JsonResponse(data[translation], safe=False)
+def getBooks(_, translation):
+    try:
+        with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
+            data = json.load(json_file)
+            return JsonResponse(data[translation.upper()], safe=False)
+    except:
+        return Http404()
 
 
 def downloadNotes(request):
@@ -738,7 +741,8 @@ def importNotes(request):
         existing_bookmarks = request.user.bookmarks_set.all()
 
         for item in received_json_data["data"]:
-            existing_bookmark_set = existing_bookmarks.filter(verse=item["verse"])
+            existing_bookmark_set = existing_bookmarks.filter(
+                verse=item["verse"])
             if len(existing_bookmark_set) > 0:
                 if received_json_data["merge_replace"] == 'true':
                     existing_bookmark = existing_bookmark_set[0]
