@@ -61,6 +61,7 @@ let settings =
 	verse_number: yes
 	verse_break: no
 	verse_picker: no
+	verse_commentary: yes
 	transitions: yes
 	name_of_book: ''
 	filtered_books: []
@@ -336,6 +337,7 @@ tag bible-reader
 		settings.font.max-width = parseInt(getCookie('max-width')) || settings.font.max-width
 		settings.font.align = getCookie('align') || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
+		settings.verse_commentary = !(getCookie('verse_commentary') == 'false')
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
 		settings.verse_number = !(getCookie('verse_number') == 'false')
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
@@ -1775,6 +1777,10 @@ tag bible-reader
 	def toggleVersePicker
 		settings.verse_picker = !settings.verse_picker
 		setCookie('verse_picker', settings.verse_picker)
+	
+	def toggleVerseCommentary
+		settings.verse_commentary = !settings.verse_commentary
+		setCookie('verse_commentary', settings.verse_commentary)
 
 	def toggleParallelSynch
 		settings.parallel_synch = !settings.parallel_synch
@@ -2337,6 +2343,16 @@ tag bible-reader
 						return yes
 		return no
 
+	def nextParallelVerseHasTheSameBookmark verse_index
+		let current_bukmark = getBookmark(parallel_verses[verse_index].pk, 'parallel_bookmarks')
+		if current_bukmark
+			const next_verse = parallel_verses[verse_index + 1]
+			if next_verse
+				let next_bookmark = getBookmark(next_verse.pk, 'parallel_bookmarks')
+				if next_bookmark
+					if next_bookmark.collection == current_bukmark.collection and next_bookmark.note == current_bukmark.note
+						return yes
+		return no
 
 	def showDefOptions
 		let selection = window.getSelection!
@@ -2671,7 +2687,7 @@ tag bible-reader
 												<title> data.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
-								if verse.comment
+								if verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
 
@@ -2708,7 +2724,7 @@ tag bible-reader
 								settingsp.name_of_book, ' ', settingsp.chapter
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
-							for parallel_verse in parallel_verses
+							for parallel_verse, verse_index in parallel_verses
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
 								let bukmark = getBookmark(parallel_verse.pk, 'parallel_bookmarks')
 
@@ -2722,14 +2738,14 @@ tag bible-reader
 									id="p{parallel_verse.verse}"
 									@click.wait(200ms)=addToChosen(parallel_verse.pk, parallel_verse.verse, 'second')
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
-								if bukmark
+								if bukmark and not nextParallelVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
 										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 											<svg viewBox="0 0 20 20" alt=data.lang.note>
 												<title> data.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
-								if parallel_verse.comment
+								if parallel_verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
 										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
 
@@ -2881,6 +2897,9 @@ tag bible-reader
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseNumber .checkbox_turned=settings.verse_number>
 					data.lang.verse_number
 					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleVerseCommentary .checkbox_turned=settings.verse_commentary>
+					data.lang.verse_commentary
+					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
 					data.lang.transitions
 					<p.checkbox> <span>
@@ -2945,7 +2964,7 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.83 🗓 "
+						"🍇 v2.1.84 🗓 "
 						<time dateTime='2022-06-12'> "12.06.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"

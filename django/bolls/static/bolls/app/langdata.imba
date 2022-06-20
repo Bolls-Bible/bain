@@ -168,6 +168,7 @@ export const english = {
 	"usual_reading": "Usual reading",
 	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Verse wrap",
+	"verse_commentary": "Verse commentary",
 	"verse_number": "Verse number"
 	"verse_picker": "Verse picker",
 	"view_source": "View the source code",
@@ -347,6 +348,7 @@ export const ukrainian = {
 	"usual_reading": "Звичайне читання",
 	"unexisten_chapter": "Ця глава неіснує"
 	"verse_break": "Перенос віршів",
+	"verse_commentary": "Коментар вірша",
 	"verse_number": "Номер вірша"
 	"verse_picker": "Вибір вірша",
 	"view_source": "Дивитися джерельний код",
@@ -526,6 +528,7 @@ export const russian = {
 	"usual_reading": "Обычное чтение",
 	"unexisten_chapter": "Такой главы не существует"
 	"verse_break": "Перенос стихов",
+	"verse_commentary": "Комментарий стиха",
 	"verse_number": "Номер стиха"
 	"verse_picker": "Выбор стиха",
 	"view_source": "Смотреть исходный код",
@@ -705,6 +708,7 @@ export const portuguese = {
 	"usual_reading": "Leitura habitual",
 	"unexisten_chapter": "Este capítulo não existe"
 	"verse_break": "Um versículo por linha",
+	"verse_commentary": "Comentário do verso",
 	"verse_number": "Número do verso"
 	"verse_picker": "Seletor de versículo",
 	"view_source": "Veja o código fonte",
@@ -884,6 +888,7 @@ export const espanol = {
 	"usual_reading": "Lectura habitual",
 	"unexisten_chapter": "Este capítulo no existe",
 	"verse_break": "Envolver versículo",
+	"verse_commentary": "Comentario en verso",
 	"verse_number": "Número de versículo",
 	"verse_picker": "Selector de versículo",
 	"view_source": "Ver el código fuente",
@@ -1064,6 +1069,7 @@ export const german = {
 	"usual_reading": "Normales lesen",
 	"unexisten_chapter": "This chapter doesn't exist"
 	"verse_break": "Zeilenumbruch",
+	"verse_commentary": "Verskommentar",
 	"verse_number": "Versnummer"
 	"verse_picker": "Versauswahl",
 	"view_source": "Source code anzeigen",
