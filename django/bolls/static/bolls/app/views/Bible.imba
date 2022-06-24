@@ -66,6 +66,7 @@ let settings =
 	name_of_book: ''
 	filtered_books: []
 	parallel_synch: yes
+	lock_books_menu: yes
 
 	get light
 		if this.theme == 'dark' or this.theme == 'black'
@@ -338,6 +339,7 @@ tag bible-reader
 		settings.font.align = getCookie('align') || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
 		settings.verse_commentary = !(getCookie('verse_commentary') == 'false')
+		settings.lock_books_menu = !(getCookie('lock_books_menu') == 'false')
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
 		settings.verse_number = !(getCookie('verse_number') == 'false')
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
@@ -1781,6 +1783,10 @@ tag bible-reader
 	def toggleVerseCommentary
 		settings.verse_commentary = !settings.verse_commentary
 		setCookie('verse_commentary', settings.verse_commentary)
+	
+	def toggleLockBooksMenu
+		settings.lock_books_menu = !settings.lock_books_menu
+		setCookie('lock_books_menu', settings.lock_books_menu)
 
 	def toggleParallelSynch
 		settings.parallel_synch = !settings.parallel_synch
@@ -2538,7 +2544,7 @@ tag bible-reader
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
 		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
-			<nav @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
+			<nav .lock-books=settings.lock_books_menu @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
@@ -2900,6 +2906,9 @@ tag bible-reader
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseCommentary .checkbox_turned=settings.verse_commentary>
 					data.lang.verse_commentary
 					<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleLockBooksMenu .checkbox_turned=settings.lock_books_menu>
+					data.lang.lock_books_menu
+					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
 					data.lang.transitions
 					<p.checkbox> <span>
@@ -2964,8 +2973,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.84 🗓 "
-						<time dateTime='2022-06-21'> "21.06.2022"
+						"🍇 v2.1.85 🗓 "
+						<time dateTime='2022-06-26'> "26.06.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3281,12 +3290,12 @@ tag bible-reader
 									if search.suggestions.books.length or search.suggestions.translations.length
 										<.search_suggestions>
 											for book in search.suggestions.books
-												<search-text-as-html.book_in_list data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+												<search-text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
 													searchSuggestionText(book)
 
 
 											for translation in search.suggestions.translations
-												<li.book_in_list [display: flex]>
+												<li.book_in_list.focusable tabIndex="0" [display: flex]>
 													<span @click=changeTranslation(translation.short_name)>
 														<b> translation.short_name
 														', '
@@ -3581,6 +3590,8 @@ tag bible-reader
 				<global
 					@hotkey('mod+shift+f').force.prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+k').force.prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('s').prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('f').prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 					@hotkey('escape').force.prevent.stop=clearSpace
 					@hotkey('mod+y').prevent.stop=fixDrawers

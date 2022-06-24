@@ -166,6 +166,15 @@ html[data-transitions="false"] * {
   outline: none;
 }
 
+.focusable {
+  border-radius: 8px;
+}
+
+.focusable:focus {
+  outline: 1px solid var(--acc-color-hover);
+  outline-offset: -1px;
+}
+
 html,
 body {
   font-family: sans, sans-serif, "Apple Color Emoji", "Droid Sans Fallback",
@@ -786,6 +795,10 @@ img,
 #page_search,
 .collectionshat {
   user-select: none;
+}
+
+.lock-books {
+  left: 0 !important;
 }
 
 .change_language {

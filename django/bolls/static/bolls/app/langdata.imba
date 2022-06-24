@@ -103,7 +103,8 @@ export const english = {
 	"language": "Language",
 	"lighttheme": "Light theme",
 	"loading": "Loading",
-	"processing": "Processing"
+	"processing": "Processing",
+	"lock_books_menu": "Lock books menu",
 	"login": "Log in",
 	"logout": "Log out",
 	"match_case": "Match case",
@@ -148,7 +149,8 @@ export const english = {
 		"Back to reading: <b>Esc</b>",
 		"Hide menu icons: <b>Ctrl + Alt + H</b>",
 		"Full screen: <b>f11</b>",
-		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
+		"Open Bible search: <b>s</b> or <b>f</>",
+		"Open chapter search: <b>Ctrl + f</b>",
 	],
 	"signin": "Sign up",
 	"skip_conflicts": "Skip conflicting bookmarks",
@@ -283,7 +285,8 @@ export const ukrainian = {
 	"language": "Мова",
 	"lighttheme": "Світла тема",
 	"loading": "Завантаження",
-	"processing": "Обробка"
+	"processing": "Обробка",
+	"lock_books_menu": "Заблокувати меню книг",
 	"login": "Увійти",
 	"logout": "Вийти",
 	"match_case": "Чутливий до регістру",
@@ -328,7 +331,8 @@ export const ukrainian = {
 		"Повернутися до читання: <b>Esc</b>",
 		"Сховати іконки меню: <b>Ctrl + Alt + H</b>",
 		"Повноекранний режим: <b>f11</b>",
-		"Не висовувати бокові панелі при наводженні курсору на край: <b>Ctrl + Alt + Y</b>"
+		"Відкрити Біблійний пошук: <b>s</b> або <b>f</>",
+		"Відкрити пошук в главі: <b>Ctrl + f</b>",
 	],
 	"signin": "Зареєструватися",
 	"skip_conflicts": "Пропускати конфліктні закладки",
@@ -463,7 +467,8 @@ export const russian = {
 	"language": "Язык",
 	"lighttheme": "Светлая тема",
 	"loading": "Загрузка",
-	"processing": "Обробка"
+	"processing": "Обробка",
+	"lock_books_menu": "Заблокувати меню книг",
 	"login": "Войти",
 	"logout": "Выйти",
 	"match_case": "Учитывать регистр",
@@ -508,7 +513,8 @@ export const russian = {
 		"Вернутся к чтению: E<b>sc</b>",
 		"Спрятать иконки меню: <b>Ctrl + Alt + H</b>",
 		"Полноэкранный режим: <b>f11</b>",
-		"Не показывать боковых панелей при наводе курсора на край: <b>Ctrl + Alt + Y</b>"
+		"Открыть поиск в Библии: <b>s</b> или <b>f</>",
+		"Открыть поиск в главе: <b>Ctrl + f</b>",
 	],
 	"signin": "Зарегистрироваться",
 	"skip_conflicts": "Пропустить конфликтующие закладки",
@@ -643,7 +649,8 @@ export const portuguese = {
 	"language": "Idioma",
 	"lighttheme": "Tema claro",
 	"loading": "Carregando",
-	"processing": "Processamento"
+	"processing": "Processamento",
+	"lock_books_menu": "Bloquear menu de livros",
 	"login": "Conecte-se",
 	"logout": "Sair",
 	"match_case": "Caso de compatibilidade",
@@ -688,7 +695,8 @@ export const portuguese = {
 		"Voltar para a leitura: <b>Esc</b>",
 		"Ocultar ícones do menu: <b>Ctrl + Alt + H</b>",
 		"Tela cheia: <b>F11</b>",
-		"Não mostrar o painel lateral ao passar o mouse: <b>Ctrl + Alt + Y</b>"
+		"Open Bible search: <b>s</b> or <b>f</>",
+		"Open chapter search: <b>Ctrl + f</b>",
 	],
 	"signin": "Inscrever-se",
 	"skip_conflicts": "Ignorar favoritos conflitantes",
@@ -824,6 +832,7 @@ export const espanol = {
 	"lighttheme": "Tema claro",
 	"loading": "Cargando",
 	"processing": "Procesando",
+	"lock_books_menu": "Bloquear menú de libros",
 	"login": "Conectarse",
 	"logout": "Salir",
 	"match_case": "Caso de coincidencia",
@@ -868,7 +877,8 @@ export const espanol = {
 		"Volver a la lectura: <b>Esc</b>",
 		"Ocultar íconos del menú: <b>Ctrl + Alt + H</b>",
 		"Pantalla completa: <b>f11</b>",
-		"No mostrar los paneles laterales al pasar el mouse: <b>Ctrl + Alt + Y</b>"
+		"Open Bible search: <b>s</b> or <b>f</>",
+		"Open chapter search: <b>Ctrl + f</b>",
 	],
 	"signin": "Registrarse",
 	"skip_conflicts": "Omitir marcadores en conflicto",
@@ -1004,7 +1014,8 @@ export const german = {
 	"language": "Sprache",
 	"lighttheme": "Lichtthema",
 	"loading": "Wird geladen",
-	"processing": "Bearbeiten"
+	"processing": "Bearbeiten",
+	"lock_books_menu": "Menü Bücher sperren",
 	"login": "Log in",
 	"logout": "Log out",
 	"match_case": "Match-Fall",
@@ -1049,7 +1060,8 @@ export const german = {
 		"Back to reading: <b>Esc</b>",
 		"Hide menu icons: <b>Ctrl + Alt + H</b>",
 		"Full screen: <b>f11</b>",
-		"Don't show side panels on hover: <b>Ctrl + Alt + Y</b>"
+		"Open Bible search: <b>s</b> or <b>f</>",
+		"Open chapter search: <b>Ctrl + f</b>",
 	],
 	"signin": "Sign up",
 	"skip_conflicts": "Widersprüchliche Lesezeichen überspringen",
