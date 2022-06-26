@@ -66,7 +66,7 @@ let settings =
 	name_of_book: ''
 	filtered_books: []
 	parallel_synch: yes
-	lock_books_menu: yes
+	lock_books_menu: no
 
 	get light
 		if this.theme == 'dark' or this.theme == 'black'
@@ -339,7 +339,7 @@ tag bible-reader
 		settings.font.align = getCookie('align') || settings.font.align
 		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
 		settings.verse_commentary = !(getCookie('verse_commentary') == 'false')
-		settings.lock_books_menu = !(getCookie('lock_books_menu') == 'false')
+		settings.lock_books_menu = (getCookie('lock_books_menu') == 'true') || settings.lock_books_menu
 		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
 		settings.verse_number = !(getCookie('verse_number') == 'false')
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
