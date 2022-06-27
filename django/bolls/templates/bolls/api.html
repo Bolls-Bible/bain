@@ -1,164 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bolls Bible API</title>
+    <link rel="stylesheet" type="text/css" href="/static/bolls/dist/api.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/static/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/static/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/static/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/static/site.webmanifest" />
+    <link rel="canonical" href="https://bolls.life/api/" />
+    <meta property="og:site_name" content="Bolls Bible" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <meta name="description" content="API for fetching Bible text." />
+    <meta property="og:title" content="API for fetching Bible text." />
+    <meta
+      property="og:description"
+      content="Bolls Bible APIs. Get the Bible text without limits."
+    />
+    <meta property="og:image" content="/static/bolls.png" />
+    <meta name="theme-color" content="#04060c" />
+    <meta name="twitter:card" content="app" />
+    <meta name="twitter:site" content="@bolls-twitter-handle" />
+    <meta name="twitter:title" content="Bolls Bible" />
+    <meta name="twitter:image:src" content="/static/bolls.png" />
+    <meta name="twitter:image:alt" content="Bolls logo" />
+    <meta name="twitter:app:name:googleplay" content="Bolls" />
+    <meta name="twitter:app:id:googleplay" content="life.bolls.bolls" />
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<title>Bolls Bible API</title>
-	<link rel="stylesheet" type="text/css" href="/static/bolls/dist/api.css">
-	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-	<link rel="manifest" href="/static/site.webmanifest">
-	<link rel="canonical" href="https://bolls.life/api/">
-	<meta property="og:site_name" content="Bolls Bible">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-	<meta name="description"
-		content="API for fetching Bible text.">
-	<meta property="og:title"
-		content="API for fetching Bible text.">
-	<meta property="og:description"
-		content="Bolls Bible APIs. Get the Bible text without limits.">
-	<meta property="og:image" content="/static/bolls.png">
-	<meta name="theme-color" content="#04060c" />
-	<meta name="twitter:card" content="app">
-	<meta name="twitter:site" content="@bolls-twitter-handle">
-	<meta name="twitter:title" content="Bolls Bible">
-	<meta name="twitter:image:src" content="/static/bolls.png">
-	<meta name="twitter:image:alt" content="Bolls logo">
-	<meta name="twitter:app:name:googleplay" content="Bolls">
-	<meta name="twitter:app:id:googleplay" content="life.bolls.bolls">
-</head>
+  <body>
+    <header>
+      <h1>
+        <a href="/" style="color: inherit; --hover-color: var(--text-color)"
+          >Bolls</a
+        >
+        API Documentation
+      </h1>
+      <p>
+        This documentation is called to provide available API for creating a
+        functioning client.
+      </p>
+    </header>
+    <h2>Table of contents</h2>
+    <ul>
+      <li>
+        <a href="#Before fetching Bible text">Before fetching Bible text</a>
+      </li>
+      <li><a href="#Fetch a chapter">Fetch a chapter</a></li>
+      <li><a href="#Search">Search</a></li>
+      <li><a href="#Get a translation">Get a translation</a></li>
+      <li><a href="#compare">Compare versions</a></li>
+      <li><a href="#Fetch a verse">Fetch a verse</a></li>
+      <li><a href="#Fetch any verses">Fetch any verses</a></li>
+      <li>
+        <a href="#dictionary"
+          >Dictionary definition for Hebrew and Greek words</a
+        >
+      </li>
+      <li><a href="#Notes">Notes</a></li>
+      <li><a href="#contact_me">Contact me</a></li>
+    </ul>
+    <h2 id="Before fetching Bible text">Before fetching Bible text</h2>
+    <p class="last-update">Updated at: 17 February 2021.</p>
+    <p>
+      First of all get
+      <a
+        target="_blank"
+        href="https://bolls.life/static/bolls/app/views/languages.json"
+        >a list of available translations</a
+      >
+      and
+      <a
+        target="_blank"
+        href="https://bolls.life/static/bolls/app/views/translations_books.json"
+        >an object with their books</a
+      >. The translations list contain nodes with following properties:
+    </p>
+    <ul>
+      <li>
+        The <code>short_name</code> field is an id of the translation in
+        database. Use it for forming a url.
+      </li>
+      <li>
+        The <code>full_name</code> field is a full name of its translation.
+      </li>
+      <li>
+        The <code>commentaries</code> field indicates whether there is a
+        translators commentary to the translation.
+      </li>
+      <li>
+        The <code>updated</code> field is a date number when the translation was
+        updated in the last time.
+      </li>
+      <li>
+        The <code>info</code> field sometimes may contain a link to translation
+        description.
+      </li>
+    </ul>
+    <p>In order to fetch books of only one translation use the nest API:</p>
+    <p></p>
+    <pre>https://bolls.life/get-books/&lt;slug:translation&gt;/</pre>
+    <p>
+      Where <code>translation</code> is an abbreviation of desired translation.
+      Example:
+    </p>
+    <pre><a target="_blank" href="https://bolls.life/get-books/YLT/">https://bolls.life/get-books/YLT/</a></pre>
 
-<body>
-	<header>
-		<h1><a href="/" style="color:inherit; --hover-color: var(--text-color);">Bolls</a> API Documentation</h1>
-		<p> This documentation is called to provide available API for creating a functioning client.</p>
-	</header>
-	<h2>Table of contents</h2>
-	<ul>
-		<li><a href='#Before fetching Bible text'>Before fetching Bible text</a></li>
-		<li><a href='#Fetch a chapter'>Fetch a chapter</a></li>
-		<li><a href='#Search'>Search</a></li>
-		<li><a href='#Get a translation'>Get a translation</a></li>
-		<li><a href='#compare'>Compare versions</a></li>
-		<li><a href='#Fetch a verse'>Fetch a verse</a></li>
-		<li><a href='#dictionary'>Dictionary definition for Hebrew and Greek words</a></li>
-		<li><a href='#Notes'>Notes</a></li>
-		<li><a href='#contact_me'>Contact me</a></li>
-	</ul>
-	<h2 id='Before fetching Bible text'>Before fetching Bible text</h2>
-	<p class='last-update'> Updated at: 17 February 2021.</p>
-	<p>First of all get <a target="_blank"
-			href="https://bolls.life/static/bolls/app/views/languages.json">a list of available
-			translations</a> and <a target="_blank"
-			href="https://bolls.life/static/bolls/app/views/translations_books.json">an object with their
-			books</a>. The translations list contain nodes with following properties:
-	</p>
-	<ul>
-		<li> The <code>short_name</code> field is an id of the translation in database. Use it for forming a url.</li>
-		<li> The <code>full_name</code> field is a full name of its translation.</li>
-		<li> The <code>commentaries</code> field indicates whether there is a translators commentary to the translation.</li>
-		<li> The <code>updated</code> field is a date number when the translation was updated in the last time.</li>
-		<li> The <code>info</code> field sometimes may contain a link to translation description.</li>
-	</ul>
-	<p>In order to fetch books of only one translation use the nest API:<p>
-	<pre>https://bolls.life/get-books/&lt;slug:translation&gt;/</pre>
-	<p>Where <code>translation</code> is an abbreviation of desired translation. Example:</p>
-	<pre><a target="_blank" href="https://bolls.life/get-books/YLT/">https://bolls.life/get-books/YLT/</a></pre>
+    <p>The books list contains books with the next properties:</p>
+    <ul>
+      <li>The <code>bookid</code> field is an id of the book in database.</li>
+      <li>
+        The <code>chronorder</code> field is a chronological order book number
+        according to Robert Young (just a small feature).
+      </li>
+      <li>The <code>name</code> field is a book name.</li>
+      <li>The <code>chapters</code> field is a number of book chapters.</li>
+    </ul>
+    <p>Curl code</p>
+    <pre>
+curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre
+    >
+    <h2 id="Fetch a chapter">Fetch a chapter</h2>
+    <p>
+      Using that data, you can form a url to fetch a chapter. You may fetch the
+      chapter with translator commentaries or without them. The url constructor:
+    </p>
 
-	<p>The books list contains books with the next properties:</p>
-	<ul>
-		<li> The <code>bookid</code> field is an id of the book in database.</li>
-		<li> The <code>chronorder</code> field is a chronological order book number according to Robert Young (just a small feature).</li>
-		<li> The <code>name</code> field is a book name.</li>
-		<li> The <code>chapters</code> field is a number of book chapters.</li>
-	</ul>
-	<p>Curl code</p>
-	<pre>curl --location --request GET 'https://bolls.life/static/bolls/app/views/languages.json'</pre>
-	<h2 id='Fetch a chapter'>Fetch a chapter</h2>
-	<p>Using that data, you can form a url to fetch a chapter. You may fetch the chapter with translator commentaries or without them. The url constructor:
+    <pre>
+https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # Without commentaries</pre
+    >
+    <pre>
+https://bolls.life/get-chapter/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # With commentaries</pre
+    >
 
-	<pre>https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # Without commentaries</pre>
-	<pre>https://bolls.life/get-chapter/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/ # With commentaries</pre>
+    <p>
+      Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation
+      like <code>YLT</code> or <code>UBIO</code> or <code>SYNOD</code>, and
+      <code>&lt;int:book&gt;</code> with <code>&lt;int:chapter&gt;</code> are
+      numbers of a book and chapter. For example by the next url you will get
+      the eight chapter of Song of Solomon in YLT or NKJV translation:
+    </p>
 
-	<p>Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation like <code>YLT</code> or
-		<code>UBIO</code> or <code>SYNOD</code>, and <code>&lt;int:book&gt;</code>
-		with <code>&lt;int:chapter&gt;</code> are numbers of a book and chapter. For example by the
-		next url you will get the eight chapter of Song of Solomon in YLT or NKJV translation:
-	</p>
+    <pre><a target="_blank" href="https://bolls.life/get-text/YLT/22/8/">https://bolls.life/get-text/YLT/22/8/</a></pre>
+    <pre><a target="_blank" href="https://bolls.life/get-chapter/NKJV/22/8/">https://bolls.life/get-chapter/NKJV/22/8/</a></pre>
+    <p>Curl code</p>
+    <pre>
+curl --location --request GET 'https://bolls.life/get-text/YLT/22/8/'</pre
+    >
+    <pre>
+curl --location --request GET 'https://bolls.life/get-chapter/NKJV/22/8/'</pre
+    >
 
-	<pre><a target="_blank" href="https://bolls.life/get-text/YLT/22/8/">https://bolls.life/get-text/YLT/22/8/</a></pre>
-	<pre><a target="_blank" href="https://bolls.life/get-chapter/NKJV/22/8/">https://bolls.life/get-chapter/NKJV/22/8/</a></pre>
-	<p>Curl code</p>
-	<pre>curl --location --request GET 'https://bolls.life/get-text/YLT/22/8/'</pre>
-	<pre>curl --location --request GET 'https://bolls.life/get-chapter/NKJV/22/8/'</pre>
+    <p>
+      The result of this request will be a list of verses of that chapter, with
+      the next fields:
+    </p>
+    <ul>
+      <li>The <code>pk</code> field is an id of the verse in database.</li>
+      <li>
+        The <code>verse</code> field is a number of the verse in its chapter.
+      </li>
+      <li>The <code>text</code> field contains an html text of this verse.</li>
+      <li>
+        The optional <code>comment</code> field contains an html text of
+        translators comment or references.
+      </li>
+    </ul>
+    <p>
+      <strong>NOTE!</strong> To fetch a single verse or a few verses of one or
+      more translations use <a href="#compare">Compare versions API</a>
+    </p>
 
-	<p>The result of this request will be a list of verses of that chapter, with the next fields:</p>
-	<ul>
-		<li> The <code>pk</code> field is an id of the verse in database.</li>
-		<li> The <code>verse</code> field is a number of the verse in its chapter.</li>
-		<li> The <code>text</code> field contains an html text of this verse.</li>
-		<li> The optional <code>comment</code> field contains an html text of translators comment or references.</li>
-	</ul>
-	<p><strong>NOTE!</strong> To fetch a single verse or a few verses of one or more translations use <a href='#compare'>Compare
-			versions API</a></p>
+    <h2 id="Search">Search</h2>
+    <p>
+      To find verses by a slug or a string you need to form a url in the next
+      manner:
+    </p>
 
-	<h2 id='Search'>Search</h2>
-	<p>To find verses by a slug or a string you need to form a url in the next manner:</p>
+    <pre>
+https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=&lt;bool:match_case&gt;&match_whole=&lt;bool:match_whole&gt;</pre
+    >
 
-	<pre>https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=&lt;bool:match_case&gt;&match_whole=&lt;bool:match_whole&gt;</pre>
+    <p>
+      Where <code>&lt;slug:translation&gt;</code> is an abbreviation of the
+      translation in which you want to find something. The
+      <code>&lt;str:piece&gt;</code> is a piece of text which can be a slug or a
+      string which you look for. It is`not case sensitive, and it can be
+      anything on any language: <code>.../WLC?search=שָּׁמַ֖יִם וְאֵ֥ת</code>,
+      <code>.../LXX?search=ὁ θεὸς τὸν</code>,
+      <code>.../UBIO?search=Небо та землю</code>,
+      <code>.../CUV?search=淵 面 黑 暗</code>.
+    </p>
+    <p>
+      Also at the end of search url you may add optional boolean parameters:
+      <code>match_case</code> (case sensitive search) and
+      <code>match_whole</code> (precise search, match whole search string). For
+      example the next url will returm a list of verses, where "Haggi" word is
+      found:
+    </p>
 
-	<p>Where <code>&lt;slug:translation&gt;</code> is an abbreviation of the translation in which you want to find something. The
-		<code>&lt;str:piece&gt;</code> is a piece of text which can be a slug or a string which you look for. It is`not
-		case sensitive, and it can be anything on any language: <code>.../WLC?search=שָּׁמַ֖יִם וְאֵ֥ת</code>, <code>.../LXX?search=ὁ
-				θεὸς τὸν</code>, <code>.../UBIO?search=Небо та землю</code>, <code>.../CUV?search=淵 面 黑 暗</code>.</p>
-	<p>Also at the end of search url you may add optional boolean parameters: <code>match_case</code> (case sensitive search) and <code>match_whole</code> (precise search, match whole search string). For example the next url will returm a list of verses, where "Haggi" word is found:
-	</p>
+    <pre><a target="_blank" href="https://bolls.life/search/YLT/?search=haggi">https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true</a></pre>
 
-	<pre><a target="_blank" href="https://bolls.life/search/YLT/?search=haggi">https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true</a></pre>
-
-	<p>The result of this request will be a list of top 1024 found verses in the given translation, where every verse will
-		have some several fields:</p>
-	<ul id="verse_fields">
-		<li> The <code>pk</code> field is an id of the verse in database.</li>
-		<li> The <code>translation</code> field is a translation of search.</li>
-		<li> The <code>book</code> field is a book of the verse.</li>
-		<li> The <code>chapter</code> field is a chapter of the book in which the verse is found.</li>
-		<li> The <code>verse</code> field is a number of the verse in its chapter.</li>
-		<li> The <code>text</code> field contains html text of the verse.</li>
-		<li> The optional <code>comment</code> field contains translators commentary to the verse if such exist.</li>
-	</ul>
-	<p>Curl code</p>
-	<pre>curl --location --request GET 'https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true'</pre>
-	<h2 id='Get a translation'>Get a translation</h2>
-	<p>You can get a full translation in json or zip:</p>
-	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre>
-	<pre>https://bolls.life/static/translations/&lt;slug:translation&gt;.zip</pre>
-	<p>The result will be an array of all translation verses. For example you can try
-		the next link:</p>
-	<pre><a target="_blank"
+    <p>
+      The result of this request will be a list of top 1024 found verses in the
+      given translation, where every verse will have some several fields:
+    </p>
+    <ul id="verse_fields">
+      <li>The <code>pk</code> field is an id of the verse in database.</li>
+      <li>The <code>translation</code> field is a translation of search.</li>
+      <li>The <code>book</code> field is a book of the verse.</li>
+      <li>
+        The <code>chapter</code> field is a chapter of the book in which the
+        verse is found.
+      </li>
+      <li>
+        The <code>verse</code> field is a number of the verse in its chapter.
+      </li>
+      <li>The <code>text</code> field contains html text of the verse.</li>
+      <li>
+        The optional <code>comment</code> field contains translators commentary
+        to the verse if such exist.
+      </li>
+    </ul>
+    <p>Curl code</p>
+    <pre>
+curl --location --request GET 'https://bolls.life/search/YLT/?search=haggi&match_case=false&match_whole=true'</pre
+    >
+    <h2 id="Get a translation">Get a translation</h2>
+    <p>You can get a full translation in json or zip:</p>
+    <pre>
+https://bolls.life/static/translations/&lt;slug:translation&gt;.json</pre
+    >
+    <pre>
+https://bolls.life/static/translations/&lt;slug:translation&gt;.zip</pre
+    >
+    <p>
+      The result will be an array of all translation verses. For example you can
+      try the next link:
+    </p>
+    <pre><a target="_blank"
 			href="https://bolls.life/static/translations/YLT.json">https://bolls.life/static/translations/YLT.json</a></pre>
-	<p>The structure of nodes in this array will be like in the nodes of search query</p>
-	<p>Curl code</p>
-	<pre>curl --location --request GET 'https://bolls.life/static/translations/YLT.json'</pre>
+    <p>
+      The structure of nodes in this array will be like in the nodes of search
+      query
+    </p>
+    <p>Curl code</p>
+    <pre>
+curl --location --request GET 'https://bolls.life/static/translations/YLT.json'</pre
+    >
 
-	<h2 id="compare">Compare versions</h2>
-	<p>You can make a request for peculiar verses in peculiar translations. If you wanna see some exact
-		verse or verses in different translation to compare them you can use this api. The request should be <code>POST</code>, and you
-		should pass in the body an object with some fields. The request url -=>
-		<code>https://bolls.life/get-paralel-verses/</code>, The body of the <code>POST</code> request must have the nest fields:
-	</p>
-	<ul>
-		<li> The <code>translations</code> field should be an array of abbreviations of translations like:
-			<code>JSON.stringify(["YLT", "HOM", "WLCC"])</code>.
-		<li> The <code>verses</code> field should be an array of numbers of verses to compare like:
-			<code>JSON.stringify([1, 2, 3, 6, 45])</code> <em>(order does mean)</em>.
-		<li> The <code>chapter</code> field should be a chapter of the book.
-		<li> The <code>book</code> field should be a book of the verses.
-	</ul>
-	<p>You may request different verses in different translations only of one chapter. Imba example.</p>
-	<pre>
+    <h2 id="compare">Compare versions</h2>
+    <p>
+      You can make a request for peculiar verses in peculiar translations. If
+      you wanna see some exact verse or verses in different translation to
+      compare them you can use this api. The request should be
+      <code>POST</code>, and you should pass in the body an object with some
+      fields. The request url -=>
+      <code>https://bolls.life/get-paralel-verses/</code>, The body of the
+      <code>POST</code> request must have the nest fields:
+    </p>
+    <ul>
+      <li>
+        The <code>translations</code> field should be an array of abbreviations
+        of translations like:
+        <code>JSON.stringify(["YLT", "HOM", "WLCC"])</code>.
+      </li>
+
+      <li>
+        The <code>verses</code> field should be an array of numbers of verses to
+        compare like: <code>JSON.stringify([1, 2, 3, 6, 45])</code>
+        <em>(order does mean)</em>.
+      </li>
+
+      <li>The <code>chapter</code> field should be a chapter of the book.</li>
+      <li>The <code>book</code> field should be a book of the verses.</li>
+    </ul>
+
+    <p>
+      You may request different verses in different translations only of one
+      chapter. Imba example.
+    </p>
+    <pre>
 window.fetch("/get-paralel-verses/", {
 	method: "POST",
 	cache: "no-cache",
@@ -181,10 +321,16 @@ window.fetch("/get-paralel-verses/", {
 .then(do |resdata|
 	translations_with_verses = resdata
 	console.log console.log
-)</pre>
-	<p>The result of this request will be an array of translations where every translation is an array of requested
-		verses, where every verse has <a href="#verse_fields">these fields</a>. Here is the example of the result:</p>
-	<pre>[
+)</pre
+    >
+    <p>
+      The result of this request will be an array of translations where every
+      translation is an array of requested verses, where every verse has
+      <a href="#verse_fields">these fields</a>. Here is the example of the
+      result:
+    </p>
+    <pre>
+[
   [
     {
       "pk": 1145257,
@@ -237,15 +383,19 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Hast thou set thy heart unto My servant Job because there is none like him in the land, a man perfect and upright, fearing God and turning aside from evil? and still he is keeping hold on his integrity, and thou dost move Me against him to swallow him up for nought!'"
     }
   ]
-]</pre>
+]</pre
+    >
 
-	<h2 id="Fetch a verse">Fetch a verse(s)</h2>
-	<p>You may need this a lot. To fetch a single verse of a few verses of a single translation you should use the
-		compare API as I mantion it above. Just pass the translation code as array with single item, chapter number,
-		book code and array with verse
-		/ verses and you will get it.</p>
-	<p>Imba example.</p>
-	<pre>window.fetch("/get-paralel-verses/", {
+    <h2 id="Fetch a verse">Fetch a verse(s)</h2>
+    <p>
+      You may need this a lot. To fetch a single verse of a few verses of a
+      single translation you should use the compare API as I mantion it above.
+      Just pass the translation code as array with single item, chapter number,
+      book code and array with verse / verses and you will get it.
+    </p>
+    <p>Imba example.</p>
+    <pre>
+window.fetch("/get-paralel-verses/", {
 	method: "POST",
 	cache: "no-cache",
 	headers: {
@@ -267,18 +417,22 @@ window.fetch("/get-paralel-verses/", {
 .then(do |resdata|
 	translations_with_verses = resdata
 	console.log(resdata)
-)</pre>
-	<p>Curl code</p>
-	<pre>curl --location --request POST 'https://bolls.life/get-paralel-verses/' \
+)</pre
+    >
+    <p>Curl code</p>
+    <pre>
+curl --location --request POST 'https://bolls.life/get-paralel-verses/' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "translations": "[\"ESV\"]",
     "verses": "[1]",
     "book": 9,
     "chapter": 4
-}'</pre>
-	<p>Here is example of the response. YLT translation, Job (18) 2:6</p>
-	<pre>[
+}'</pre
+    >
+    <p>Here is example of the response. YLT translation, Job (18) 2:6</p>
+    <pre>
+[
   [
     {
       "pk": 36112,
@@ -289,32 +443,149 @@ window.fetch("/get-paralel-verses/", {
       "text": "And Jehovah saith unto the Adversary, 'Lo, he [is] in thy hand; only his life take care of.'"
     }
   ]
-]</pre>
-	<p>As you see it is the same as <a href='#compare'>Compare translation API</a>. More detailes about the fields of
-		this request see the <a href='#compare'>Compare translation API</a>.</p>
+]</pre
+    >
+    <p>
+      As you see it is the same as
+      <a href="#compare">Compare translation API</a>. More detailes about the
+      fields of this request see the
+      <a href="#compare">Compare translation API</a>.
+    </p>
 
+    <h2 id="Fetch any verses">Fetch any verses</h2>
+    <p class="last-update">New from 28 June 2022.</p>
+    <p>
+      Sometimes one my need to fetch a few verses from different places of all
+      of the Bible. This API allow to do that. In the body you should provide
+      and array of Bible places you wanna fetch:
+    </p>
+    <ul>
+      <li>The <code>translation</code> field must contain translation code</li>
+      <li>The <code>book</code> field must contain book code</li>
+      <li>The <code>chapter</code> field must contain chapter number</li>
+      <li>The <code>verses</code> field must contain array of verses numbers</li>
+    </ul>
+    <p>Here is an example:</p>
+    <pre>
+window.fetch('/get-verses/', {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json'
+	},
+	body: JSON.stringify([
+		{
+			translation: settings.translation,
+			book: settings.book,
+			chapter: settings.chapter,
+			verses: [14, 15, 16]
+		},
+		{
+			translation: 'KJV',
+			book: 19,
+			chapter: 91,
+			verses: [1, 2, 3]
+		}
+	])
+}).then(do(response) response.json()).then(do(data)
+	console.log(data)
+).catch(do(error) console.log('Error:', error))
+</pre
+    >
+    <p>That will result in the next way:</p>
+    <pre>
+[
+	[
+		{
+			"pk": 23228,
+			"translation": "YLT",
+			"book": 1,
+			"chapter": 1,
+			"verse": 14,
+			"text": "And God saith, 'Let luminaries be in the expanse of the heavens, to make a separation between the day and the night, then they have been for signs, and for seasons, and for days and years,"
+		},
+		{
+			"pk": 23229,
+			"translation": "YLT",
+			"book": 1,
+			"chapter": 1,
+			"verse": 15,
+			"text": "and they have been for luminaries in the expanse of the heavens to give light upon the earth:' and it is so."
+		},
+		{
+			"pk": 23230,
+			"translation": "YLT",
+			"book": 1,
+			"chapter": 1,
+			"verse": 16,
+			"text": "And God maketh the two great luminaries, the great luminary for the rule of the day, and the small luminary -- and the stars -- for the rule of the night;"
+		}
+	],
+	[
+		{
+			"pk": 2743734,
+			"translation": "KJV",
+			"book": 19,
+			"chapter": 91,
+			"verse": 1,
+			"text": "He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty."
+		},
+		{
+			"pk": 2743735,
+			"translation": "KJV",
+			"book": 19,
+			"chapter": 91,
+			"verse": 2,
+			"text": "I will say of the LORD, He is my refuge and my fortress: my God; in him will I trust."
+		},
+		{
+			"pk": 2743736,
+			"translation": "KJV",
+			"book": 19,
+			"chapter": 91,
+			"verse": 3,
+			"text": "Surely he shall deliver thee from the snare of the fowler, and from the noisome pestilence."
+		}
+	]
+]
+</pre
+    >
 
-	<h2 id="dictionary">Dictionary definition for Hebrew and Greek words</h2>
-	<p class='last-update'> New from 23 December 2021.</p>
-	<p> This API is used to get a list of definitions for a Hebrew or Greek word, if such do exist in a dictionary.
-		If there are no definitions for requested query -- an empty array is returned.
-		The API looks in the next way:
-	</p>
-	<pre>https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</pre>
-	<p>Where: <code>dict</code> is an abbreviation of dictionary that should be used.
-		At this moment there are available only to dictionaries:
-		<code>BDBT</code> - <em>Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek Definitions</em>
-		and <code>RUSD</code> - <em>Полный лексикон по Стронгу и Дворецкому, 2019</em>
-		(<a href="https://bolls.life/static/bolls/app/views/dictionaries.json" target="_blank">https://bolls.life/static/bolls/app/views/dictionaries.json<a>).
-		<code>query</code> is a string -- anything in Greek or Hebrew.
-		You may also search for English/Russian words and it will return <em>some</em> relative Hebrew/Greek words and their definitions.
-		<code>query</code> also may be a strong number like <code>H125</code> or <code>G523</code>
-		- it will return a particular definition under that Strong number.
-		In result you will get a JSON array - empty or with definitions XD. For example the next request will return an array of definitions for the Hebrew word <code>אֹ֑ור</code> (light):
-	</p>
-	<pre><a target="_blank" href="https://bolls.life/dictionary-definition/BDBT/אֹ֑ור">https://bolls.life/dictionary-definition/BDBT/אֹ֑ור</a></pre>
-	<p>Result:</p>
-	<pre>
+    <h2 id="dictionary">Dictionary definition for Hebrew and Greek words</h2>
+    <p class="last-update">New from 23 December 2021.</p>
+    <p>
+      This API is used to get a list of definitions for a Hebrew or Greek word,
+      if such do exist in a dictionary. If there are no definitions for
+      requested query -- an empty array is returned. The API looks in the next
+      way:
+    </p>
+    <pre>
+https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</pre
+    >
+    <p>
+      Where: <code>dict</code> is an abbreviation of dictionary that should be
+      used. At this moment there are available only to dictionaries:
+      <code>BDBT</code> -
+      <em
+        >Brown-Driver-Briggs' Hebrew Definitions / Thayer's Greek
+        Definitions</em
+      >
+      and <code>RUSD</code> -
+      <em>Полный лексикон по Стронгу и Дворецкому, 2019</em> (<a
+        href="https://bolls.life/static/bolls/app/views/dictionaries.json"
+        target="_blank"
+        >https://bolls.life/static/bolls/app/views/dictionaries.json</a
+      >). <code>query</code> is a string -- anything in Greek or Hebrew. You may
+      also search for English/Russian words and it will return
+      <em>some</em> relative Hebrew/Greek words and their definitions.
+      <code>query</code> also may be a strong number like <code>H125</code> or
+      <code>G523</code> - it will return a particular definition under that
+      Strong number. In result you will get a JSON array - empty or with
+      definitions XD. For example the next request will return an array of
+      definitions for the Hebrew word <code>אֹ֑ור</code> (light):
+    </p>
+    <pre><a target="_blank" href="https://bolls.life/dictionary-definition/BDBT/אֹ֑ור">https://bolls.life/dictionary-definition/BDBT/אֹ֑ור</a></pre>
+    <p>Result:</p>
+    <pre>
 [
   {
     "topic": "H215",
@@ -353,32 +624,48 @@ window.fetch("/get-paralel-verses/", {
     "weight": 1
   }
 ]
-	</pre>
-	<p>Every definition contains next fields:</p>
-	<ul>
-		<li><code>topic</code> - a Strong number.</li>
-		<li><code>definition</code> - an HTML string with the definition text.</li>
-		<li><code>lexeme</code> - the found word itself.</li>
-		<li><code>transliteration</code> - transliteration of the found word.</li>
-		<li><code>pronunciation</code> - pronunciation of the found word</li>
-		<li><code>short_definition</code> - short definition of the word, by which, between, the word can be found with English/Russian query</li>
-		<li><code>weight</code> - a number indicating how close is the matched word to the query on the scale from 0 to 1</li>
-	</ul>
+	</pre
+    >
+    <p>Every definition contains next fields:</p>
+    <ul>
+      <li><code>topic</code> - a Strong number.</li>
+      <li>
+        <code>definition</code> - an HTML string with the definition text.
+      </li>
+      <li><code>lexeme</code> - the found word itself.</li>
+      <li><code>transliteration</code> - transliteration of the found word.</li>
+      <li><code>pronunciation</code> - pronunciation of the found word</li>
+      <li>
+        <code>short_definition</code> - short definition of the word, by which,
+        between, the word can be found with English/Russian query
+      </li>
+      <li>
+        <code>weight</code> - a number indicating how close is the matched word
+        to the query on the scale from 0 to 1
+      </li>
+    </ul>
 
+    <h3 id="Notes">Notes</h3>
+    <ul>
+      <li>
+        Every verse text should be interpreted as an html string. There may
+        appear some tags like <code>&lt;/br></code> or
+        <code>&lt;i>&lt;/i></code>. Or display the text as HTML or clean up the
+        text.
+      </li>
+    </ul>
 
-	<h3 id='Notes'>Notes</h3>
-	<ul>
-		<li>Every verse text should be interpreted as an html string. There may appear some tags like
-			<code>&lt;/br></code> or <code>&lt;i>&lt;/i></code>. Or display the text
-			as HTML or clean up the text.</li>
-	</ul>
-
-	<footer id='contact_me' style="padding-bottom: 256px;">
-		<h3>Contact me</h3>
-		<address>
-			<p>If you have any further questions <a href="mailto:bpavlisinec@gmail.com">you can mail me</a> or <a target="_blank" href="https://t.me/Boguslavv">text me in Telegram</a></p>
-		</address>
-	</footer>
-</body>
-
+    <footer id="contact_me" style="padding-bottom: 256px">
+      <h3>Contact me</h3>
+      <address>
+        <p>
+          If you have any further questions
+          <a href="mailto:bpavlisinec@gmail.com">you can mail me</a> or
+          <a target="_blank" href="https://t.me/Boguslavv"
+            >text me in Telegram</a
+          >
+        </p>
+      </address>
+    </footer>
+  </body>
 </html>

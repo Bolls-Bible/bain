@@ -405,6 +405,48 @@ def getParallelVerses(request):
             else:
                 return HttpResponse("Body fields are incorrect", status=400)
         except:
+            return HttpResponse("Body json is incorrect", status=400)
+    else:
+        return HttpResponse("The request should be POSTed", status=400)
+
+
+@csrf_exempt
+def getVerses(request):
+    if request.method == 'POST':
+        try:
+            received_json_data = json.loads(request.body)
+            print(received_json_data)
+            if received_json_data:
+                response = []
+                query_set = []
+                for text in received_json_data:
+                    for verse in text["verses"]:
+                        print(text["translation"], text["book"],
+                              text["chapter"], verse)
+                        query_set.append("Q(translation=\"" + text["translation"] + "\", book=" +
+                                         str(text["book"]) + ", chapter=" + str(text["chapter"]) + ", verse=" + str(verse) + ")")
+
+                query = ' | '.join(query_set)
+                queryres = Verses.objects.filter(eval(query))
+
+                for text in received_json_data:
+                    verses = []
+                    for verse in text["verses"]:
+                        for item in queryres:
+                            if item.translation == text["translation"] and item.book == text["book"] and item.chapter == text["chapter"] and item.verse == verse:
+                                verses.append({
+                                    "pk": item.pk,
+                                    "translation": item.translation,
+                                    "book": item.book,
+                                    "chapter": item.chapter,
+                                    "verse": item.verse,
+                                    "text": item.text,
+                                })
+                    response.append(verses)
+                return JsonResponse(response, safe=False)
+            else:
+                return HttpResponse("Body fields are incorrect", status=400)
+        except:
             return HttpResponse("Body fields are incorrect", status=400)
     else:
         return HttpResponse("The request should be POSTed", status=400)

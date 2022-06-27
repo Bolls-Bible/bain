@@ -25,6 +25,7 @@ urlpatterns = [
     path('get-translation/<slug:translation>/',
          views.getTranslation),
     path('get-paralel-verses/', views.getParallelVerses),
+    path('get-verses/', views.getVerses),
     path('get-searched-bookmarks/<str:query>/<int:range_from>/<int:range_to>/',
          views.getSearchedProfileBookmarks),
     path('get-notes-bookmarks/<int:range_from>/<int:range_to>/',
