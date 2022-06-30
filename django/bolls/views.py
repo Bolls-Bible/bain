@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.template import RequestContext
-from django.http import Http404, JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse
 
 from bolls.books_map import *
 from bolls.forms import SignUpForm
@@ -752,9 +752,9 @@ def getBooks(_, translation):
     try:
         with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
             data = json.load(json_file)
-            return JsonResponse(data[translation.upper()], safe=False)
+            return JsonResponse(data[translation], safe=False)
     except:
-        return Http404()
+        return HttpResponse("Wrong translation: " + translation, status=404);
 
 
 def downloadNotes(request):
