@@ -58,7 +58,7 @@ docker exec -i db_dev psql -U django_dev -d cotton -c "\copy bolls_commentary(tr
 
 Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then zip it. You may find examples in that folder. Otherwise the user will not be able to download it.
 
-If it times out try to get it from inside container, `wget -O KB.json -timeout=0 localhost:8000/get-translation/<translation-abbrevition>/`
+If it times out try to get it from inside container, `wget -O verses.json -timeout=0 localhost:8000/get-translation/<translation-abbrevition>/`.
 
 ### Test it.
 

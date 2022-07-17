@@ -248,6 +248,12 @@
         "full_name": "Nueva Traducción Viviente, 2009",
         "info": "https://es.wikipedia.org/wiki/Nueva_Traducci%C3%B3n_Viviente",
         "updated": 1635446313426
+      },
+      {
+        "short_name": "LBLA",
+        "full_name": "La Biblia de las Américas, 1997",
+        "info": "https://www.lockman.org/lbla/la-biblia-de-las-americas-biblia-de-estudio-lbla/",
+        "updated": 1635446313426
       }
     ]
   },
