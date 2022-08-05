@@ -752,7 +752,7 @@ def getBooks(_, translation):
     try:
         with open(BASE_DIR + '/bolls/static/bolls/app/views/translations_books.json') as json_file:
             data = json.load(json_file)
-            return JsonResponse(data[translation], safe=False)
+            return cross_origin(JsonResponse(data[translation], safe=False))
     except:
         return HttpResponse("Wrong translation: " + translation, status=404);
 
