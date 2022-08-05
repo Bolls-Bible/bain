@@ -2629,7 +2629,7 @@ tag bible-reader
 													<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
 							if !settings.filtered_books.length
 								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search> data.lang.search
+				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search>
 				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
@@ -2659,17 +2659,17 @@ tag bible-reader
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
 							#main_header_arrow_size = "min(64px, max({max_header_font}em, {chapter_headers.fontsize1}em))"
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
-								<a.arrow @click.prevent.stop.prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
+								<a.arrow @click.prevent.stop=prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settings.name_of_book, ' ', settings.chapter
 
-								<a.arrow @click.prevent.stop.nextChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop=nextChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settings.name_of_book, ' ', settings.chapter
+						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px us:none]> settings.name_of_book, ' ', settings.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 							for verse, verse_index in verses
 								let bukmark = getBookmark(verse.pk, 'bookmarks')
@@ -2702,11 +2702,11 @@ tag bible-reader
 									unless settings.verse_number
 										<span.ws> '	'
 						<.arrows>
-							<a.arrow @click.prevent.prevChapter() title=data.lang.prev href="{prevChapterLink()}">
+							<a.arrow @click.prevent=prevChapter() title=data.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							<a.arrow @click.prevent.nextChapter() title=data.lang.next href="{nextChapterLink()}">
+							<a.arrow @click.prevent=nextChapter() title=data.lang.next href="{nextChapterLink()}">
 								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
 									<title> data.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -2728,7 +2728,7 @@ tag bible-reader
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
 								settingsp.name_of_book, ' ', settingsp.chapter
-						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px]> settingsp.name_of_book, ' ', settingsp.chapter
+						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px us:none]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 							for parallel_verse, verse_index in parallel_verses
 								let super_style = "padding-bottom:{0.8 * settings.font.line-height}em;padding-top:{settings.font.line-height - 1}em"
@@ -2973,8 +2973,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.85 🗓 "
-						<time dateTime='2022-06-26'> "26.06.2022"
+						"🍇 v2.1.87 🗓 "
+						<time dateTime='2022-08-05'> "05.08.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3295,8 +3295,8 @@ tag bible-reader
 
 
 											for translation in search.suggestions.translations
-												<li.book_in_list.focusable tabIndex="0" [display: flex]>
-													<span @click=changeTranslation(translation.short_name)>
+												<li.book_in_list.focusable tabIndex="0" [display: flex] @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
+													<span>
 														<b> translation.short_name
 														', '
 														translation.full_name
