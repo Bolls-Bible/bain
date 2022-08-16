@@ -2177,6 +2177,7 @@ tag bible-reader
 
 	def slideend touch
 		touch = touch.changedTouches[0]
+		log touch
 
 		touch.dy = slidetouch.clientY - touch.clientY
 		touch.dx = slidetouch.clientX - touch.clientX
@@ -2194,14 +2195,15 @@ tag bible-reader
 		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !store.show_history && !choosenid.length
 			if window.innerWidth > 600
 				if touch.dx < -32
-					settingsp.display && touch.x > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
+					settingsp.display && touch.clientX > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.x > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
+					settingsp.display && touch.clientX > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
 			else
 				if touch.dx < -32
-					settingsp.display && touch.y > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
+					log touch.y > window.innerHeight, touch.y, touch
+					settingsp.display && touch.clientY > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.y > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
+					settingsp.display && touch.clientY > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
 
 		slidetouch = null
 		inzone = no
@@ -2378,7 +2380,7 @@ tag bible-reader
 			if $main.contains(rangeContainer)
 				let viewportRectangle = range.getBoundingClientRect()
 				host_rectangle = {
-					top: viewportRectangle.top + settings.font.size * settings.font.line-height
+					top: viewportRectangle.top + settings.font.size * 1.4
 					left: 'auto'
 					right: 'auto'
 					width: viewportRectangle.width
@@ -2726,8 +2728,17 @@ tag bible-reader
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {chapter_headers.fontsize2}em] title=translationFullName(settingsp.translation)>
+							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize2}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settingsp.translation)>
+								<a.arrow @click.prevent.stop=prevChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
+									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.prev
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settingsp.name_of_book, ' ', settingsp.chapter
+
+								<a.arrow @click.prevent.stop=nextChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
+									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
+										<title> data.lang.next
+										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px us:none]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 							for parallel_verse, verse_index in parallel_verses
@@ -2973,8 +2984,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.87 🗓 "
-						<time dateTime='2022-08-05'> "05.08.2022"
+						"🍇 v2.1.88 🗓 "
+						<time dateTime='2022-08-17'> "17.08.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3593,6 +3604,7 @@ tag bible-reader
 					@hotkey('s').prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('f').prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
+					@hotkey('mod+d').prevent.stop=showDictionaryView
 					@hotkey('escape').force.prevent.stop=clearSpace
 					@hotkey('mod+y').prevent.stop=fixDrawers
 					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)

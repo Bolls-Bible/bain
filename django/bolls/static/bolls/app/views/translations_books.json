@@ -26548,5 +26548,469 @@
       "chronorder": 65,
       "chapters": 22
     }
+  ],
+  "PHIL": [
+    {
+      "bookid": 1,
+      "name": "Буття",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Вихід",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Левит",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Числа",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Второзаконня",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Книга Ісуса Навина",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Книга суддів Ізраїлевих",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Книга Руфі",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "Перша книга Царств",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "Друга книга Царств",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "Третя книга Царств",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "Четверта книга Царств",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "Перша книга Паралипоменон",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "Друга книга Паралипоменон",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Перша книга Ездри",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Книга Неємії",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 67,
+      "name": "Друга книга Ездри*",
+      "chronorder": 67,
+      "chapters": 9
+    },
+    {
+      "bookid": 68,
+      "name": "Книга Товита*",
+      "chronorder": 68,
+      "chapters": 14
+    },
+    {
+      "bookid": 69,
+      "name": "Книга Юдифі*",
+      "chronorder": 69,
+      "chapters": 16
+    },
+    {
+      "bookid": 17,
+      "name": "Книга Есфирі",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Книга Іова",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Псалтир",
+      "chronorder": 13,
+      "chapters": 151
+    },
+    {
+      "bookid": 20,
+      "name": "Книга притч Соломонових",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Книга Екклезіаста, або Проповідника",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Книга пісні пісень Соломона",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 70,
+      "name": "Книга премудрости Соломона*",
+      "chronorder": 70,
+      "chapters": 19
+    },
+    {
+      "bookid": 71,
+      "name": "Книга премудрости Ісуса, сина Сирахового*",
+      "chronorder": 71,
+      "chapters": 51
+    },
+    {
+      "bookid": 23,
+      "name": "Книга пророка Ісаї",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Книга пророка Єремії",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Книга плач Єремії",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 72,
+      "name": "Послання Єремії*",
+      "chronorder": 72,
+      "chapters": 1
+    },
+    {
+      "bookid": 73,
+      "name": "Книга пророка Варуха*",
+      "chronorder": 73,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Книга пророка Єзекиїля",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Книга пророка Даниїла",
+      "chronorder": 33,
+      "chapters": 14
+    },
+    {
+      "bookid": 28,
+      "name": "Книга пророка Осії",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Книга пророка Іоїля",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Книга пророка Амоса",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Книга пророка Авдія",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Книга пророка Іони",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Книга пророка Михея",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Книга порока Наума",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Книга пророка Аввакума",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Книга пророка Софонії",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Книга пророка Аггея",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Книга пророка Захарії",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Книга пророка Малахії",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 74,
+      "name": "Перша книга Маккавейська*",
+      "chronorder": 74,
+      "chapters": 16
+    },
+    {
+      "bookid": 75,
+      "name": "Друга книга Маккавейська*",
+      "chronorder": 75,
+      "chapters": 15
+    },
+    {
+      "bookid": 76,
+      "name": "Третя книга Маккавейська*",
+      "chronorder": 76,
+      "chapters": 7
+    },
+    {
+      "bookid": 77,
+      "name": "Третя книга Ездри*",
+      "chronorder": 77,
+      "chapters": 16
+    },
+    {
+      "bookid": 40,
+      "name": "Від Матфея святе благовістування",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Від Марка святе благовістування",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Від Луки святе благовістування",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Від Іоана святе благовістування",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Діяння святих апостолів",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 59,
+      "name": "Послання Якова",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "Перше послання Петра",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "Друге послання Петра",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "Перше послання Іоана",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "Друге послання Іоана",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "Третє послання Іоана",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Послання Іуди",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 45,
+      "name": "Послання до римлян",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "Перше послання до коринф’ян",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "Друге послання до коринф’ян",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Послання до галатів",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Послання до ефесян",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Послання до филип’ян",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Послання до колосян",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "Перше послання до солунян (фессалонікійців)",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "Друге послання до солунян (фессалонікійців)",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "Перше послання до Тимофія",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "Друге послання до Тимофія",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Послання до Тита",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Послання до Филимона",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Послання до євреїв",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 66,
+      "name": "Одкровення святого Іоана Богослова (Апокаліпсис)",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }

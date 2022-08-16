@@ -26,7 +26,7 @@
     "@codemirror/lang-markdown": "^0.19.4",
     "@codemirror/state": "^0.19.6",
     "@codemirror/view": "^0.19.40",
-    "imba": "^2.0.0-alpha.186",
+    "imba": "^2.0.0-alpha.213",
     "rehype-sanitize": "^5.0.1",
     "rehype-stringify": "^9.0.2",
     "remark-parse": "^10.0.1",

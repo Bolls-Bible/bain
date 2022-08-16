@@ -102,5 +102,5 @@ UPDATE bolls_verses SET translation = ('DELETED') where translation = 'KJV';
 
 
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/LBLA.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/PHIL.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/django/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;

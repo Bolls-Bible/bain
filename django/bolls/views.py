@@ -653,6 +653,11 @@ def stripVowels(raw_string):
         # Replace some letters, which are not present in a given unicode range, manually.
         res = res.replace('שׁ', 'ש')
         res = res.replace('שׂ', 'ש')
+        res = res.replace('ץ', 'צ')
+        res = res.replace('ם', 'מ')
+        res = res.replace('ן', 'נ')
+        res = res.replace('ך', 'כ')
+        res = res.replace('ף', 'פ')
 
     res = res.replace('‎', '')
     return res
@@ -688,7 +693,7 @@ def parseLinks(text, translation):
     return result
 
 
-def searchInDictionary(request, dict, query):
+def searchInDictionary(_, dict, query):
     query = query.strip()
     unaccented_query = stripVowels(query.lower())
 
