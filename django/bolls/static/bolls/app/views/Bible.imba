@@ -1,4 +1,4 @@
-import *  as BOOKS from "./translations_books.json"
+import {default as BOOKS} from "./translations_books.json"
 import languages from "./languages.json"
 import dictionaries from "./dictionaries.json"
 import './Profile'

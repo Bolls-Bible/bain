@@ -1,73 +1,124 @@
-{% load static %}
-{% load i18n %}
+{% load static %} {% load i18n %}
 <!DOCTYPE html>
-<html data-accent='golddark' data-theme="dark" data-transitions="true" data-pukaka='no' lang='en'>
+<html
+  data-accent="golddark"
+  data-theme="dark"
+  data-transitions="true"
+  data-pukaka="no"
+  lang="en"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bolls Bible</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static 'apple-touch-icon.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'favicon-32x32.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'favicon-16x16.png' %}"
+    />
+    <link rel="manifest" href="{% static 'site.webmanifest' %}" />
+    {% if translation and not verse %}
+    <link
+      rel="canonical"
+      href="https://bolls.life/{{translation}}/{{book}}/{{chapter}}/"
+    />
+    {% endif %}
+    <meta property="og:site_name" content="Bolls Bible" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width,minimum-scale=1,maximum-scale=5,initial-scale=1"
+    />
+    {% if description %}
+    <meta name="description" content="{{ description }}" />
+    <meta property="og:description" content="{{ description }}" />
+    {% else %}
+    <meta
+      name="description"
+      content="A web app for reading the Bible with full emphasis on the God`s Word only. Sola scriptura"
+    />
+    <meta
+      property="og:description"
+      content="Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."
+    />
+    {% endif %}
+    <meta property="og:title" content="Bolls Bible" />
+    <meta property="og:image" content="{% static 'bolls.png' %}" />
+    <meta name="theme-color" content="#04060c" />
+    <meta name="twitter:card" content="app" />
+    <meta name="twitter:title" content="Bolls Bible" />
+    <meta name="twitter:image:src" content="{% static 'bolls.png' %}" />
+    <meta name="twitter:image:alt" content="Bolls logo" />
+    <meta name="twitter:app:name:googleplay" content="Bolls" />
+    <meta name="twitter:app:id:googleplay" content="life.bolls.bolls" />
+    <script>
+      {% if message %}
+      	window.message = "{{ message }}";{% endif %}
+      {%if translation %}
+      	window.translation = "{{ translation }}";
+      	window.book = {{ book}};
+      	window.chapter = {{ chapter }};
+      	window.verses = {{ verses | safe }};
+      	{% if verse %}
+      		window.verse = {{ verse }};
+      		{% if endverse %}
+      			window.endverse = {{ endverse }};{% endif %}{% endif %}{% endif %}
+    </script>
+    <script src="{% static 'bolls/dexie.min.js' %}"></script>
 
-<head>
-	<meta charset="UTF-8">
-	<title>Bolls Bible</title>
-	<script>
-{% if message %}
-	window.message = "{{ message }}";{% endif %}
-{%if translation %}
-	window.translation = "{{ translation }}";
-	window.book = {{ book}};
-	window.chapter = {{ chapter }};
-	window.verses = {{ verses | safe }};
-	{% if verse %}
-		window.verse = {{ verse }};
-		{% if endverse %}
-			window.endverse = {{ endverse }};{% endif %}{% endif %}{% endif %}
-	</script>
-	<script src="{% static 'bolls/dist/dexie.min.js' %}"></script>
-	<script src="{% static 'bolls/dist/public/__assets__/app/client.js' %}" async></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'bolls/dist/index.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'bolls/fonts/fontstylesheet.css' %}"
+    />
 
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/public/__assets__/app/client.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/dist/index.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'bolls/fonts/fontstylesheet.css' %}">
+    {% for asset in assets %} {% if asset.type == 'js' %}
+    <script src="{{ asset.url }}" type="module"></script>
+    {% else %}
+    <link rel="stylesheet" type="text/css" href="{{ asset.url }}" />
+    {% endif %} {% endfor %}
+  </head>
 
-	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
-	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
-	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
-	<link rel="manifest" href="{% static 'site.webmanifest' %}">
-{% if translation and not verse %}
-	<link rel="canonical" href="https://bolls.life/{{translation}}/{{book}}/{{chapter}}/">
-{% endif %}
-	<meta property="og:site_name" content="Bolls Bible">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=5,initial-scale=1">
-{% if description %}
-	<meta name="description" content="{{ description }}">
-	<meta property="og:description" content="{{ description }}">
-{% else %}
-	<meta name="description" content="A web app for reading the Bible with full emphasis on the God`s Word only. Sola scriptura">
-	<meta property="og:description" content="Read God`s Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more.">
-{% endif %}
-	<meta property="og:title" content="Bolls Bible">
-	<meta property="og:image" content="{% static 'bolls.png' %}">
-	<meta name="theme-color" content="#04060c" />
-	<meta name="twitter:card" content="app">
-	<meta name="twitter:title" content="Bolls Bible">
-	<meta name="twitter:image:src" content="{% static 'bolls.png' %}">
-	<meta name="twitter:image:alt" content="Bolls logo">
-	<meta name="twitter:app:name:googleplay" content="Bolls">
-	<meta name="twitter:app:id:googleplay" content="life.bolls.bolls">
-</head>
-
-<body oncontextmenu="return false;">
-	<script>
-		if ('serviceWorker' in navigator) {
-			window.addEventListener('load', function () {
-				navigator.serviceWorker.register("/sw.js").then(function (registration) {
-					console.log('ServiceWorker registration successful with scope: ', registration.scope);
-					registration.update();
-				}, function (err) {
-					console.log('ServiceWorker registration failed: ', err);
-				});
-			});
-		}
-	</script>
-	<noscript><p style="color: var(--c)">{% trans "Unfortunately, this site requires JavaScript that is disabled in your browser :(" %}</p></noscript>
-</body>
-
+  <body oncontextmenu="return false;">
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js").then(
+            function (registration) {
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope
+              );
+              registration.update();
+            },
+            function (err) {
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
+        });
+      }
+    </script>
+    <noscript
+      ><p style="color: var(--c)">
+        {% trans "Unfortunately, this site requires JavaScript that is disabled
+        in your browser :(" %}
+      </p></noscript
+    >
+  </body>
 </html>

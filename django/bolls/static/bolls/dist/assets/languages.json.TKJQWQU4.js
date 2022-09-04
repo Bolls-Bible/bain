@@ -1,0 +1,515 @@
+export default [
+  {
+    "language": "English",
+    "translations": [
+      {
+        "short_name": "YLT",
+        "full_name": "Young's Literal Translation (1898)",
+        "info": "https://wikipedia.org/wiki/Young%27s_Literal_Translation",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "KJV",
+        "full_name": "King James Version 1769 with Apocrypha",
+        "info": "https://wikipedia.org/wiki/King_James_Version",
+        "updated": 1624014765325
+      },
+      {
+        "short_name": "NKJV",
+        "full_name": "New King James Version, 1982",
+        "info": "https://wikipedia.org/wiki/New_King_James_Version",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "WEB",
+        "full_name": "World English Bible",
+        "info": "https://wikipedia.org/wiki/World_English_Bible",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "RSV",
+        "full_name": "Revised Standard Version (1952)",
+        "info": "https://wikipedia.org/wiki/Revised_Standard_Version",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "CJB",
+        "full_name": "The Complete Jewish Bible (1998)",
+        "info": "https://wikipedia.org/wiki/Messianic_Bible_translations#Complete_Jewish_Bible_(CJB)",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "TS2009",
+        "full_name": "The Scriptures 2009",
+        "info": "https://isr-messianic.org/publications/the-scriptures.html",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "LXXE",
+        "full_name": "English version of the Septuagint Bible, 1851",
+        "info": "https://ebible.org/eng-Brenton/",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "TLV",
+        "full_name": "Tree of Life Version",
+        "info": "https://www.tlvbiblesociety.org/tree-of-life-version",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "NASB",
+        "full_name": "New American Standard Bible (1995)",
+        "info": "https://wikipedia.org/wiki/New_American_Standard_Bible",
+        "updated": 1598253681687
+      },
+      {
+        "short_name": "ESV",
+        "full_name": "English Standard Version 2001, 2016",
+        "info": "https://en.wikipedia.org/wiki/English_Standard_Version",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "GNV",
+        "full_name": "Geneva Bible (1599)",
+        "info": "https://wikipedia.org/wiki/Geneva_Bible",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "DRB",
+        "full_name": "Douay Rheims Bible",
+        "info": "https://en.wikipedia.org/wiki/Douay%E2%80%93Rheims_Bible",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "NIV",
+        "full_name": "New International Version, 1984",
+        "info": "https://en.wikipedia.org/wiki/New_International_Version",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "NLT",
+        "full_name": "New Living Translation, 2015",
+        "info": "https://en.wikipedia.org/wiki/New_Living_Translation",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "NRSVCE",
+        "full_name": "New Revised Standard Version Catholic Edition, 1993",
+        "info": "https://en.wikipedia.org/wiki/New_Revised_Standard_Version_Catholic_Edition",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "NET",
+        "full_name": "New English Translation, 2007",
+        "info": "https://en.wikipedia.org/wiki/New_English_Translation",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "NJB1985",
+        "full_name": "New Jerusalem Bible, 1985",
+        "info": "https://en.wikipedia.org/wiki/New_Jerusalem_Bible",
+        "updated": 1635188106109
+      }
+    ]
+  },
+  {
+    "language": "Hebrew עברית",
+    "translations": [
+      {
+        "short_name": "WLC",
+        "full_name": "Westminster Leningrad Codex (with Vowels)",
+        "info": "https://wikipedia.org/wiki/Leningrad_Codex",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "WLCC",
+        "full_name": "Westminster Leningrad Codex (Consonants)",
+        "info": "https://wikipedia.org/wiki/Leningrad_Codex",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "HAC",
+        "full_name": "כֶּתֶר אֲרָם צוֹבָא - Tanah Aleppo Codex",
+        "info": "https://en.wikipedia.org/wiki/Aleppo_Codex",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Українська Ukrainian",
+    "translations": [
+      {
+        "short_name": "UBIO",
+        "full_name": "Біблія, Іван Іванович Огієнко 1962",
+        "info": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%97_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%9E%D0%B3%D1%96%D1%94%D0%BD%D0%BA%D0%B0",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "UKRK",
+        "full_name": "Біблія. Пантелеймон Александрович Куліш, Іван Семенович Нечуй-Левицький, Іван Павлович Пулюй,1903",
+        "info": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4%D0%B8_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%97_%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D1%8E_%D0%BC%D0%BE%D0%B2%D0%BE%D1%8E#%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4_%D0%9F%D0%B0%D0%BD%D1%82%D0%B5%D0%BB%D0%B5%D0%B9%D0%BC%D0%BE%D0%BD%D0%B0_%D0%9A%D1%83%D0%BB%D1%96%D1%88%D0%B0,_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%9F%D1%83%D0%BB%D1%8E%D1%8F,_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%9D%D0%B5%D1%87%D1%83%D0%B9-%D0%9B%D0%B5%D0%B2%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE",
+        "updated": 1653205808333
+      },
+      {
+        "short_name": "HOM",
+        "full_name": "Святе Письмо, Переклад Івана Хоменка, 1963",
+        "info": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4%D0%B8_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%97_%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D1%8E_%D0%BC%D0%BE%D0%B2%D0%BE%D1%8E#%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4_%D0%86%D0%B2%D0%B0%D0%BD%D0%B0_%D0%A5%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%B0",
+        "updated": 1591185595163
+      },
+      {
+        "short_name": "UTT",
+        "full_name": "Українська Біблія LXX УБТ Рафаїла Турконяка (2011) 77 книг",
+        "info": "https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%B4%D0%B8_%D0%91%D1%96%D0%B1%D0%BB%D1%96%D1%97_%D0%A0%D0%B0%D1%84%D0%B0%D1%97%D0%BB%D0%B0_%D0%A2%D1%83%D1%80%D0%BA%D0%BE%D0%BD%D1%8F%D0%BA%D0%B0",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "UMT",
+        "full_name": "Свята Біблія: Сучасною мовою",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "PHIL",
+        "full_name": "Бiблiя. Переклад Патріарха ФІЛАРЕТА (Денисенка), 2004",
+        "updated": 1635188106109
+      }
+    ]
+  },
+  {
+    "language": "Русский Russian / Церковнославянский",
+    "translations": [
+      {
+        "short_name": "JNT",
+        "full_name": "Еврейский Новый Завет в переводе и комментариях Давида Стерна",
+        "info": "https://bohooslav.github.io/bolls_info/JNT/",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "NRT",
+        "full_name": "Новый Русский Перевод (НРП)",
+        "info": "https://ru.wikipedia.org/w/index.php?title=%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B5_%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4%D1%8B_%D0%91%D0%B8%D0%B1%D0%BB%D0%B8%D0%B8&stable=0#%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9_%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9_%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "SYNOD",
+        "full_name": "Русский Синодальный Перевод",
+        "info": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BD%D0%BE%D0%B4%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "RBS2",
+        "full_name": "Современный русский перевод, 2015",
+        "info": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4_%D0%91%D0%B8%D0%B1%D0%BB%D0%B8%D0%B8_(%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B5_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B5%D0%B9%D1%81%D0%BA%D0%BE%D0%B5_%D0%BE%D0%B1%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%BE)",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "CSL",
+        "full_name": "Библия Церковнославянская, 1900",
+        "info": "https://ru.wikipedia.org/wiki/%D0%A6%D0%B5%D1%80%D0%BA%D0%BE%D0%B2%D0%BD%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D1%8F%D0%BD%D1%81%D0%BA%D0%B8%D0%B5_%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4%D1%8B_%D0%91%D0%B8%D0%B1%D0%BB%D0%B8%D0%B8",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "BTI",
+        "full_name": "Библия под ред. М.П. Кулакова и М.М. Кулакова, 2015",
+        "info": "https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D0%BB%D0%B0%D0%BA%D0%BE%D0%B2,_%D0%9C%D0%B8%D1%85%D0%B0%D0%B8%D0%BB_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
+        "updated": 1635446313426
+      }
+    ]
+  },
+  {
+    "language": "Español Spanish",
+    "translations": [
+      {
+        "short_name": "BTX3",
+        "full_name": "La Biblia Textual 3ra Edicion",
+        "info": "http://www.labiblia.org/paginas/btx/",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "RV1960",
+        "full_name": "Reina-Valera 1960",
+        "info": "https://wikipedia.org/wiki/Reina-Valera",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "RV2004",
+        "full_name": "Reina Valera Gómez 2004",
+        "info": "https://wikipedia.org/wiki/Reina-Valera",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "PDT",
+        "full_name": "Palabra de Dios para Todos",
+        "info": "https://medium.com/libros-para-cristianos-inquietos/la-palabra-de-dios-para-todos-26f0f951b328",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "NVI",
+        "full_name": "Nueva Versión Internacional",
+        "info": "https://es.wikipedia.org/wiki/Nueva_Versi%C3%B3n_Internacional",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "NTV",
+        "full_name": "Nueva Traducción Viviente, 2009",
+        "info": "https://es.wikipedia.org/wiki/Nueva_Traducci%C3%B3n_Viviente",
+        "updated": 1635446313426
+      },
+      {
+        "short_name": "LBLA",
+        "full_name": "La Biblia de las Américas, 1997",
+        "info": "https://www.lockman.org/lbla/la-biblia-de-las-americas-biblia-de-estudio-lbla/",
+        "updated": 1635446313426
+      }
+    ]
+  },
+  {
+    "language": "Portuguese",
+    "translations": [
+      {
+        "short_name": "ARA",
+        "full_name": "Almeida Revista e Atualizada, 1993",
+        "info": "https://pt.wikipedia.org/wiki/Almeida_Revista_e_Atualizada",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "NTJud",
+        "full_name": "Novo Testamento Judaico",
+        "updated": 1591781197652
+      },
+      {
+        "short_name": "OL",
+        "full_name": "O Livro",
+        "updated": 1636583761597
+      },
+      {
+        "short_name": "NVIPT",
+        "full_name": "Nova Versão Internacional",
+        "info": "https://pt.wikipedia.org/wiki/Nova_Vers%C3%A3o_Internacional",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "NVT",
+        "full_name": "Bíblia Sagrada, Nova Versão Transformadora, 2016",
+        "info": "https://pt.wikipedia.org/wiki/Nova_Vers%C3%A3o_Transformadora",
+        "updated": 1636583761597
+      },
+      {
+        "short_name": "NTLH",
+        "full_name": "Nova Tradução na Linguagem de Hoje, 2000",
+        "info": "https://pt.wikipedia.org/wiki/Nova_Tradu%C3%A7%C3%A3o_na_Linguagem_de_Hoje",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "KJA",
+        "full_name": "Bíblia King James Atualizada, 2001",
+        "info": "https://pt.wikipedia.org/wiki/B%C3%ADblia_do_Rei_Jaime#Vers%C3%B5es_em_portugu%C3%AAs",
+        "updated": 1638385240931
+      },
+      {
+        "short_name": "VFL",
+        "full_name": "Bíblia Sagrada: Versão Fácil de Ler",
+        "info": "",
+        "updated": 1638385240931
+      }
+    ]
+  },
+  {
+    "language": "Deutsch German",
+    "translations": [
+      {
+        "full_name": "Menge-Bibel",
+        "short_name": "MB",
+        "info": "https://de.wikipedia.org/wiki/Hermann_Menge",
+        "updated": 1591185595149
+      },
+      {
+        "full_name": "Elberfelder Bibel, 1871",
+        "short_name": "ELB",
+        "info": "https://de.wikipedia.org/wiki/Elberfelder_Bibel",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "SCH",
+        "full_name": "Schlachter (1951)",
+        "info": "https://wikipedia.org/wiki/Schlachter_Bible",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "LUT",
+        "full_name": "Luther (1912)",
+        "info": "https://wikipedia.org/wiki/Luther_Bible",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Farsi فارسی",
+    "translations": [
+      {
+        "short_name": "POV",
+        "full_name": "Persian Old Version",
+        "info": "https://en.wikipedia.org/wiki/Bible_translations_into_Persian#Persian_Old_Version_(POV)",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "FACB",
+        "full_name": "کتاب مقدس، ترجمه تفسیری Farsi Contemporary Bible",
+        "info": "",
+        "updated": 1626349711821
+      }
+    ]
+  },
+  {
+    "language": "தமிழ் Tamil",
+    "translations": [
+      {
+        "short_name": "TBSI",
+        "full_name": "Tamil Older Version Bible",
+        "info": "https://en.wikipedia.org/wiki/Bible_translations_into_Tamil",
+        "updated": 1626349711821
+      }
+    ]
+  },
+  {
+    "language": "Indonesian",
+    "translations": [
+      {
+        "short_name": "TB",
+        "full_name": "Terjemahan Baru",
+        "info": "https://id.wikipedia.org/wiki/Terjemahan_Baru",
+        "updated": 1626349711821
+      }
+    ]
+  },
+  {
+    "language": "Nederland Netherlands",
+    "translations": [
+      {
+        "short_name": "NLD",
+        "full_name": "De Heilige Schrift, Petrus Canisiusvertaling, 1939",
+        "info": "https://nl.wikipedia.org/wiki/Petrus_Canisiusvertaling",
+        "updated": 1591292348391
+      }
+    ]
+  },
+  {
+    "language": "Norsk Norwegian",
+    "translations": [
+      {
+        "short_name": "DNB",
+        "full_name": "Det Norsk Bibelselskap (1930)",
+        "info": "https://nn.wikipedia.org/wiki/Det_Norske_Bibelselskap",
+        "updated": 1591292348391
+      }
+    ]
+  },
+  {
+    "language": "Français French",
+    "translations": [
+      {
+        "short_name": "NBS",
+        "full_name": "Nouvelle Bible Segond, 2002",
+        "info": "https://fr.wikipedia.org/wiki/Bible_Segond",
+        "updated": 1636583761597
+      }
+    ]
+  },
+  {
+    "language": "Swahili Kiswahili",
+    "translations": [
+      {
+        "short_name": "SUV",
+        "full_name": "Swahili Union Version, 1997",
+        "updated": 1636583761597
+      }
+    ]
+  },
+  {
+    "language": "Japanese 日本語",
+    "translations": [
+      {
+        "short_name": "NJB",
+        "full_name": "新改訳聖書 第三版, New Japanese Bible - Shinkai-yaku, 2003",
+        "info": "https://en.wikipedia.org/wiki/Bible_translations_into_Japanese#New_Japanese_Bible,_1965,_1970,_1978,_2003,_2017",
+        "updated": 1626349711821
+      }
+    ]
+  },
+  {
+    "language": "Chinese 中文",
+    "translations": [
+      {
+        "short_name": "CUV",
+        "full_name": "Chinese Union (Traditional) 和合本",
+        "info": "https://en.wikipedia.org/wiki/Chinese_Union_Version",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Polska Polish",
+    "translations": [
+      {
+        "short_name": "BG",
+        "full_name": "Biblia gdańska, 1881",
+        "info": "https://pl.wikipedia.org/wiki/Biblia_gda%C5%84ska",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "BW",
+        "full_name": "Biblia warszawska, 1975",
+        "info": "https://pl.wikipedia.org/wiki/Biblia_warszawska",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Ελληνικά Greek",
+    "translations": [
+      {
+        "short_name": "LXX",
+        "full_name": "Septuagint",
+        "info": "https://wikipedia.org/wiki/Septuagint",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "NTGT",
+        "full_name": "Greek NT: Tischendorf 8th Ed.",
+        "info": "https://en.wikipedia.org/wiki/Constantin_von_Tischendorf",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "TR",
+        "full_name": "Elzevir Textus Receptus (1624)",
+        "info": "https://wikipedia.org/wiki/Textus_Receptus",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Latin / Italian",
+    "translations": [
+      {
+        "short_name": "VULG",
+        "full_name": "Biblia Sacra juxta Vulgatam Clementinam",
+        "info": "https://en.wikipedia.org/wiki/Vulgate",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "NR06",
+        "full_name": "Nuova Riveduta, 2006",
+        "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Hungarian Magyar",
+    "translations": [
+      {
+        "short_name": "KB",
+        "full_name": "Karoli Bible 1908",
+        "updated": 1653206484214
+      }
+    ]
+  }
+]

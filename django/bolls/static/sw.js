@@ -5,8 +5,8 @@ var urlsToCache = [
   "/static/bolls/dist/public/__assets__/app/client.css",
   "/static/bolls/dist/index.css",
   "/static/bolls/fonts/fontstylesheet.css",
-  "/static/bolls/dist/dexie.min.js",
-  "/static/bolls/dist/dexie_worker.js",
+  "/static/bolls/dexie.min.js",
+  "/static/bolls/dexie_worker.js",
 ];
 
 self.addEventListener("install", function (event) {

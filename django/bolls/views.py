@@ -25,8 +25,32 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 bolls_index = 'bolls/index.html'
 
 
+def getAssets():
+    assets = []
+    jsfiles = []
+    for root, dirs, files in os.walk(os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets')):
+        for file in files:
+            if file.endswith('.js'):
+                if 'client' in file:
+                    jsfiles.append({"url": os.path.join(
+                        '/static/bolls/dist/assets', file), "type": "js"})
+            elif file.endswith('.css'):
+                assets.append({"url": os.path.join(
+                    '/static/bolls/dist/assets', file), "type": "css"})
+    ## iterate all js files, get their update date and filter old files
+    for jsfile in jsfiles:
+        if jsfile['type'] == 'js':
+            jsfile['mtime'] = os.path.getmtime(
+                os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(jsfile['url'])))
+    # now reduce jsfiles to only the newest file
+    jsfiles = [max(jsfiles, key=lambda x: x['mtime'])]
+    assets.extend(jsfiles)
+
+    return assets
+
+
 def index(request):
-    return render(request, bolls_index)
+    return render(request, bolls_index, {"assets": getAssets()})
 
 
 def cross_origin(response):
@@ -222,17 +246,17 @@ def getDescription(verses, verse, endverse):
 
 def linkToVerse(request, translation, book, chapter, verse):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
+    return render(request, bolls_index, {"assets": getAssets(), "translation": translation, "book": book, "chapter": chapter, "verse": verse, "verses": verses, "description": getDescription(verses, verse, 0)})
 
 
 def linkToVerses(request, translation, book, chapter, verse, endverse):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
+    return render(request, bolls_index, {"assets": getAssets(), "translation": translation, "book": book, "chapter": chapter, "verse": verse, "endverse": endverse, "verses": verses, "description": getDescription(verses, verse, endverse)})
 
 
 def linkToChapter(request, translation, book, chapter):
     verses = getChapterWithCommentaries(translation, book, chapter)
-    return render(request, bolls_index, {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
+    return render(request, bolls_index, {"assets": getAssets(), "translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": getDescription(verses, 1, 3)})
 
 
 def signUp(request):
@@ -258,9 +282,9 @@ def deleteAccount(request):
             message = "account_deleted"
 
         except Exception as e:
-            return render(request, bolls_index, {'message': e.message})
+            return render(request, bolls_index, {'message': e.message, "assets": getAssets()})
     print(message)
-    return render(request, bolls_index, {"message": message})
+    return render(request, bolls_index, {"message": message, "assets": getAssets()})
 
 
 def editAccount(request):
@@ -759,7 +783,7 @@ def getBooks(_, translation):
             data = json.load(json_file)
             return cross_origin(JsonResponse(data[translation], safe=False))
     except:
-        return HttpResponse("Wrong translation: " + translation, status=404);
+        return HttpResponse("Wrong translation: " + translation, status=404)
 
 
 def downloadNotes(request):

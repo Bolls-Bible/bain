@@ -143,7 +143,7 @@ tag orderable-list
 
 
 	css
-		self > div
+		self div
 			p:8px
 
 		.draggable
