@@ -5,7 +5,7 @@ import ast
 import unicodedata
 import json
 from django.db.models import Count, Q
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity, TrigramWordSimilarity
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramWordSimilarity
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import is_password_usable
 from django.contrib.auth.models import User
@@ -28,6 +28,8 @@ bolls_index = 'bolls/index.html'
 def getAssets():
     assets = []
     jsfiles = []
+    indexcssfiles = []
+    clientcssfiles = []
     for root, dirs, files in os.walk(os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets')):
         for file in files:
             if file.endswith('.js'):
@@ -35,16 +37,36 @@ def getAssets():
                     jsfiles.append({"url": os.path.join(
                         '/static/bolls/dist/assets', file), "type": "js"})
             elif file.endswith('.css'):
-                assets.append({"url": os.path.join(
-                    '/static/bolls/dist/assets', file), "type": "css"})
-    ## iterate all js files, get their update date and filter old files
+                if 'index' in file:
+                    indexcssfiles.append({"url": os.path.join(
+                        '/static/bolls/dist/assets', file), "type": "css"})
+                else:
+                    clientcssfiles.append({"url": os.path.join(
+                        '/static/bolls/dist/assets', file), "type": "css"})
+    # iterate all js files, get their update date and filter old files
     for jsfile in jsfiles:
         if jsfile['type'] == 'js':
             jsfile['mtime'] = os.path.getmtime(
                 os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(jsfile['url'])))
+    # now do same for css files
+    for cssfile in clientcssfiles:
+        if cssfile['type'] == 'css':
+            cssfile['mtime'] = os.path.getmtime(
+                os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(cssfile['url'])))
+    for cssfile in indexcssfiles:
+        if cssfile['type'] == 'css':
+            cssfile['mtime'] = os.path.getmtime(
+                os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(cssfile['url'])))
+
     # now reduce jsfiles to only the newest file
     jsfiles = [max(jsfiles, key=lambda x: x['mtime'])]
+    # reduce cssfiles to only the newest file
+    clientcssfiles = [max(clientcssfiles, key=lambda x: x['mtime'])]
+    indexcssfiles = [max(indexcssfiles, key=lambda x: x['mtime'])]
+
     assets.extend(jsfiles)
+    assets.extend(clientcssfiles)
+    assets.extend(indexcssfiles)
 
     return assets
 
@@ -439,7 +461,6 @@ def getVerses(request):
     if request.method == 'POST':
         try:
             received_json_data = json.loads(request.body)
-            print(received_json_data)
             if received_json_data:
                 response = []
                 query_set = []
@@ -717,9 +738,13 @@ def parseLinks(text, translation):
     return result
 
 
-def searchInDictionary(_, dict, query):
+def searchInDictionary(request, dict, query):
     query = query.strip()
     unaccented_query = stripVowels(query.lower())
+
+    similarity_rank = 0.5
+    if request.GET.get('extended', False):
+        similarity_rank = 0.3
 
     # Rank search
     search_vector = SearchVector('lexeme__unaccent')
@@ -728,8 +753,8 @@ def searchInDictionary(_, dict, query):
         search_vector, search_query)).filter(Q(short_definition__search=unaccented_query) | Q(topic=query.upper()) | Q(rank__gt=0), dictionary=dict).order_by('-rank')
 
     # SImilarity search
-    results_of_similarity = Dictionary.objects.annotate(rank=TrigramSimilarity(
-        'lexeme__unaccent', unaccented_query)).filter(dictionary=dict, rank__gt=0.5).order_by('-rank')
+    results_of_similarity = Dictionary.objects.annotate(rank=TrigramWordSimilarity(
+        unaccented_query, 'lexeme__unaccent')).filter(dictionary=dict, rank__gt=similarity_rank).order_by('-rank')
 
     # Merge both kinds of search
     results_of_search = list(results_of_similarity) + \
@@ -844,3 +869,13 @@ def importNotes(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)
+
+
+# for devonly
+def sw(request):
+    # get the file for the service worker
+    sw_file = open(os.path.join(BASE_DIR, 'bolls/static/sw.js'), 'r')
+    sw_content = sw_file.read()
+    sw_file.close()
+    # and sent it to the client
+    return HttpResponse(sw_content, content_type='application/javascript')

@@ -2,7 +2,7 @@
   "name": "bolls",
   "scripts": {
     "start": "imba build -w -p --web --base /static/bolls/dist ./app/index.html",
-    "build": "imba build ./app/index.html",
+    "build": "imba build -p --web --base /static/bolls/dist ./app/index.html",
     "babel-watch": "npx babel -w dist/public/__assets__/app/client.js -o dist/public/__assets__/app/client.js",
     "babel-build": "npx babel dist/public/__assets__/app/client.js -o dist/public/__assets__/app/client.js"
   },

@@ -1121,20 +1121,20 @@ html[data-light="light"] .Notifications p {
 }
 
 .checkbox {
-  width: 50px;
-  min-width: 50px;
-  height: 30px;
+  width: 2.8em;
+  min-width: 2.8em;
+  height: 1.68em;
   border: 2px solid var(--filling);
-  border-radius: 40px;
+  border-radius: 2.24em;
   margin-left: auto;
 }
 
 .checkbox span {
   display: block;
-  width: 26px;
-  height: 26px;
+  width: 1.456em;
+  height: 1.456em;
   background: var(--filling);
-  border-radius: 14px;
+  border-radius: 0.784em;
 }
 
 .checkbox_turned {

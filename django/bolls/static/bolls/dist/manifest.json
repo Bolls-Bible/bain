@@ -1,17 +1,17 @@
 {
   "entry:app/client.imba?web": {
-    "url": "/static/bolls/dist/assets/client.VBYB6QNX.js",
-    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/client.VBYB6QNX.js"
+    "url": "/static/bolls/dist/assets/client.R2G6MXUY.js",
+    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/client.R2G6MXUY.js"
   },
   "*?css": {
-    "url": "/static/bolls/dist/assets/index.J0HINOVB.css",
-    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/index.J0HINOVB.css"
+    "url": "/static/bolls/dist/assets/index.P2WWFJT8.css",
+    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/index.P2WWFJT8.css"
   },
   "/static/bolls/dist/index.html": {},
   "/static/bolls/dist/assets/languages.json.TKJQWQU4.js": {},
   "/static/bolls/dist/assets/dictionaries.json.QGP2BXEY.js": {},
   "/static/bolls/dist/assets/translations_books.json.VZWAXFQH.js": {},
-  "/static/bolls/dist/assets/client.VBYB6QNX.js": {},
-  "/static/bolls/dist/assets/client.IKETQHYA.css": {},
+  "/static/bolls/dist/assets/client.R2G6MXUY.js": {},
+  "/static/bolls/dist/assets/client.MZJOTWIM.css": {},
   "main": "index.html"
 }

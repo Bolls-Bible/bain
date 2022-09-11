@@ -17,22 +17,6 @@ db.version(3).stores({
   dictionaries: "++, dictionary",
 });
 
-self.onmessage = function (msg) {
-  if (msg.data.search_input) {
-    search(msg.data);
-  } else if (msg.data.action == "delete") {
-    deleteDictionary(msg.data.dictionary);
-  } else if (msg.data.action == "download_dictionary") {
-    downloadDictionary(msg.data);
-  } else if (msg.data.query) {
-    dictionarySearch(msg.data);
-  } else if (msg.data.includes("/static/translations/")) {
-    downloadTranslation(msg.data);
-  } else {
-    deleteTranslation(msg.data);
-  }
-};
-
 async function downloadZip(url, filename) {
   let data = await fetch(url) // 1) fetch the url
     .then(function (response) {
@@ -52,7 +36,7 @@ async function downloadZip(url, filename) {
         return JSON.parse(text);
       },
       function error(e) {
-        console.log(e);
+        console.error(e);
         throw filename;
       }
     );
@@ -60,101 +44,166 @@ async function downloadZip(url, filename) {
 }
 
 async function downloadTranslation(url) {
-  let tranlslation = url.substring(21, url.length - 4);
-  let data = await downloadZip(url, tranlslation);
-  db.transaction("rw", db.verses, () => {
-    db.verses.bulkPut(data).then(() => {
-      postMessage(["downloaded", tranlslation]);
-    });
-  }).catch((e) => {
-    throw tranlslation;
-  });
-}
-
-function deleteTranslation(translation) {
-  db.transaction("rw", db.verses, () => {
-    db.verses
-      .where({ translation: translation })
-      .delete()
-      .then((deleteCount) => postMessage([deleteCount, translation]));
-  }).catch((e) => {
-    throw translation;
-  });
-}
-
-function search(search) {
-  db.transaction("r", db.verses, () => {
-    db.verses
-      .where({ translation: search.search_result_translation })
-      .filter((verse) => {
-        return verse.text.toLowerCase().includes(search.search_input);
-      })
-      .toArray()
-      .then((data) => {
-        postMessage(["search", data]);
+  const translation = url.split("/")[5].split(".")[0];
+  let data = await downloadZip(url, translation);
+  return db
+    .transaction("rw", db.verses, async () => {
+      return db.verses.bulkPut(data).then(() => {
+        return new Response("Downloaded translation", {
+          status: 200,
+          statusText: "Downloaded translation",
+        });
       });
-  }).catch((e) => {
-    throw search.search_result_translation;
-  });
+    })
+    .catch((e) => {
+      return new Response(translation, {
+        status: 500,
+        statusText: e.message,
+      });
+    });
 }
 
-async function downloadDictionary(request) {
-  let data = await downloadZip(request.url, request.dictionary);
+async function deleteTranslation(url) {
+  const translation = url.split("/")[5];
+  return db
+    .transaction("rw", db.verses, () => {
+      return db.verses
+        .where({ translation: translation })
+        .delete()
+        .then(
+          () =>
+            new Response(translation, {
+              status: 200,
+              statusText: "Deleted translation",
+            })
+        );
+    })
+    .catch((e) => {
+      return new Response(translation, {
+        status: 500,
+        statusText: e.message,
+      });
+    });
+}
+
+async function searchVerses(url) {
+  const url_parts = url.split("/");
+  const translation = url_parts[5];
+  const search_input = decodeURI(url_parts[6]);
+  const search_input_parts = search_input.split(" ");
+  return db
+    .transaction("r", db.verses, () => {
+      return db.verses
+        .where({ translation: translation })
+        .filter((verse) => {
+          let lowercased_text = verse.text.toLowerCase();
+          // If a few words are searched, all words must be present
+          if (search_input_parts.length > 1)
+            return search_input_parts
+              .map((search_input_part) =>
+                lowercased_text.includes(search_input_part)
+              )
+              .reduce((a, b) => a && b);
+          return lowercased_text.includes(search_input);
+        })
+        .toArray()
+        .then((data) => {
+          return new Response(JSON.stringify(data), {
+            status: 200,
+            statusText: "Search verses",
+          });
+        });
+    })
+    .catch((e) => {
+      return new Response(translation, {
+        status: 500,
+        statusText: e.message,
+      });
+    });
+}
+
+async function downloadDictionary(url) {
+  const dictionary = url.split("/")[5].split(".")[0];
+  let data = await downloadZip(url, dictionary);
   for (const element of data) {
-    element.dictionary = request.dictionary;
+    element.dictionary = dictionary;
   }
 
-  db.transaction("rw", db.dictionaries, () => {
-    db.dictionaries.bulkPut(data).then(() => {
-      postMessage(["downloaded_dictionary", request.dictionary]);
+  return db
+    .transaction("rw", db.dictionaries, () => {
+      return db.dictionaries.bulkPut(data).then(() => {
+        return new Response("Downloaded dictionary", {
+          status: 200,
+          statusText: "Downloaded dictionary",
+        });
+      });
+    })
+    .catch((e) => {
+      return new Response(dictionary, {
+        status: 500,
+        statusText: e.message,
+      });
     });
-  }).catch((e) => {
-    console.log(e);
-    throw request.dictionary;
-  });
 }
 
-function deleteDictionary(dictionary) {
-  db.transaction("rw", db.dictionaries, () => {
-    db.dictionaries
-      .where({ dictionary: dictionary })
-      .delete()
-      .then((deleteCount) => postMessage([deleteCount, dictionary]));
-  }).catch((e) => {
-    throw dictionary;
-  });
+async function deleteDictionary(url) {
+  const dictionary = url.split("/")[5];
+  return db
+    .transaction("rw", db.dictionaries, () => {
+      return db.dictionaries
+        .where({ dictionary: dictionary })
+        .delete()
+        .then(() => new Response(dictionary, { status: 200 }));
+    })
+    .catch((e) => {
+      return new Response(dictionary, {
+        status: 500,
+        statusText: e.message,
+      });
+    });
 }
 
-function dictionarySearch(search) {
-  let uppercase_query = search.query.toUpperCase();
-  db.transaction("r", db.dictionaries, () => {
-    db.dictionaries
-      .where({ dictionary: search.dictionary })
-      .filter((definition) => {
-        if (definition.topic.toUpperCase() == uppercase_query) {
-          return true;
-        }
-
-        if (definition.short_definition) {
-          let short_definition = definition.short_definition.toUpperCase();
-          if (
-            uppercase_query.indexOf(short_definition) > -1 ||
-            short_definition.indexOf(uppercase_query) > -1
-          ) {
+async function dictionarySearch(url) {
+  const url_parts = url.split("/");
+  const dictionary = url_parts[5];
+  const query = decodeURI(url_parts[6]);
+  let uppercase_query = query.toUpperCase();
+  return db
+    .transaction("r", db.dictionaries, () => {
+      return db.dictionaries
+        .where({ dictionary: dictionary })
+        .filter((definition) => {
+          if (definition.topic.toUpperCase() == uppercase_query) {
             return true;
           }
-        }
 
-        return search.query.includes(definition.lexeme) ||
-          definition.lexeme.includes(search.query)
-          ? true
-          : false;
-      })
-      .toArray()
-      .then((data) => {
-        postMessage(["search", data]);
+          if (definition.short_definition) {
+            let short_definition = definition.short_definition.toUpperCase();
+            if (
+              uppercase_query.indexOf(short_definition) > -1 ||
+              short_definition.indexOf(uppercase_query) > -1
+            ) {
+              return true;
+            }
+          }
+
+          return query.includes(definition.lexeme) ||
+            definition.lexeme.includes(query)
+            ? true
+            : false;
+        })
+        .toArray()
+        .then((data) => {
+          return new Response(JSON.stringify(data), {
+            status: 200,
+            statusText: "Dictionary search",
+          });
+        });
+    })
+    .catch((e) => {
+      return new Response(dictionary, {
+        status: 500,
+        statusText: e.message,
       });
-  }).catch((e) => {
-    throw search;
-  });
+    });
 }

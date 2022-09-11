@@ -35,7 +35,8 @@ const applemob\boolean = window.navigator.platform.charAt(0) == 'i'
 if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
 	MOBILE_PLATFORM = yes
 
-
+def noop
+	return
 
 const inner_height = window.innerHeight
 let iOS_keaboard_height = 0
@@ -67,6 +68,7 @@ let settings =
 	filtered_books: []
 	parallel_synch: yes
 	lock_books_menu: no
+	extended_dictionary_search: no
 
 	get light
 		if this.theme == 'dark' or this.theme == 'black'
@@ -138,12 +140,6 @@ let definitions_history = []
 let definitions_history_index = -1
 let expanded_definition = 0
 let download_menu = no
-document.onselectionchange = do
-	setTimeout(&, 150) do
-		let selection = document.getSelection()
-		if selection.isCollapsed
-			host_rectangle = null
-
 
 
 # Some messy stuff
@@ -236,19 +232,7 @@ const accents = [
 	}
 ]
 
-def hidePanels event
-	if !fixdrawers && (event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
-		onzone = no
-		inzone = no
-		bible_menu_left = -300
-		settings_menu_left = -300
-		imba.commit!
 
-
-window.onblur = hidePanels
-document.body.onmouseleave = hidePanels
-document.onmouseleave = hidePanels
-window.onmouseout = hidePanels
 
 tag bible-reader
 	prop verses = []
@@ -337,10 +321,11 @@ tag bible-reader
 		settings.font.line-height = parseFloat(getCookie('line-height')) || settings.font.line-height
 		settings.font.max-width = parseInt(getCookie('max-width')) || settings.font.max-width
 		settings.font.align = getCookie('align') || settings.font.align
-		settings.verse_picker = (getCookie('verse_picker') == 'true') || settings.verse_picker
+		settings.verse_picker = (getCookie('verse_picker') == 'true')
 		settings.verse_commentary = !(getCookie('verse_commentary') == 'false')
-		settings.lock_books_menu = (getCookie('lock_books_menu') == 'true') || settings.lock_books_menu
-		settings.verse_break = (getCookie('verse_break') == 'true') || settings.verse_break
+		settings.lock_books_menu = (getCookie('lock_books_menu') == 'true')
+		settings.verse_break = (getCookie('verse_break') == 'true')
+		settings.extended_dictionary_search = (getCookie('extended_dictionary_search') === 'true')
 		settings.verse_number = !(getCookie('verse_number') == 'false')
 		settings.parallel_synch = !(getCookie('parallel_synch') == 'false')
 		settings.translation = getCookie('translation') || settings.translation
@@ -416,6 +401,40 @@ tag bible-reader
 			loadDefinitions!
 			imba.commit!
 
+	def hidePanels event
+		if !fixdrawers && (event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
+			onzone = no
+			inzone = no
+			bible_menu_left = -300
+			settings_menu_left = -300
+			imba.commit!
+		
+	def onSelectionChange
+		if window.getSelection().toString().length > 0		
+			this.showDefOptions!
+		setTimeout(&, 150) do
+			let selection = document.getSelection()
+			if selection.isCollapsed
+				host_rectangle = null
+
+	def mount
+		# silly anaalog of routed
+		let link = window.location.pathname.split('/')
+		getChapter link[1], link[2], link[3]
+
+		document.addEventListener('selectionchange', onSelectionChange.bind(self))
+
+		window.onblur = hidePanels
+		document.body.onmouseleave = hidePanels
+		document.onmouseleave = hidePanels
+		window.onmouseout = hidePanels
+
+	def unmount
+		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
+		window.onblur = noop
+		document.body.onmouseleave = noop
+		document.onmouseleave = noop
+		window.onmouseout = noop
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -1046,13 +1065,14 @@ tag bible-reader
 			search_verses = {}
 			try
 				search_verses = await loadData(url)
-				search.bookid_of_results = []
 			catch error
 				console.error error
 				if data.db_is_available && data.downloaded_translations.indexOf(search.translation) != -1
 					search_verses = await data.getSearchedTextFromStorage(search)
-					search.bookid_of_results = []
+				else
+					search_verses = []
 
+			search.bookid_of_results = []
 			search.results = 0
 			search.nt = no
 			search.ot = no
@@ -2380,7 +2400,7 @@ tag bible-reader
 			if $main.contains(rangeContainer)
 				let viewportRectangle = range.getBoundingClientRect()
 				host_rectangle = {
-					top: viewportRectangle.top + settings.font.size * 1.4
+					top: viewportRectangle.top + settings.font.size * (MOBILE_PLATFORM ? 2.2 : 1.4),
 					left: 'auto'
 					right: 'auto'
 					width: viewportRectangle.width
@@ -2465,10 +2485,10 @@ tag bible-reader
 			loading = yes
 			imba.commit!
 			if window.navigator.onLine
-				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}")
+				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}?extended={settings.extended_dictionary_search ? 'true' : ''}")
 			elif state.dictionary in state.downloaded_dictionaries
 				let unvoweled_query = stripVowels(store.definition_search)
-				search_results = await state.searchDefinitionsOffline {dictionary:state.dictionary, query:unvoweled_query}
+				search_results = await state.searchDefinitionsOffline {dictionary: state.dictionary, query: unvoweled_query}
 				definitions = []
 				for definition in search_results
 					const score = scoreSearch(definition.lexeme, unvoweled_query)
@@ -2527,18 +2547,22 @@ tag bible-reader
 			expanded_definition = -1
 		else
 			expanded_definition = index
-			for kid, i in $definitions.children
-				if i + 1 == index
-					$definitions.children[i+1].scrollIntoView()
+			setTimeout(&, 300) do
+				for kid, i in $definitions.children
+					if i + 1 == index
+						$definitions.children[i+1].scrollIntoView()
 
 	def currentDictionary
 		for dictionary in dictionaries
 			if dictionary.abbr == state.dictionary
 				return dictionary.name
 
-
 	def closecp
 		store.show_color_picker = no
+	
+	def toggleExtendedDictionarySearch
+		settings.extended_dictionary_search = !settings.extended_dictionary_search
+		setCookie 'extended_dictionary_search', settings.extended_dictionary_search
 
 
 	def render
@@ -2653,7 +2677,7 @@ tag bible-reader
 
 			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
 				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll @pointerup=showDefOptions dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
@@ -2723,7 +2747,7 @@ tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll @pointerup=showDefOptions dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -2942,21 +2966,22 @@ tag bible-reader
 					<a.help href='/downloads/' target="_blank" @click=install>
 						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
 						data.lang.install_app
-					<a.help @click=showDictionaryView>
+					<.help @click=showDictionaryView>
 						<span.font_icon> 'א'
 						data.lang.dictionary
 						<a[ml:auto] href='https://bohuslav.me/Dictionary/' target='_blank'>
 							<svg.helpsvg[p:4px] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+								<title> data.lang.dictionary + 'link'
 								<path d="M0 0h24v24H0z" fill="none">
 								<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
 
-				<a.help @click=turnHelpBox>
+				<.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 						<title> data.lang.help
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
 					data.lang.help
-				<a.help @click=turnSupport() id="animated-heart">
+				<.help @click=turnSupport() id="animated-heart">
 					<svg.helpsvg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
 						<title> data.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
@@ -3220,12 +3245,24 @@ tag bible-reader
 												<.popup_menu [l:0 y@off:-32px o@off:0] ease>
 													for dictionary in dictionaries
 														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
+									if window.navigator.onLine
+										<button.nighttheme.parent_checkbox.flex [m:8px 0 fs:0.85em] @click=toggleExtendedDictionarySearch .checkbox_turned=settings.extended_dictionary_search>
+											<span[ml:auto]> "Extended search"
+											<p.checkbox [m:0 8px 0 24px]> <span>
 
-
-									for definition, index in definitions
+									for definition, index in definitions when index < 64
 										<div.definition .expanded=(expanded_definition == index)>
-											<p @click=expandDefinition(index)>
-												definition.lexeme + ' · ' + definition.pronunciation + ' · ' + definition.transliteration + ' · ' + definition.short_definition
+											<div.hat @click=expandDefinition(index)>
+												<p>
+													<b> definition.lexeme
+													<span> ' · '
+													<span> definition.pronunciation
+													<span> ' · '
+													<span> definition.transliteration
+													<span> ' · '
+													<b> definition.short_definition
+													<span> ' · '
+													<span> definition.topic
 												<svg [fill:$c min-width:16px] width="16" height="10" viewBox="0 0 8 5">
 													<title> 'expand'
 													<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
@@ -3719,21 +3756,23 @@ tag bible-reader
 			lh:1.6
 
 		.definition
-			p
-				m:0
-				p:8px 8px 8px 0
-				fw:bold
+			.hat
 				d:flex
-				jc:space-between
 				ai:center
-				cursor:pointer
 				pos:sticky
+				p:8px 8px 8px 0
+				cursor:pointer
 				t:0px
+				m:0
 				bg:$bg
 				bdt:1px solid $acc-bgc
 
+			p
+				ws:break-spaces
+
 			svg
 				transform:$svg-transform
+				ml:auto
 
 		.expanded
 			$svg-transform:rotate(180deg)

@@ -1,7 +1,7 @@
 import { remark } from './remark'
 import "./loading.imba"
 
-import * as BOOKS from "./translations_books.json"
+import {default as BOOKS} from "./translations_books.json"
 
 import { svg_paths } from "./svg_paths.imba"
 
@@ -224,8 +224,7 @@ tag profile-page
 
 
 	def goToBookmark bookmark
-		let bible = document.getElementsByTagName("bible-reader")
-		bible[0].getText(bookmark.translation, bookmark.book, bookmark.chapter, bookmark.verse)
+		router.go(bookmark.translation + '/' + bookmark.book + '/' + bookmark.chapter + '/' + bookmark.verse[0] + '/')
 
 
 	def showOptions title

@@ -5,6 +5,7 @@ from django.conf.urls import handler404, handler500, include
 urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
     path('', views.index, name="index"),
+    path('sw.js', views.sw, name="sw"),
     path('signup/', views.signUp, name="signup"),
     path('api/', views.api),
     path('donate/', views.index),
@@ -31,7 +32,6 @@ urlpatterns = [
     path('get-notes-bookmarks/<int:range_from>/<int:range_to>/',
          views.getBookmarksWithNotes),
     path('search/<slug:translation>/<str:piece>/', views.search),
-    path('search/<slug:translation>/', views.search),
 
     path('get-books/<slug:translation>/', views.getBooks),
     path('get-text/<slug:translation>/<int:book>/<int:chapter>/',

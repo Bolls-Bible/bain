@@ -553,7 +553,7 @@ window.fetch('/get-verses/', {
     <h2 id="dictionary">Dictionary definition for Hebrew and Greek words</h2>
     <p class="last-update">New from 23 December 2021.</p>
     <p>
-      This API is used to get a list of definitions for a Hebrew or Greek word,
+      This API lets you get a list of definitions for a Hebrew or Greek word,
       if such do exist in a dictionary. If there are no definitions for
       requested query -- an empty array is returned. The API looks in the next
       way:
@@ -644,6 +644,10 @@ https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</p
         to the query on the scale from 0 to 1
       </li>
     </ul>
+    <p>
+      Also there is an optional flag <code>extended</code> which when equals to <code>true</code> will return results of extended search. For example try this query:
+    <pre><a target="_blank" href="https://bolls.life/dictionary-definition/BDBT/אֹ֑ור/?extended=true">https://bolls.life/dictionary-definition/BDBT/אֹ֑ור/?extended=true</a></pre>
+  </p>
 
     <h3 id="Notes">Notes</h3>
     <ul>
