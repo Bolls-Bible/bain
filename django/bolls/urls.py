@@ -5,7 +5,7 @@ from django.conf.urls import handler404, handler500, include
 urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
     path('', views.index, name="index"),
-    path('sw.js', views.sw, name="sw"),
+#     path('sw.js', views.sw, name="sw"),
     path('signup/', views.signUp, name="signup"),
     path('api/', views.api),
     path('donate/', views.index),
