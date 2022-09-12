@@ -1,7 +1,7 @@
 {
   "entry:app/client.imba?web": {
-    "url": "/static/bolls/dist/assets/client.R2G6MXUY.js",
-    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/client.R2G6MXUY.js"
+    "url": "/static/bolls/dist/assets/client.TA5NAI7B.js",
+    "path": "/home/bohuslav/bain/django/bolls/static/bolls/dist/assets/client.TA5NAI7B.js"
   },
   "*?css": {
     "url": "/static/bolls/dist/assets/index.P2WWFJT8.css",
@@ -11,7 +11,7 @@
   "/static/bolls/dist/assets/languages.json.TKJQWQU4.js": {},
   "/static/bolls/dist/assets/dictionaries.json.QGP2BXEY.js": {},
   "/static/bolls/dist/assets/translations_books.json.VZWAXFQH.js": {},
-  "/static/bolls/dist/assets/client.R2G6MXUY.js": {},
+  "/static/bolls/dist/assets/client.TA5NAI7B.js": {},
   "/static/bolls/dist/assets/client.MZJOTWIM.css": {},
   "main": "index.html"
 }

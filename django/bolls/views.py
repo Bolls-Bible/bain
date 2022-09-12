@@ -874,7 +874,7 @@ def importNotes(request):
 # for devonly
 def sw(request):
     # get the file for the service worker
-    sw_file = open(os.path.join(BASE_DIR, 'bolls/static/sw.js'), 'r')
+    sw_file = open(os.path.join(BASE_DIR, 'bolls/static/service-worker.js'), 'r')
     sw_content = sw_file.read()
     sw_file.close()
     # and sent it to the client
