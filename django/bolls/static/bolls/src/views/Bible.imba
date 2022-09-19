@@ -2414,6 +2414,10 @@ tag bible-reader
 
 
 	def showDictionaryView
+		const selection = window.getSelection!
+		const selected = selection.toString!.trim!
+		if selected
+			store.definition_search = selected
 		clearSpace!
 		popUp 'dictionary'
 		loadDefinitions!
@@ -3009,7 +3013,7 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.91 🗓 "
+						"🍇 v2.1.94 🗓 "
 						<time dateTime='2022-09-12'> "12.09.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
@@ -3246,7 +3250,7 @@ tag bible-reader
 														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
 									if window.navigator.onLine
 										<button.nighttheme.parent_checkbox.flex [m:8px 0 fs:0.85em] @click=toggleExtendedDictionarySearch .checkbox_turned=settings.extended_dictionary_search>
-											<span[ml:auto]> dat.lang.extended_search
+											<span[ml:auto]> data.lang.extended_search
 											<p.checkbox [m:0 8px 0 24px]> <span>
 
 									for definition, index in definitions when index < 64
