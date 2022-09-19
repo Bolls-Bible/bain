@@ -1,10 +1,10 @@
-import {State} from './state'
-import './views/Bible'
-import './views/donate'
-import './views/Profile'
-import './views/downloads'
-import {Notifications} from './views/Notifications'
-import './icons'
+import { State } from './state.imba'
+import './views/Bible.imba'
+import './views/donate.imba'
+import './views/Profile.imba'
+import './views/downloads.imba'
+import { Notifications } from './views/Notifications.imba'
+import './icons.imba'
 
 let state = new State()
 

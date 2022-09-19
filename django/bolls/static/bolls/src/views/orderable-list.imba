@@ -1,5 +1,5 @@
-import {svg_paths} from "./svg_paths"
-import './search-text-as-html'
+import {svg_paths} from "./svg_paths.imba"
+import './search-text-as-html.imba'
 
 tag orderable-list
 	prop list = []
@@ -143,9 +143,6 @@ tag orderable-list
 
 
 	css
-		self div
-			p:8px
-
 		.draggable
 			zi:2
 			pos:sticky

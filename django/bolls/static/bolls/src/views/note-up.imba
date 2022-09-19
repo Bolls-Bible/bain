@@ -1,5 +1,5 @@
-import { remark } from './remark'
-import { scrollToY } from './smooth_scrolling'
+import { remark } from './remark.imba'
+import { scrollToY } from './smooth_scrolling.imba'
 
 
 tag note-up

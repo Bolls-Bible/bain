@@ -1,18 +1,18 @@
 import {default as BOOKS} from "./translations_books.json"
 import languages from "./languages.json"
 import dictionaries from "./dictionaries.json"
-import './Profile'
+import './Profile.imba'
 import "./loading.imba"
 import "./downloads.imba"
 import "./colorPicker.imba"
-import './search-text-as-html'
-import "./note-up"
-import "./menu-popup"
-import "./mark-down"
-import './orderable-list'
-import {thanks_to} from './thanks_to'
-import {svg_paths, swirl} from "./svg_paths"
-import {scrollToY} from './smooth_scrolling'
+import './search-text-as-html.imba'
+import "./note-up.imba"
+import "./menu-popup.imba"
+import "./mark-down.imba"
+import './orderable-list.imba'
+import {thanks_to} from './thanks_to.imba'
+import {svg_paths, swirl} from "./svg_paths.imba"
+import {scrollToY} from './smooth_scrolling.imba'
 
 let html = document.documentElement
 
@@ -2383,12 +2383,12 @@ tag bible-reader
 		return no
 
 	def showDefOptions
-		let selection = window.getSelection!
-		store.definition_search = selection.toString!.trim!
+		const selection = window.getSelection!
+		const selected = selection.toString!.trim!
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected
-		let hebrew_or_greek = store.definition_search.match(/[\u0590-\u05FF]/) or  store.definition_search.match(/[\u0370-\u03FF]/)
-		if store.definition_search.match(/\s/) or store.definition_search == '' or not hebrew_or_greek
+		let hebrew_or_greek = selected.match(/[\u0590-\u05FF]/) or  selected.match(/[\u0370-\u03FF]/)
+		if selected.match(/\s/) or selected == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
 
@@ -2670,7 +2670,7 @@ tag bible-reader
 
 			if host_rectangle
 				<button
-					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:4px 8px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
+					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:8px 16px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
 					@click=loadDefinitions
 					ease
 					> data.lang.definition
@@ -3009,11 +3009,10 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.90 🗓 "
+						"🍇 v2.1.91 🗓 "
 						<time dateTime='2022-09-12'> "12.09.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
-
 
 
 			if big_modal_block_content.length
@@ -3247,7 +3246,7 @@ tag bible-reader
 														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
 									if window.navigator.onLine
 										<button.nighttheme.parent_checkbox.flex [m:8px 0 fs:0.85em] @click=toggleExtendedDictionarySearch .checkbox_turned=settings.extended_dictionary_search>
-											<span[ml:auto]> "Extended search"
+											<span[ml:auto]> dat.lang.extended_search
 											<p.checkbox [m:0 8px 0 24px]> <span>
 
 									for definition, index in definitions when index < 64

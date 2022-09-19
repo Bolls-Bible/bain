@@ -1,4 +1,4 @@
-import { remark } from './remark'
+import { remark } from './remark.imba'
 import "./loading.imba"
 
 import {default as BOOKS} from "./translations_books.json"

@@ -87,12 +87,7 @@
       type="text/css"
       href="{% static 'bolls/fonts/fontstylesheet.css' %}"
     />
-
-    {% for asset in assets %} {% if asset.type == 'js' %}
-    <script src="{{ asset.url }}" type="module"></script>
-    {% else %}
-    <link rel="stylesheet" type="text/css" href="{{ asset.url }}" />
-    {% endif %} {% endfor %}
+    <script type="module" crossorigin src="{% static 'bolls/dist/assets/index.js' %}"></script>
   </head>
 
   <body>

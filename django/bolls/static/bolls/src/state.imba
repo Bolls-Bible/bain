@@ -1,6 +1,6 @@
 import languages from "./views/languages.json"
 import dictionaries from "./views/dictionaries.json"
-import {english, ukrainian, russian, portuguese, espanol, german} from './langdata'
+import { english, ukrainian, russian, portuguese, espanol, german } from './langdata.imba'
 
 export class State
 	db_is_available

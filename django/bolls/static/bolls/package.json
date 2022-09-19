@@ -1,36 +1,43 @@
 {
   "name": "bolls",
-  "scripts": {
-    "start": "imba build -w -p --web --base /static/bolls/dist ./app/index.html",
-    "build": "imba build -p --web --base /static/bolls/dist ./app/index.html",
-    "babel-watch": "npx babel -w dist/public/__assets__/app/client.js -o dist/public/__assets__/app/client.js",
-    "babel-build": "npx babel dist/public/__assets__/app/client.js -o dist/public/__assets__/app/client.js"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.2",
-    "@babel/preset-env": "^7.18.2",
-    "@types/node": "^14.14.37",
-    "babel-plugin-transform-globalthis": "^1.0.0"
-  },
-  "repository": "Bohooslav/bolls",
+  "version": "0.0.0",
+  "repository": "Bolls-Bible/bain",
   "description": "Frontend for Bolls Bible app",
-  "version": "1.0.0",
-  "homepage": "https://github.com/Bohooslav/bolls",
+  "homepage": "https://github.com/Bolls-Bible/bain",
   "author": "Pavlyshynets Bohuslav (https://github.com/Bohooslav)",
   "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite build -w",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^8.17.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@vitest/ui": "^0.23.1",
+    "imba": "^2.0.0-alpha.220",
+    "jsdom": "^20.0.0",
+    "vite": "^3.1.0",
+    "vite-plugin-imba": "^0.4.1",
+    "vitest": "^0.23.1",
+    "vitest-github-actions-reporter-temp": "^0.8.3"
+  },
   "dependencies": {
-    "@codemirror/closebrackets": "^0.19.0",
-    "@codemirror/commands": "^0.19.7",
+    "@codemirror/closebrackets": "^0.19.2",
+    "@codemirror/commands": "^6.1.0",
+    "@codemirror/highlight": "^0.19.8",
     "@codemirror/history": "^0.19.2",
-    "@codemirror/lang-markdown": "^0.19.4",
-    "@codemirror/state": "^0.19.6",
-    "@codemirror/view": "^0.19.40",
-    "imba": "^2.0.0-alpha.213",
+    "@codemirror/lang-markdown": "^6.0.1",
+    "@codemirror/matchbrackets": "^0.19.4",
+    "@codemirror/state": "^6.1.1",
+    "@codemirror/view": "^6.2.4",
     "rehype-sanitize": "^5.0.1",
-    "rehype-stringify": "^9.0.2",
+    "rehype-stringify": "^9.0.3",
     "remark-parse": "^10.0.1",
-    "remark-rehype": "^10.1.0",
-    "unified": "^10.1.1"
+    "remark-rehype": "^10.1.0"
   }
 }
