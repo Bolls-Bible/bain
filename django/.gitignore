@@ -160,6 +160,5 @@ dictionaries/*.json
 
 
 bolls/static/bolls/package-lock.json
-bolls/static/bolls/dist/serve.js.manifest
 bolls/static/translations/*.json
 bolls/static/dictionaries/*.json
