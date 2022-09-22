@@ -18,7 +18,7 @@ export default defineConfig({
   test: {
     globals: true,
     include: ["**/*.{test,spec}.{imba,js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    includeSource: ["src/**/*.{imba,js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    includeSource: ["app/**/*.{imba,js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     environment: "jsdom",
     setupFiles: ["./test/setup.imba"],
     reporters: process.env.GITHUB_ACTIONS

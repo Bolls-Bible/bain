@@ -19,7 +19,7 @@ To see what it looks like when you use this template and deploy it, check out th
 
 ### `main.imba`
 
-In `src/main.imba` you see how [Imba styles](https://imba.io/docs/css) work. CSS is clearly scoped in Imba, so you can see [global CSS](https://imba.io/docs/css/syntax#selectors-global-selectors), tag level, and element level.
+In `app/main.imba` you see how [Imba styles](https://imba.io/docs/css) work. CSS is clearly scoped in Imba, so you can see [global CSS](https://imba.io/docs/css/syntax#selectors-global-selectors), tag level, and element level.
 
 Both [assets](https://imba.io/docs/assets) and [components](https://imba.io/docs/components/) are imported and used. Finally, the web application is started by [mounting the tag](https://imba.io/docs/tags/mounting).
 
@@ -29,7 +29,7 @@ In `src/components/counter.imba` you see more about how [tags](https://imba.io/d
 
 ### `app.css`
 
-You don't need to use CSS files, because of the powerful scoping of [Imba styles](https://imba.io/docs/css), but this file shows how you can get the best of both worlds. It is imported and used in `src/main.imba`.
+You don't need to use CSS files, because of the powerful scoping of [Imba styles](https://imba.io/docs/css), but this file shows how you can get the best of both worlds. It is imported and used in `app/main.imba`.
 
 ### `utils.imba`
 
@@ -72,4 +72,4 @@ Run and watch the tests - and open the [Vitest UI](https://vitest.dev/guide/ui.h
 
 ## Notes
 - This app doesn't have a server. If you need a full stack web application with server logic you can use [imba base template](https://github.com/imba/imba-base-template) or check out [Vite's backend integration guide](https://vitejs.dev/guide/backend-integration.html)
-- There is a temporary `src/main.js` file that is still necessary for Vite to work correctly. You don't have to do anything with this file. And this will probably be fixed in a future version of Vite.
+- There is a temporary `app/main.js` file that is still necessary for Vite to work correctly. You don't have to do anything with this file. And this will probably be fixed in a future version of Vite.
