@@ -488,9 +488,10 @@ export class State
 				if bookmark
 					bookmark.collection = bookmark.collections.join(' | ')
 					bookmarks.push bookmark
-			return bookmarks
+			return bookmarks || []
 		).catch (do |e|
 			console.error(e)
+			return []
 		)
 
 	def getChapterFromDB translation, book, chapter, verse

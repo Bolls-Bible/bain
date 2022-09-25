@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
+import sys
 import psycopg2.extensions
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -92,6 +93,11 @@ DATABASES = {
         "PORT": os.environ.get("SQL_PORT", ""),
     }
 }
+
+if 'test' in sys.argv and '--keepdb' in sys.argv:
+    DATABASES['default']['TEST'] = {
+        'NAME': 'bain'
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

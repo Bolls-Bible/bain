@@ -60,12 +60,15 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER ',' CSV HEADER;
 
 
-\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '/home/bohuslav/verses.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '~/projects/bolls_data/ylt.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_dictionary(id,topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '~/projects/bolls_data/bdbt.csv' DELIMITER '|' CSV HEADER;
+
 \copy bolls_commentary FROM '/home/bohuslav/commentary.csv' DELIMITER '|' CSV HEADER;
 
 
 
-\copy (SELECT * FROM bolls_verses where translation='DNB') TO '/home/b/Bibles/dnb.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_verses where translation='YLT') TO '~/projects/bolls_data/ylt.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_dictionary where dictionary='BDBT') TO '~/projects/bolls_data/bdbt.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_verses) TO '/home/bohuslav/verses.csv' WITH CSV DELIMITER '|';
 \copy (SELECT calculate_translation_hashes()) TO '/home/b/hashes.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_bookmarks) TO 'bookmarks.csv' WITH CSV DELIMITER '|';

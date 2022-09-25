@@ -466,8 +466,6 @@ def getVerses(request):
                 query_set = []
                 for text in received_json_data:
                     for verse in text["verses"]:
-                        print(text["translation"], text["book"],
-                              text["chapter"], verse)
                         query_set.append("Q(translation=\"" + text["translation"] + "\", book=" +
                                          str(text["book"]) + ", chapter=" + str(text["chapter"]) + ", verse=" + str(verse) + ")")
 
@@ -492,7 +490,7 @@ def getVerses(request):
             else:
                 return HttpResponse("Body fields are incorrect", status=400)
         except:
-            return HttpResponse("Body fields are incorrect", status=400)
+            return HttpResponse("Body fields are incorrect" + str(request.body), status=400)
     else:
         return HttpResponse("The request should be POSTed", status=400)
 
@@ -625,11 +623,13 @@ def history(request):
                 obj.save()
 
             except History.DoesNotExist:
-                user.history_set.create(history=received_json_data["history"])
+                user.history_set.create(
+                    history=received_json_data["history"])
 
             except History.MultipleObjectsReturned:
                 user.history_set.all().delete()
-                user.history_set.create(history=received_json_data["history"])
+                user.history_set.create(
+                    history=received_json_data["history"])
 
             return JsonResponse({"response": "200"}, safe=False)
 
@@ -642,11 +642,13 @@ def history(request):
                 obj.save()
 
             except History.DoesNotExist:
-                user.history_set.create(history=received_json_data["history"])
+                user.history_set.create(
+                    history=received_json_data["history"])
 
             except History.MultipleObjectsReturned:
                 user.history_set.all().delete()
-                user.history_set.create(history=received_json_data["history"])
+                user.history_set.create(
+                    history=received_json_data["history"])
 
             return JsonResponse({"response": "200"}, safe=False)
 
@@ -874,7 +876,8 @@ def importNotes(request):
 # for devonly
 def sw(request):
     # get the file for the service worker
-    sw_file = open(os.path.join(BASE_DIR, 'bolls/static/service-worker.js'), 'r')
+    sw_file = open(os.path.join(
+        BASE_DIR, 'bolls/static/service-worker.js'), 'r')
     sw_content = sw_file.read()
     sw_file.close()
     # and sent it to the client

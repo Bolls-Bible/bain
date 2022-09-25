@@ -416,14 +416,21 @@ tag bible-reader
 			let selection = document.getSelection()
 			if selection.isCollapsed
 				host_rectangle = null
+			
+	def onPopState event
+		if event.state.translation && event.state.book && event.state.chapter
+			getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
+		else
+			clearSpace!
 
 	def mount
-		# silly anaalog of routed
+		# silly analog of routed
 		let link = window.location.pathname.split('/')
-		getChapter link[1], link[2], link[3]
+		if link[1] && link[2] && link[3]
+			getChapter link[1], link[2], link[3]
 
 		document.addEventListener('selectionchange', onSelectionChange.bind(self))
-
+		window.addEventListener('popstate', onPopState.bind(self))
 		window.onblur = hidePanels
 		document.body.onmouseleave = hidePanels
 		document.onmouseleave = hidePanels
@@ -431,6 +438,7 @@ tag bible-reader
 
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
+		window.removeEventListener('popstate', onPopState.bind(self))
 		window.onblur = noop
 		document.body.onmouseleave = noop
 		document.onmouseleave = noop
@@ -544,7 +552,15 @@ tag bible-reader
 		imba.commit()
 
 	def getText translation, book, chapter, verse
-		router.go(window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/')
+		window.history.pushState({
+				translation: settings.translation,
+				book: settings.book,
+				chapter: settings.chapter,
+				verse: id,
+			}
+			'',
+			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + verse ? verse : '')
+
 		getChapter translation, book, chapter, verse
 
 	def getChapter translation, book, chapter, verse
@@ -1419,18 +1435,8 @@ tag bible-reader
 			choosenid.push(pk)
 			choosen.push(id)
 			pushCollectionIfExist(pk)
-			window.history.pushState({
-					translation: settings.translation,
-					book: settings.book,
-					chapter: settings.chapter,
-					verse: id,
-					parallel: parallel != 'first',
-					parallel_display: settingsp.display
-					parallel-translation: settingsp.translation,
-					parallel-book: settingsp.book,
-					parallel-chapter: settingsp.chapter,
-					parallel-verse: id,
-				}
+			window.history.pushState(
+				no,
 				'',
 				window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
 
@@ -1830,7 +1836,6 @@ tag bible-reader
 	def popUp what
 		big_modal_block_content = what
 		window.history.pushState(no, what)
-		router.go("/{settings.translation}/{settings.book}/{settings.chapter}/0/")
 
 	def makeNote
 		if big_modal_block_content
@@ -2568,12 +2573,15 @@ tag bible-reader
 		settings.extended_dictionary_search = !settings.extended_dictionary_search
 		setCookie 'extended_dictionary_search', settings.extended_dictionary_search
 
+	def openSearchVerse event
+		if event.detail.translation && event.detail.book && event.detail.chapter
+			getText event.detail.translation, event.detail.book, event.detail.chapter, event.detail.verse
 
 	def render
 		if applemob
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove .fixscroll=(big_modal_block_content or inzone or onzone)>
+		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove @gotoverse=openSearchVerse .fixscroll=(big_modal_block_content or inzone or onzone)>
 			<nav .lock-books=settings.lock_books_menu @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>

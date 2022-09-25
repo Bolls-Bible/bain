@@ -9,6 +9,7 @@ tag search-text-as-html
 				window.open(route, '_blank')
 			elif document.getSelection().isCollapsed
 				router.go route
+				emit "gotoverse", data
 
 	def render
 		<self [d:inline] @click=goToVerse @keyup.enter=goToVerse>
