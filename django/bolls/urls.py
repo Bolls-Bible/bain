@@ -22,6 +22,7 @@ urlpatterns = [
     path('user-logged/', views.userLogged),
     path('download-notes/', views.downloadNotes),
     path('import-notes/', views.importNotes),
+    path('save-compare-translations/', views.saveCompareTranslations),
 
     path('get-translation/<slug:translation>/',
          views.getTranslation),

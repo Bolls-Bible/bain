@@ -444,7 +444,7 @@ main header h1 {
   padding: 0 4px;
   position: sticky;
   background-color: var(--bgc);
-  top: 0px;
+  top: -1px;
   line-height: 1;
   cursor: pointer;
 }
@@ -1027,7 +1027,6 @@ img,
 .search_item {
   color: inherit;
   text-align: left;
-  position: relative;
 }
 
 .search_res_verse_text {
@@ -1123,26 +1122,32 @@ html[data-light="light"] .Notifications p {
 .checkbox {
   width: 2.8em;
   min-width: 2.8em;
-  height: 1.68em;
+  height: 1.5em;
   border: 2px solid var(--filling);
   border-radius: 2.24em;
   margin-left: auto;
+  box-sizing: content-box;
 }
 
 .checkbox span {
   display: block;
-  width: 1.456em;
-  height: 1.456em;
+  width: 1.5em;
+  height: 1.5em;
   background: var(--filling);
-  border-radius: 0.784em;
+  border-radius: 0.8em;
+  transform: translateX(-1px);
 }
 
 .checkbox_turned {
   --filling: var(--c);
 }
 
+.checkbox_turned p {
+  box-shadow: inset 0 0 0.8em 0.2em var(--filling);
+}
+
 .checkbox_turned span {
-  transform: translateX(20px);
+  transform: translateX(1.4em);
 }
 
 .help {
@@ -1166,6 +1171,7 @@ html[data-light="light"] .Notifications p {
 
 .nighttheme:hover {
   color: var(--acc-color-hover);
+  --filling: var(--acc-color-hover);
 }
 
 .nighttheme:hover p {
@@ -1722,6 +1728,15 @@ note-body ul li,
 
 mark-down * {
   transition: none !important;
+}
+
+.sortable-ghost {
+  opacity: 0.5;
+}
+
+.sortable-draggable {
+  background-color: var(--acc-bgc);
+  border-radius: 8px;
 }
 
 @media all and (display-mode: standalone) {

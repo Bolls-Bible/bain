@@ -25,52 +25,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 bolls_index = 'bolls/index.html'
 
 
-# def getAssets():
-#     assets = []
-#     jsfiles = []
-#     indexcssfiles = []
-#     clientcssfiles = []
-#     for root, dirs, files in os.walk(os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets')):
-#         for file in files:
-#             if file.endswith('.js'):
-#                 if 'client' in file:
-#                     jsfiles.append({"url": os.path.join(
-#                         '/static/bolls/dist/assets', file), "type": "js"})
-#             elif file.endswith('.css'):
-#                 if 'index' in file:
-#                     indexcssfiles.append({"url": os.path.join(
-#                         '/static/bolls/dist/assets', file), "type": "css"})
-#                 else:
-#                     clientcssfiles.append({"url": os.path.join(
-#                         '/static/bolls/dist/assets', file), "type": "css"})
-#     # iterate all js files, get their update date and filter old files
-#     for jsfile in jsfiles:
-#         if jsfile['type'] == 'js':
-#             jsfile['mtime'] = os.path.getmtime(
-#                 os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(jsfile['url'])))
-#     # now do same for css files
-#     for cssfile in clientcssfiles:
-#         if cssfile['type'] == 'css':
-#             cssfile['mtime'] = os.path.getmtime(
-#                 os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(cssfile['url'])))
-#     for cssfile in indexcssfiles:
-#         if cssfile['type'] == 'css':
-#             cssfile['mtime'] = os.path.getmtime(
-#                 os.path.join(BASE_DIR, 'bolls/static/bolls/dist/assets', os.path.basename(cssfile['url'])))
-
-#     # now reduce jsfiles to only the newest file
-#     jsfiles = [max(jsfiles, key=lambda x: x['mtime'])]
-#     # reduce cssfiles to only the newest file
-#     clientcssfiles = [max(clientcssfiles, key=lambda x: x['mtime'])]
-#     indexcssfiles = [max(indexcssfiles, key=lambda x: x['mtime'])]
-
-#     assets.extend(jsfiles)
-#     assets.extend(clientcssfiles)
-#     assets.extend(indexcssfiles)
-
-#     return assets
-
-
 def index(request):
     return render(request, bolls_index)
 
@@ -598,17 +552,19 @@ def historyOf(user):
 
 
 def historyData(user):
+    default_response_obj = {"history": [],
+                            "purge_date": 0, "compare_translations": []}
     if user.is_authenticated:
         try:
             obj = user.history_set.get(user=user)
-            return {"history": obj.history, "purge_date": obj.purge_date}
+            return {"history": obj.history, "purge_date": obj.purge_date, "compare_translations": obj.compare_translations}
         except History.MultipleObjectsReturned:
             user.history_set.filter(user=user).delete()
-            return {"history": [], "purge_date": 0}
+            return default_response_obj
         except History.DoesNotExist:
-            return {"history": [], "purge_date": 0}
+            return default_response_obj
     else:
-        return {"history": [], "purge_date": 0}
+        return default_response_obj
 
 
 def history(request):
@@ -873,7 +829,6 @@ def importNotes(request):
         return HttpResponse(status=405)
 
 
-# for devonly
 def sw(request):
     # get the file for the service worker
     sw_file = open(os.path.join(
@@ -882,3 +837,15 @@ def sw(request):
     sw_file.close()
     # and sent it to the client
     return HttpResponse(sw_content, content_type='application/javascript')
+
+
+def saveCompareTranslations(request):
+    if request.method == 'PUT' and request.user.is_authenticated:
+        received_json_data = json.loads(request.body)
+        history = request.user.history_set.get(user=request.user)
+        print(received_json_data["translations"])
+        history.compare_translations = received_json_data["translations"]
+        history.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=405)

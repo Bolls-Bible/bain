@@ -38,6 +38,7 @@ class History(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     history = models.TextField(default=None)
     purge_date = models.PositiveBigIntegerField(default=0)
+    compare_translations = models.TextField(null=True, default=None)
 
 
 class Dictionary(models.Model):

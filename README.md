@@ -80,6 +80,6 @@ python manage.py clearsessions
 
 # Become a maintainer
 
-You will get full access to Google Cloud project running the app backend, VPS with PostgreSQL database, abd this repo.
+You will get full access to this repo.
 
 ### On how to add a new translation read /django/HOW_TO_ADD_A_NEW_TRANSLATION.md

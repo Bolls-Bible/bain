@@ -1,18 +1,13 @@
 tag loading-animation
 	prop genesis = Date.now()
-	prop speed = 800
+	prop speed = 1024
 	prop period = 6 * speed
 
 	def mount
-		# schedule(raf: yes)
-		# call render every second
-		$timer = setInterval(render.bind(self),1000 / 31.25)
-		# window.requestAnimationFrame render
+		#timer = setInterval(render.bind(self), 1000 / 25)
 
 	def unmount
-		# remember to clear interval when tag unmounts
-		clearInterval($timer)
-
+		clearInterval(#timer)
 
 	def scale delay
 		delay *= speed
@@ -29,7 +24,7 @@ tag loading-animation
 
 	def rotate delay
 		delay *= speed
-		return Math.floor(((Date.now() - genesis - delay) / (period / 8)) * 360 - 270)
+		return Math.floor(((Date.now() - genesis - delay) / (period / 4)) * 360 - 270)
 
 
 	def render

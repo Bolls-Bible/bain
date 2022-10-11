@@ -20,6 +20,7 @@ let agent = window.navigator.userAgent;
 let isWebkit = (agent.indexOf("AppleWebKit") > 0);
 let isIPad = (agent.indexOf("iPad") > 0);
 let isIOS = (agent.indexOf("iPhone") > 0 || agent.indexOf("iPod") > 0)
+let isApple = isIPad || isIOS
 let isAndroid = (agent.indexOf("Android")  > 0)
 let isNewBlackBerry = (agent.indexOf("AppleWebKit") > 0 && agent.indexOf("BlackBerry") > 0)
 let isWebOS = (agent.indexOf("webOS") > 0);
@@ -29,8 +30,6 @@ let isUnknownMobile = (isWebkit && isSmallScreen)
 let isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile)
 # let isTablet = (isIPad || (isMobile && !isSmallScreen))
 let MOBILE_PLATFORM = no
-
-const applemob\boolean = window.navigator.platform.charAt(0) == 'i'
 
 if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
 	MOBILE_PLATFORM = yes
@@ -162,7 +161,6 @@ let show_delete_bookmark = no
 let show_translations_for_comparison = no
 let welcome = yes
 let slidetouch = null
-let compare_translations = []
 let compare_parallel_of_chapter
 let compare_parallel_of_book
 let highlighted_title = ''
@@ -250,6 +248,28 @@ tag bible-reader
 	prop chronorder = no
 	prop search = {suggestions:{}}
 	#main_header_arrow_size = ''
+
+	get compare_translations
+		return #compare_translations || []
+
+	set compare_translations new_translations
+		unless new_translations
+			return
+		#compare_translations = new_translations
+		if window.navigator.onLine
+			window.fetch("/save-compare-translations/", {
+					method: "PUT",
+					cache: "no-cache",
+					headers: {
+						'X-CSRFToken': data.get_cookie('csrftoken'),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						translations: JSON.stringify(new_translations),
+					})
+				})
+		window.localStorage.setItem("compare_translations", JSON.stringify(new_translations))
+
 
 	def setup
 		# # # Setup some global events
@@ -344,6 +364,9 @@ tag bible-reader
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
 
+		history = JSON.parse(getCookie("history")) || []
+		history.sort(do(a, b) return a.date - b.date)
+
 		if window.navigator.onLine
 			try
 				let userdata = await loadData("/user-logged/")
@@ -362,9 +385,6 @@ tag bible-reader
 			catch err
 				console.error('Error: ', err)
 				data.showNotification('error')
-
-		history = JSON.parse(getCookie("history")) || []
-		history.sort(do(a, b) return a.date - b.date)
 
 		if window.message
 			data.showNotification(window.message)
@@ -427,7 +447,7 @@ tag bible-reader
 		# silly analog of routed
 		let link = window.location.pathname.split('/')
 		if link[1] && link[2] && link[3]
-			getChapter link[1], link[2], link[3]
+			getChapter link[1], link[2], link[3], link[4]
 
 		document.addEventListener('selectionchange', onSelectionChange.bind(self))
 		window.addEventListener('popstate', onPopState.bind(self))
@@ -485,7 +505,7 @@ tag bible-reader
 	def syncHistory
 		if data.user.username && window.navigator.onLine
 			let cloud_history = await loadData('/history')
-
+			if cloud_history.compare_translations..length then #compare_translations = JSON.parse(cloud_history.compare_translations)
 			# Merge local history and server copy
 			history = JSON.parse(getCookie("history")) || []
 			try
@@ -556,7 +576,7 @@ tag bible-reader
 				translation: settings.translation,
 				book: settings.book,
 				chapter: settings.chapter,
-				verse: id,
+				verse: verse,
 			}
 			'',
 			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + verse ? verse : '')
@@ -1207,11 +1227,15 @@ tag bible-reader
 		search.filter = book
 		search.show_filters = no
 		search.counter = 50
+		let search_body = document.getElementById('search_body')
+		search_body.scrollTo(0,0)
 
 	def dropFilter
 		search.filter = ''
 		search.show_filters = no
 		search.counter = 50
+		let search_body = document.getElementById('search_body')
+		search_body.scrollTo(0,0)
 
 
 	def getFilteredASearchVerses
@@ -1884,10 +1908,10 @@ tag bible-reader
 			})
 			.then(do |response| response.json())
 			.then(do |resdata|
-					comparison_parallel = resdata
-					loading = no
-					popUp 'show_compare'
-					imba.commit()
+				comparison_parallel = resdata
+				loading = no
+				popUp 'show_compare'
+				imba.commit()
 			)
 			.catch(do |error|
 				if data.db_is_available && data.downloaded_translations.indexOf(settings.translation) != -1
@@ -1899,6 +1923,7 @@ tag bible-reader
 	def addTranslation translation
 		if compare_translations.indexOf(translation.short_name) < 0
 			compare_translations.unshift(translation.short_name)
+			compare_translations = compare_translations
 			window.fetch("/get-paralel-verses/", {
 				method: "POST",
 				cache: "no-cache",
@@ -1925,6 +1950,7 @@ tag bible-reader
 				data.showNotification('error'))
 		else
 			compare_translations.splice(compare_translations.indexOf(translation.short_name), 1)
+			compare_translations = compare_translations
 			comparison_parallel.splice(comparison_parallel.indexOf(comparison_parallel.find(do |prlll| return prlll[0].translation == translation.short_name)), 1)
 		window.localStorage.setItem("compare_translations", JSON.stringify(compare_translations))
 		show_translations_for_comparison = no
@@ -2041,7 +2067,6 @@ tag bible-reader
 
 	def saveCompareChanges arr
 		compare_translations = arr
-		window.localStorage.setItem("compare_translations", JSON.stringify(arr))
 
 	def currentLanguage
 		switch data.language
@@ -2147,10 +2172,10 @@ tag bible-reader
 			chapter_headers.fontsize1 = 2
 
 		const last_known_scroll_position = scrollTop
-		setTimeout(&, 100) do
-			if scrollTop < last_known_scroll_position || not scrollTop
+		setTimeout(&, 250) do
+			if scrollTop - last_known_scroll_position + 32 < 0 || not scrollTop
 				menu_icons_transform = 0
-			elif scrollTop > last_known_scroll_position
+			elif scrollTop - last_known_scroll_position - 32 > 0
 				if window.innerWidth >= 1024
 					menu_icons_transform = -100
 				else
@@ -2416,6 +2441,7 @@ tag bible-reader
 					host_rectangle.left = viewportRectangle.left
 				else
 					host_rectangle.right = window.innerWidth - viewportRectangle.right
+				imba.commit!
 
 
 	def showDictionaryView
@@ -2577,11 +2603,17 @@ tag bible-reader
 		if event.detail.translation && event.detail.book && event.detail.chapter
 			getText event.detail.translation, event.detail.book, event.detail.chapter, event.detail.verse
 
+	def textDirection text
+		// check if there are present rtl characters
+		if text.match(/[\u0590-\u08FF]/)
+			return 'rtl'
+		return 'ltr'
+
 	def render
-		if applemob
+		if isApple
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
 
-		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove @gotoverse=openSearchVerse .fixscroll=(big_modal_block_content or inzone or onzone)>
+		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove @gotoverse=openSearchVerse .fixscroll=(big_modal_block_content)>
 			<nav .lock-books=settings.lock_books_menu @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
@@ -2671,7 +2703,6 @@ tag bible-reader
 				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
 					<title> data.lang.delete
 					<path[m: auto] d=svg_paths.close>
-
 
 			<div
 				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
@@ -3021,8 +3052,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.95 🗓 "
-						<time dateTime='2022-09-25'> "25.09.2022"
+						"🍇 v2.1.96 🗓 "
+						<time dateTime='2022-10-11'> "11.10.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3057,7 +3088,7 @@ tag bible-reader
 								for q in data.lang.HB
 									<h3 id=q[0] > q[0]
 									<p innerHTML=q[1]>
-								if window.innerWidth >= 1024
+								if !MOBILE_PLATFORM
 									<div id="shortcuts">
 										<h3> data.lang.shortcuts
 										for shortcut in data.lang.shortcuts_list
@@ -3090,10 +3121,10 @@ tag bible-reader
 											<a.book_in_list.book_in_filter dir="auto" @click=addTranslation(translation)> translation.short_name, ', ', translation.full_name
 
 
-							<article$compare_body.search_body [pb: 256px scroll-behavior: auto]>
+							<article$compare_body.search_body [scroll-behavior: auto]>
 								<p.total_msg> data.lang.add_translations_msg
 
-								<orderable-list list=comparison_parallel saveCompareChanges=saveCompareChanges>
+								<orderable-list list=comparison_parallel saveCompareChanges=saveCompareChanges.bind(this)>
 
 								unless compare_translations.length
 									<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
@@ -3180,7 +3211,6 @@ tag bible-reader
 
 														if no_translation_downloaded
 															data.lang["no_translation_downloaded"]
-										<.freespace>
 
 						elif big_modal_block_content == 'show_support'
 							<article.search_hat>
@@ -3227,7 +3257,7 @@ tag bible-reader
 										<title> data.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
+								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none direction: {textDirection(store.definition_search)}]
 									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
 									@keydown.enter=loadDefinitions>
 
@@ -3320,7 +3350,7 @@ tag bible-reader
 									<path[m: auto] d=svg_paths.close>
 
 								<input$generalsearch
-									[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none]
+									[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none direction: {textDirection(search.search_input)}]
 									minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search
 									bind=search.search_input @keydown.enter=getSearchText @input=searchSuggestions>
 
@@ -3388,7 +3418,6 @@ tag bible-reader
 											<p> data.lang.nothing
 											<p[padding:32px 0px 8px]> data.lang.translation, ' ', search.translation
 											<button.more_results @click=(lock_panel = yes;showTranslations!)> data.lang.change_translation
-									<.freespace>
 
 
 			if show_collections || show_share_box || choosenid.length
@@ -3624,7 +3653,7 @@ tag bible-reader
 
 			if page_search.d
 				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--bgc)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $acc-bgc p:2px 8px zi:1100] ease>
-					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0] placeholder=data.lang.find_in_chapter>
+					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0 direction: {textDirection(page_search.query)}] placeholder=data.lang.find_in_chapter>
 					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
 						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>
 							<title> data.lang.prev
