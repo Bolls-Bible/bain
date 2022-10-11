@@ -1,43 +1,117 @@
 import {svg_paths} from "./svg_paths.imba"
 import './search-text-as-html.imba'
-import Sortable from 'sortablejs';
 
 tag orderable-list
 	prop list = []
 	#swapped_offset = 0
 	#dy = 0
 	#scroll_direction = 0
-	#initial_parent_scroll = 0
+	#scrolled_distance = 0
 
 	def mount
-		#sortable = new Sortable(self, {
-			ghostClass: 'sortable-ghost',
-			# chosenClass: "draggable",
-			dragClass: 'sortable-draggable',
-			animation: 300,
-			easing: 'cubic-bezier(0.37, 0, 0.63, 1)',
-			onEnd: do 
-				let arr = []
-				for item in childNodes
-					arr.push item.id
+		$timer = setInterval(autoscroll.bind(self),25)
 
-				saveCompareChanges(arr)
-		});
- 
+	def unmount
+		clearInterval($timer)
+
+
+	def reorder touch, id
+		#dy = touch.y - touch.events[0].y
+		state.intouch = yes
+
+		unless #drugging_target
+			#drugging_target = id
+
+		else
+			# target -- draggable item. After every swap it is a different node of DOM
+			let target = document.getElementById(#drugging_target)
+			let index = list.indexOf(list.find(do(el) return el[0].translation == #drugging_target))
+
+			# log target
+			if target.nextSibling
+				if #dy + #scrolled_distance > #swapped_offset + (target.nextSibling.clientHeight / 2)
+					if index < list.length - 1
+						list[index + 1] = list.splice(index, 1, list[index + 1])[0]
+						#swapped_offset += target.nextSibling.clientHeight
+			if target.previousSibling
+				if #dy + #scrolled_distance < #swapped_offset - (target.previousSibling.clientHeight / 2)
+					if index > 0
+						list[index - 1] = list.splice(index, 1, list[index - 1])[0]
+						#swapped_offset -= target.previousSibling.clientHeight
+
+
+		if touch.phase == 'ended'
+			touchend(touch)
+
+
+	def touchend touch
+		#drugging_target = ''
+		#swapped_offset = 0
+		#scroll_direction = 0
+		#scrolled_distance = 0
+		await imba.commit!
+
+		.then do state.intouch = no
+		let arr = []
+		for item in childNodes
+			arr.push item.id
+
+		saveCompareChanges(arr)
+
+
+
+	def triggerAutoscroll event
+		# Trigger intersect only for the target
+		if event.target.id != #drugging_target
+			return
+
+		if event.delta >= 0 and event.entry.isIntersecting
+			stopIntersect!
+			return
+
+		# Autoscroll when on the top/bottom edge of the app
+		let boundingClientRect = event.entry.boundingClientRect
+		if boundingClientRect.top < window.innerHeight / 2
+			#scroll_direction = -1
+		else
+			#scroll_direction = 1
+
+
+	def autoscroll
+		if #scroll_direction == 1
+			# Prevent scrolling to bottom if the target is already the last one
+			if list.indexOf(#drugging_target) != list.length - 1
+				parentNode.scroll(0, parentNode.scrollTop + 8)
+				#scrolled_distance += 8
+		elif #scroll_direction == -1
+			if parentNode.scrollTop > 3
+				parentNode.scroll(0, parentNode.scrollTop - 8)
+				#scrolled_distance -= 8
+		imba.commit!
+
+	def stopIntersect
+		#scroll_direction = 0
+
+	def draggedOffset item
+		if item == #drugging_target
+			return #dy - #swapped_offset + #scrolled_distance
+		return 0
+
 	def druggable id
 		return id == #drugging_target
 
+
 	def render
-		<self[d:block]>
+		<self[d:block] @mouseup=stopIntersect>
 			for item in list
 				if item[0].text
-					<div.search_item id=item[0].translation>
+					<div.search_item .draggable=(druggable item[0].translation) id=item[0].translation [transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,100)=triggerAutoscroll>
 						<div.search_res_verse_text>
 							for aoefv in item
 								<search-text-as-html data=aoefv innerHTML="{aoefv.text + ' '}">
 
 						<div.search_res_verse_header [mb:0 pb:16px]>
-							<svg.drag_handle xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+							<svg.drag_handle @touch=reorder(e, item[0].translation) xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
 								<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
 							<span> item[0].translation
 
@@ -54,8 +128,8 @@ tag orderable-list
 								<title> state.lang.delete
 								<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
 				else
-					<div.search_res_verse_header id=item[0].translation [p: 16px 0px mb:0 display:flex align-items:center]>
-						<svg.drag_handle [margin-right: 16px] xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
+					<div.search_res_verse_header .draggable=(druggable item[0].translation) id=item[0].translation [p: 16px 0px mb:0 display:flex align-items:center transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,100)=triggerAutoscroll>
+						<svg.drag_handle [margin-right: 16px] @touch=reorder(e, item[0].translation) xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
 							<path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z">
 
 						state.lang.the_verse_is_not_available, ' ', item[0].translation, item[0].text
@@ -63,3 +137,15 @@ tag orderable-list
 						<svg.remove_parallel.close_search [margin: -8px 8px 0 auto] @click.prevent.addTranslation({short_name: item[0].translation}) xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" alt=state.lang.delete>
 							<title> state.lang.delete
 							<path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z">
+
+
+	css
+		.draggable
+			zi:2
+			pos:sticky
+			o:0.75
+			cursor: move
+		
+		.search_item, .search_res_verse_header
+			transition-property@important:background-color, opacity
+

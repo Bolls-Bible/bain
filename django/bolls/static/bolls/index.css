@@ -1730,15 +1730,6 @@ mark-down * {
   transition: none !important;
 }
 
-.sortable-ghost {
-  opacity: 0.5;
-}
-
-.sortable-draggable {
-  background-color: var(--acc-bgc);
-  border-radius: 8px;
-}
-
 @media all and (display-mode: standalone) {
   #pwa {
     display: none;

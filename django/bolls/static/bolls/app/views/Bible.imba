@@ -250,13 +250,16 @@ tag bible-reader
 	#main_header_arrow_size = ''
 
 	get compare_translations
-		return #compare_translations || []
+		return #compare_translations || [
+			settings.translation
+			settingsp.translation
+		]
 
 	set compare_translations new_translations
 		unless new_translations
 			return
 		#compare_translations = new_translations
-		if window.navigator.onLine
+		if window.navigator.onLine && data.user.username
 			window.fetch("/save-compare-translations/", {
 					method: "PUT",
 					cache: "no-cache",
@@ -1866,7 +1869,7 @@ tag bible-reader
 			big_modal_block_content = ''
 		else
 			popUp 'show_note'
-
+		
 	def toggleCompare
 		if choosen.length then choosen_for_comparison = choosen
 		if choosen_parallel == 'second'
