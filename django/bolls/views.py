@@ -259,7 +259,6 @@ def deleteAccount(request):
 
         except Exception as e:
             return render(request, bolls_index, {'message': e.message})
-    print(message)
     return render(request, bolls_index, {"message": message})
 
 
@@ -800,7 +799,6 @@ def importNotes(request):
             if len(existing_bookmark_set) > 0:
                 if received_json_data["merge_replace"] == 'true':
                     existing_bookmark = existing_bookmark_set[0]
-                    print(existing_bookmark)
                     if existing_bookmark.note is not None:
                         if len(item["note"]):
                             existing_bookmark.note.text = item["note"]
@@ -843,7 +841,6 @@ def saveCompareTranslations(request):
     if request.method == 'PUT' and request.user.is_authenticated:
         received_json_data = json.loads(request.body)
         history = request.user.history_set.get(user=request.user)
-        print(received_json_data["translations"])
         history.compare_translations = received_json_data["translations"]
         history.save()
         return HttpResponse(status=200)
