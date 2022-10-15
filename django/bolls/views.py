@@ -828,6 +828,7 @@ def importNotes(request):
 
 
 def sw(request):
+    # return HttpResponse(status=404) # for dev only
     # get the file for the service worker
     sw_file = open(os.path.join(
         BASE_DIR, 'bolls/static/service-worker.js'), 'r')

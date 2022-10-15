@@ -444,7 +444,7 @@ main header h1 {
   padding: 0 4px;
   position: sticky;
   background-color: var(--bgc);
-  top: -1px;
+  top: 0;
   line-height: 1;
   cursor: pointer;
 }

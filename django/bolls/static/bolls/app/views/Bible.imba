@@ -582,7 +582,7 @@ tag bible-reader
 				verse: verse,
 			}
 			'',
-			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + verse ? verse : '')
+			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + (verse ? verse : ''))
 
 		getChapter translation, book, chapter, verse
 
@@ -812,11 +812,11 @@ tag bible-reader
 		# unless the user is typing something focus the reader in order to enable arrow navigation on the text
 		unless page_search.d
 			focus()
+			window.getSelection().removeAllRanges()
 		if page_search.d || big_modal_block_content
 			page_search.d = no
 			page_search.matches = []
 			page_search.rects = []
-		window.getSelection().removeAllRanges()
 		big_modal_block_content = ''
 		imba.commit()
 
@@ -975,7 +975,7 @@ tag bible-reader
 				pageSearch()
 		if page_search.matches[page_search.current_occurence]
 			findVerse(page_search.matches[page_search.current_occurence].id, no, no)
-		focusInput()
+		# focusInput()
 		imba.commit()
 
 
@@ -3055,8 +3055,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.96 🗓 "
-						<time dateTime='2022-10-11'> "11.10.2022"
+						"🍇 v2.1.97 🗓 "
+						<time dateTime='2022-10-15'> "15.10.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
