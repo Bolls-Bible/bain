@@ -3055,8 +3055,8 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.97 🗓 "
-						<time dateTime='2022-10-15'> "15.10.2022"
+						"🍇 v2.1.98 🗓 "
+						<time dateTime='2022-10-18'> "18.10.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
