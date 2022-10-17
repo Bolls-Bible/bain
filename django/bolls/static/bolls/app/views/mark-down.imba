@@ -4,11 +4,9 @@ import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 import { history, historyKeymap } from '@codemirror/history'
 import { indentOnInput } from '@codemirror/language'
 import { bracketMatching } from '@codemirror/matchbrackets'
-import { defaultHighlightStyle } from '@codemirror/highlight'
+import { defaultHighlightStyle, HighlightStyle, tags } from '@codemirror/highlight'
 import { markdown, markdownLanguage, markdownKeymap } from '@codemirror/lang-markdown'
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets'
-
-import { HighlightStyle, tags } from '@codemirror/highlight'
 
 export const syntaxHighlighting = HighlightStyle.define([
 	{
@@ -162,7 +160,6 @@ tag mark-down
 
 	def setup
 		editorView = new EditorView({
-			state: editorState!,
 			parent: self
 		})
 
