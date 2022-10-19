@@ -13,6 +13,7 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/
 
 
 docker exec -i <database_container> psql -U <database_user> -d <database_name> -c "<sql command>"
+docker exec -i database_container psql -U database_user -d database_name -c "sql_command"
 
 
 
