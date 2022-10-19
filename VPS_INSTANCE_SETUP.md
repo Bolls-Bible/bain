@@ -10,6 +10,8 @@ Create a brunch `feature/setup` and push it to GitHub to trigger automated pipel
 
 ### 4. Populate database with default data
 Go into database container
-`wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump`
+Download command (doesn't really work idk) `wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump`
 `docker cp ./backup.dump db_dev:backup.dump`
 `docker exec -i db_dev pg_restore -U django_dev -v -d cotton < backup.dump`
+
+Copy command `scp backup.dump root@ip.ip.ip.ip:/root`
