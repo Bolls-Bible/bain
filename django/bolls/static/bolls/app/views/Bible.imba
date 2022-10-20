@@ -34,6 +34,8 @@ let MOBILE_PLATFORM = no
 if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=") < 0
 	MOBILE_PLATFORM = yes
 
+const DRAWERARROWWIDTH = do Math.min(32, Math.max(16, window.innerWidth * 0.02))
+
 def noop
 	return
 
@@ -905,9 +907,9 @@ tag bible-reader
 					return rect_left - search_body.offsetLeft - search_body.parentNode.offsetLeft
 				elif settingsp.display
 					if window.innerWidth > 639 && parallel
-						return rect_left - chapter_articles[parallel].parentNode.offsetLeft - chapter_articles[parallel].offsetLeft
+						return rect_left - chapter_articles[parallel].parentNode.offsetLeft - DRAWERARROWWIDTH!
 					else
-						return rect_left - window.innerWidth * 0.02
+						return rect_left - DRAWERARROWWIDTH!
 				else return rect_left
 
 			# getClientRects returns metrics of selections
@@ -3048,15 +3050,15 @@ tag bible-reader
 						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
 						<a target="_blank" href="/api"> "API "
-						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
-						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
-						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram :P"
+						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
+						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
+						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.1.98 🗓 "
-						<time dateTime='2022-10-18'> "18.10.2022"
+						"🍇 v2.2.0 🗓 "
+						<time dateTime='2022-10-20'> "20.10.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

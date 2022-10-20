@@ -92,8 +92,8 @@ jobs:
             docker compose exec -T $WEB_CONTAINER_NAME python manage.py migrate --noinput
             docker compose exec -T $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
             docker cp ./django/sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-            docker compose exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
-            docker compose exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            docker exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
+            docker exec -T $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             docker compose exec -T $WEB_CONTAINER_NAME python manage.py test --keepdb
             echo "Done."
             cd ..

@@ -9,9 +9,14 @@ https://docs.docker.com/engine/install/debian/
 Create a brunch `feature/setup` and push it to GitHub to trigger automated pipeline. You may need to run it twice if database wasn't well setup at first run.
 
 ### 4. Populate database with default data
-Go into database container
-Download command (doesn't really work idk) `wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump`
+Go into database container. Download backup:
+`wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump`
+
+Copy to container:
 `docker cp ./backup.dump db_dev:backup.dump`
+
+Restore in one of these ways (depends on the backup you have done)
 `docker exec -i db_dev pg_restore -U django_dev -v -d cotton < backup.dump`
+`docker exec -i db_dev psql -U django_dev cotton < backup.dump`
 
 Copy command `scp backup.dump root@ip.ip.ip.ip:/root`
