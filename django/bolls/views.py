@@ -841,9 +841,20 @@ def sw(request):
 def saveCompareTranslations(request):
     if request.method == 'PUT' and request.user.is_authenticated:
         received_json_data = json.loads(request.body)
-        history = request.user.history_set.get(user=request.user)
-        history.compare_translations = received_json_data["translations"]
-        history.save()
+        user = request.user
+        try:
+            history = user.history_set.get(user=user)
+            history.compare_translations = received_json_data["translations"]
+            history.save()
+
+        except History.DoesNotExist:
+            user.history_set.create(
+                compare_translations=received_json_data["translations"])
+
+        except History.MultipleObjectsReturned:
+            user.history_set.all().delete()
+            user.history_set.create(
+                compare_translations=received_json_data["translations"])
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)

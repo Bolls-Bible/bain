@@ -475,6 +475,11 @@ footer a,
   padding-bottom: 4px;
 }
 
+main S,
+main s {
+  display: none;
+}
+
 html[data-transitions="true"] #iosinstall a:hover,
 html[data-transitions="true"] .main span:hover,
 html[data-transitions="true"] footer a:hover,

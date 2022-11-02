@@ -433,7 +433,7 @@ tag bible-reader
 			bible_menu_left = -300
 			settings_menu_left = -300
 			imba.commit!
-		
+
 	def onSelectionChange
 		if window.getSelection().toString().length > 0		
 			this.showDefOptions!
@@ -441,7 +441,7 @@ tag bible-reader
 			let selection = document.getSelection()
 			if selection.isCollapsed
 				host_rectangle = null
-			
+
 	def onPopState event
 		if event.state.translation && event.state.book && event.state.chapter
 			getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
@@ -550,10 +550,9 @@ tag bible-reader
 						history: JSON.stringify(history),
 					})
 			})
-			.then(do |response| response.json())
-			.catch(do |e| console.error(e))
-			# .then(do |data| log data)
-
+			.then(do |response| if(response.status !== 200)
+				throw new Error(response.statusText)
+			).catch(do |e| console.error(e))
 
 
 	def loadData url
@@ -2417,12 +2416,20 @@ tag bible-reader
 						return yes
 		return no
 
+	def strongHunber query, number
+		console.log(query)
+		// check if the text containe hebrew symbols
+		if query.match(/[\u0590-\u05FF]/)
+			return 'H' + number
+		else
+			return 'G' + number
+
 	def showDefOptions
 		const selection = window.getSelection!
 		const selected = selection.toString!.trim!
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected
-		let hebrew_or_greek = selected.match(/[\u0590-\u05FF]/) or  selected.match(/[\u0370-\u03FF]/)
+		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/)
 		if selected.match(/\s/) or selected == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
@@ -2440,12 +2447,16 @@ tag bible-reader
 					right: 'auto'
 					width: viewportRectangle.width
 					height: viewportRectangle.height
+					selected: selected
 				}
 				# Prevent overflowing
 				if viewportRectangle.left <= window.innerWidth / 2
 					host_rectangle.left = viewportRectangle.left
 				else
 					host_rectangle.right = window.innerWidth - viewportRectangle.right
+
+				if selection.anchorNode.nextSibling..textContent
+					host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
 				imba.commit!
 
 
@@ -2509,11 +2520,13 @@ tag bible-reader
 
 
 
-	def loadDefinitions
+	def loadDefinitions query
 		let selected_text = window.getSelection!.toString!.trim!
+		if query
+			selected_text = query
 		if selected_text
 			store.definition_search = selected_text
-
+		console.log(selected_text)
 		definitions = []
 		if store.definition_search && (window.navigator.onLine or state.downloaded_dictionaries.length)
 			if definitions_history.indexOf(store.definition_search) == -1
@@ -2610,7 +2623,7 @@ tag bible-reader
 
 	def textDirection text
 		// check if there are present rtl characters
-		if text.match(/[\u0590-\u08FF]/)
+		if text..match(/[\u0590-\u08FF]/)
 			return 'rtl'
 		return 'ltr'
 
@@ -2717,11 +2730,14 @@ tag bible-reader
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 			if host_rectangle
-				<button
-					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 bg:$acc-bgc @hover:$acc-bgc-hover fs:inherit font:inherit c:inherit p:8px 16px rd:4px bd:1px solid $acc-bgc-hover cursor:pointer scale@off:0.75 o@off:0 origin:top center]
-					@click=loadDefinitions
+				<div.host_rectangle
+					[pos:fixed l:{host_rectangle.left}px r:{host_rectangle.right}px t:{host_rectangle.top}px zi:1 scale@off:0.75 o@off:0 origin:top center]
 					ease
-					> data.lang.definition
+					>
+					<button @click=loadDefinitions(host_rectangle.selected)> host_rectangle.selected
+					if host_rectangle.strong
+						'|'
+						<button @click=loadDefinitions(host_rectangle.strong)> host_rectangle.strong
 
 			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
 				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
@@ -3057,8 +3073,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.0 🗓 "
-						<time dateTime='2022-10-20'> "20.10.2022"
+						"🍇 v2.2.1 🗓 "
+						<time dateTime='2022-11-02'> "2.11.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3825,3 +3841,14 @@ tag bible-reader
 		.disabled
 			o:0.5
 			transform:nonel
+
+		.host_rectangle
+			bg:$acc-bgc rd:4px
+			bd:1px solid $acc-bgc-hover
+		
+		.host_rectangle button
+			p: 8px
+			bgc:transparent @hover:$acc-bgc-hover
+			fs:inherit font:inherit c:inherit
+			cursor:pointer
+
