@@ -1744,10 +1744,8 @@ tag bible-reader
 			show_collections = !show_collections
 			store.show_color_picker = no
 			if show_collections && data.user.username
-				let url = "/get-categories/"
 				if window.navigator.onLine
-					let data = await loadData(url)
-					categories = []
+					let data = await loadData("/get-categories/")
 					categories = data.data
 					for category in choosen_categories
 						if !categories.find(do |element| return element == category)
@@ -2519,14 +2517,14 @@ tag bible-reader
 		return 0
 
 
-
+	# Get query results from the dictionary, or Strong's number 
 	def loadDefinitions query
 		let selected_text = window.getSelection!.toString!.trim!
-		if query
+		if typeof query === 'string' # imba may pass the event object from input
 			selected_text = query
 		if selected_text
 			store.definition_search = selected_text
-		console.log(selected_text)
+
 		definitions = []
 		if store.definition_search && (window.navigator.onLine or state.downloaded_dictionaries.length)
 			if definitions_history.indexOf(store.definition_search) == -1
@@ -2557,6 +2555,8 @@ tag bible-reader
 			parseDefinitionsLinks!
 			imba.commit!
 
+	# Since I use MyBible modules they have their own links format, which is not supported by the browser.
+	# So we have to parse them and replace with custom click events.
 	def parseDefinitionsLinks
 		# Parse Strong links
 		let patterns = [
@@ -3073,8 +3073,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.1 🗓 "
-						<time dateTime='2022-11-02'> "2.11.2022"
+						"🍇 v2.2.2 🗓 "
+						<time dateTime='2022-11-03'> "3.11.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

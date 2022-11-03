@@ -27248,5 +27248,169 @@
       "chronorder": 39,
       "chapters": 3
     }
+  ],
+  "TISCH": [
+    {
+      "bookid": 40,
+      "name": "ΚΑΤΑ ΜΑΤΘΑΙΟΝ",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "ΚΑΤΑ ΜΑΡΚΟΝ",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "ΚΑΤΑ ΛΟΥΚΑΝ",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "ΚΑΤΑ ΙΩΑΝΝΗΝ",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "ΠΡΑΞΕΙΣ",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "ΠΡΟΣ ΡΩΜΑΙΟΥΣ",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "ΠΡΟΣ ΚΟΡΙΝΘΙΟΥΣ Α΄",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "ΠΡΟΣ ΚΟΡΙΝΘΙΟΥΣ Β΄",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "ΠΡΟΣ ΓΑΛΑΤΑΣ",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "ΠΡΟΣ ΕΦΕΣΙΟΥΣ",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "ΠΡΟΣ ΦΙΛΙΠΠΗΣΙΟΥΣ",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "ΠΡΟΣ ΚΟΛΟΣΣΑΕΙΣ",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "ΘΕΣΣΑΛΟΝΙΚΕΙΣ Α΄",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "ΘΕΣΣΑΛΟΝΙΚΕΙΣ Β΄",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "ΠΡΟΣ ΤΙΜΟΘΕΟΝ Α΄",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "ΠΡΟΣ ΤΙΜΟΘΕΟΝ Β΄",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "ΠΡΟΣ ΤΙΤΟΝ",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "ΠΡΟΣ ΦΙΛΗΜΟΝΑ",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "ΠΡΟΣ ΕΒΡΑΙΟΥΣ",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "ΙΑΚΩΒΟΥ",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "ΠΕΤΡΟΥ Α΄",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "ΠΕΤΡΟΥ Β΄",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "ΙΩΑΝΝΟΥ Α΄",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "ΙΩΑΝΝΟΥ Β΄",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "ΙΩΑΝΝΟΥ Γ΄",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "ΙΟΥΔΑ",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "ΑΠΟΚΑΛΥΨΙΣ ΙΩΑΝΝΟΥ",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }

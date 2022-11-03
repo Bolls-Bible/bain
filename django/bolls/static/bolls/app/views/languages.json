@@ -473,16 +473,22 @@
     "language": "Ελληνικά Greek",
     "translations": [
       {
-        "short_name": "LXX",
-        "full_name": "Septuagint",
-        "info": "https://wikipedia.org/wiki/Septuagint",
-        "updated": 1626349711821
-      },
-      {
         "short_name": "NTGT",
         "full_name": "Greek NT: Tischendorf 8th Ed.",
         "info": "https://en.wikipedia.org/wiki/Constantin_von_Tischendorf",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "TISCH",
+        "full_name": "Tischendorf's Greek New Testament, 8th edition, 1869–72 (With Strong's numbers)",
+        "info": "https://en.wikipedia.org/wiki/Constantin_von_Tischendorf",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "LXX",
+        "full_name": "Septuagint",
+        "info": "https://wikipedia.org/wiki/Septuagint",
+        "updated": 1626349711821
       },
       {
         "short_name": "TR",
