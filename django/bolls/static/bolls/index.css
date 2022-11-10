@@ -475,7 +475,7 @@ footer a,
   padding-bottom: 4px;
 }
 
-main S,
+search-text-as-html s,
 main s {
   display: none;
 }
@@ -1147,12 +1147,14 @@ html[data-light="light"] .Notifications p {
   --filling: var(--c);
 }
 
-.checkbox_turned p {
+html[data-theme="dark"] .checkbox_turned p,
+html[data-theme="black"] .checkbox_turned p {
   box-shadow: inset 0 0 0.8em 0.2em var(--filling);
 }
 
 .checkbox_turned span {
   transform: translateX(1.4em);
+  opacity: 1;
 }
 
 .help {

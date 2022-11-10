@@ -2314,11 +2314,6 @@ tag bible-reader
 		if e.enter
 			addNewCollection(store.newcollection)
 
-	def tDir translation
-		if translation in ['WLC', 'WLCC', 'POV', 'HAC']
-			return 'rtl'
-		return 'ltr'
-
 	def layerHeight parallel
 		if parallel
 			return $secondparallel.clientHeight
@@ -2741,7 +2736,7 @@ tag bible-reader
 
 			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
 				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=tDir(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=textDirection(verses[0]..text) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
@@ -2811,7 +2806,7 @@ tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
 
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=tDir(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=textDirection(parallel_verses[0]..text) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -3073,8 +3068,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.2 🗓 "
-						<time dateTime='2022-11-03'> "3.11.2022"
+						"🍇 v2.2.3 🗓 "
+						<time dateTime='2022-11-10'> "10.11.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
