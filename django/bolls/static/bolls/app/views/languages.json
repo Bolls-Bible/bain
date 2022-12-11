@@ -116,6 +116,12 @@
     "language": "Hebrew עברית",
     "translations": [
       {
+        "short_name": "WLCa",
+        "full_name": "Westminster Leningrad Codex (with vowels, accents and Strong's numbers)",
+        "info": "https://wikipedia.org/wiki/Leningrad_Codex",
+        "updated": 1591185595149
+      },
+      {
         "short_name": "WLC",
         "full_name": "Westminster Leningrad Codex (with Vowels)",
         "info": "https://wikipedia.org/wiki/Leningrad_Codex",
@@ -124,12 +130,6 @@
       {
         "short_name": "WLCC",
         "full_name": "Westminster Leningrad Codex (Consonants)",
-        "info": "https://wikipedia.org/wiki/Leningrad_Codex",
-        "updated": 1591185595149
-      },
-      {
-        "short_name": "WLCa",
-        "full_name": "Westminster Leningrad Codex (with vowels, accents and Strong's numbers)",
         "info": "https://wikipedia.org/wiki/Leningrad_Codex",
         "updated": 1591185595149
       },
@@ -473,14 +473,14 @@
     "language": "Ελληνικά Greek",
     "translations": [
       {
-        "short_name": "NTGT",
-        "full_name": "Greek NT: Tischendorf 8th Ed.",
+        "short_name": "TISCH",
+        "full_name": "Tischendorf's Greek New Testament, 8th edition, 1869–72 (With Strong's numbers)",
         "info": "https://en.wikipedia.org/wiki/Constantin_von_Tischendorf",
         "updated": 1591185595149
       },
       {
-        "short_name": "TISCH",
-        "full_name": "Tischendorf's Greek New Testament, 8th edition, 1869–72 (With Strong's numbers)",
+        "short_name": "NTGT",
+        "full_name": "Greek NT: Tischendorf 8th Ed.",
         "info": "https://en.wikipedia.org/wiki/Constantin_von_Tischendorf",
         "updated": 1591185595149
       },

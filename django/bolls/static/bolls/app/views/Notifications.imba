@@ -1,8 +1,8 @@
 export tag Notifications
 	def render
 		<self>
-			for notification in data.notifications
-				<p.{notification.className} @click=data.hideNotification(notification)> notification.title
+			for notification in state.notifications
+				<p.{notification.className} @click=state.hideNotification(notification)> notification.title
 
 	css
 		position: fixed

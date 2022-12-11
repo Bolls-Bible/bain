@@ -475,8 +475,9 @@ footer a,
   padding-bottom: 4px;
 }
 
-search-text-as-html s,
-main s {
+text-as-html s,
+main s,
+.bookmark_text s {
   display: none;
 }
 

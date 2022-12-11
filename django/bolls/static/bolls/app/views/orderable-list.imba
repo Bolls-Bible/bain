@@ -1,5 +1,5 @@
 import {svg_paths} from "./svg_paths.imba"
-import './search-text-as-html.imba'
+import './text-as-html.imba'
 
 tag orderable-list
 	prop list = []
@@ -108,7 +108,7 @@ tag orderable-list
 					<div.search_item .draggable=(druggable item[0].translation) id=item[0].translation [transform:translateY({draggedOffset(item[0].translation)}px)] @intersect(self.parentNode,100)=triggerAutoscroll>
 						<div.search_res_verse_text>
 							for aoefv in item
-								<search-text-as-html data=aoefv innerHTML="{aoefv.text + ' '}">
+								<text-as-html data=aoefv innerHTML="{aoefv.text + ' '}">
 
 						<div.search_res_verse_header [mb:0 pb:16px]>
 							<svg.drag_handle @touch=reorder(e, item[0].translation) xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24">

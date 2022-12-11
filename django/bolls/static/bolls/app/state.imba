@@ -3,20 +3,20 @@ import dictionaries from "./views/dictionaries.json"
 import { english, ukrainian, russian, portuguese, espanol, german } from './langdata.imba'
 
 export class State
-	db_is_available
+	db_is_available = yes
 	db
 
-	downloaded_translations
-	translations_in_downloading
-	deleting_of_all_transllations
+	downloaded_translations = []
+	translations_in_downloading = []
+	deleting_of_all_transllations = no
 	translations_current_state = {}
 
-	dictionaries_in_downloading
-	downloaded_dictionaries
-	deleting_of_all_dictionaries
+	dictionaries_in_downloading = []
+	downloaded_dictionaries = []
+	deleting_of_all_dictionaries = no
 	dictionaries_current_state = {}
 
-	show_languages
+	show_languages = no
 	language
 	lang
 	notifications = []
@@ -42,18 +42,6 @@ export class State
 	def constructor
 		for lngg in languages
 			translations = translations.concat(lngg.translations)
-
-		show_languages = no
-		db_is_available = yes
-
-		downloaded_translations = []
-		translations_in_downloading = []
-		deleting_of_all_transllations = no
-
-		downloaded_dictionaries = []
-		dictionaries_in_downloading = []
-		deleting_of_all_dictionaries = no
-
 
 		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
 		db = new Dexie('versesdb')
@@ -124,7 +112,7 @@ export class State
 				when 'it'
 					setDefaultTranslation 'NR06'
 				when 'he'
-					setDefaultTranslation 'WLCC'
+					setDefaultTranslation 'WLCa'
 				when 'zh'
 					setDefaultTranslation 'CUV'
 				when 'pl'
@@ -135,6 +123,7 @@ export class State
 					language = 'eng'
 					document.lastChild.lang = "en"
 			setLanguage(language)
+
 		if getCookie('dictionary')
 			dictionary = getCookie('dictionary')
 		else
@@ -164,7 +153,6 @@ export class State
 		)
 
 		#  Detect if the app is installed in order to prevent the install app button and its text
-		
 		let isStandalone
 		try
 			isStandalone = window.matchMedia('(display-mode: standalone)').matches
@@ -320,7 +308,6 @@ export class State
 
 			let response = await window.fetch(url)
 			if response.status == 200
-				db_is_available = yes
 				downloaded_translations.push(translation)
 				setCookie('downloaded_translations', JSON.stringify(downloaded_translations))
 				translations_in_downloading.splice(translations_in_downloading.indexOf(translation), 1)
@@ -339,12 +326,10 @@ export class State
 		downloaded_translations.splice(downloaded_translations.indexOf(translation), 1)
 		translations_in_downloading.push(translation)
 		let begtime = Date.now()
-		db_is_available = no
 
 		let response = await window.fetch('/sw/delete-translation/' + translation)
 		console.log response
 		if response.status == 200
-			db_is_available = yes
 			console.log( "Deleted ", translation, ". Time: ", (Date.now() - begtime) / 1000)
 			translations_in_downloading.splice(translations_in_downloading.indexOf(translation), 1)
 			delete translations_current_state[translation]
@@ -364,7 +349,6 @@ export class State
 
 			let response = await window.fetch(url)
 			if response.status == 200
-				db_is_available = yes
 				downloaded_dictionaries.push(dictionary)
 				setCookie('downloaded_dictionaries', JSON.stringify(downloaded_dictionaries))
 				dictionaries_current_state[dictionary] = Date.now()
@@ -379,12 +363,10 @@ export class State
 		downloaded_dictionaries.splice(downloaded_dictionaries.indexOf(dictionary), 1)
 		dictionaries_in_downloading.push(dictionary)
 		let begtime = Date.now()
-		db_is_available = no
 
 		let url = '/sw/delete-dictionary/' + dictionary
 		let response = await window.fetch(url)
 		if response.status == 200
-			db_is_available = yes
 			console.log("Deleted ", dictionary, ". Time: ", (Date.now() - begtime) / 1000)
 			delete dictionaries_current_state[dictionary]
 			setCookie('stored_dictionaries_updates', JSON.stringify(dictionaries_current_state))
@@ -397,13 +379,11 @@ export class State
 
 	def searchDefinitionsOffline search
 		let begtime = Date.now()
-		db_is_available = no
 
 		def resolveSearch data
-			db_is_available = yes
 			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			return data
-		
+
 		const url = '/sw/search-definitions/' + search.dictionary + '/' + search.query
 		let response = await window.fetch(url)
 		if response.status == 200
@@ -522,10 +502,8 @@ export class State
 
 	def getSearchedTextFromStorage search
 		let begtime = Date.now()
-		db_is_available = no
 
 		def resolveSearch data
-			db_is_available = yes
 			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
 			return data
 
@@ -668,7 +646,7 @@ export class State
 		let bookmarks-to-delete = getCookie('bookmarks-to-delete')
 		setCookie('bookmarks-to-delete', JSON.stringify(bookmarks-to-delete.concat(pks)))
 
-	def getUserName
+	get userName
 		if user.username
 			if user.name
 				return user.name

@@ -61,7 +61,7 @@ def getTranslation(request, translation):
 
         if len(comment) > 0:
             verse["comment"] = comment
-        return(verse)
+        return (verse)
 
     verses = [serializeVerse(obj) for obj in all_verses]
     return cross_origin(JsonResponse(verses, safe=False))
@@ -849,11 +849,13 @@ def saveCompareTranslations(request):
 
         except History.DoesNotExist:
             user.history_set.create(
+                history='[]',
                 compare_translations=received_json_data["translations"])
 
         except History.MultipleObjectsReturned:
             user.history_set.all().delete()
             user.history_set.create(
+                history='[]',
                 compare_translations=received_json_data["translations"])
         return HttpResponse(status=200)
     else:

@@ -1,4 +1,4 @@
-tag search-text-as-html
+tag text-as-html
 	def goToVerse event
 		unless state.intouch
 			let route = "/{data.translation}/{data.book}/{data.chapter}"
@@ -12,5 +12,5 @@ tag search-text-as-html
 				emit "gotoverse", data
 
 	def render
-		<self [d:inline] @click=goToVerse @keyup.enter=goToVerse>
+		<self [d:inline dir:auto] dir=textDirection(self.textContent) @click=goToVerse @keyup.enter=goToVerse>
 			<slot>

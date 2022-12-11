@@ -78,7 +78,7 @@ tag profile-page
 
 
 	def mount
-		document.title = "Bolls · " + data.getUserName()
+		document.title = "Bolls · " + state.userName
 		setaleup!
 
 	def loadData url
@@ -158,7 +158,7 @@ tag profile-page
 			if window.navigator.onLine
 				bookmarksdata = await loadData(url)
 			else
-				bookmarksdata = await data.getBookmarksFromStorage() || []
+				bookmarksdata = await state.getBookmarksFromStorage() || []
 			highlights_range.loaded += bookmarksdata.length
 			parseBookmarks(bookmarksdata, 'highlights')
 		list_for_display = highlights
@@ -234,7 +234,7 @@ tag profile-page
 			store.show_options_of = title
 
 	def deleteBookmark bookmark
-		data.requestDeleteBookmark(bookmark.pks)
+		state.requestDeleteBookmark(bookmark.pks)
 		for pk in bookmark.pks
 			if bookmarks.find(do |bm| return bm.pks == pk)
 				bookmarks.splice(bookmarks.indexOf(bookmarks.find(do |bm| return bm.pks == pk)), 1)
@@ -244,7 +244,7 @@ tag profile-page
 		imba.commit()
 
 	def copyToClipboard bookmark
-		data.shareCopying(bookmark)
+		state.shareCopying(bookmark)
 		store.show_options_of = ''
 
 	def showDeleteForm
@@ -258,8 +258,8 @@ tag profile-page
 
 	def showEditForm
 		account_action = 1
-		store.username = data.user.username
-		store.name = data.user.name
+		store.username = state.user.username
+		store.name = state.user.name
 		window.history.pushState({profile: yes}, "Edit Account")
 
 	def editAccountFormIsValid
@@ -279,7 +279,7 @@ tag profile-page
 				method: "POST",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': data.get_cookie('csrftoken'),
+					'X-CSRFToken': state.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -289,17 +289,17 @@ tag profile-page
 			})
 			.then(do |response|
 				if response.status == 200
-					data.showNotification('account_edited')
-					data.user.username = store.username
-					data.user.name = store.name
-					data.setCookie('username', data.user.username)
-					data.setCookie('name', data.user.name)
+					state.showNotification('account_edited')
+					state.user.username = store.username
+					state.user.name = store.name
+					state.setCookie('username', state.user.username)
+					state.setCookie('name', state.user.name)
 					account_action = 0
 				elif response.status == 409
 					taken_usernames.push store.username
-					data.showNotification('username_taken')
+					state.showNotification('username_taken')
 			).catch(do |error|
-				data.showNotification('error')
+				state.showNotification('error')
 				console.error(error)
 			)
 			loading = no
@@ -345,7 +345,7 @@ tag profile-page
 			method: "POST",
 			cache: "no-cache",
 			headers: {
-				'X-CSRFToken': data.get_cookie('csrftoken'),
+				'X-CSRFToken': state.get_cookie('csrftoken'),
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
@@ -366,35 +366,35 @@ tag profile-page
 				<.collectionsflex[z-index: 100000 of:visible]>
 					<a.svgBack [pos:relative m:auto 16px auto 0 l:8px] route-to='/'>
 						<svg[w:20px min-width: 20px h:32px fill:inherit] viewBox="0 0 20 20">
-							<title> data.lang.back
+							<title> state.lang.back
 							<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-					<h1[margin: 1em 4px]> data.getUserName()
+					<h1[margin: 1em 4px]> state.userName
 					if window.navigator.onLine
 						<.change_password.help.popup_menu_box>
 							<svg.helpsvg @click=showOptions('account_actions') xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-								<title> "data.lang.edit_account"
+								<title> "Edit account"
 								<g transform="matrix(1.6312057,0,0,1.6312057,-7.2588652,-7.2588652)">
 									<path d="M 11.5,4.45 A 7.05,7.05 0 1 0 18.55,11.5 7.058,7.058 0 0 0 11.5,4.45 Z m 4.415,11.025 c -0.5,-0.917 -2.28,-1.708 -4.415,-1.708 -2.135,0 -3.912,0.791 -4.415,1.708 a 5.95,5.95 0 1 1 8.83,0 z">
 									<ellipse cx="11.5" cy="10" rx="2.375" ry="2.5">
 
 							if store.show_options_of == 'account_actions'
 								<.popup_menu [y@off:-32px o@off:0] ease>
-									<button.butt @click=showEditForm()> data.lang.edit_account
-									if data.user.is_password_usable
+									<button.butt @click=showEditForm()> state.lang.edit_account
+									if state.user.is_password_usable
 										<a @click.prevent=(do window.location = "/accounts/password_change/")>
-											<button.butt> data.lang.change_password
+											<button.butt> state.lang.change_password
 									<button.butt @click=showIEport> 'Import / Export Bookmarks'
-									<button.butt @click=showDeleteForm> data.lang.delete_account
+									<button.butt @click=showDeleteForm> state.lang.delete_account
 
 			<div.nav>
-				<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> data.lang.all
-				<button.tab .active-tab=tab==1 @click=getSearchedBookmarks(0)> data.lang.collections
-				<button.tab .active-tab=tab==2 @click=getBookmarksWithNotes> data.lang.notes
+				<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> state.lang.all
+				<button.tab .active-tab=tab==1 @click=getSearchedBookmarks(0)> state.lang.collections
+				<button.tab .active-tab=tab==2 @click=getBookmarksWithNotes> state.lang.notes
 
 			if tab == 1
 				<.collectionsflex [flex-wrap: wrap max-height:24vh of:auto]>
 					if collections.length > 8
-						<input.search placeholder=data.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
+						<input.search placeholder=state.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
 
 					for collection in collections.filter(do(el) return el.toLowerCase!.indexOf(store.collections_search.toLowerCase!) > -1)
 						<p.collection .add_new_collection=(collection==query) @click=getSearchedBookmarks(collection)> collection
@@ -415,13 +415,13 @@ tag profile-page
 						<time.time dateTime="bookmark.date"> bookmark.date.toLocaleString()
 						<menu-popup bind=(bookmark.title == store.show_options_of)>
 							<svg._options @pointerdown=showOptions(bookmark.title) viewBox="0 0 20 20">
-								<title> data.lang.options
+								<title> state.lang.options
 								<path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z">
 							if bookmark.title == store.show_options_of
 								<.popup_menu [y@off:-32px o@off:0] ease>
-									<button.butt @click.stop=deleteBookmark(bookmark)> data.lang.delete
-									<button.butt @click.stop=goToBookmark(bookmark)> data.lang.open
-									<button.butt @click.stop=copyToClipboard(bookmark)> data.lang.copy
+									<button.butt @click.stop=deleteBookmark(bookmark)> state.lang.delete
+									<button.butt @click.stop=goToBookmark(bookmark)> state.lang.open
+									<button.butt @click.stop=copyToClipboard(bookmark)> state.lang.copy
 				<hr.hr>
 
 			if loading
@@ -430,7 +430,7 @@ tag profile-page
 				<div.freespace>
 
 			if !(highlights.length && collections.length)
-				<p[text-align: center]> data.lang.thereisnobookmarks
+				<p[text-align: center]> state.lang.thereisnobookmarks
 
 			if !list_for_display.length && !loading
 				<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
@@ -446,68 +446,68 @@ tag profile-page
 									<path[m:auto] d=svg_paths.close>
 
 								<div.imex_block>
-									<button.imex_block_btn .active_tab=extab @click=(extab = yes)> data.lang.export
-									<button.imex_block_btn .active_tab=!extab @click=(extab = no)> data.lang.import
+									<button.imex_block_btn .active_tab=extab @click=(extab = yes)> state.lang.export
+									<button.imex_block_btn .active_tab=!extab @click=(extab = no)> state.lang.import
 
 							<article#imex>
 								if extab
-									<h1> data.lang.export_bookmarks
-									<a download="notes.json" target="__blank" href='/download-notes'> data.lang.download + ' notes.json'
+									<h1> state.lang.export_bookmarks
+									<a download="notes.json" target="__blank" href='/download-notes'> state.lang.download + ' notes.json'
 								else
-									<h1> data.lang.import_bookmarks
+									<h1> state.lang.import_bookmarks
 									<input.file-input type='file' @change=readSingleFile>
 									<p[m:24px 0 8px fw:600]>
-										data.lang.merge_strategy
+										state.lang.merge_strategy
 
 									<label>
 										<input type="radio" value="false" bind=store.merge_replace>
-										<p> data.lang.skip_conflicts
+										<p> state.lang.skip_conflicts
 									<label>
 										<input type="radio" value="true" bind=store.merge_replace>
-										<p> data.lang.replace_existing
+										<p> state.lang.replace_existing
 
-									<button.change_language [mt:16px] disabled=(!store.import_data.length || !importing) @click=importNotes> data.lang.import
+									<button.change_language [mt:16px] disabled=(!store.import_data.length || !importing) @click=importNotes> state.lang.import
 
 						elif account_action == 2
 							<form action="/delete-my-account/">
 								<header.search_hat>
-									<h1[margin:auto]> data.lang.are_you_sure
+									<h1[margin:auto]> state.lang.are_you_sure
 									<svg.close_search @click=(do account_action = 0) viewBox="0 0 20 20" tabindex="0">
-										<title> data.lang.close
+										<title> state.lang.close
 										<path d=svg_paths.close [margin:auto]>
-								<p[margin-bottom:16px]> data.lang.cannot_be_undone
-								<label> data.lang.delete_account_label
+								<p[margin-bottom:16px]> state.lang.cannot_be_undone
+								<label> state.lang.delete_account_label
 								<input.search bind=store.username [margin: 8px 0 border-radius:4px]>
-								if store.username == data.user.username
-									<button.change_language> data.lang.i_understand
+								if store.username == state.user.username
+									<button.change_language> state.lang.i_understand
 								else
-									<button.change_language disabled> data.lang.i_understand
+									<button.change_language disabled> state.lang.i_understand
 
 						else
 							<article id="edit_account">
 								<header.search_hat>
-									<h1[margin:auto]> data.lang.edit_account
+									<h1[margin:auto]> state.lang.edit_account
 									<svg.close_search @click=(do account_action = 0) viewBox="0 0 20 20" tabindex="0">
-										<title> data.lang.close
+										<title> state.lang.close
 										<path d=svg_paths.close css:margin="auto">
-								<label> data.lang.edit_username_label
+								<label> state.lang.edit_username_label
 								<input.search bind=store.username .invalid=taken_usernames.includes(store.username) pattern='[a-zA-Z0-9_@+\.-]{1,150}' required maxlength=150 [margin:8px 0 border-radius:4px]>
 								if taken_usernames.includes(store.username)
-									<p.errormessage> data.lang.username_taken
-								<label> data.lang.edit_name_label
+									<p.errormessage> state.lang.username_taken
+								<label> state.lang.edit_name_label
 								<input.search bind=store.name maxlength=30 [margin: 8px 0 border-radius:4px]>
 								if editAccountFormIsValid()
-									<button.change_language @click=editAccount> data.lang.edit_account
+									<button.change_language @click=editAccount> state.lang.edit_account
 								else
-									<button.change_language disabled @click=editAccount> data.lang.edit_account
+									<button.change_language disabled @click=editAccount> state.lang.edit_account
 
 			if !window.navigator.onLine
 				<div[position:fixed bottom:16px left:16px color:$c background:$bgc padding:8px 16px border-radius:8px text-align:center border:1px solid $acc-bgc-hover z-index:1000]>
-					data.lang.offline
+					state.lang.offline
 					<svg[transform:translateY(0.2em) fill:$c] width="1.25em" height="1.26em" viewBox="0 0 24 24">
 						<path fill="none" d="M0 0h24v24H0V0z">
 						<path d="M23.64 7c-.45-.34-4.93-4-11.64-4-1.32 0-2.55.14-3.69.38L18.43 13.5 23.64 7zM3.41 1.31L2 2.72l2.05 2.05C1.91 5.76.59 6.82.36 7L12 21.5l3.91-4.87 3.32 3.32 1.41-1.41L3.41 1.31z">
-					<a.reload @click=(do window.location.reload(true))> data.lang.reload
+					<a.reload @click=(do window.location.reload(true))> state.lang.reload
 
 	css
 		h: 100vh

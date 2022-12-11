@@ -11,15 +11,21 @@ let state = new State()
 extend tag element
 	get state
 		return state
+	
+	def textDirection text
+		// check if there are present rtl characters
+		if text..match(/[\u0590-\u08FF]/)
+			return 'rtl'
+		return 'ltr'
 
 tag the-app
 	<self>
-		<profile-page route='/profile/' data=state>
-		<downloads-page route='/downloads/' data=state>
+		<profile-page route='/profile/'>
+		<downloads-page route='/downloads/'>
 		<donate route='/donate/'>
 
-		<bible-reader route='*' data=state>
+		<bible-reader route='*'>
 
 imba.mount <the-app>
 
-imba.mount <Notifications data=state>
+imba.mount <Notifications>

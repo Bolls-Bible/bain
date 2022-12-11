@@ -5,7 +5,7 @@ import './Profile.imba'
 import "./loading.imba"
 import "./downloads.imba"
 import "./colorPicker.imba"
-import './search-text-as-html.imba'
+import './text-as-html.imba'
 import "./note-up.imba"
 import "./menu-popup.imba"
 import "./mark-down.imba"
@@ -140,7 +140,7 @@ let definitions = []
 let definitions_history = []
 let definitions_history_index = -1
 let expanded_definition = 0
-let download_menu = no
+let download_dictionaries = no
 
 
 # Some messy stuff
@@ -261,12 +261,12 @@ tag bible-reader
 		unless new_translations
 			return
 		#compare_translations = new_translations
-		if window.navigator.onLine && data.user.username
+		if window.navigator.onLine && state.user.username
 			window.fetch("/save-compare-translations/", {
 					method: "PUT",
 					cache: "no-cache",
 					headers: {
-						'X-CSRFToken': data.get_cookie('csrftoken'),
+						'X-CSRFToken': state.get_cookie('csrftoken'),
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
@@ -277,7 +277,7 @@ tag bible-reader
 
 
 	def setup
-		# # # Setup some global events
+		# Setup some global events handlers
 		# Detect change of dark/light mode
 		try
 			if window.matchMedia
@@ -376,23 +376,23 @@ tag bible-reader
 			try
 				let userdata = await loadData("/user-logged/")
 				if userdata.username
-					data.user.username = userdata.username
-					data.user.is_password_usable = userdata.is_password_usable
-					data.user.name = userdata.name || ''
-					setCookie('username', data.user.username)
-					setCookie('name', data.user.name)
+					state.user.username = userdata.username
+					state.user.is_password_usable = userdata.is_password_usable
+					state.user.name = userdata.name || ''
+					setCookie('username', state.user.username)
+					setCookie('name', state.user.name)
 
 					syncHistory!
 				else
 					window.localStorage.removeItem('username')
 					window.localStorage.removeItem('name')
-					data.user = {}
+					state.user = {}
 			catch err
 				console.error('Error: ', err)
-				data.showNotification('error')
+				state.showNotification('error')
 
 		if window.message
-			data.showNotification(window.message)
+			state.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
 			toggleChronorder!
 		highlights = JSON.parse(getCookie("highlights")) || []
@@ -489,7 +489,7 @@ tag bible-reader
 				books = BOOKS[translation]
 
 	def saveToHistory translation, book, chapter, verse, parallel
-		if data.user.username && window.navigator.onLine
+		if state.user.username && window.navigator.onLine
 			history = await loadData('/history')
 
 		if getCookie("history")
@@ -508,7 +508,7 @@ tag bible-reader
 		saveHistoryToServer!
 
 	def syncHistory
-		if data.user.username && window.navigator.onLine
+		if state.user.username && window.navigator.onLine
 			let cloud_history = await loadData('/history')
 			if cloud_history.compare_translations..length then #compare_translations = JSON.parse(cloud_history.compare_translations)
 			# Merge local history and server copy
@@ -538,12 +538,12 @@ tag bible-reader
 
 
 	def saveHistoryToServer
-		if data.user.username && window.navigator.onLine
+		if state.user.username && window.navigator.onLine
 			window.fetch("/history/", {
 				method: "PUT",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': data.get_cookie('csrftoken'),
+					'X-CSRFToken': state.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -565,21 +565,22 @@ tag bible-reader
 		try
 			server_bookmarks = await loadData(url)
 		catch error
-			log error
+			console.error error
+			offline_bookmarks = []
 
-		if data.db_is_available
+		if state.db_is_available
 			if type == 'bookmarks'
-				offline_bookmarks = await data.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
+				offline_bookmarks = await state.getChapterBookmarksFromStorage(verses.map(do |verse| return verse.pk))
 			else
-				offline_bookmarks = await data.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
+				offline_bookmarks = await state.getChapterBookmarksFromStorage(parallel_verses.map(do |verse| return verse.pk))
 		this[type] = offline_bookmarks.concat(server_bookmarks)
 		imba.commit()
 
 	def getText translation, book, chapter, verse
 		window.history.pushState({
-				translation: settings.translation,
-				book: settings.book,
-				chapter: settings.chapter,
+				translation: translation,
+				book: book,
+				chapter: chapter,
 				verse: verse,
 			}
 			'',
@@ -619,23 +620,21 @@ tag bible-reader
 			try
 				verses = []
 				imba.commit()
-				if data.db_is_available && data.downloaded_translations.indexOf(translation) != -1
-					verses = await data.getChapterFromDB(translation, book, chapter, verse)
+				if state.downloaded_translations.indexOf(translation) > -1
+					verses = await state.getChapterFromDB(translation, book, chapter, verse)
 				else
 					verses = await loadData(url)
 				loading = no
-				imba.commit()
 
 			catch error
 				loading = no
-				imba.commit()
 				console.error('Error: ', error)
 				if window.navigator.onLine
-					data.showNotification('error')
+					state.showNotification('error')
 
 			if settings.parallel_synch && settingsp.display && changeParallel
 				getParallelText settingsp.translation, book, chapter, verse, yes
-			if data.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
+			if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 		clearSpace!
 		window.on_pops_tate = no
 		if verse
@@ -649,6 +648,7 @@ tag bible-reader
 				scrollToY($firstparallel,0)
 				scrollToY(self, 0)
 		if verse > 0 then show_verse_picker = no else show_verse_picker = yes
+		imba.commit()
 
 
 	def getParallelText translation, book, chapter, verse, caller
@@ -674,17 +674,17 @@ tag bible-reader
 			let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
 			parallel_verses = []
 			try
-				if data.db_is_available && data.downloaded_translations.indexOf(translation) != -1
-					parallel_verses = await data.getChapterFromDB(translation, book, chapter, verse)
+				if state.downloaded_translations.indexOf(translation) != -1
+					parallel_verses = await state.getChapterFromDB(translation, book, chapter, verse)
 				else
 					parallel_verses = await loadData(url)
 				imba.commit()
 			catch error
 				console.error('Error: ', error)
-				data.showNotification('error')
+				state.showNotification('error')
 			if settings.parallel_synch && settingsp.display && changeParallel && not caller
 				getText settings.translation, book, chapter, verse
-			if data.user.username
+			if state.user.username
 				getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
 			imba.commit()
 			setCookie('parallel_display', settingsp.display)
@@ -1107,8 +1107,8 @@ tag bible-reader
 				search_verses = await loadData(url)
 			catch error
 				console.error error
-				if data.db_is_available && data.downloaded_translations.indexOf(search.translation) != -1
-					search_verses = await data.getSearchedTextFromStorage(search)
+				if state.downloaded_translations.indexOf(search.translation) != -1
+					search_verses = await state.getSearchedTextFromStorage(search)
 				else
 					search_verses = []
 
@@ -1536,13 +1536,13 @@ tag bible-reader
 			if key + 1 < choosen_categories.length
 				collections += " | "
 
-		unless data.user.username
+		unless state.user.username
 			window.location.pathname = "/signup/"
 			return
 
 		def saveOffline
-			if data.db_is_available
-				data.saveBookmarksToStorageUntillOnline({
+			if state.db_is_available
+				state.saveBookmarksToStorageUntillOnline({
 					verses: choosenid,
 					color: store.highlight_color,
 					date: Date.now(),
@@ -1555,7 +1555,7 @@ tag bible-reader
 				method: "POST",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': data.get_cookie('csrftoken'),
+					'X-CSRFToken': state.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -1567,10 +1567,10 @@ tag bible-reader
 				}),
 			})
 			.then(do |response| response.json())
-			.then(do data.showNotification('saved'))
+			.then(do state.showNotification('saved'))
 			.catch(do |e|
 				console.error(e)
-				data.showNotification('error')
+				state.showNotification('error')
 				saveOffline!)
 		else saveOffline!
 
@@ -1605,8 +1605,8 @@ tag bible-reader
 		window.localStorage.setItem("highlights", JSON.stringify(highlights))
 
 	def deleteBookmarks pks
-		if data.user.username
-			data.requestDeleteBookmark(pks)
+		if state.user.username
+			state.requestDeleteBookmark(pks)
 			if choosen_parallel == 'second'
 				for verse in choosenid
 					if parallel_bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1650,7 +1650,7 @@ tag bible-reader
 		return copyobj
 
 	def copyToClipboard
-		data.copyToClipboard(getShareObj())
+		state.copyToClipboard(getShareObj())
 		clearSpace()
 
 	def byteCount s
@@ -1658,12 +1658,12 @@ tag bible-reader
 
 	def canShareViaTelegram
 		const copyobj = getShareObj()
-		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/')}&text={window.encodeURIComponent('«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation)}") < 4096
+		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + state.versePart(copyobj.verse) + '/')}&text={window.encodeURIComponent('«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation)}") < 4096
 
 	def shareTelegram
 		const copyobj = getShareObj()
 		const text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation
-		const url = "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/'
+		const url = "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + state.versePart(copyobj.verse) + '/'
 		const link = "https://t.me/share/url?url={window.encodeURIComponent(url)}&text={window.encodeURIComponent(text)}"
 		if byteCount(link) < 4096
 			window.open(link, '_blank')
@@ -1671,7 +1671,7 @@ tag bible-reader
 
 	def sharedText
 		const copyobj = getShareObj()
-		const text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/'
+		const text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + state.versePart(copyobj.verse) + '/'
 		return text
 
 	def canMakeTweet
@@ -1683,18 +1683,11 @@ tag bible-reader
 
 	def shareViaFB
 		const copyobj = getShareObj()
-		window.open("https://www.facebook.com/sharer.php?u=https://bolls.life/" + copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/', '_blank')
+		window.open("https://www.facebook.com/sharer.php?u=https://bolls.life/" + copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + state.versePart(copyobj.verse) + '/', '_blank')
 		clearSpace()
 
 	def shareViaWhatsApp
 		window.open("https://api.whatsapp.com/send?text={window.encodeURIComponent(sharedText())}", '_blank')
-		clearSpace()
-
-	def shareViaVK
-		const copyobj = getShareObj()
-		const text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation
-		const url = "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + data.versePart(copyobj.verse) + '/'
-		window.open("http://vk.com/share.php?url={window.encodeURIComponent(url)}&title={window.encodeURIComponent(text)}", '_blank')
 		clearSpace()
 
 	def shareViaViber
@@ -1718,12 +1711,12 @@ tag bible-reader
 		turnHistory()
 		history = []
 		window.localStorage.setItem("history", "[]")
-		if data.user.username
+		if state.user.username
 			window.fetch("/history/", {
 				method: "DELETE",
 				cache: "no-cache",
 				headers: {
-					'X-CSRFToken': data.get_cookie('csrftoken'),
+					'X-CSRFToken': state.get_cookie('csrftoken'),
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
@@ -1734,7 +1727,7 @@ tag bible-reader
 			.then(do |response| response.json())
 			.catch(do |error|
 				console.error(error)
-				data.showNotification('error'))
+				state.showNotification('error'))
 			# .then(do |data| log data)
 
 	def turnCollections
@@ -1743,7 +1736,7 @@ tag bible-reader
 		else
 			show_collections = !show_collections
 			store.show_color_picker = no
-			if show_collections && data.user.username
+			if show_collections && state.user.username
 				if window.navigator.onLine
 					let data = await loadData("/get-categories/")
 					categories = data.data
@@ -1886,12 +1879,12 @@ tag bible-reader
 		loading = yes
 
 		def getCompareTranslationsFromDB
-			comparison_parallel = await data.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
+			comparison_parallel = await state.getParallelVersesFromStorage(compare_translations, choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter)
 			loading = no
 			popUp 'show_compare'
 			imba.commit()
 
-		if !window.navigator.onLine && data.db_is_available && data.downloaded_translations.indexOf(settings.translation) != -1
+		if !window.navigator.onLine && state.downloaded_translations.indexOf(settings.translation) != -1
 			getCompareTranslationsFromDB!
 		else
 			comparison_parallel = []
@@ -1916,11 +1909,11 @@ tag bible-reader
 				imba.commit()
 			)
 			.catch(do |error|
-				if data.db_is_available && data.downloaded_translations.indexOf(settings.translation) != -1
+				if state.downloaded_translations.indexOf(settings.translation) != -1
 					getCompareTranslationsFromDB!
 				console.error error
 				loading = no
-				data.showNotification('error'))
+				state.showNotification('error'))
 
 	def addTranslation translation
 		if compare_translations.indexOf(translation.short_name) < 0
@@ -1949,7 +1942,7 @@ tag bible-reader
 			.catch(do |error|
 				console.error error
 				loading = no
-				data.showNotification('error'))
+				state.showNotification('error'))
 		else
 			compare_translations.splice(compare_translations.indexOf(translation.short_name), 1)
 			compare_translations = compare_translations
@@ -1981,11 +1974,11 @@ tag bible-reader
 	def toggleDownloads
 		clearSpace()
 		popUp 'show_downloads'
-		download_menu = no
+		download_dictionaries = no
 
 	def openDictionaryDownloads
 		toggleDownloads!
-		download_menu = yes
+		download_dictionaries = yes
 
 
 	def changeFontWeight value
@@ -2004,18 +1997,21 @@ tag bible-reader
 		let score = 0
 		let p = 0 # Position within the `item`
 		# Look through each character of the search string, stopping at the end(s)...
-
-		for i in [0 ... search_query.length]
+		for char in search_query
 			# Figure out if the current letter is found in the rest of the `item`.
-			const index = item.indexOf(search_query[i], p)
-			# If not, stop here.
+			const index = item.indexOf(char, p)
+			# If not, punish & continue to the next character.
 			if index < 0
-				break
+				score--
+				continue
+
+			if index - p === 0
+				score++
+
 			#  If it is, add to the score...
 			score++
 			#  ... and skip the position within `item` forward.
-			p = index
-
+			p = index + 1
 		return score
 
 
@@ -2027,7 +2023,7 @@ tag bible-reader
 
 			for book in self[books]
 				const score = scoreSearch(book.name, store.book_search)
-				if score > 0
+				if score >= store.book_search.length * 2
 					filtered_books.push({
 						book: book
 						score: score
@@ -2055,10 +2051,10 @@ tag bible-reader
 			copyobj.text.push(t.text)
 			copyobj.verse.push(t.verse)
 		copyobj.title = getHighlightedRow(copyobj.translation, copyobj.book, copyobj.chapter, copyobj.verse)
-		data.shareCopying(copyobj)
+		state.shareCopying(copyobj)
 
 	def copyToClipboardFromSerach obj
-		data.shareCopying({
+		state.shareCopying({
 			text: [obj.text],
 			translation: obj.translation,
 			book: obj.book,
@@ -2071,7 +2067,7 @@ tag bible-reader
 		compare_translations = arr
 
 	def currentLanguage
-		switch data.language
+		switch state.language
 			when 'ukr' then "Українська"
 			when 'ru' then "Русский"
 			when 'pt' then "Portuguese"
@@ -2229,7 +2225,6 @@ tag bible-reader
 
 	def slideend touch
 		touch = touch.changedTouches[0]
-		log touch
 
 		touch.dy = slidetouch.clientY - touch.clientY
 		touch.dx = slidetouch.clientX - touch.clientX
@@ -2252,7 +2247,6 @@ tag bible-reader
 					settingsp.display && touch.clientX > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
 			else
 				if touch.dx < -32
-					log touch.y > window.innerHeight, touch.y, touch
 					settingsp.display && touch.clientY > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
 					settingsp.display && touch.clientY > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
@@ -2290,7 +2284,7 @@ tag bible-reader
 
 
 	def install
-		data.deferredPrompt.prompt()
+		state.deferredPrompt.prompt()
 
 	def settingsIconTransform huh
 		if (fixdrawers && window.innerWidth >= 1024) or huh
@@ -2355,36 +2349,36 @@ tag bible-reader
 
 
 	def translationDownloadStatus translation
-		if data.translations_in_downloading.find(do |tr| return tr == translation)
+		if state.translations_in_downloading.find(do |tr| return tr == translation)
 			return 'processing'
-		elif data.downloaded_translations.indexOf(translation) != -1
+		elif state.downloaded_translations.indexOf(translation) != -1
 			return 'delete'
 		else
 			return 'download'
 
 	def dictionaryDownloadStatus dictionary
-		if data.dictionaries_in_downloading.find(do |tr| return tr == dictionary)
+		if state.dictionaries_in_downloading.find(do |tr| return tr == dictionary)
 			return 'processing'
-		elif data.downloaded_dictionaries.indexOf(dictionary) != -1
+		elif state.downloaded_dictionaries.indexOf(dictionary) != -1
 			return 'delete'
 		else
 			return 'download'
 
 	def offlineTranslationAction tr
-		if data.translations_in_downloading.find(do |translation| return translation == tr)
+		if state.translations_in_downloading.find(do |translation| return translation == tr)
 			return
-		elif data.downloaded_translations.indexOf(tr) != -1
-			data.deleteTranslation(tr)
+		elif state.downloaded_translations.indexOf(tr) != -1
+			state.deleteTranslation(tr)
 		else
-			data.downloadTranslation(tr)
+			state.downloadTranslation(tr)
 
 	def offlineDictionaryAction dict
-		if data.dictionaries_in_downloading.find(do |translation| return translation == dict)
+		if state.dictionaries_in_downloading.find(do |translation| return translation == dict)
 			return
-		elif data.downloaded_dictionaries.indexOf(dict) != -1
-			data.deleteDictionary(dict)
+		elif state.downloaded_dictionaries.indexOf(dict) != -1
+			state.deleteDictionary(dict)
 		else
-			data.downloadDictionary(dict)
+			state.downloadDictionary(dict)
 
 
 	def nextVerseHasTheSameBookmark verse_index
@@ -2410,7 +2404,6 @@ tag bible-reader
 		return no
 
 	def strongHunber query, number
-		console.log(query)
 		// check if the text containe hebrew symbols
 		if query.match(/[\u0590-\u05FF]/)
 			return 'H' + number
@@ -2481,23 +2474,32 @@ tag bible-reader
 	# Compute a search relevance score for an item.
 	def scoreDefinition thename, query
 		query = stripVowels(query.toLowerCase!)
-		# console.log thename, query
 		let score = 0
 		let p = 0 # Position within the `item`
+		let consequtiveBonus = 2 # Bonus for consecutive matches
 		# Look through each character of the query string, stopping at the end(s)...
 
-		for i in [0 ... query.length]
+		for char in query
 			# Figure out if the current letter is found in the rest of the `item`.
-			const index = thename.indexOf(query[i], p)
-			# If not, stop here.
+			const index = thename.indexOf(char, p)
+			# If not, continue to the next character.
 			if index < 0
-				break
+				continue
+
 			#  If it is, add to the score...
-			score += 1
-			if (index - p) < 2
-				score++
+			score++
+			# If the character is found in the next two chars, give it a bonus for being consecutive
+			if index - p < 2
+				score += consequtiveBonus
+				# if the char is next, multiply the bonus by 2
+				if index === p
+					consequtiveBonus *= 2
+				# Otherwise, don't reset the bonus, maybe user missed a char
+			else
+				consequtiveBonus = 2
+
 			#  ... and skip the position within `item` forward.
-			p = index
+			p = index + 1
 
 		if thename.indexOf(query) > -1
 			score += 8
@@ -2506,7 +2508,6 @@ tag bible-reader
 		if thename.length == query.length
 			score += 1
 
-		# log score
 		if score > query.length
 			return score
 		return 0
@@ -2529,9 +2530,11 @@ tag bible-reader
 			clearSpace!
 			popUp 'dictionary'
 			loading = yes
-			imba.commit!
 			if window.navigator.onLine
-				definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}?extended={settings.extended_dictionary_search ? 'true' : ''}")
+				try
+					definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}?extended={settings.extended_dictionary_search ? 'true' : ''}")
+				catch error
+					console.error error
 			elif state.dictionary in state.downloaded_dictionaries
 				let unvoweled_query = stripVowels(store.definition_search)
 				search_results = await state.searchDefinitionsOffline {dictionary: state.dictionary, query: unvoweled_query}
@@ -2616,12 +2619,6 @@ tag bible-reader
 		if event.detail.translation && event.detail.book && event.detail.chapter
 			getText event.detail.translation, event.detail.book, event.detail.chapter, event.detail.verse
 
-	def textDirection text
-		// check if there are present rtl characters
-		if text..match(/[\u0590-\u08FF]/)
-			return 'rtl'
-		return 'ltr'
-
 	def render
 		if isApple
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
@@ -2633,24 +2630,24 @@ tag bible-reader
 						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
 						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation)> settingsp.translation
 				<header[d:flex jc:space-between cursor:pointer]>
-					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=data.lang.chronological_order>
-						<title> data.lang.chronological_order
+					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=state.lang.chronological_order>
+						<title> state.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 					if settingsp.edited_version == settingsp.translation && settingsp.display
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+						<p.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settingsp.edited_version
 							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
-								<title> data.lang.open
+								<title> state.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					else
-						<p.translation_name title=data.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+						<p.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settings.translation
 							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
-								<title> data.lang.open
+								<title> state.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					if data.db_is_available
+					if state.db_is_available
 						<svg.download_translations @click=toggleDownloads .hide_chron_order=show_list_of_translations viewBox="0 0 212.646728515625 159.98291015625">
-							<title> data.lang.download
+							<title> state.lang.download
 							<g transform="matrix(1.5 0 0 1.5 0 128)">
 								<path d=svg_paths.download>
 
@@ -2661,13 +2658,13 @@ tag bible-reader
 								<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
 									language.language
 									<svg.arrow_next[margin-left:auto min-width:16px] width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.open
+										<title> state.lang.open
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								if language.language == show_language_of
 									<ul [o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 										let no_translation_downloaded = yes
 										for translation in language.translations
-											if window.navigator.onLine || data.downloaded_translations.indexOf(translation.short_name) != -1
+											if window.navigator.onLine || state.downloaded_translations.indexOf(translation.short_name) != -1
 												no_translation_downloaded = no
 												<li.book_in_list .selected=currentTranslation(translation.short_name) [display: flex]>
 													<span @click=changeTranslation(translation.short_name)>
@@ -2679,7 +2676,7 @@ tag bible-reader
 															<title> translation.info
 															<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
 										if no_translation_downloaded
-											<p.book_in_list> data.lang["no_translation_downloaded"]
+											<p.book_in_list> state.lang["no_translation_downloaded"]
 
 
 				<$books.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
@@ -2712,16 +2709,16 @@ tag bible-reader
 													<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
 							if !settings.filtered_books.length
 								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
-				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=data.lang.search aria-label=data.lang.search>
+				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=state.lang.search aria-label=state.lang.search>
 				<svg id="close_book_search" @click=(store.book_search = '', $bookssearch.focus(), filterBooks()) viewBox="0 0 20 20">
-					<title> data.lang.delete
+					<title> state.lang.delete
 					<path[m: auto] d=svg_paths.close>
 
 			<div
 				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
 				@click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
-					<title> data.lang.change_book
+					<title> state.lang.change_book
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 			if host_rectangle
@@ -2744,15 +2741,15 @@ tag bible-reader
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
 							#main_header_arrow_size = "min(64px, max({max_header_font}em, {chapter_headers.fontsize1}em))"
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
-								<a.arrow @click.prevent.stop=prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
+								<a.arrow @click.prevent.stop=prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.prev
+										<title> state.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settings.name_of_book, ' ', settings.chapter
 
-								<a.arrow @click.prevent.stop=nextChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop=nextChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.next
+										<title> state.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px us:none]> settings.name_of_book, ' ', settings.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
@@ -2774,8 +2771,8 @@ tag bible-reader
 								if bukmark and not nextVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
 										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
-											<svg viewBox="0 0 20 20" alt=data.lang.note>
-												<title> data.lang.note
+											<svg viewBox="0 0 20 20" alt=state.lang.note>
+												<title> state.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if verse.comment and settings.verse_commentary
@@ -2787,24 +2784,24 @@ tag bible-reader
 									unless settings.verse_number
 										<span.ws> '	'
 						<.arrows>
-							<a.arrow @click.prevent=prevChapter() title=data.lang.prev href="{prevChapterLink()}">
+							<a.arrow @click.prevent=prevChapter() title=state.lang.prev href="{prevChapterLink()}">
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
-									<title> data.lang.prev
+									<title> state.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-							<a.arrow @click.prevent=nextChapter() title=data.lang.next href="{nextChapterLink()}">
+							<a.arrow @click.prevent=nextChapter() title=state.lang.next href="{nextChapterLink()}">
 								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
-									<title> data.lang.next
+									<title> state.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settings.translation) == -1
+					elif !window.navigator.onLine && state.downloaded_translations.indexOf(settings.translation) == -1
 						<p.in_offline>
-							data.lang.this_translation_is_unavailable
+							state.lang.this_translation_is_unavailable
 							<br>
-							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
+							<a.reload @click=(do window.location.reload(yes))> state.lang.reload
 					elif not loading
 						<p.in_offline>
-							data.lang.unexisten_chapter
+							state.lang.unexisten_chapter
 							<br>
-							<a.reload @click=(do window.location.reload(yes))> data.lang.reload
+							<a.reload @click=(do window.location.reload(yes))> state.lang.reload
 
 				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=textDirection(parallel_verses[0]..text) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
@@ -2812,15 +2809,15 @@ tag bible-reader
 					if parallel_verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
 							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize2}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settingsp.translation)>
-								<a.arrow @click.prevent.stop=prevChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.prev href="{prevChapterLink()}">
+								<a.arrow @click.prevent.stop=prevChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.prev
+										<title> state.lang.prev
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 								settingsp.name_of_book, ' ', settingsp.chapter
 
-								<a.arrow @click.prevent.stop=nextChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=data.lang.next href="{nextChapterLink()}">
+								<a.arrow @click.prevent.stop=nextChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.next href="{nextChapterLink()}">
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.next
+										<title> state.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 						<p[mb:1em p: 0 8px o:0 lh:1 ff: {settings.font.family} fw: {settings.font.weight + 200} fs: {settings.font.size * 2}px us:none]> settingsp.name_of_book, ' ', settingsp.chapter
 						<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
@@ -2841,8 +2838,8 @@ tag bible-reader
 								if bukmark and not nextParallelVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
 										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
-											<svg viewBox="0 0 20 20" alt=data.lang.note>
-												<title> data.lang.note
+											<svg viewBox="0 0 20 20" alt=state.lang.note>
+												<title> state.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if parallel_verse.comment and settings.verse_commentary
@@ -2856,59 +2853,59 @@ tag bible-reader
 						<.arrows>
 							<a.arrow @click=prevChapter(yes)>
 								<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
-									<title> data.lang.prev
+									<title> state.lang.prev
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 							<a.arrow @click=nextChapter(yes)>
 								<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
-									<title> data.lang.next
+									<title> state.lang.next
 									<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					elif !window.navigator.onLine && data.downloaded_translations.indexOf(settingsp.translation) == -1
-						<p.in_offline> data.lang.this_translation_is_unavailable
+					elif !window.navigator.onLine && state.downloaded_translations.indexOf(settingsp.translation) == -1
+						<p.in_offline> state.lang.this_translation_is_unavailable
 
 			<div
 				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
 				@click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
-					<title> data.lang.other
+					<title> state.lang.other
 					<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 
 			<aside @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="right:{MOBILE_PLATFORM ? settings_menu_left : settings_menu_left ? settings_menu_left : settings_menu_left + 12}px;{boxShadow(settings_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				<p[fs:24px h:32px d:flex jc:space-between ai:center]>
-					data.lang.other
+					state.lang.other
 					<.current_accent .enlarge_current_accent=show_accents>
 						<.visible_accent @click=(do show_accents = !show_accents)>
 						<.accents .show_accents=show_accents>
 							for accent in accents when accent.name != settings.accent
 								<.accent @click=changeAccent(accent.name) [background-color: {settings.light == 'dark' ? accent.light : accent.dark}]>
 				<[d:flex m:24px 0 ai:center]>
-					if data.getUserName()
+					if state.userName
 						<[w:100% d:flex ai:center $fill-on-hover:$c @hover:$acc-color-hover cursor:pointer] route-to='/profile/'>
 							<svg.helpsvg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 0 24 24" width="32px">
-								<title> data.getUserName()
+								<title> state.userName
 								<path d="M0 0h24v24H0z" fill="none">
 								<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
-							<a.username [c:$fill-on-hover]> data.getUserName()
-						<a.prof_btn [ws:pre] @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> data.lang.logout
+							<a.username [c:$fill-on-hover]> state.userName
+						<a.prof_btn [ws:pre] @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> state.lang.logout
 					else
-						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> data.lang.login
-						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> data.lang.signin
+						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> state.lang.login
+						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> state.lang.signin
 				<button.btnbox.cbtn.aside_button @click=turnGeneralSearch>
 					<svg.helpsvg [p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
-						<title> data.lang.find_in_chapter
+						<title> state.lang.find_in_chapter
 						<path d=svg_paths.search>
-					data.lang.bible_search
+					state.lang.bible_search
 				<button.btnbox.cbtn.aside_button @click=pageSearch()>
 					<svg.helpsvg [p:0 4px] viewBox="0 0 12 12" width="24px" height="24px">
-						<title> data.lang.find_in_chapter
+						<title> state.lang.find_in_chapter
 						<path d=svg_paths.search>
-					data.lang.find_in_chapter
+					state.lang.find_in_chapter
 				<button.btnbox.cbtn.aside_button @click=turnHistory>
 					<svg.helpsvg width="24" height="24" viewBox="0 0 24 24">
-						<title> data.lang.history
+						<title> state.lang.history
 						<path d="M0 0h24v24H0z" fill="none">
 						<path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z">
-					data.lang.history
+					state.lang.history
 
 				<menu-popup bind=store.show_themes>
 					<.btnbox.cbtn.aside_button.popup_menu_box [d:flex transform@important:none ai:center pos:relative] @click=(do store.show_themes = !store.show_themes)>
@@ -2919,45 +2916,45 @@ tag bible-reader
 						if store.show_themes
 							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
 								<button.butt[fw:900 bgc:black c:white bdr:32px solid white] @click=changeTheme('black')> 'Black'
-								<button.butt[fw:900 bgc:rgb(4, 6, 12) c:rgb(255, 238, 238) bdr:32px solid rgb(255, 238, 238)] @click=changeTheme('dark')> data.lang.nighttheme
+								<button.butt[fw:900 bgc:rgb(4, 6, 12) c:rgb(255, 238, 238) bdr:32px solid rgb(255, 238, 238)] @click=changeTheme('dark')> state.lang.nighttheme
 								<button.butt[fw:900 bgc:#f1f1f1 c:black bdr:32px solid black] @click=changeTheme('gray')> 'Gray'
 								<button.butt[fw:900 bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:32px solid rgb(46, 39, 36)] @click=changeTheme('sepia')> 'Sepia'
-								<button.butt[fw:900 bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:32px solid rgb(4, 6, 12)] @click=changeTheme('light')> data.lang.lighttheme
+								<button.butt[fw:900 bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:32px solid rgb(4, 6, 12)] @click=changeTheme('light')> state.lang.lighttheme
 								<button.butt[fw:900 bgc:white c:black bdr:32px solid black] @click=changeTheme('white')> 'White'
 
 				<.btnbox>
-					<button[p:12px fs:20px].cbtn @click=decreaseFontSize title=data.lang.decrease_font_size> "B-"
-					<button[p:8px fs:24px].cbtn @click=increaseFontSize title=data.lang.increase_font_size> "B+"
+					<button[p:12px fs:20px].cbtn @click=decreaseFontSize title=state.lang.decrease_font_size> "B-"
+					<button[p:8px fs:24px].cbtn @click=increaseFontSize title=state.lang.increase_font_size> "B+"
 				<.btnbox>
-					<button.cbtn [p:8px fs:24px fw:100] @click=changeFontWeight(-100) title=data.lang.decrease_font_weight> "B"
-					<button.cbtn [p:8px fs:24px fw:900] @click=changeFontWeight(100) title=data.lang.increase_font_weight> "B"
+					<button.cbtn [p:8px fs:24px fw:100] @click=changeFontWeight(-100) title=state.lang.decrease_font_weight> "B"
+					<button.cbtn [p:8px fs:24px fw:900] @click=changeFontWeight(100) title=state.lang.increase_font_weight> "B"
 				<.btnbox>
 					<svg.cbtn @click=changeLineHeight(no) viewBox="0 0 38 14" fill="context-fill" [p:16px 0]>
-						<title> data.lang.decrease_line_height
+						<title> state.lang.decrease_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="6" width="38" height="2">
 						<rect x="0" y="12" width="18" height="2">
 					<svg.cbtn @click=changeLineHeight(yes) viewBox="0 0 38 24" fill="context-fill" [p:10px 0]>
-						<title> data.lang.increase_line_height
+						<title> state.lang.increase_line_height
 						<rect x="0" y="0" width="28" height="2">
 						<rect x="0" y="11" width="38" height="2">
 						<rect x="0" y="22" width="18" height="2">
 				if window.chrome
 					<.btnbox>
 						<svg.cbtn @click=changeAlign(yes) viewBox="0 0 20 20" [p:10px 0]>
-							<title> data.lang.auto_align
+							<title> state.lang.auto_align
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h12v2H1V5zm0 8h12v2H1v-2z">
 						<svg.cbtn @click=changeAlign(no) viewBox="0 0 20 20" [p:10px 0]>
-							<title> data.lang.align_justified
+							<title> state.lang.align_justified
 							<path d="M1 1h18v2H1V1zm0 8h18v2H1V9zm0 8h18v2H1v-2zM1 5h18v2H1V5zm0 8h18v2H1v-2z">
 				if window.innerWidth > 639
 					<.btnbox>
 						<svg.cbtn @click=changeMaxWidth(no) width="42" height="16" viewBox="0 0 42 16" fill="context-fill" [p: calc(42px - 28px) 0]>
-							<title> data.lang.increase_max_width
+							<title> state.lang.increase_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z">
 							<path d="M38.5,7 L32.75,1.25 L34,6.58831647e-15 L42,8 L41.375,8.625 L34,16 L32.75,14.75 L38.5,9 L24,9 L24,7 L38.5,7 Z" transform="translate(33.000000, 8.000000) scale(-1, 1) translate(-33.000000, -8.000000)">
 						<svg.cbtn @click=changeMaxWidth(yes) width="44" height="16" viewBox="0 0 44 16" fill="context-fill" [padding: calc(42px - 28px) 0]>
-							<title> data.lang.decrease_max_width
+							<title> state.lang.decrease_max_width
 							<path d="M14.5,7 L8.75,1.25 L10,-1.91791433e-15 L18,8 L17.375,8.625 L10,16 L8.75,14.75 L14.5,9 L1.13686838e-13,9 L1.13686838e-13,7 L14.5,7 Z" transform="translate(9.000000, 8.000000) scale(-1, 1) translate(-9.000000, -8.000000)">
 							<path d="M40.5,7 L34.75,1.25 L36,-5.17110888e-16 L44,8 L43.375,8.625 L36,16 L34.75,14.75 L40.5,9 L26,9 L26,7 L40.5,7 Z">
 
@@ -2970,91 +2967,91 @@ tag bible-reader
 								for font in fonts
 									<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
 
-				<menu-popup bind=data.show_languages>
-					<.nighttheme.flex.popup_menu_box @click=(do data.show_languages = !data.show_languages)>
-						data.lang.language
+				<menu-popup bind=state.show_languages>
+					<.nighttheme.flex.popup_menu_box @click=(do state.show_languages = !state.show_languages)>
+						state.lang.language
 						<button.change_language> currentLanguage!
-						if data.show_languages
+						if state.show_languages
 							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
-								<button.butt .active_butt=('ukr'==data.language) @click=(do data.setLanguage('ukr'))> "Українська"
-								<button.butt .active_butt=('ru'==data.language) @click=(do data.setLanguage('ru'))> "Русский"
-								<button.butt .active_butt=('eng'==data.language) @click=(do data.setLanguage('eng'))> "English"
-								<button.butt .active_butt=('de'==data.language) @click=(do data.setLanguage('de'))> "Deutsch"
-								<button.butt .active_butt=('pt'==data.language) @click=(do data.setLanguage('pt'))> "Portuguese"
-								<button.butt .active_butt=('es'==data.language) @click=(do data.setLanguage('es'))> "Español"
+								<button.butt .active_butt=('ukr'==state.language) @click=(do state.setLanguage('ukr'))> "Українська"
+								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "Русский"
+								<button.butt .active_butt=('eng'==state.language) @click=(do state.setLanguage('eng'))> "English"
+								<button.butt .active_butt=('de'==state.language) @click=(do state.setLanguage('de'))> "Deutsch"
+								<button.butt .active_butt=('pt'==state.language) @click=(do state.setLanguage('pt'))> "Portuguese"
+								<button.butt .active_butt=('es'==state.language) @click=(do state.setLanguage('es'))> "Español"
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
-					data.lang.parallel
+					state.lang.parallel
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch .checkbox_turned=settings.parallel_synch>
-					data.lang.parallel_synch
+					state.lang.parallel_synch
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVersePicker .checkbox_turned=settings.verse_picker>
-					data.lang.verse_picker
+					state.lang.verse_picker
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseBreak .checkbox_turned=settings.verse_break>
-					data.lang.verse_break
+					state.lang.verse_break
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseNumber .checkbox_turned=settings.verse_number>
-					data.lang.verse_number
+					state.lang.verse_number
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleVerseCommentary .checkbox_turned=settings.verse_commentary>
-					data.lang.verse_commentary
+					state.lang.verse_commentary
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleLockBooksMenu .checkbox_turned=settings.lock_books_menu>
-					data.lang.lock_books_menu
+					state.lang.lock_books_menu
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleTransitions .checkbox_turned=settings.transitions>
-					data.lang.transitions
+					state.lang.transitions
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleChronorder .checkbox_turned=chronorder>
-					data.lang.chronological_order
+					state.lang.chronological_order
 					<p.checkbox> <span>
 				unless MOBILE_PLATFORM
 					<button.nighttheme.parent_checkbox.flex @click=fixDrawers .checkbox_turned=fixdrawers>
-						data.lang.fixdrawers
+						state.lang.fixdrawers
 						<p.checkbox> <span>
 
 				if window.navigator.onLine
-					if data.db_is_available
+					if state.db_is_available
 						<.help @click=toggleDownloads>
 							<svg.helpsvg @click=toggleDownloads viewBox="0 0 212.646728515625 159.98291015625">
-								<title> data.lang.download_translations
+								<title> state.lang.download_translations
 								<g transform="matrix(1.5 0 0 1.5 0 128)">
 									<path d=svg_paths.download>
-							data.lang.download_translations
+							state.lang.download_translations
 					<a.help href='/downloads/' target="_blank" @click=install>
-						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=data.lang.install_app>
-						data.lang.install_app
+						<img.helpsvg[size:32px rd: 23%] src='/static/bolls.png' alt=state.lang.install_app>
+						state.lang.install_app
 					<.help @click=showDictionaryView>
 						<span.font_icon> 'א'
-						data.lang.dictionary
+						state.lang.dictionary
 						<a[ml:auto] href='https://bohuslav.me/Dictionary/' target='_blank'>
 							<svg.helpsvg[p:4px] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-								<title> data.lang.dictionary + 'link'
+								<title> state.lang.dictionary + 'link'
 								<path d="M0 0h24v24H0z" fill="none">
 								<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
 
 				<.help @click=turnHelpBox>
 					<svg.helpsvg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
-						<title> data.lang.help
+						<title> state.lang.help
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
-					data.lang.help
+					state.lang.help
 				<.help @click=turnSupport() id="animated-heart">
 					<svg.helpsvg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
-						<title> data.lang.support
+						<title> state.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
-					data.lang.support
+					state.lang.support
 				<.help @click=randomVerse>
 					<svg.helpsvg viewBox="0 0 25 25" role="img" aria-hidden="true" width="24px" height="24px">
 						<path fill="none" d="M0 0h25v25H0z">
 						<path d="M17.5 4h-10A3.5 3.5 0 004 7.5v10A3.5 3.5 0 007.5 21h10a3.5 3.5 0 003.5-3.5v-10A3.5 3.5 0 0017.5 4zm-10 1H12v4.414A5.537 5.537 0 0010.973 7.6 2.556 2.556 0 009.1 6.869a2.5 2.5 0 00-1.814.794 2.614 2.614 0 00.2 3.684A3.954 3.954 0 008.671 12H5V7.5A2.5 2.5 0 017.5 5zm4.271 6.846a11.361 11.361 0 01-3.6-1.231 1.613 1.613 0 01-.146-2.271 1.5 1.5 0 011.094-.476h.021a1.7 1.7 0 011.158.464 11.4 11.4 0 011.472 3.514zM5 17.5V13h6.64c-.653 1.149-2.117 3.2-4.4 3.568a.5.5 0 10.158.987A7.165 7.165 0 0012 14.318V20H7.5A2.5 2.5 0 015 17.5zM17.5 20H13v-5.7a7.053 7.053 0 004.6 3.259.542.542 0 00.074.005.5.5 0 00.072-.995c-2.194-.325-3.632-2.253-4.377-3.567H20v4.5A2.5 2.5 0 0117.5 20zm2.5-8h-3.735a4.1 4.1 0 001.251-.678 2.614 2.614 0 00.2-3.684 2.5 2.5 0 00-1.816-.793 2.634 2.634 0 00-1.872.732A5.537 5.537 0 0013 9.389V5h4.5A2.5 2.5 0 0120 7.5zm-6.77-.179a11.405 11.405 0 011.479-3.513 1.694 1.694 0 011.158-.464h.021a1.5 1.5 0 011.094.476 1.613 1.613 0 01-.146 2.271 11.366 11.366 0 01-3.606 1.23z">
-					data.lang.random
+					state.lang.random
 
-				unless data.pswv
+				unless state.pswv
 					<a.help route-to="/donate/">
 						<span.font_icon [mr:2px]> '🔥'
-						data.lang.donate
+						state.lang.donate
 
 				<footer>
 					<p.footer_links>
@@ -3068,8 +3065,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.3 🗓 "
-						<time dateTime='2022-11-10'> "10.11.2022"
+						"🍇 v2.2.4 🗓 "
+						<time dateTime='2022-12-12'> "12.12.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3084,53 +3081,53 @@ tag bible-reader
 						if big_modal_block_content == 'show_help'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1> data.lang.help
+								<h1> state.lang.help
 								<a href="mailto:bpavlisinec@gmail.com">
 									<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
-										<title> data.lang.help
+										<title> state.lang.help
 										<g>
 											<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
 											<path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
 							<article.helpFAQ.search_body>
-								<p[color: $acc-color-hover font-size: 0.9em]> data.lang.faqmsg
-								<h3> data.lang.content
+								<p[color: $acc-color-hover font-size: 0.9em]> state.lang.faqmsg
+								<h3> state.lang.content
 								<ul>
-									for q in data.lang.HB
+									for q in state.lang.HB
 										<li> <a href="#{q[0]}"> q[0]
 									if window.innerWidth >= 1024
-										<li> <a href="#shortcuts"> data.lang.shortcuts
-								for q in data.lang.HB
+										<li> <a href="#shortcuts"> state.lang.shortcuts
+								for q in state.lang.HB
 									<h3 id=q[0] > q[0]
 									<p innerHTML=q[1]>
 								if !MOBILE_PLATFORM
 									<div id="shortcuts">
-										<h3> data.lang.shortcuts
-										for shortcut in data.lang.shortcuts_list
+										<h3> state.lang.shortcuts
+										for shortcut in state.lang.shortcuts_list
 											<p> <span innerHTML=shortcut>
 								<address.still_have_questions>
-									data.lang.still_have_questions
+									state.lang.still_have_questions
 									<a target="_blank" href="mailto:bpavlisinec@gmail.com"> " bpavlisinec@gmail.com"
 
 						elif big_modal_block_content == 'show_compare'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
 								<h1> highlighted_title
-								<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=data.lang.addcollection [stroke:$c stroke-width:2px]>
-									<title> data.lang.compare
+								<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=state.lang.addcollection [stroke:$c stroke-width:2px]>
+									<title> state.lang.compare
 									<line x1="0" y1="10" x2="20" y2="10">
 									<line x1="10" y1="0" x2="10" y2="20">
 								if show_translations_for_comparison
 									<[z-index: 1100 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
 										if compare_translations.length == translations.length
-											<p[padding: 12px 8px]> data.lang.nothing_else
+											<p[padding: 12px 8px]> state.lang.nothing_else
 										<div[d:hflex bg:$bgc pos:sticky t:-8px]>
-											<input.search [p:0 8px] bind=store.compare_translations_search placeholder=data.lang.search aria-label=data.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
+											<input.search [p:0 8px] bind=store.compare_translations_search placeholder=state.lang.search aria-label=state.lang.search [m:2px 8px max-width: calc(100% - 16px)]>
 											<svg.close_search [mr:-16px @lt-sm:8px h:42px p:0px] @click=(show_translations_for_comparison = no) viewBox="0 0 20 20">
-												<title> data.lang.close
+												<title> state.lang.close
 												<path[m: auto] d=svg_paths.close>
 
 										for translation in translations when (!compare_translations.find(do |element| return element == translation.short_name) and filterCompareTranslation translation)
@@ -3138,45 +3135,45 @@ tag bible-reader
 
 
 							<article$compare_body.search_body [scroll-behavior: auto]>
-								<p.total_msg> data.lang.add_translations_msg
+								<p.total_msg> state.lang.add_translations_msg
 
 								<orderable-list list=comparison_parallel saveCompareChanges=saveCompareChanges.bind(this)>
 
 								unless compare_translations.length
-									<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> data.lang.add_translation_btn
+									<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> state.lang.add_translation_btn
 
 						elif big_modal_block_content == 'show_downloads'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
 								<h1[transform@important:none pos:relative c@hover:$acc-color-hover fill:$c @hover:$acc-color-hover cursor:pointer d:flex w:100% h:50px jc:center ai:center us:none]
-									@click=(download_menu = !download_menu)>
+									@click=(download_dictionaries = !download_dictionaries)>
 									<span>
-										if download_menu
-											data.lang.download_dictionaries
+										if download_dictionaries
+											state.lang.download_dictionaries
 										else
-											data.lang.download_translations
+											state.lang.download_translations
 									<span[p:0 8px m:auto 0]>
 										<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
 											<title> 'expand'
 											<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
-								if data.deleting_of_all_dictionaries
+								if state.deleting_of_all_dictionaries
 									<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
-										<title> data.lang.loading
+										<title> state.lang.loading
 										<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 								else
-									<svg.close_search @click=(do data.clearDictionariesTable()) viewBox="0 0 12 16" alt=data.lang.delete>
-										<title> data.lang.remove_all_dictionaries
+									<svg.close_search @click=(do state.clearDictionariesTable()) viewBox="0 0 12 16" alt=state.lang.delete>
+										<title> state.lang.remove_all_dictionaries
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 							<article.search_body>
-								if download_menu
+								if download_dictionaries
 									<div[o@off:0] ease>
-										# let no_dictionary_downloaded = yes
+										let no_dictionary_downloaded = yes
 										for dictionary in dictionaries
-											if window.navigator.onLine || data.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
-												# no_dictionary_downloaded = no
+											if window.navigator.onLine || state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+												no_dictionary_downloaded = no
 												<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineDictionaryAction(dictionary.abbr)>
 													if state.dictionaries_in_downloading.find(do |dict| return dict == dictionary.abbr)
 														<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
@@ -3192,6 +3189,8 @@ tag bible-reader
 															<g transform="matrix(1.5 0 0 1.5 0 128)">
 																<path d=svg_paths.download>
 													<span> "{state.lang[dictionaryDownloadStatus(dictionary.abbr)]} {<b> dictionary.abbr}, {dictionary.name}"
+										if no_dictionary_downloaded
+											state.lang["no_dictionary_downloaded"]
 
 								else
 									<div>
@@ -3200,89 +3199,89 @@ tag bible-reader
 												<a.book_in_list dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
 													language.language
 													<svg[ml: auto].arrow_next width="16" height="10" viewBox="0 0 8 5">
-														<title> data.lang.open
+														<title> state.lang.open
 														<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 												if language.language == show_language_of
 													<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 														let no_translation_downloaded = yes
 														for tr in language.translations
-															if window.navigator.onLine || data.downloaded_translations.indexOf(tr.short_name) != -1
+															if window.navigator.onLine || state.downloaded_translations.indexOf(tr.short_name) != -1
 																no_translation_downloaded = no
 																<a[d:flex py:8px pl:8px cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-color-hover rd:8px] @click=offlineTranslationAction(tr.short_name)>
-																	if data.translations_in_downloading.find(do |translation| return translation == tr.short_name)
+																	if state.translations_in_downloading.find(do |translation| return translation == tr.short_name)
 																		<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-																			<title> data.lang.loading
+																			<title> state.lang.loading
 																			<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
-																	elif data.downloaded_translations.indexOf(tr.short_name) != -1
-																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=data.lang.delete>
-																			<title> data.lang.delete
+																	elif state.downloaded_translations.indexOf(tr.short_name) != -1
+																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=state.lang.delete>
+																			<title> state.lang.delete
 																			<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
 																	else
 																		<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-																			<title> data.lang.download
+																			<title> state.lang.download
 																			<g transform="matrix(1.5 0 0 1.5 0 128)">
 																				<path d=svg_paths.download>
-																	<span> "{data.lang[translationDownloadStatus(tr.short_name)]} {<b> tr.short_name}, {tr.full_name}"
+																	<span> "{state.lang[translationDownloadStatus(tr.short_name)]} {<b> tr.short_name}, {tr.full_name}"
 
 														if no_translation_downloaded
-															data.lang["no_translation_downloaded"]
+															state.lang["no_translation_downloaded"]
 
 						elif big_modal_block_content == 'show_support'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1> data.lang.support
+								<h1> state.lang.support
 								<a target="_blank" href="mailto:bpavlisinec@gmail.com">
 									<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
-										<title> data.lang.help
+										<title> state.lang.help
 										<g>
 												<path d="M16 2L0 7l3.5 2.656L14.563 2.97 5.25 10.656l4.281 3.156z">
 												<path d="M3 8.5v6.102l2.83-2.475-.66-.754L4 12.396V8.5z" color="#000" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible" fill-rule="evenodd">
 							<article.helpFAQ.search_body>
-								<h3> data.lang.ycdtitnw
-								<ul> for text in data.lang.SUPPORT
+								<h3> state.lang.ycdtitnw
+								<ul> for text in state.lang.SUPPORT
 									<li> <span innerHTML=text>
-								<h3> data.lang.bgthnkst, ":"
+								<h3> state.lang.bgthnkst, ":"
 								<ul> for text in thanks_to
 									<li> <span innerHTML=text>
 
 						elif big_modal_block_content == "show_note"
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<h1> data.lang.note, ', ', highlighted_title
-								<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=data.lang.create>
-									<title> data.lang.create
+								<h1> state.lang.note, ', ', highlighted_title
+								<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=state.lang.create>
+									<title> state.lang.create
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-							<mark-down store=store lemon=data.lang.write_something_awesone>
+							<mark-down store=store lemon=state.lang.write_something_awesone>
 
 						elif big_modal_block_content == "dictionary"
 							<article#dict_hat.search_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
-								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0 or definitions_history.length == 0) title=data.lang.back>
+								<button.arrow @click=prevDefinition() .disabled=(definitions_history_index == 0 or definitions_history.length == 0) title=state.lang.back>
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.back
+										<title> state.lang.back
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-								<button.arrow @click=nextDefinition() .disabled=(definitions_history.length - 1 == definitions_history_index) title=data.lang.next>
+								<button.arrow @click=nextDefinition() .disabled=(definitions_history.length - 1 == definitions_history_index) title=state.lang.next>
 									<svg.arrow_next width="16" height="10" viewBox="0 0 8 5">
-										<title> data.lang.next
+										<title> state.lang.next
 										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 
 								<input$dictionarysearch[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none direction: {textDirection(store.definition_search)}]
-									bind=store.definition_search minLength=2 type='text' placeholder=(data.lang.search) aria-label=data.lang.search
+									bind=store.definition_search minLength=2 type='text' placeholder=(state.lang.search) aria-label=state.lang.search
 									@keydown.enter=loadDefinitions>
 
 								<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=loadDefinitions>
-									<title> data.lang.search
+									<title> state.lang.search
 									<path d=svg_paths.search>
 
 								<svg.close_search [min-width:28px] @click=openDictionaryDownloads viewBox="0 0 212.646728515625 159.98291015625">
-									<title> data.lang.download
+									<title> state.lang.download
 									<g transform="matrix(1.5 0 0 1.5 0 128)">
 										<path d=svg_paths.download>
 
@@ -3304,7 +3303,7 @@ tag bible-reader
 														<button.butt .active_butt=(state.dictionary==dictionary.abbr) @click=(state.dictionary=dictionary.abbr;loadDefinitions!)> dictionary.name
 									if window.navigator.onLine
 										<button.nighttheme.parent_checkbox.flex [m:8px 0 fs:0.85em] @click=toggleExtendedDictionarySearch .checkbox_turned=settings.extended_dictionary_search>
-											<span[ml:auto]> data.lang.extended_search
+											<span[ml:auto]> state.lang.extended_search
 											<p.checkbox [m:0 8px 0 24px]> <span>
 
 									for definition, index in definitions when index < 64
@@ -3330,26 +3329,26 @@ tag bible-reader
 
 									unless definitions.length
 										<div[display:flex flex-direction:column pt:25% lh:1.6]>
-											<p> data.lang.nothing
-											<p[pt:16px]> data.lang.dictionary_help
+											<p> state.lang.nothing
+											<p[pt:16px]> state.lang.dictionary_help
 
 						else	# MAIN SEARCH
 							if search_verses.length
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
 										<div[d:hflex bg:$bgc ai:center jc:space-between p:0 8px pos:sticky t:-8px]>
-											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> data.lang.addfilter
+											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> state.lang.addfilter
 											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
-												<title> data.lang.close
+												<title> state.lang.close
 												<path[m: auto] d=svg_paths.close>
 										if search.filter
-											<button.book_in_list @click=dropFilter> data.lang.drop_filter
+											<button.book_in_list @click=dropFilter> state.lang.drop_filter
 
 										if search.ot
-											<button.book_in_list[ta:left] @click=addFilter("ot")> data.lang.ot
+											<button.book_in_list[ta:left] @click=addFilter("ot")> state.lang.ot
 
 										if search.nt
-											<button.book_in_list[ta:left] @click=addFilter("nt")> data.lang.nt
+											<button.book_in_list[ta:left] @click=addFilter("nt")> state.lang.nt
 
 										if settingsp.edited_version == settingsp.translation && settingsp.display
 											<>
@@ -3362,40 +3361,40 @@ tag bible-reader
 
 							<article.search_hat#gs_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
 
 								<input$generalsearch
 									[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none direction: {textDirection(search.search_input)}]
-									minLength=3 type='text' placeholder=(data.lang.bible_search + ', ' + search.translation) aria-label=data.lang.bible_search
+									minLength=3 type='text' placeholder=(state.lang.bible_search + ', ' + search.translation) aria-label=state.lang.bible_search
 									bind=search.search_input @keydown.enter=getSearchText @input=searchSuggestions>
 
 								if window.navigator.onLine
 									<svg.search_option .search_option_on=search.match_case @click=(search.match_case = !search.match_case, setCookie("match_case", search.match_case)) width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-										<title> data.lang.match_case
+										<title> state.lang.match_case
 										<path d="M8.85352 11.7021H7.85449L7.03809 9.54297H3.77246L3.00439 11.7021H2L4.9541 4H5.88867L8.85352 11.7021ZM6.74268 8.73193L5.53418 5.4502C5.49479 5.34277 5.4554 5.1709 5.41602 4.93457H5.39453C5.35872 5.15299 5.31755 5.32487 5.271 5.4502L4.07324 8.73193H6.74268Z">
 										<path d="M13.756 11.7021H12.8752V10.8428H12.8537C12.4706 11.5016 11.9066 11.8311 11.1618 11.8311C10.6139 11.8311 10.1843 11.686 9.87273 11.396C9.56479 11.106 9.41082 10.721 9.41082 10.2412C9.41082 9.21354 10.016 8.61556 11.2262 8.44727L12.8752 8.21631C12.8752 7.28174 12.4974 6.81445 11.7419 6.81445C11.0794 6.81445 10.4815 7.04004 9.94793 7.49121V6.58887C10.4886 6.24512 11.1117 6.07324 11.8171 6.07324C13.1097 6.07324 13.756 6.75716 13.756 8.125V11.7021ZM12.8752 8.91992L11.5485 9.10254C11.1403 9.15983 10.8324 9.26188 10.6247 9.40869C10.417 9.55192 10.3132 9.80794 10.3132 10.1768C10.3132 10.4453 10.4081 10.6655 10.5978 10.8374C10.7912 11.0057 11.0472 11.0898 11.3659 11.0898C11.8027 11.0898 12.1626 10.9377 12.4455 10.6333C12.7319 10.3254 12.8752 9.93685 12.8752 9.46777V8.91992Z">
 
 									<svg.search_option .search_option_on=search.match_whole @click=(search.match_whole = !search.match_whole, setCookie("match_whole", search.match_whole)) width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-										<title> data.lang.match_whole
+										<title> state.lang.match_whole
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M0 11H1V13H15V11H16V14H15H1H0V11Z">
 										<path d="M6.84048 11H5.95963V10.1406H5.93814C5.555 10.7995 4.99104 11.1289 4.24625 11.1289C3.69839 11.1289 3.26871 10.9839 2.95718 10.6938C2.64924 10.4038 2.49527 10.0189 2.49527 9.53906C2.49527 8.51139 3.10041 7.91341 4.3107 7.74512L5.95963 7.51416C5.95963 6.57959 5.58186 6.1123 4.82632 6.1123C4.16389 6.1123 3.56591 6.33789 3.03238 6.78906V5.88672C3.57307 5.54297 4.19612 5.37109 4.90152 5.37109C6.19416 5.37109 6.84048 6.05501 6.84048 7.42285V11ZM5.95963 8.21777L4.63297 8.40039C4.22476 8.45768 3.91682 8.55973 3.70914 8.70654C3.50145 8.84977 3.39761 9.10579 3.39761 9.47461C3.39761 9.74316 3.4925 9.96338 3.68228 10.1353C3.87564 10.3035 4.13166 10.3877 4.45035 10.3877C4.8872 10.3877 5.24706 10.2355 5.52994 9.93115C5.8164 9.62321 5.95963 9.2347 5.95963 8.76562V8.21777Z">
 										<path d="M9.3475 10.2051H9.32601V11H8.44515V2.85742H9.32601V6.4668H9.3475C9.78076 5.73633 10.4146 5.37109 11.2489 5.37109C11.9543 5.37109 12.5057 5.61816 12.9032 6.1123C13.3042 6.60286 13.5047 7.26172 13.5047 8.08887C13.5047 9.00911 13.2809 9.74674 12.8333 10.3018C12.3857 10.8532 11.7734 11.1289 10.9964 11.1289C10.2695 11.1289 9.71989 10.821 9.3475 10.2051ZM9.32601 7.98682V8.75488C9.32601 9.20964 9.47282 9.59635 9.76644 9.91504C10.0636 10.2301 10.4396 10.3877 10.8944 10.3877C11.4279 10.3877 11.8451 10.1836 12.1458 9.77539C12.4502 9.36719 12.6024 8.79964 12.6024 8.07275C12.6024 7.46045 12.4609 6.98063 12.1781 6.6333C11.8952 6.28597 11.512 6.1123 11.0286 6.1123C10.5166 6.1123 10.1048 6.29134 9.7933 6.64941C9.48177 7.00391 9.32601 7.44971 9.32601 7.98682Z">
 
 								<svg.close_search [w:24px min-width:24px mr:8px] viewBox="0 0 12 12" width="24px" height="24px" @click=getSearchText>
-									<title> data.lang.bible_search
+									<title> state.lang.bible_search
 									<path d=svg_paths.search>
 
 								if search_verses.length
 									<svg.filter_search [min-width:24px] ease .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
-										<title> data.lang.addfilter
+										<title> state.lang.addfilter
 										<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
 								if search.suggestions.books
 									if search.suggestions.books.length or search.suggestions.translations.length
 										<.search_suggestions>
 											for book in search.suggestions.books
-												<search-text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+												<text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
 													searchSuggestionText(book)
 
 
@@ -3409,31 +3408,31 @@ tag bible-reader
 							if search.search_result_header
 								<article.search_body id="search_body" @scroll=searchPagination>
 									let filtered_books = getFilteredASearchVerses()
-									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  filtered_books.length, ' ', data.lang.totalyresultsofsearch
+									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  filtered_books.length, ' ', state.lang.totalyresultsofsearch
 
 									<>
 										for verse, key in filtered_books
 											<a.search_item>
-												<search-text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
+												<text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
 												<.search_res_verse_header>
 													<span> nameOfBook(verse.book, (settingsp.display ? settingsp.edited_version : settings.translation)), ' '
 													<span> verse.chapter, ':'
 													<span> verse.verse
-													<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) viewBox="0 0 561 561" alt=data.lang.copy>
-														<title> data.lang.copy
+													<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) viewBox="0 0 561 561" alt=state.lang.copy>
+														<title> state.lang.copy
 														<path d=svg_paths.copy>
 													<svg.open_in_parallel [margin-left: 4px] viewBox="0 0 400 338" @click=backInHistory({translation: search.translation, book: verse.book, chapter: verse.chapter,verse: verse.verse}, yes)>
-														<title> data.lang.open_in_parallel
+														<title> state.lang.open_in_parallel
 														<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 										if search.filter then <div[p:12px 0px ta:center]>
-											data.lang.filter_name + ' ' + nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
+											state.lang.filter_name + ' ' + nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
 											<br>
-											<button[d: inline-block; mt: 12px].more_results @click=dropFilter> data.lang.drop_filter
+											<button[d: inline-block; mt: 12px].more_results @click=dropFilter> state.lang.drop_filter
 									unless search_verses.length
 										<div[display:flex flex-direction:column height:100% justify-content:center align-items:center]>
-											<p> data.lang.nothing
-											<p[padding:32px 0px 8px]> data.lang.translation, ' ', search.translation
-											<button.more_results @click=(lock_panel = yes;showTranslations!)> data.lang.change_translation
+											<p> state.lang.nothing
+											<p[padding:32px 0px 8px]> state.lang.translation, ' ', search.translation
+											<button.more_results @click=(lock_panel = yes;showTranslations!)> state.lang.change_translation
 
 
 			if show_collections || show_share_box || choosenid.length
@@ -3442,46 +3441,46 @@ tag bible-reader
 						<div[o@off:0 h:auto @off:0px of@off:hidden] ease>
 							<.collectionshat>
 								<svg.svgBack viewBox="0 0 20 20" @click=turnCollections>
-									<title> data.lang.back
+									<title> state.lang.back
 									<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
 								if addcollection
-									<p.saveto> data.lang.newcollection
+									<p.saveto> state.lang.newcollection
 								else
-									<p.saveto> data.lang.saveto
-									<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=data.lang.addcollection>
-										<title> data.lang.addcollection
+									<p.saveto> state.lang.saveto
+									<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=state.lang.addcollection>
+										<title> state.lang.addcollection
 										<line x1="0" y1="10" x2="20" y2="10">
 										<line x1="10" y1="0" x2="10" y2="20">
 
 							<.mark_grid [pt:0 pb:8px]>
 								if addcollection
-									<input.newcollectioninput placeholder=data.lang.newcollection id="newcollectioninput" bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
+									<input.newcollectioninput placeholder=state.lang.newcollection id="newcollectioninput" bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 								elif categories.length
 									<>
 										if categories.length > 8
-											<input.search placeholder=data.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
+											<input.search placeholder=state.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
 									<>
 										for category in categories.filter(do(el) return el.toLowerCase!.indexOf(store.collections_search.toLowerCase!) > -1)
 											<p.collection .add_new_collection=(choosen_categories.find(do |element| return element == category)) @click=addNewCollection(category)> category
 									<div[min-width: 16px]>
 								else
-									<p[m: 8px auto].collection.add_new_collection @click=addCollection> data.lang.addcollection
+									<p[m: 8px auto].collection.add_new_collection @click=addCollection> state.lang.addcollection
 							if (store.newcollection && addcollection) || (choosen_categories.length && !addcollection)
-								<button.cancel.add_new_collection @click=addNewCollection(store.newcollection)> data.lang.save
+								<button.cancel.add_new_collection @click=addNewCollection(store.newcollection)> state.lang.save
 							else
-								<button.cancel @click=turnCollections> data.lang.cancel
+								<button.cancel @click=turnCollections> state.lang.cancel
 					elif show_share_box
 						<div[o@off:0 h:auto @off:0px of@off:hidden] ease>
 							<.collectionshat>
-								<p.saveto> data.lang.share_via
+								<p.saveto> state.lang.share_via
 							<.mark_grid[py:3px]>
-								<.share_box @click=(do data.shareCopying(getShareObj()) && clearSpace())>
-									<svg.share_btn viewBox="0 0 561 561" alt=data.lang.copy fill="var(--c)">
-										<title> data.lang.copy
+								<.share_box @click=(do state.shareCopying(getShareObj()) && clearSpace())>
+									<svg.share_btn viewBox="0 0 561 561" alt=state.lang.copy fill="var(--c)">
+										<title> state.lang.copy
 										<path d=svg_paths.copy>
-								<.share_box @click=(do data.internationalShareCopying(getShareObj()) && clearSpace())>
+								<.share_box @click=(do state.internationalShareCopying(getShareObj()) && clearSpace())>
 									<svg.share_btn height="24" viewBox="0 0 24 24" width="24" fill="var(--c)">
-										<title> data.lang.copy_international
+										<title> state.lang.copy_international
 										<path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z">
 								if canShareViaTelegram() then <.share_box @click=shareTelegram()>
 									<svg.share_btn viewBox="0 0 240 240" [background: linear-gradient(#37aee2, #1e96c8); border-radius: 50%] alt="Telegram">
@@ -3502,12 +3501,6 @@ tag bible-reader
 										<title> "WhatsApp"
 										<path[fill:#4CAF50] d="M256.014,0.134C114.629,0.164,0.038,114.804,0.068,256.189c0.01,48.957,14.059,96.884,40.479,138.1 L0.718,497.628c-2.121,5.496,0.615,11.671,6.111,13.792c1.229,0.474,2.534,0.717,3.851,0.715c1.222,0.006,2.435-0.203,3.584-0.619 l106.667-38.08c120.012,74.745,277.894,38.048,352.638-81.965s38.048-277.894-81.965-352.638 C350.922,13.495,303.943,0.087,256.014,0.134z">
 										<path[fill:#FAFAFA] d="M378.062,299.889c0,0-26.133-12.8-42.496-21.333c-18.517-9.536-40.277,8.32-50.517,18.475 c-15.937-6.122-30.493-15.362-42.816-27.179c-11.819-12.321-21.059-26.877-27.179-42.816c10.155-10.261,27.968-32,18.475-50.517 c-8.427-16.384-21.333-42.496-21.333-42.517c-1.811-3.594-5.49-5.863-9.515-5.867h-21.333c-31.068,5.366-53.657,32.474-53.333,64 c0,33.493,40.085,97.835,67.115,124.885s91.371,67.115,124.885,67.115c31.526,0.324,58.634-22.266,64-53.333v-21.333 C384.018,305.401,381.71,301.686,378.062,299.889z">
-								<.share_box @click=shareViaVK()>
-									<svg.share_btn width="445" height="445" viewBox="0 0 445 445">
-										<title> "Vkontakte"
-										<g id="icon" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1] transform="translate(-2.4722222222222285 -2.4722222222222285) scale(4.94 4.94)">
-											<path d="M 31.2 0 c 25.2 0 2.4 0 27.6 0 S 90 6 90 31.2 s 0 2.4 0 27.6 S 84 90 58.8 90 s -2.4 0 -27.6 0 S 0 84 0 58.8 s 0 -13.528 0 -27.6 C 0 6 6 0 31.2 0 z" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(81,129,184); fill-rule: nonzero; opacity: 1] transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
-											<path d="M 73.703 31.006 c 0.417 -1.391 0 -2.412 -1.985 -2.412 h -6.563 c -1.669 0 -2.438 0.883 -2.855 1.856 c 0 0 -3.337 8.134 -8.065 13.418 c -1.53 1.53 -2.225 2.016 -3.059 2.016 c -0.417 0 -1.021 -0.487 -1.021 -1.877 V 31.006 c 0 -1.669 -0.484 -2.412 -1.875 -2.412 H 37.969 c -1.043 0 -1.67 0.774 -1.67 1.508 c 0 1.582 2.364 1.947 2.607 6.396 v 9.664 c 0 2.119 -0.383 2.503 -1.217 2.503 c -2.225 0 -7.636 -8.171 -10.846 -17.52 c -0.629 -1.817 -1.26 -2.551 -2.937 -2.551 h -6.563 c -1.875 0 -2.25 0.883 -2.25 1.856 c 0 1.738 2.225 10.359 10.359 21.761 c 5.423 7.787 13.063 12.008 20.016 12.008 c 4.171 0 4.688 -0.938 4.688 -2.552 v -5.885 c 0 -1.875 0.395 -2.249 1.716 -2.249 c 0.973 0 2.642 0.487 6.535 4.241 c 4.45 4.45 5.183 6.446 7.686 6.446 h 6.563 c 1.875 0 2.813 -0.938 2.272 -2.788 c -0.592 -1.844 -2.716 -4.519 -5.535 -7.691 c -1.53 -1.808 -3.824 -3.754 -4.519 -4.728 c -0.973 -1.251 -0.695 -1.808 0 -2.92 C 64.874 46.093 72.869 34.83 73.703 31.006 z" [stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1] transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round">
 								<.share_box @click=shareViaViber()>
 									<svg.share_btn viewBox='0 0 72 72' [border-radius: 23%]>
 										<rect x="0" y="0" [fill:#7D3DAF] width="455.731" height="455.731">
@@ -3516,7 +3509,7 @@ tag bible-reader
 											<path d="M45.775 39.367c-.732-.589-1.514-1.118-2.284-1.658-1.535-1.078-2.94-1.162-4.085.573-.644.974-1.544 1.017-2.486.59-2.596-1.178-4.601-2.992-5.775-5.63-.52-1.168-.513-2.215.702-3.04.644-.437 1.292-.954 1.24-1.908-.067-1.244-3.088-5.402-4.281-5.84-.494-.182-.985-.17-1.488-.002-2.797.94-3.955 3.241-2.846 5.965 3.31 8.127 9.136 13.784 17.155 17.237.457.197.965.275 1.222.346 1.826.018 3.964-1.74 4.582-3.486.595-1.68-.662-2.346-1.656-3.147zm-8.991-16.08c5.862.9 8.566 3.688 9.312 9.593.07.545-.134 1.366.644 1.381.814.016.618-.793.625-1.339.068-5.56-4.78-10.716-10.412-10.906-.425.061-1.304-.293-1.359.66-.036.641.704.536 1.19.61z">
 											<path d="M37.93 24.905c-.564-.068-1.308-.333-1.44.45-.137.82.692.737 1.225.856 3.621.81 4.882 2.127 5.478 5.719.087.524-.086 1.339.804 1.203.66-.1.421-.799.476-1.207.03-3.448-2.925-6.586-6.543-7.02z">
 											<path d="M38.263 27.725c-.377.01-.746.05-.884.452-.208.601.229.745.674.816 1.485.239 2.267 1.114 2.415 2.596.04.402.295.727.684.682.538-.065.587-.544.57-.998.027-1.665-1.854-3.588-3.46-3.548z">
-							<button.cancel @click=(do show_share_box = no; imba.commit!)> data.lang.cancel
+							<button.cancel @click=(do show_share_box = no; imba.commit!)> state.lang.cancel
 					else
 						<div[o@off:0 h:auto @off:0px of@off:hidden] ease>
 							<p[pt:16px]>
@@ -3542,58 +3535,58 @@ tag bible-reader
 												@click=deleteColor(highlight)
 												xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
 												>
-											<title> data.lang.delete
+											<title> state.lang.delete
 											<path d=svg_paths.close>
 							<div[pb:16px] id="addbuttons">
 								if show_delete_bookmark
 									<div .collection=(window.innerWidth > 475) @click=deleteBookmarks(choosenid) [o@off:0 w@off:0 p@off:0 of@off:hidden mr@off:-4px] ease>
-										<svg.close_search viewBox="0 0 12 16" alt=data.lang.delete>
-											<title> data.lang.delete
+										<svg.close_search viewBox="0 0 12 16" alt=state.lang.delete>
+											<title> state.lang.delete
 											<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-										<p> data.lang.delete
+										<p> state.lang.delete
 								<div .collection=(window.innerWidth > 475) @click=clearSpace()>
-									<svg.close_search viewBox="0 0 20 20" alt=data.lang.close>
-										<title> data.lang.close
-										<path d=svg_paths.close alt=data.lang.close>
-									<p> data.lang.close
+									<svg.close_search viewBox="0 0 20 20" alt=state.lang.close>
+										<title> state.lang.close
+										<path d=svg_paths.close alt=state.lang.close>
+									<p> state.lang.close
 								<div .collection=(window.innerWidth > 475) @click=(do show_share_box = yes)>
 									<svg.save_bookmark [stroke:none] @click=(do show_share_box = yes) xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-										<title> data.lang.share
+										<title> state.lang.share
 										<path d="M0 0h24v24H0V0z" fill="none">
 										<path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z">
-									<p> data.lang.share
+									<p> state.lang.share
 								<div .collection=(window.innerWidth > 475) @click=copyToClipboard()>
-									<svg.save_bookmark viewBox="0 0 561 561" alt=data.lang.copy>
-										<title> data.lang.copy
+									<svg.save_bookmark viewBox="0 0 561 561" alt=state.lang.copy>
+										<title> state.lang.copy
 										<path d=svg_paths.copy>
-									<p> data.lang.copy
+									<p> state.lang.copy
 								<div .collection=(window.innerWidth > 475) @click=toggleCompare()>
 									<svg.save_bookmark viewBox='0 0 400 400'>
-										<title> data.lang.compare
+										<title> state.lang.compare
 										<path d="m 158.87835,59.714254 c -22.24553,22.942199 -40.6885,42.183936 -40.98426,42.758776 -0.8318,1.61252 -0.20661,2.77591 3.5444,6.59866 5.52042,5.6227 1.07326,9.0169 37.637,-28.724885 17.50924,-18.073765 32.15208,-32.92934 32.53977,-33.012765 2.11329,-0.454845 1.99262,-9.787147 1.99262,154.63098 0,162.70162 0.0852,155.59667 -1.92404,155.16124 -0.4175,-0.0891 -31.30684,-31.67221 -68.64371,-70.1831 -82.516734,-85.113 -79.762069,-82.23881 -79.523922,-82.9759 0.156562,-0.48685 7.785466,-0.64342 40.516819,-0.82856 33.282953,-0.18856 40.451433,-0.33827 41.056163,-0.85598 0.99477,-0.85141 1.07891,-10.82255 0.10651,-12.19963 -1.01499,-1.43197 -104.747791,-1.64339 -106.131194,-0.216 -1.408859,1.45366 -1.422172,108.27345 -0.01065,109.72598 1.061864,1.09597 10.873494,1.39767 11.873689,0.36572 0.405788,-0.41828 0.535724,-10.38028 0.551701,-41.94167 0.01065,-31.23452 0.150173,-41.70737 0.55383,-42.67534 l 0.533593,-1.28109 78.641191,81.10851 c 43.25264,44.609 79.6823,82.26506 80.95505,83.67874 1.27157,1.41482 2.51534,2.57136 2.7635,2.57136 3.82365,0.0993 6.74023,0.19783 10.78264,0.32569 l 2.48223,-2.72678 c 9.56539,-10.51282 158.34672,-163.337 159.13762,-163.46273 1.69462,-0.2697 1.72007,0.33714 1.72678,42.53708 0.007,40.52683 0.0212,41.4788 0.86376,41.94164 1.22845,0.67884 10.78936,0.61599 11.45949,-0.0754 0.94791,-0.97828 0.75087,-109.32029 -0.20024,-110.13513 -0.61027,-0.52227 -9.49349,-0.64912 -53.0551,-0.75425 l -52.32298,-0.128 -0.77536,0.97824 c -1.17177,1.47768 -1.14409,11.36197 0.032,12.46251 0.74235,0.69256 4.25002,0.75654 41.35204,0.75654 22.29752,0 40.6652,0.12915 40.81803,0.28686 0.75194,0.77597 -5.99106,7.88549 -73.9736,77.99435 -74.8598,77.20005 -74.60834,76.94635 -75.706,76.51207 -0.65608,-0.25942 -1.04162,-309.073405 -0.38768,-310.829927 0.51549,-1.385101 3.29625,1.278819 28.18793,26.998083 44.2328,45.702694 38.02575,40.757704 43.65905,34.786424 4.03624,-4.27873 4.21348,-4.55415 3.74602,-5.85812 -0.56235,-1.56794 -81.63283,-85.027265 -82.59319,-85.027265 -0.5123,0 -16.36846,16.023541 -41.27664,41.713088" [stroke-width:20;stroke-miterlimit:4;stroke-opacity:1;stroke-linecap:round;stroke-linejoin:round;paint-order:normal] fill-rule="evenodd">
-									<p> data.lang.compare
+									<p> state.lang.compare
 								<div .collection=(window.innerWidth > 475) @click=makeNote()>
-									<svg.save_bookmark .filled=isNoteEmpty() viewBox="0 0 24 24" fill="black" alt=data.lang.note>
-										<title> data.lang.note
+									<svg.save_bookmark .filled=isNoteEmpty() viewBox="0 0 24 24" fill="black" alt=state.lang.note>
+										<title> state.lang.note
 										<path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
-									<p> data.lang.note
+									<p> state.lang.note
 								<div .collection=(window.innerWidth > 475) @click=turnCollections()>
-									<svg.save_bookmark .filled=choosen_categories.length viewBox="0 0 20 20" alt=data.lang.bookmark>
-										<title> data.lang.bookmark
+									<svg.save_bookmark .filled=choosen_categories.length viewBox="0 0 20 20" alt=state.lang.bookmark>
+										<title> state.lang.bookmark
 										<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
-									<p> data.lang.bookmark
+									<p> state.lang.bookmark
 								<div .collection=(window.innerWidth > 475) @click=sendBookmarksToDjango>
-									<svg.save_bookmark viewBox="0 0 12 16" alt=data.lang.create>
-										<title> data.lang.create
+									<svg.save_bookmark viewBox="0 0 12 16" alt=state.lang.create>
+										<title> state.lang.create
 										<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-									<p> data.lang.create
+									<p> state.lang.create
 							if store.show_color_picker
 								<svg.close_colorPicker
 										xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16"
 										[scale@off:0.75 o@off:0] ease>
-									<title> data.lang.close
+									<title> state.lang.close
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
-								<color-picker bind=store @closecp=closecp .show-canvas=store.show_color_picker width="320" height="208" alt=data.lang.canvastitle [scale@off:0.75 o@off:0] ease>  data.lang.canvastitle
+								<color-picker bind=store @closecp=closecp .show-canvas=store.show_color_picker width="320" height="208" alt=state.lang.canvastitle [scale@off:0.75 o@off:0] ease>  state.lang.canvastitle
 
 
 			if store.show_history
@@ -3601,11 +3594,11 @@ tag bible-reader
 					<section.small_box.filters [pos:fixed b:16px t:auto r:16px w:300px max-height:calc(100vh - 32px) p:8px zi:4 o@off:0 origin:bottom right transform@off:scale(0.75)]>
 						<[m: 0 c:inherit].nighttheme.flex>
 							<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
-									<title> data.lang.close
+									<title> state.lang.close
 									<path d=svg_paths.close>
-							<h1[margin: 0 0 0 8px]> data.lang.history
-							<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=data.lang.delete>
-								<title> data.lang.delete
+							<h1[margin: 0 0 0 8px]> state.lang.history
+							<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=state.lang.delete>
+								<title> state.lang.delete
 								<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
 						<article[of:auto max-height: calc(97vh - 82px)]>
 							for h in history
@@ -3616,25 +3609,25 @@ tag bible-reader
 											':' + h.verse
 										' ' + h.translation
 									<svg.open_in_parallel viewBox="0 0 400 338" @click=backInHistory(h, yes)>
-										<title> data.lang.open_in_parallel
+										<title> state.lang.open_in_parallel
 										<path d=svg_paths.columnssvg [fill:inherit;fill-rule:evenodd;stroke:none;stroke-width:1.81818187]>
 							unless history.length
-								<p[padding: 12px]> data.lang.empty_history
+								<p[padding: 12px]> state.lang.empty_history
 
 
 			if menuicons and not (big_modal_block_content && window.innerWidth < 640)
 				<section#navigation [o@off:0 t@lg:0px b@lt-lg:{-menu_icons_transform}px height:48px @lg:0px bgc@lt-lg:$bgc d:flex jc:space-between] ease>
 					<div[transform: translateY({menu_icons_transform}%) translateX({bibleIconTransform!}px)] @click=toggleBibleMenu>
 						<svg viewBox="0 0 16 16">
-							<title> data.lang.change_book
+							<title> state.lang.change_book
 							<path d="M3 5H7V6H3V5ZM3 8H7V7H3V8ZM3 10H7V9H3V10ZM14 5H10V6H14V5ZM14 7H10V8H14V7ZM14 9H10V10H14V9ZM16 3V12C16 12.55 15.55 13 15 13H9.5L8.5 14L7.5 13H2C1.45 13 1 12.55 1 12V3C1 2.45 1.45 2 2 2H7.5L8.5 3L9.5 2H15C15.55 2 16 2.45 16 3ZM8 3.5L7.5 3H2V12H8V3.5ZM15 3H9.5L9 3.5V12H15V3Z">
 					<div[transform: translateY({menu_icons_transform}%) d@lg:none] @click=turnGeneralSearch>
 						<svg.helpsvg [p:2px] viewBox="0 0 12 12" width="24px" height="24px">
-							<title> data.lang.search
+							<title> state.lang.search
 							<path d=svg_paths.search>
 					<div[transform: translateY({menu_icons_transform}%) translateX({settingsIconTransform!}px)] @click=toggleSettingsMenu>
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-							<title> data.lang.other
+							<title> state.lang.other
 							<path d="M7.502 1.019a.996.996 0 0 0-.998.998v.451a5.734 5.734 0 0 0-1.356.566l-.322-.322a.995.995 0 0 0-1.41 0l-.705.705a.995.995 0 0 0 0 1.41l.32.32a5.734 5.734 0 0 0-.56 1.358h-.454a.995.995 0 0 0-.998.996V8.5c0 .553.446.996.998.996h.45a5.734 5.734 0 0 0 .566 1.356l-.322.322a.995.995 0 0 0 0 1.41l.705.705c.39.391 1.02.391 1.41 0l.32-.32a5.734 5.734 0 0 0 1.358.56v.456c0 .552.445.996.998.996h.996a.995.995 0 0 0 .998-.996v-.451a5.734 5.734 0 0 0 1.355-.567l.323.322c.39.391 1.02.391 1.41 0l.705-.705a.995.995 0 0 0 0-1.41l-.32-.32a5.734 5.734 0 0 0 .56-1.358h.453a.995.995 0 0 0 .998-.996v-.998a.995.995 0 0 0-.998-.996h-.449a5.734 5.734 0 0 0-.566-1.355l.322-.323a.995.995 0 0 0 0-1.41l-.705-.705a.995.995 0 0 0-1.41 0l-.32.32a5.734 5.734 0 0 0-1.358-.56v-.455a.996.996 0 0 0-.998-.998zm.515 3.976a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3z" style="marker:none">
 
 
@@ -3645,9 +3638,9 @@ tag bible-reader
 			if settings.verse_picker and (show_verse_picker || show_parallel_verse_picker)
 				<section.small_box [pos:fixed t:8vh l:48px w:300px p:12px pt:8px zi:100  max-height:86% origin:top left scale@off:0.96 y@off:-16px o@off:0] ease>
 					<.flex>
-						<h1[margin: 0 auto;font-size: 1.3em; line-height: 1;]> data.lang.choose_verse
+						<h1[margin: 0 auto;font-size: 1.3em; line-height: 1;]> state.lang.choose_verse
 						<svg[m: 0 8px].close_search @click=hideVersePicker viewBox="0 0 20 20">
-							<title> data.lang.close
+							<title> state.lang.close
 							<path d=svg_paths.close>
 					<div>
 						if show_verse_picker
@@ -3662,31 +3655,31 @@ tag bible-reader
 
 			if welcome != 'false'
 				<section#welcome.small_box [pos:fixed zi:9999 r:16px b:16px p:16px o@off:0 scale@off:0.75 origin:bottom right w:300px] ease>
-					<h1[margin: 0 auto 12px; font-size: 1.2em]> data.lang.welcome
-					<p[mb:8px lh:1.5 fs:0.9em ws:pre-line]> data.lang.welcome_msg, <span.emojify> ' 😉'
+					<h1[margin: 0 auto 12px; font-size: 1.2em]> state.lang.welcome
+					<p[mb:8px lh:1.5 fs:0.9em ws:pre-line]> state.lang.welcome_msg, <span.emojify> ' 😉'
 					<button [w:100% h:32px bg:$acc-bgc @hover:$acc-bgc-hover c:$c @hover:$acc-color-hover ta:center border:none fs:1em rd:4px cursor:pointer] @click=welcomeOk> "Ok ", <span.emojify> '👌🏽'
 
 
 			if page_search.d
 				<section#page_search [background-color: {page_search.matches.length || !page_search.query.length ? 'var(--bgc)' : 'firebrick'} pos:fixed b:0 y@off:100% l:0 r:0 d:flex ai:center bdt:1px solid $acc-bgc p:2px 8px zi:1100] ease>
-					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0 direction: {textDirection(page_search.query)}] placeholder=data.lang.find_in_chapter>
-					<button.arrow @click=prevOccurence() title=data.lang.prev [border-radius: 0]>
+					<input$pagesearch.search bind=page_search.query @input.pageSearch @keydown.enter.pageSearchKeydownManager [border-top-right-radius: 0;border-bottom-right-radius: 0 direction: {textDirection(page_search.query)}] placeholder=state.lang.find_in_chapter>
+					<button.arrow @click=prevOccurence() title=state.lang.prev [border-radius: 0]>
 						<svg width="16" height="10" viewBox="0 0 8 5" [transform: rotate(180deg)]>
-							<title> data.lang.prev
+							<title> state.lang.prev
 							<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
-					<button.arrow @click=nextOccurence() title=data.lang.next [border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px margin-right:16px]>
+					<button.arrow @click=nextOccurence() title=state.lang.next [border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 4px; border-bottom-right-radius: 4px margin-right:16px]>
 						<svg width="16" height="10" viewBox="0 0 8 5">
-							<title> data.lang.next
+							<title> state.lang.next
 							<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					if page_search.matches.length
 						<p> page_search.current_occurence + 1, ' / ', page_search.matches.length
 					elif page_search.query.length != 0 && window.innerWidth > 640
-						<p> data.lang.phrase_not_found, '!'
-						<title> data.lang.delete
+						<p> state.lang.phrase_not_found, '!'
+						<title> state.lang.delete
 						<path[m:auto] d=svg_paths.close>
 
 					<svg.close_search [ml:auto min-width:26px] @click=clearSpace viewBox="0 0 20 20">
-						<title> data.lang.close
+						<title> state.lang.close
 						<path[m: auto] d=svg_paths.close>
 
 
