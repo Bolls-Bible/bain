@@ -2416,7 +2416,7 @@ tag bible-reader
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected
 		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/)
-		if selected.match(/\s/) or selected == '' or not hebrew_or_greek
+		if [...selected.matchAll(/\s/g)].length > 1 or selected == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
 
@@ -3065,8 +3065,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.4 🗓 "
-						<time dateTime='2022-12-12'> "12.12.2022"
+						"🍇 v2.2.5 🗓 "
+						<time dateTime='2022-12-25'> "25.12.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
