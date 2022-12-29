@@ -82,6 +82,7 @@ jobs:
             sed -i "s/WEBSITE_ROUTER/$WEBSITE_ROUTER/g" docker-compose.yml
             sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/nginx.conf
             echo "Setting up environment..."
+            apt update -y && apt install -y unzip
             for i in $(ls django/bolls/static/translations); do unzip django/bolls/static/translations/$i -d django/bolls/static/translations; done
             for i in $(ls django/bolls/static/dictionaries); do unzip django/bolls/static/dictionaries/$i -d django/bolls/static/dictionaries; done
             mkdir /var/letsencrypt

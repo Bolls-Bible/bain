@@ -3065,8 +3065,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.5 🗓 "
-						<time dateTime='2022-12-25'> "25.12.2022"
+						"🍇 v2.2.6 🗓 "
+						<time dateTime='2022-12-29'> "29.12.2022"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3645,12 +3645,12 @@ tag bible-reader
 					<div>
 						if show_verse_picker
 							<>
-								for i in [0 ... verses.length]
-									<a.chapter_number @click=goToVerse(i + 1)> i + 1
+								for verse in verses
+									<a.chapter_number @click=goToVerse(verse.verse)> verse.verse
 						elif show_parallel_verse_picker
 							<>
-								for j in [0 ... parallel_verses.length]
-									<a.chapter_number @click=goToVerse('p' + (j + 1))> j + 1
+								for pverse in parallel_verses
+									<a.chapter_number @click=goToVerse('p' + (pverse.verse))> pverse.verse
 
 
 			if welcome != 'false'

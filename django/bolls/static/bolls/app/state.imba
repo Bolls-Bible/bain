@@ -304,7 +304,7 @@ export class State
 		if (downloaded_translations.indexOf(translation) < 0 && window.navigator.onLine)
 			translations_in_downloading.push(translation)
 			let begtime = Date.now()
-			let url = '/static/translations/' + translation + '.zip'
+			let url = '/static/translations/' + translation
 
 			let response = await window.fetch(url)
 			if response.status == 200
@@ -345,7 +345,7 @@ export class State
 		if (downloaded_dictionaries.indexOf(dictionary) < 0 && window.navigator.onLine)
 			dictionaries_in_downloading.push(dictionary)
 			let begtime = Date.now()
-			let url = '/static/dictionaries/' + dictionary + '.zip'
+			let url = '/static/dictionaries/' + dictionary
 
 			let response = await window.fetch(url)
 			if response.status == 200

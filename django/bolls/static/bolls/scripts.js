@@ -44,12 +44,12 @@ async function downloadZip(url, filename) {
 }
 
 async function downloadTranslation(url) {
-  const translation = url.split("/")[5].split(".")[0];
-  let data = await downloadZip(url, translation);
+  const translation = url.split("/")[5];
+  let data = await downloadZip(`${url}.zip`, translation);
   return db
     .transaction("rw", db.verses, async () => {
       return db.verses.bulkPut(data).then(() => {
-        return new Response("Downloaded translation", {
+        return new Response(JSON.stringify(data), {
           status: 200,
           statusText: "Downloaded translation",
         });
@@ -123,8 +123,8 @@ async function searchVerses(url) {
 }
 
 async function downloadDictionary(url) {
-  const dictionary = url.split("/")[5].split(".")[0];
-  let data = await downloadZip(url, dictionary);
+  const dictionary = url.split("/")[5];
+  let data = await downloadZip(`${url}.zip`, dictionary);
   for (const element of data) {
     element.dictionary = dictionary;
   }
@@ -132,7 +132,7 @@ async function downloadDictionary(url) {
   return db
     .transaction("rw", db.dictionaries, () => {
       return db.dictionaries.bulkPut(data).then(() => {
-        return new Response("Downloaded dictionary", {
+        return new Response(JSON.stringify(data), {
           status: 200,
           statusText: "Downloaded dictionary",
         });

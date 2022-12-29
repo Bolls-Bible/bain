@@ -2,7 +2,7 @@ importScripts("/static/bolls/jszip.min.js");
 importScripts("/static/bolls/dexie.min.js");
 importScripts("/static/bolls/scripts.js");
 
-const CACHE_NAME = "v2.2.5";
+const CACHE_NAME = "v2.2.6";
 const urlsToCache = [
   "/",
   "/static/bolls/dist/assets/index.js",
@@ -24,20 +24,21 @@ self.addEventListener("install", function (event) {
 });
 
 self.addEventListener("fetch", (event) => {
+  const url = event.request.url;
   // Translations API
-  if (event.request.url.includes("/static/translations/")) {
-    event.respondWith(downloadTranslation(event.request.url));
-  } else if (event.request.url.includes("/sw/delete-translation/")) {
-    event.respondWith(deleteTranslation(event.request.url));
-  } else if (event.request.url.includes("/sw/search-verses/")) {
-    event.respondWith(searchVerses(event.request.url));
+  if (url.includes("/static/translations/") && !url.includes(".zip")) {
+    event.respondWith(downloadTranslation(url));
+  } else if (url.includes("/sw/delete-translation/")) {
+    event.respondWith(deleteTranslation(url));
+  } else if (url.includes("/sw/search-verses/")) {
+    event.respondWith(searchVerses(url));
     // Dictionaries API
-  } else if (event.request.url.includes("/static/dictionaries/")) {
-    event.respondWith(downloadDictionary(event.request.url));
-  } else if (event.request.url.includes("/sw/delete-dictionary/")) {
-    event.respondWith(deleteDictionary(event.request.url));
-  } else if (event.request.url.includes("/sw/search-definitions/")) {
-    event.respondWith(dictionarySearch(event.request.url));
+  } else if (url.includes("/static/dictionaries/") && !url.includes(".zip")) {
+    event.respondWith(downloadDictionary(url));
+  } else if (url.includes("/sw/delete-dictionary/")) {
+    event.respondWith(deleteDictionary(url));
+  } else if (url.includes("/sw/search-definitions/")) {
+    event.respondWith(dictionarySearch(url));
     // All the other stuff
   } else {
     event.respondWith(
