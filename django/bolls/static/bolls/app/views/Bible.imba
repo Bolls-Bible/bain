@@ -590,51 +590,50 @@ tag bible-reader
 
 	def getChapter translation, book, chapter, verse
 		let changeParallel = yes
-		const does_the_chapter_exist_in_this_translation = theChapterExistInThisTranslation(translation, book, chapter)
-		unless does_the_chapter_exist_in_this_translation
+		unless theChapterExistInThisTranslation(translation, book, chapter)
 			book = settings.book
 			chapter = settings.chapter
 			changeParallel = no
 
 		# const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
-		const the_same_chapter = translation == settings.translation && book == settings.book && chapter == settings.chapter
+		if translation == settings.translation && book == settings.book && chapter == settings.chapter && verses.length
+			return
 
-		if !the_same_chapter or !verses.length
-			loading = yes
-			switchTranslation translation
-			clearSpace()
-			document.title = nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name + " Bolls Bible"
-			if chronorder
-				chronorder = !chronorder
-				toggleChronorder!
-			settings.book = book
-			settings.chapter = chapter
-			settings.translation = translation
-			setCookie('book', book)
-			setCookie('chapter', chapter)
-			setCookie('translation', translation)
-			settings.name_of_book = nameOfBook(settings.book, settings.translation)
-			settings.filtered_books = filteredBooks('books')
-			saveToHistory(translation, book, chapter, verse, no)
-			let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
-			try
-				verses = []
-				imba.commit()
-				if state.downloaded_translations.indexOf(translation) > -1
-					verses = await state.getChapterFromDB(translation, book, chapter, verse)
-				else
-					verses = await loadData(url)
-				loading = no
+		loading = yes
+		switchTranslation translation
+		clearSpace()
+		document.title = nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name + " Bolls Bible"
+		if chronorder
+			chronorder = !chronorder
+			toggleChronorder!
+		settings.book = book
+		settings.chapter = chapter
+		settings.translation = translation
+		setCookie('book', book)
+		setCookie('chapter', chapter)
+		setCookie('translation', translation)
+		settings.name_of_book = nameOfBook(settings.book, settings.translation)
+		settings.filtered_books = filteredBooks('books')
+		saveToHistory(translation, book, chapter, verse, no)
+		let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
+		try
+			verses = []
+			imba.commit()
+			if state.downloaded_translations.indexOf(translation) > -1
+				verses = await state.getChapterFromDB(translation, book, chapter, verse)
+			else
+				verses = await loadData(url)
+			loading = no
 
-			catch error
-				loading = no
-				console.error('Error: ', error)
-				if window.navigator.onLine
-					state.showNotification('error')
+		catch error
+			loading = no
+			console.error('Error: ', error)
+			if window.navigator.onLine
+				state.showNotification('error')
 
-			if settings.parallel_synch && settingsp.display && changeParallel
-				getParallelText settingsp.translation, book, chapter, verse, yes
-			if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
+		if settings.parallel_synch && settingsp.display && changeParallel
+			getParallelText settingsp.translation, book, chapter, verse, yes
+		if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 		clearSpace!
 		window.on_pops_tate = no
 		if verse
@@ -648,58 +647,60 @@ tag bible-reader
 				scrollToY($firstparallel,0)
 				scrollToY(self, 0)
 		if verse > 0 then show_verse_picker = no else show_verse_picker = yes
+		show_chapters_of = book
 		imba.commit()
 
 
 	def getParallelText translation, book, chapter, verse, caller
 		let changeParallel = yes
-		const does_the_chapter_exist_in_this_translation = theChapterExistInThisTranslation(translation, book, chapter)
-		unless does_the_chapter_exist_in_this_translation
+		unless theChapterExistInThisTranslation(translation, book, chapter)
 			book = settingsp.book
 			chapter = settingsp.chapter
 			changeParallel = no
 
 		if !(translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter) || !parallel_verses.length || !settingsp.display
-			if chronorder
-				chronorder = !chronorder
-				toggleChronorder!
-			switchTranslation translation, yes
-			settingsp.translation = translation
-			settingsp.edited_version = translation
-			settingsp.book = book
-			settingsp.chapter = chapter
-			settingsp.name_of_book = nameOfBook(settingsp.book, settingsp.translation)
-			settingsp.filtered_books = filteredBooks('parallel_books')
-			clearSpace()
-			let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
-			parallel_verses = []
-			try
-				if state.downloaded_translations.indexOf(translation) != -1
-					parallel_verses = await state.getChapterFromDB(translation, book, chapter, verse)
-				else
-					parallel_verses = await loadData(url)
-				imba.commit()
-			catch error
-				console.error('Error: ', error)
-				state.showNotification('error')
-			if settings.parallel_synch && settingsp.display && changeParallel && not caller
-				getText settings.translation, book, chapter, verse
-			if state.user.username
-				getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
-			imba.commit()
-			setCookie('parallel_display', settingsp.display)
-			saveToHistory translation, book, chapter, 0, yes
-			setCookie('parallel_translation', translation)
-			setCookie('parallel_book', book)
-			setCookie('parallel_chapter', chapter)
-			if verse
-				findVerse("p{verse}")
+			return
+
+		if chronorder
+			chronorder = !chronorder
+			toggleChronorder!
+		switchTranslation translation, yes
+		settingsp.translation = translation
+		settingsp.edited_version = translation
+		settingsp.book = book
+		settingsp.chapter = chapter
+		settingsp.name_of_book = nameOfBook(settingsp.book, settingsp.translation)
+		settingsp.filtered_books = filteredBooks('parallel_books')
+		clearSpace()
+		let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
+		parallel_verses = []
+		try
+			if state.downloaded_translations.indexOf(translation) != -1
+				parallel_verses = await state.getChapterFromDB(translation, book, chapter, verse)
 			else
-				setTimeout(&, 100) do
-					chapter_headers.fontsize2 = 2
-					scrollToY($secondparallel,0)
-			if !window.on_pops_tate && verses && !verse && settingsp.display
-				show_parallel_verse_picker = true
+				parallel_verses = await loadData(url)
+			imba.commit()
+		catch error
+			console.error('Error: ', error)
+			state.showNotification('error')
+		if settings.parallel_synch && settingsp.display && changeParallel && not caller
+			getText settings.translation, book, chapter, verse
+		if state.user.username
+			getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
+		imba.commit()
+		setCookie('parallel_display', settingsp.display)
+		saveToHistory translation, book, chapter, 0, yes
+		setCookie('parallel_translation', translation)
+		setCookie('parallel_book', book)
+		setCookie('parallel_chapter', chapter)
+		if verse
+			findVerse("p{verse}")
+		else
+			setTimeout(&, 100) do
+				chapter_headers.fontsize2 = 2
+				scrollToY($secondparallel,0)
+		if !window.on_pops_tate && verses && !verse && settingsp.display
+			show_parallel_verse_picker = true
 
 	def theChapterExistInThisTranslation translation, book, chapter
 		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
@@ -3065,8 +3066,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.6 🗓 "
-						<time dateTime='2022-12-29'> "29.12.2022"
+						"🍇 v2.2.7 🗓 "
+						<time dateTime='2023-01-02'> "2.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

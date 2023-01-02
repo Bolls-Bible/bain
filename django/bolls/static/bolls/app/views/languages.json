@@ -245,6 +245,11 @@
         "full_name": "כֶּתֶר אֲרָם צוֹבָא - Tanah Aleppo Codex",
         "info": "https://en.wikipedia.org/wiki/Aleppo_Codex",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "DHNT",
+        "full_name": "Delitzsch's Hebrew New Testament 1877, 1998 (with vowels)",
+        "updated": 1672568934565
       }
     ]
   },
