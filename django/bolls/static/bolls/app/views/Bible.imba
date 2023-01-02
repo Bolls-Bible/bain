@@ -658,7 +658,7 @@ tag bible-reader
 			chapter = settingsp.chapter
 			changeParallel = no
 
-		if !(translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter) || !parallel_verses.length || !settingsp.display
+		if (translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter && parallel_verses.length) && !settingsp.display
 			return
 
 		if chronorder
@@ -3066,7 +3066,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.7 🗓 "
+						"🍇 v2.2.8 🗓 "
 						<time dateTime='2023-01-02'> "2.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
