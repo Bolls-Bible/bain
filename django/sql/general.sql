@@ -60,13 +60,11 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/SVD/svd.csv' DELIMITER ',' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/DHNT.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/MSG.csv' DELIMITER ',' CSV HEADER;
 
 
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '~/projects/bolls_data/ylt.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_dictionary(id,topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '~/projects/bolls_data/bdbt.csv' DELIMITER '|' CSV HEADER;
-
-\copy bolls_commentary FROM '/home/bohuslav/commentary.csv' DELIMITER '|' CSV HEADER;
 
 
 

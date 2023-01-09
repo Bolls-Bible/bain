@@ -130,6 +130,18 @@
         "full_name": "New Jerusalem Bible, 1985",
         "info": "https://en.wikipedia.org/wiki/New_Jerusalem_Bible",
         "updated": 1635188106109
+      },
+      {
+        "short_name": "AMP",
+        "full_name": "Amplified Bible, 2015",
+        "info": "https://en.wikipedia.org/wiki/Amplified_Bible",
+        "updated": 1673261959445
+      },
+      {
+        "short_name": "MSG",
+        "full_name": "The Message, 2002",
+        "info": "https://messagebible.com/",
+        "updated": 1635188106109
       }
     ]
   },

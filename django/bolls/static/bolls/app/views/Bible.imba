@@ -443,10 +443,10 @@ tag bible-reader
 				host_rectangle = null
 
 	def onPopState event
-		if event.state.translation && event.state.book && event.state.chapter
-			getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
-		else
-			clearSpace!
+		if event.state
+			if event.state.translation && event.state.book && event.state.chapter
+				return getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
+		clearSpace!
 
 	def mount
 		# silly analog of routed
@@ -2620,6 +2620,21 @@ tag bible-reader
 		if event.detail.translation && event.detail.book && event.detail.chapter
 			getText event.detail.translation, event.detail.book, event.detail.chapter, event.detail.verse
 
+	def purcheCache
+		# unregister service worker and purge cache
+		if window.navigator.serviceWorker != undefineds
+			window.navigator.serviceWorker.getRegistrations().then(do(registrations)
+				for registration in registrations
+					await registration.unregister()
+			)
+
+		window.caches.keys().then(do(cacheNames)	
+			for cacheName in cacheNames
+				await window.caches.delete(cacheName)
+			)
+		# & reload
+		window.history.go()
+
 	def render
 		if isApple
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
@@ -3054,6 +3069,10 @@ tag bible-reader
 						<span.font_icon [mr:2px]> '🔥'
 						state.lang.donate
 
+				<.help @click=purcheCache>
+					<span.font_icon [mr:2px]> '🧹'
+					state.lang.purge_cache
+
 				<footer>
 					<p.footer_links>
 						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
@@ -3066,8 +3085,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.8 🗓 "
-						<time dateTime='2023-01-02'> "2.1.2023"
+						"🍇 v2.2.9 🗓 "
+						<time dateTime='2023-01-09'> "9.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

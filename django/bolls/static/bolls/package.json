@@ -19,7 +19,7 @@
     "@testing-library/dom": "^8.17.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@vitest/ui": "^0.23.1",
-    "imba": "^2.0.0-alpha.220",
+    "imba": "^2.0.0-alpha.225",
     "jsdom": "^20.0.0",
     "vite": "^3.1.0",
     "vite-plugin-imba": "^0.4.1",

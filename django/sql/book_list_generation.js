@@ -403,7 +403,7 @@ let books = [
 ];
 
 for (const book of ylt) {
-  new_book = books.find((el) => {
+  let new_book = books.find((el) => {
     return el.bookid == book.bookid;
   });
   if (new_book) {
