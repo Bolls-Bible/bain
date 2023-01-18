@@ -1,5 +1,5 @@
 import { State } from './state.imba'
-import './views/Bible.imba'
+import './views/BibleReader.imba'
 import './views/donate.imba'
 import './views/Profile.imba'
 import './views/downloads.imba'
@@ -11,7 +11,7 @@ let state = new State()
 extend tag element
 	get state
 		return state
-	
+
 	def textDirection text
 		// check if there are present rtl characters
 		if text..match(/[\u0590-\u08FF]/)

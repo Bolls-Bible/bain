@@ -28770,5 +28770,241 @@
       "chronorder": 65,
       "chapters": 22
     }
+  ],
+  "TNHR": [
+    {
+      "bookid": 1,
+      "name": "Бырэйшит",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Шемот",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Ваикра",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Бымидбар",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Дыварим",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Йегошуа",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Судьи",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Рут",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "Шемуэйл I",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "Шемуэйл II",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "Мелахим I",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "Мелахим II",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "Диврей гайамим I",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "Диврей гайамим II",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Эзра",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Нехемия",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Эстер",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Ийов",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Тегилим",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Мишлей",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Когелет",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Шир гайирим",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Йешайа",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Йирмейа",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Эйха",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Йехэзкэйл",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Даниель",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Ошэйа",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Йоэйл",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Амос",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Овадйа",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Иона",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Миха",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Нахум",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Хаваккук",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Цефанйа",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Хаггай",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Зехарйа",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Малахи",
+      "chronorder": 39,
+      "chapters": 4
+    }
   ]
 }

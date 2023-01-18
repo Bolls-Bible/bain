@@ -14,6 +14,8 @@ import {thanks_to} from './thanks_to.imba'
 import {svg_paths, swirl} from "./svg_paths.imba"
 import {scrollToY} from './smooth_scrolling.imba'
 
+console.log(BOOKS)
+
 let html = document.documentElement
 
 let agent = window.navigator.userAgent;
@@ -443,10 +445,10 @@ tag bible-reader
 				host_rectangle = null
 
 	def onPopState event
+		clearSpace!
 		if event.state
 			if event.state.translation && event.state.book && event.state.chapter
 				return getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
-		clearSpace!
 
 	def mount
 		# silly analog of routed
@@ -1853,9 +1855,9 @@ tag bible-reader
 	def translationFullName tr
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
-	def popUp what
-		big_modal_block_content = what
-		window.history.pushState(no, what)
+	def popUp modal_name
+		big_modal_block_content = modal_name
+		window.history.pushState(no, modal_name)
 
 	def makeNote
 		if big_modal_block_content
@@ -3085,14 +3087,14 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.9 🗓 "
-						<time dateTime='2023-01-09'> "9.1.2023"
+						"🍇 v2.2.10 🗓 "
+						<time dateTime='2023-01-18'> "18.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
 			if big_modal_block_content.length
-				<section [pos:fixed t:0 b:0 r:0 l:0 bgc:#000A h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{big_modal_block_content == "show_note" ? 1200 : 3}]
+				<section [pos:fixed t:0 b:0 r:0 l:0 bg:rgba(0,0,0,0.75) h:100% d:flex jc:center p:14vh 0 @lt-sm:0 o@off:0 visibility@off:hidden zi:{big_modal_block_content == "show_note" ? 1200 : 3}]
 					@click=(do unless state.intouch then clearSpace!) ease>
 
 					<div[pos:relative max-height:72vh @lt-sm:100vh max-width:64em @lt-sm:100% w:80% @lt-sm:100% bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none rd:16px @lt-sm:0 p:12px 24px @lt-sm:12px scale@off:0.75]
