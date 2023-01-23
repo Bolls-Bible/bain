@@ -8,7 +8,7 @@ docker-compose -f dev-docker-compose.yml build
 docker-compose -f dev-docker-compose.yml up -d
 ```
 
-Then restore the database from a (backup file)[https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql]
+Then restore the database from a [backup file](https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql)
 
 ```bash
 docker exec -i database psql -U postgres_user postgres_db < backup.sql
@@ -16,6 +16,10 @@ docker exec -i database psql -U postgres_user postgres_db < backup.sql
 If it doesn't work, enter the container with `docker exec -it database bash` and try from inside.
 
 
+Now add `bolls.local` to your hosts file (on linux it's /etc/hosts)
+
+
+```bash
 Now you should be able to open the application in your browser at http://bolls.local
 
 
