@@ -14,8 +14,6 @@ import {thanks_to} from './thanks_to.imba'
 import {svg_paths, swirl} from "./svg_paths.imba"
 import {scrollToY} from './smooth_scrolling.imba'
 
-console.log(BOOKS)
-
 let html = document.documentElement
 
 let agent = window.navigator.userAgent;
@@ -598,8 +596,8 @@ tag bible-reader
 			changeParallel = no
 
 		# const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
-		if translation == settings.translation && book == settings.book && chapter == settings.chapter && verses.length
-			return
+		# if translation == settings.translation && book == settings.book && chapter == settings.chapter && verses.length
+		# 	return # -- unneded optimization?
 
 		loading = yes
 		switchTranslation translation
@@ -621,7 +619,7 @@ tag bible-reader
 		try
 			verses = []
 			imba.commit()
-			if state.downloaded_translations.indexOf(translation) > -1
+			if state.downloaded_translations.indexOf(translation) != -1
 				verses = await state.getChapterFromDB(translation, book, chapter, verse)
 			else
 				verses = await loadData(url)
@@ -660,7 +658,9 @@ tag bible-reader
 			chapter = settingsp.chapter
 			changeParallel = no
 
-		if (translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter && parallel_verses.length) && !settingsp.display
+		# if (translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter && parallel_verses.length) && !settingsp.display
+		# 	return
+		if !settingsp.display
 			return
 
 		if chronorder
@@ -705,7 +705,7 @@ tag bible-reader
 			show_parallel_verse_picker = true
 
 	def theChapterExistInThisTranslation translation, book, chapter
-		const theBook = BOOKS[translation].find(do |element| return element.bookid == book)
+		const theBook = BOOKS[translation]?.find(do |element| return element.bookid == book)
 		if theBook
 			if theBook.chapters >= chapter
 				return yes
@@ -2423,7 +2423,7 @@ tag bible-reader
 			host_rectangle = null
 			return imba.commit!
 
-		# The feature is not available offline
+		# The feature is not available offline without downloads
 		if window.navigator.onLine or state.downloaded_dictionaries.length
 			let range = selection.getRangeAt(0)
 			let rangeContainer = range.commonAncestorContainer
@@ -2443,9 +2443,12 @@ tag bible-reader
 					host_rectangle.left = viewportRectangle.left
 				else
 					host_rectangle.right = window.innerWidth - viewportRectangle.right
-
-				if selection.anchorNode.nextSibling..textContent
-					host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
+				
+				if selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
+					host_rectangle.strong = strongHunber(selected, selection.focusNode.previousSibling.textContent)
+				else
+					if selection.anchorNode.nextSibling..textContent
+						host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
 				imba.commit!
 
 
@@ -2472,49 +2475,6 @@ tag bible-reader
 		# Clear Greek
 		res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		return res
-
-
-	# Compute a search relevance score for an item.
-	def scoreDefinition thename, query
-		query = stripVowels(query.toLowerCase!)
-		let score = 0
-		let p = 0 # Position within the `item`
-		let consequtiveBonus = 2 # Bonus for consecutive matches
-		# Look through each character of the query string, stopping at the end(s)...
-
-		for char in query
-			# Figure out if the current letter is found in the rest of the `item`.
-			const index = thename.indexOf(char, p)
-			# If not, continue to the next character.
-			if index < 0
-				continue
-
-			#  If it is, add to the score...
-			score++
-			# If the character is found in the next two chars, give it a bonus for being consecutive
-			if index - p < 2
-				score += consequtiveBonus
-				# if the char is next, multiply the bonus by 2
-				if index === p
-					consequtiveBonus *= 2
-				# Otherwise, don't reset the bonus, maybe user missed a char
-			else
-				consequtiveBonus = 2
-
-			#  ... and skip the position within `item` forward.
-			p = index + 1
-
-		if thename.indexOf(query) > -1
-			score += 8
-			if thename.length - query.length < 2
-				score += 8
-		if thename.length == query.length
-			score += 1
-
-		if score > query.length
-			return score
-		return 0
-
 
 	# Get query results from the dictionary, or Strong's number 
 	def loadDefinitions query
@@ -3087,8 +3047,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.10 🗓 "
-						<time dateTime='2023-01-18'> "18.1.2023"
+						"🍇 v2.2.11 🗓 "
+						<time dateTime='2023-01-23'> "23.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

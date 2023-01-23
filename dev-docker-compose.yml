@@ -54,7 +54,6 @@ services:
       - internal
     depends_on:
       - database
-
   nginx:
     build: ./nginx_dev
     restart: always
