@@ -363,11 +363,10 @@ tag bible-reader
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
 
-		if !verses.length
-			getChapter(settings.translation, settings.book, settings.chapter)
-
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
+
+		getChapter(settings.translation, settings.book, settings.chapter)
 
 		history = JSON.parse(getCookie("history")) || []
 		history.sort(do(a, b) return a.date - b.date)
@@ -452,7 +451,7 @@ tag bible-reader
 		# silly analog of routed
 		let link = window.location.pathname.split('/')
 		if link[1] && link[2] && link[3]
-			getChapter link[1], link[2], link[3], link[4]
+			getChapter link[1], parseInt link[2], parseInt link[3], link[4]
 
 		document.addEventListener('selectionchange', onSelectionChange.bind(self))
 		window.addEventListener('popstate', onPopState.bind(self))
@@ -596,8 +595,9 @@ tag bible-reader
 			changeParallel = no
 
 		# const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
-		# if translation == settings.translation && book == settings.book && chapter == settings.chapter && verses.length
-		# 	return # -- unneded optimization?
+		if verses.length
+			if verses[0].translation == translation && verses[0].book == book && verses[0].chapter == chapter
+				return
 
 		loading = yes
 		switchTranslation translation
@@ -658,10 +658,9 @@ tag bible-reader
 			chapter = settingsp.chapter
 			changeParallel = no
 
-		# if (translation == settingsp.translation && book == settingsp.book && chapter == settingsp.chapter && parallel_verses.length) && !settingsp.display
-		# 	return
-		if !settingsp.display
-			return
+		if parallel_verses.length && !settingsp.display
+			if parallel_verses[0].translation == translation && parallel_verses[0].book == book && parallel_verses[0].chapter == chapter
+				return
 
 		if chronorder
 			chronorder = !chronorder
@@ -1026,16 +1025,15 @@ tag bible-reader
 			popUp 'show_support'
 
 	def toggleParallelMode
-		let parallel = !settingsp.display
-		if !parallel
+		if settingsp.display
 			settingsp.display = no
 			clearSpace()
 		else
+			settingsp.display = yes
 			if settings.parallel_synch
 				getParallelText(settingsp.translation, settings.book, settings.chapter)
 			else
 				getParallelText(settingsp.translation, settingsp.book, settingsp.chapter)
-			settingsp.display = yes
 		setCookie('parallel_display', settingsp.display)
 
 	def changeEditedParallel translation
@@ -1827,11 +1825,11 @@ tag bible-reader
 	def toggleVersePicker
 		settings.verse_picker = !settings.verse_picker
 		setCookie('verse_picker', settings.verse_picker)
-	
+
 	def toggleVerseCommentary
 		settings.verse_commentary = !settings.verse_commentary
 		setCookie('verse_commentary', settings.verse_commentary)
-	
+
 	def toggleLockBooksMenu
 		settings.lock_books_menu = !settings.lock_books_menu
 		setCookie('lock_books_menu', settings.lock_books_menu)
@@ -2118,7 +2116,7 @@ tag bible-reader
 				id: ''
 			}
 
-			for kid in scrolled_block.children[2].children
+			for kid in scrolled_block.children[2]..children
 				if kid.id
 					let new_distance = Math.abs(kid.offsetTop - scrolled_block.scrollTop)
 					if new_distance < top_verse.distance
@@ -3047,8 +3045,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.11 🗓 "
-						<time dateTime='2023-01-23'> "23.1.2023"
+						"🍇 v2.2.12 🗓 "
+						<time dateTime='2023-01-24'> "24.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
