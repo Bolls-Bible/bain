@@ -561,11 +561,12 @@ tag bible-reader
 	def getBookmarks url, type
 		let server_bookmarks = []
 		let offline_bookmarks = []
-		try
-			server_bookmarks = await loadData(url)
-		catch error
-			console.error error
-			offline_bookmarks = []
+		if window.navigator.onLine
+			try
+				server_bookmarks = await loadData(url)
+			catch error
+				console.warn error
+				offline_bookmarks = []
 
 		if state.db_is_available
 			if type == 'bookmarks'
@@ -3045,8 +3046,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.12 🗓 "
-						<time dateTime='2023-01-24'> "24.1.2023"
+						"🍇 v2.2.13 🗓 "
+						<time dateTime='2023-01-30'> "30.1.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
