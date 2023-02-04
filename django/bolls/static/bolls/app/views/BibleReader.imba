@@ -891,8 +891,40 @@ tag bible-reader
 		def highlightText node, lastIndex, cssclass, parallel
 			# Create range of matched text to get its position in document
 			const range = document.createRange()
-			range.setStart(node.firstChild, lastIndex - page_search.query.length)	# Start at first character of query
-			range.setEnd(node.firstChild, lastIndex)	# End at last character
+
+			let range_start = lastIndex - page_search.query.length
+			let range_end_index = lastIndex
+			let range_node
+
+			# The node may contain multiple text nodes and some minor HTML tags like <i>, <b> or <br>
+			# That is why we need to iterate through all the childNodes of the node
+			# and find the node that contains the matched text
+			for child in node.childNodes
+				# if child is a text node
+				# then check if its length is greater than the range_start
+				# if it is then we found the node that contains the matched text
+				if child.nodeType == 3
+					if range_start < child.length
+						range_node = child
+						break
+					else
+						range_start -= child.length
+						range_end_index -= child.length
+				else
+					# if child is not a text node then we need to check against its firstChild
+					# if the length of the firstChild is greater than the range_start
+					# then we found the node that contains the matched text
+					# Again the fuss around firstChild is just guessing.
+					# Ideally it should work well without deep recursion
+					if range_start < child.firstChild.length
+						range_node = child.firstChild
+						break
+					else
+						range_start -= child.firstChild.length
+						range_end_index -= child.firstChild.length
+
+			range.setStart(range_node, range_start)	# Start at first character of query
+			range.setEnd(range_node, range_end_index)	# End at last character
 
 			def getSearchSelectionTopOffset rect_top
 				if parallel == 'ps'
@@ -3046,8 +3078,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.13 🗓 "
-						<time dateTime='2023-01-30'> "30.1.2023"
+						"🍇 v2.2.14 🗓 "
+						<time dateTime='2023-02-04'> "4.2.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
