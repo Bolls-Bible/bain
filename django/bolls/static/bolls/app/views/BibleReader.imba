@@ -451,7 +451,7 @@ tag bible-reader
 		# silly analog of routed
 		let link = window.location.pathname.split('/')
 		if link[1] && link[2] && link[3]
-			getChapter link[1], parseInt link[2], parseInt link[3], link[4]
+			getChapter link[1], parseInt(link[2]), parseInt(link[3]), parseInt(link[4])
 
 		document.addEventListener('selectionchange', onSelectionChange.bind(self))
 		window.addEventListener('popstate', onPopState.bind(self))
@@ -843,7 +843,8 @@ tag bible-reader
 		for book in BOOKS[translation]
 			if book.bookid == bookid
 				return book.name
-		return bookid.toUpperCase!
+		console.log(book, BOOKS[translation])
+		return bookid
 
 
 	def pageSearch event
@@ -3076,10 +3077,10 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
-						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Spam me on Telegram 😜"
+						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.14 🗓 "
-						<time dateTime='2023-02-04'> "4.2.2023"
+						"🍇 v2.2.15 🗓 "
+						<time dateTime='2023-02-14'> "14.2.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
