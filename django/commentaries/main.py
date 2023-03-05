@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = 'AMP'
+translation = 'NIV2011'
 
 def parseLinks(text):
 	if type(text) == float:

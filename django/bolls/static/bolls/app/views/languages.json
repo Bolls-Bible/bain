@@ -45,7 +45,7 @@
         "short_name": "WEB",
         "full_name": "World English Bible",
         "info": "http://wikipedia.org/wiki/World_English_Bible",
-        "updated": 1591185595149
+        "updated": 1678028993719
       },
       {
         "short_name": "RSV",
@@ -100,6 +100,12 @@
         "full_name": "Douay Rheims Bible",
         "info": "http://en.wikipedia.org/wiki/Douay%E2%80%93Rheims_Bible",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "NIV2011",
+        "full_name": "New International Version, 2011",
+        "info": "http://en.wikipedia.org/wiki/New_International_Version",
+        "updated": 1626349711821
       },
       {
         "short_name": "NIV",
