@@ -14,11 +14,8 @@ services:
       - "traefik.enable=false"
     networks:
       - INTERNAL_NETWORK_NAME
-    # volumes:
-    #   - bolls_db:/var/lib/postgresql/data
     volumes:
-      bolls_db:
-        driver: local
+      - bolls_db:/var/lib/postgresql/data
 
 
   WEB_SERVICE_NAME:
@@ -104,7 +101,8 @@ services:
 
 volumes:
   STATIC_VOLUME_NAME:
-
+  bolls_db:
+    driver: local
 
 networks:
   internal:
