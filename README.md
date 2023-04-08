@@ -82,4 +82,4 @@ python manage.py clearsessions
 
 You will get full access to this repo.
 
-### On how to add a new translation read /django/HOW_TO_ADD_A_NEW_TRANSLATION.md
+### On how to add a new translation read `/django/HOW_TO_ADD_A_NEW_TRANSLATION.md`s
