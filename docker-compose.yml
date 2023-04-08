@@ -14,7 +14,8 @@ services:
       - "traefik.enable=false"
     networks:
       - INTERNAL_NETWORK_NAME
-
+    volumes:
+      - bolls_db:/var/lib/postgresql/data
 
   WEB_SERVICE_NAME:
     build:
