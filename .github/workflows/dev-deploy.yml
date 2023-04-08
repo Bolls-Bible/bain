@@ -104,4 +104,3 @@ jobs:
             docker compose exec -T $WEB_CONTAINER_NAME python manage.py test --keepdb
             echo "Done."
             cd ..
-            rm -fr bain
