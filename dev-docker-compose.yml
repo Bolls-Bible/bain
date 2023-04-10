@@ -20,7 +20,7 @@ services:
   django:
     build:
       context: ./django/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     command: python manage.py runserver 0:8000
     # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
@@ -29,7 +29,7 @@ services:
     security_opt:
       - label:disable
     volumes:
-      - static_volume:/home/bolls/web/static
+      - ./django:/code
     expose:
       - 8000
     environment:
@@ -70,7 +70,7 @@ services:
     security_opt:
       - label:disable
     volumes:
-      - static_volume:/home/bolls/web/static
+      - ./django/bolls/static/:/home/bolls/web/static/:delegated
     networks:
       - internal
     depends_on:
@@ -105,9 +105,6 @@ services:
     volumes:
       - "/var/letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
-
-volumes:
-  static_volume:
 
 networks:
   internal:

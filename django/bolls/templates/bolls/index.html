@@ -74,6 +74,8 @@
       		window.verse = {{ verse }};
       		{% if endverse %}
       			window.endverse = {{ endverse }};{% endif %}{% endif %}{% endif %}
+      {% if userBookmarkMap %}
+        window.localStorage.setItem("userBookmarkMap", JSON.stringify({{ userBookmarkMap | safe }}));{% endif %}
     </script>
     <script src="{% static 'bolls/dexie.min.js' %}"></script>
 
@@ -87,7 +89,11 @@
       type="text/css"
       href="{% static 'bolls/fonts/fontstylesheet.css' %}"
     />
-    <script type="module" crossorigin src="{% static 'bolls/dist/assets/index.js' %}"></script>
+    <script
+      type="module"
+      crossorigin
+      src="{% static 'bolls/dist/assets/index.js' %}"
+    ></script>
   </head>
 
   <body>

@@ -249,6 +249,7 @@ tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {suggestions:{}}
+	userBookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap"))
 	#main_header_arrow_size = ''
 
 	get compare_translations
@@ -331,7 +332,7 @@ tag bible-reader
 				settings.theme = 'gray'
 			window.localStorage.removeItem('sepia')
 			window.localStorage.removeItem('gray')
-			### ### ### ### ### ### ### ### ### ### ### ###
+			### ###
 		changeTheme(settings.theme)
 
 		if getCookie('transitions') == 'false'
@@ -1556,7 +1557,21 @@ tag bible-reader
 				else row += ',' + id
 		return row
 
+	def saveUserBookmarkToMap translation, book, chapter
+		unless userBookmarkMap[translation]
+			userBookmarkMap[translation] = {}
+		unless userBookmarkMap[translation][book]
+			userBookmarkMap[translation][book] = {}
+		unless userBookmarkMap[translation][book][chapter]
+			userBookmarkMap[translation][book][chapter] = []
+		userBookmarkMap[translation][book][chapter].push(store.highlight_color)
+		window.localStorage.setItem("userBookmarkMap", JSON.stringify(userBookmarkMap))
+
 	def sendBookmarksToDjango
+		unless state.user.username
+			window.location.pathname = "/signup/"
+			return
+
 		if store.note == '<br>'
 			store.note == ''
 
@@ -1570,10 +1585,6 @@ tag bible-reader
 			collections += category.trim()
 			if key + 1 < choosen_categories.length
 				collections += " | "
-
-		unless state.user.username
-			window.location.pathname = "/signup/"
-			return
 
 		def saveOffline
 			if state.db_is_available
@@ -1620,6 +1631,7 @@ tag bible-reader
 					collection: collections
 					note: store.note
 				})
+				saveUserBookmarkToMap settingsp.translation, settingsp.book, settingsp.chapter
 		else
 			for verse in choosenid
 				if bookmarks.find(do |bookmark| return bookmark.verse == verse)
@@ -1632,12 +1644,21 @@ tag bible-reader
 					note: store.note
 					}
 				)
+				saveUserBookmarkToMap settings.translation, settings.book, settings.chapter
 		clearSpace()
 		clearSpace()
 
 	def deleteColor color_to_delete
 		highlights.splice(highlights.indexOf(color_to_delete), 1)
 		window.localStorage.setItem("highlights", JSON.stringify(highlights))
+
+	def deleteBookmarkFromUserMap translation, book, chapter
+		// remove also from userBookmarkMap its color
+		if userBookmarkMap[translation][book][chapter].length >= 1
+			delete userBookmarkMap[translation][book][chapter]
+		else
+			userBookmarkMap[translation][book][chapter].splice(userBookmarkMap[translation][book][chapter].indexOf(userBookmarkMap[translation][book][chapter].find(do |color| return color == store.highlight_color)), 1)
+		window.localStorage.setItem("userBookmarkMap", JSON.stringify(userBookmarkMap))
 
 	def deleteBookmarks pks
 		if state.user.username
@@ -1646,10 +1667,12 @@ tag bible-reader
 				for verse in choosenid
 					if parallel_bookmarks.find(do |bookmark| return bookmark.verse == verse)
 						parallel_bookmarks.splice(parallel_bookmarks.indexOf(parallel_bookmarks.find(do |bookmark| return bookmark.verse == verse)), 1)
+				deleteBookmarkFromUserMap settingsp.translation, settingsp.book, settingsp.chapter
 			else
 				for verse in choosenid
 					if bookmarks.find(do |bookmark| return bookmark.verse == verse)
 						bookmarks.splice(bookmarks.indexOf(bookmarks.find(do |bookmark| return bookmark.verse == verse)), 1)
+				deleteBookmarkFromUserMap settings.translation, settings.book, settings.chapter
 		clearSpace()
 
 
@@ -2702,7 +2725,12 @@ tag bible-reader
 										if book.bookid == show_chapters_of
 											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 												for i in [0 ... book.chapters]
-													<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1)> i+1
+													<li.chapter_number .selected=(i + 1 == settingsp.chapter && book.bookid==settingsp.book) @click=getParallelText(settingsp.translation, book.bookid, i+1)>
+														i+1
+														<div.nav_bookmarks>
+															if userBookmarkMap[settingsp.translation] and userBookmarkMap[settingsp.translation][book.bookid] and userBookmarkMap[settingsp.translation][book.bookid][i+1]
+																for color in userBookmarkMap[settingsp.translation][book.bookid][i+1]
+																	<span [bgc:{color}]>
 							if !settingsp.filtered_books.length
 								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 						else
@@ -2716,7 +2744,12 @@ tag bible-reader
 										if book.bookid == show_chapters_of
 											<ul[o@off:0 m:0 0 16px @off:-24px 0 24px transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 												for i in [0 ... book.chapters]
-													<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1) > i+1
+													<li.chapter_number .selected=(i + 1 == settings.chapter && book.bookid == settings.book) @click=getText(settings.translation, book.bookid, i+1)>
+														i+1
+														<div.nav_bookmarks>
+															if userBookmarkMap[settings.translation] and userBookmarkMap[settings.translation][book.bookid] and userBookmarkMap[settings.translation][book.bookid][i+1]
+																for color in userBookmarkMap[settings.translation][book.bookid][i+1]
+																	<span [bgc:{color}]>
 							if !settings.filtered_books.length
 								<p.book_in_list [white-space: pre]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 				<input$bookssearch.search @keyup=filterBooks bind=store.book_search type="text" placeholder=state.lang.search aria-label=state.lang.search>
