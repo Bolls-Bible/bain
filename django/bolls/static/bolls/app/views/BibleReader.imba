@@ -249,7 +249,7 @@ tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {suggestions:{}}
-	userBookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap"))
+	userBookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap")) || {}
 	#main_header_arrow_size = ''
 
 	get compare_translations
@@ -3112,8 +3112,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.16 🗓 "
-						<time dateTime='2023-03-05'> "05.03.2023"
+						"🍇 v2.2.17 🗓 "
+						<time dateTime='2023-04-10'> "10.04.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
