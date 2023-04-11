@@ -30,8 +30,41 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 bolls_index = "bolls/index.html"
 
 
+def userBookmarkMap(request):
+    if not request.user.is_authenticated:
+        return {}
+
+    # Filter by user and only if collection or note is not empty
+    bookmarks = Bookmarks.objects.filter(user=request.user).select_related("verse")
+
+    # Now create the next map
+    # {translation: {book: {chapter: {color, color,}}}}
+    result = {}
+    for bookmark in bookmarks:
+        translation = bookmark.verse.translation
+        book = bookmark.verse.book
+        chapter = bookmark.verse.chapter
+        color = bookmark.color
+        if translation not in result:
+            result[translation] = {}
+        if book not in result[translation]:
+            result[translation][book] = {}
+        if chapter not in result[translation][book]:
+            result[translation][book][chapter] = []
+        if color not in result[translation][book][chapter]:
+            result[translation][book][chapter].append(color)
+
+    return result
+
+
 def index(request):
-    return render(request, bolls_index)
+    return render(
+        request,
+        bolls_index,
+        {
+            "userBookmarkMap": userBookmarkMap(request),
+        },
+    )
 
 
 def cross_origin(response):
@@ -270,6 +303,7 @@ def linkToVerse(request, translation, book, chapter, verse):
             "verse": verse,
             "verses": verses,
             "description": getDescription(verses, verse, 0),
+            "userBookmarkMap": userBookmarkMap(request),
         },
     )
 
@@ -287,6 +321,7 @@ def linkToVerses(request, translation, book, chapter, verse, endverse):
             "endverse": endverse,
             "verses": verses,
             "description": getDescription(verses, verse, endverse),
+            "userBookmarkMap": userBookmarkMap(request),
         },
     )
 
@@ -302,6 +337,7 @@ def linkToChapter(request, translation, book, chapter):
             "chapter": chapter,
             "verses": verses,
             "description": getDescription(verses, 1, 3),
+            "userBookmarkMap": userBookmarkMap(request),
         },
     )
 
@@ -329,8 +365,22 @@ def deleteAccount(request):
             message = "account_deleted"
 
         except Exception as e:
-            return render(request, bolls_index, {"message": e.message})
-    return render(request, bolls_index, {"message": message})
+            return render(
+                request,
+                bolls_index,
+                {
+                    "message": e.message,
+                    "userBookmarkMap": userBookmarkMap(request),
+                },
+            )
+    return render(
+        request,
+        bolls_index,
+        {
+            "message": message,
+            "userBookmarkMap": userBookmarkMap(request),
+        },
+    )
 
 
 def editAccount(request):

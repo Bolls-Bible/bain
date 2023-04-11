@@ -364,6 +364,28 @@ body {
   width: 20%;
   font-size: 20px;
   padding-top: 16px;
+  position: relative;
+}
+
+.nav_bookmarks {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  right: 0px;
+  left: 0px;
+  max-width: 100%;
+  flex-wrap: wrap;
+  max-height: 32px;
+  overflow: hidden;
+}
+
+.nav_bookmarks > span {
+  display: block;
+  width: 6px;
+  min-width: 6px;
+  height: 6px;
+  border-radius: 3px;
 }
 
 .translation_name:hover,

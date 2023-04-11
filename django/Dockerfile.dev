@@ -1,0 +1,28 @@
+# pull official base image
+FROM python
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# set work directory
+WORKDIR /code
+
+# install psycopg2 dependencies
+RUN apt update -y \
+    && apt install -y postgresql postgresql-contrib netcat
+
+# # lint
+# RUN pip install --upgrade pip
+
+# install dependencies
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy entrypoint.sh
+COPY ./entrypoint.sh /code
+
+# run entrypoint.sh
+ENTRYPOINT ["/code/entrypoint.sh"]
+
+COPY . /code/

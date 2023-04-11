@@ -15,7 +15,7 @@ services:
     networks:
       - INTERNAL_NETWORK_NAME
     volumes:
-      - bolls_db:/var/lib/postgresql/data
+      - DATABASE_VOLUME_SECRET:/var/lib/postgresql/data
 
 
   WEB_SERVICE_NAME:
@@ -101,7 +101,7 @@ services:
 
 volumes:
   STATIC_VOLUME_NAME:
-  bolls_db:
+  DATABASE_VOLUME_SECRET:
     driver: local
 
 networks:
