@@ -1,7 +1,3 @@
-###########
-# BUILDER #
-###########
-
 # pull official base image
 FROM python
 

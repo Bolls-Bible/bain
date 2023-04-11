@@ -1,5 +1,5 @@
 version: "3.8"
-
+# For development purposes only!!!
 services:
   database:
     image: postgres:alpine
@@ -54,6 +54,20 @@ services:
       - internal
     depends_on:
       - database
+
+  imba:
+    build: ./django/bolls/static/bolls/
+    # context: ./django/bolls/static/bolls/
+    # dockerfile: Dockerfile
+    restart: always
+    container_name: imba
+    command: npm start
+    # required for SELinux
+    security_opt:
+      - label:disable
+    volumes:
+      - ./django/bolls/static/bolls:/code:delegated
+
   nginx:
     build: ./nginx_dev
     restart: always
