@@ -74,8 +74,6 @@
       		window.verse = {{ verse }};
       		{% if endverse %}
       			window.endverse = {{ endverse }};{% endif %}{% endif %}{% endif %}
-      {% if userBookmarkMap %}
-        window.localStorage.setItem("userBookmarkMap", JSON.stringify({{ userBookmarkMap | safe }}));{% endif %}
     </script>
     <script src="{% static 'bolls/dexie.min.js' %}"></script>
 

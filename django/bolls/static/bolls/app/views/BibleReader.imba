@@ -376,11 +376,13 @@ tag bible-reader
 			try
 				let userdata = await loadData("/user-logged/")
 				if userdata.username
-					state.user.username = userdata.username
 					state.user.is_password_usable = userdata.is_password_usable
-					state.user.name = userdata.name || ''
+					state.user.username = userdata.username
 					setCookie('username', state.user.username)
+					state.user.name = userdata.name || ''
 					setCookie('name', state.user.name)
+					userBookmarkMap = userdata.bookmarksMap
+					setCookie('userBookmarkMap', JSON.stringify(userBookmarkMap))
 
 					syncHistory!
 				else
@@ -3112,8 +3114,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.17 🗓 "
-						<time dateTime='2023-04-10'> "10.04.2023"
+						"🍇 v2.2.18 🗓 "
+						<time dateTime='2023-04-15'> "15.04.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
