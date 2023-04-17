@@ -249,7 +249,7 @@ tag bible-reader
 	prop categories = []
 	prop chronorder = no
 	prop search = {suggestions:{}}
-	userBookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap")) || {}
+	userBookmarkMap = {}
 	#main_header_arrow_size = ''
 
 	get compare_translations
@@ -338,6 +338,15 @@ tag bible-reader
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
+		
+		try 
+			let bookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap"))
+			if bookmarkMap
+				userBookmarkMap = bookmarkMap
+		catch error
+			window.localStorage.removeItem("userBookmarkMap")
+			console.warn 'Error getting bookmarks map from localstorage', error
+
 
 		welcome = getCookie('welcome') || welcome
 		settings.font.size = parseInt(getCookie('font')) || settings.font.size
@@ -381,13 +390,16 @@ tag bible-reader
 					setCookie('username', state.user.username)
 					state.user.name = userdata.name || ''
 					setCookie('name', state.user.name)
-					userBookmarkMap = userdata.bookmarksMap
-					setCookie('userBookmarkMap', JSON.stringify(userBookmarkMap))
-
+					console.log(userdata.bookmarksMap)
+					if userdata.bookmarksMap
+						userBookmarkMap = userdata.bookmarksMap
+						setCookie('userBookmarkMap', JSON.stringify(userBookmarkMap))
 					syncHistory!
 				else
 					window.localStorage.removeItem('username')
 					window.localStorage.removeItem('name')
+					window.localStorage.removeItem('userBookmarkMap')
+					userBookmarkMap = {}
 					state.user = {}
 			catch err
 				console.error('Error: ', err)
@@ -3114,8 +3126,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.18 🗓 "
-						<time dateTime='2023-04-15'> "15.04.2023"
+						"🍇 v2.2.19 🗓 "
+						<time dateTime='2023-04-17'> "17.04.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
