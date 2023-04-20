@@ -3126,8 +3126,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.19 🗓 "
-						<time dateTime='2023-04-17'> "17.04.2023"
+						"🍇 v2.2.20 🗓 "
+						<time dateTime='2023-04-20'> "20.04.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

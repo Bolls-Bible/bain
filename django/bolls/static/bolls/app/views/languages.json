@@ -281,6 +281,11 @@
     "language": "Hungarian Magyar",
     "translations": [
       {
+        "short_name": "RUF",
+        "full_name": "Magyar Bibliatársulat újfordítású Bibliája, 2014 (protestáns)",
+        "updated": 1681972167751
+      },
+      {
         "short_name": "KB",
         "full_name": "Karoli Bible 1908",
         "updated": 1653206484214

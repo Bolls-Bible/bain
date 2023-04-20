@@ -15,6 +15,10 @@ COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/Bibles/
 docker exec -i <database_container> psql -U <database_user> -d <database_name> -c "<sql command>"
 docker exec -i database_container psql -U database_user -d database_name -c "sql_command"
 
+-- ADD NEW TRANSLATION TO LOCAL DEV DB IN DOCKER CONTAINER --
+docker cp ./RUF.csv database:verses.csv
+docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+
 
 
 ALTER TABLE dictionary
