@@ -12,5 +12,5 @@ tag text-as-html
 				emit "gotoverse", data
 
 	def render
-		<self [d:inline dir:auto] dir=textDirection(self.textContent) @click=goToVerse @keyup.enter=goToVerse>
+		<self [d:inline dir:auto] dir=translationTextDirection(data.translation) @click=goToVerse @keyup.enter=goToVerse>
 			<slot>

@@ -8,6 +8,12 @@
 git clone git@github.com:Bohooslav/bain.git
 ```
 
+There are two ways you may run this project:
+1. Just run it on bare metal, on your machine
+2. Run it in docker with docker compose
+
+### Bare metal setup
+
 - enter the directory
 
 ```bash
@@ -63,6 +69,10 @@ npm run watch
 
 After that you should be able to debug it.
 
+### Docker Compose setup
+
+Go to [LOCAL_DEV_WITH_DOCKER_COMPOSER.md](LOCAL_DEV_WITH_DOCKER_COMPOSER.md) for mpore info
+
 ### Checklist before any deploy
 
 - work is done on a branch name following the next pattern: 'feature/**'
@@ -82,4 +92,5 @@ python manage.py clearsessions
 
 You will get full access to this repo.
 
-### On how to add a new translation read `/django/HOW_TO_ADD_A_NEW_TRANSLATION.md`s
+### [How to add a new translation](./django/HOW_TO_ADD_A_NEW_TRANSLATION.md)
+### [How to add a new dictionary](./django/HOW_TO_ADD_A_NEW_DICTIONARY.md)

@@ -5,7 +5,8 @@
       {
         "full_name": "Smith and Van Dyke",
         "short_name": "SVD",
-        "updated": 1671955360023
+        "updated": 1671955360023,
+        "dir": "rtl"
       }
     ]
   },
@@ -164,13 +165,15 @@
         "short_name": "POV",
         "full_name": "Persian Old Version",
         "info": "http://en.wikipedia.org/wiki/Bible_translations_into_Persian#Persian_Old_Version_(POV)",
-        "updated": 1626349711821
+        "updated": 1626349711821,
+        "dir": "rtl"
       },
       {
         "short_name": "FACB",
         "full_name": "کتاب مقدس، ترجمه تفسیری Farsi Contemporary Bible",
         "info": "",
-        "updated": 1626349711821
+        "updated": 1626349711821,
+        "dir": "rtl"
       }
     ]
   },
@@ -250,30 +253,35 @@
         "short_name": "WLCa",
         "full_name": "Westminster Leningrad Codex (with vowels, accents and Strong's numbers)",
         "info": "http://wikipedia.org/wiki/Leningrad_Codex",
-        "updated": 1591185595149
+        "updated": 1591185595149,
+        "dir": "rtl"
       },
       {
         "short_name": "WLC",
         "full_name": "Westminster Leningrad Codex (with Vowels)",
         "info": "http://wikipedia.org/wiki/Leningrad_Codex",
-        "updated": 1591185595149
+        "updated": 1591185595149,
+        "dir": "rtl"
       },
       {
         "short_name": "WLCC",
         "full_name": "Westminster Leningrad Codex (Consonants)",
         "info": "http://wikipedia.org/wiki/Leningrad_Codex",
-        "updated": 1591185595149
+        "updated": 1591185595149,
+        "dir": "rtl"
       },
       {
         "short_name": "HAC",
         "full_name": "כֶּתֶר אֲרָם צוֹבָא - Tanah Aleppo Codex",
         "info": "http://en.wikipedia.org/wiki/Aleppo_Codex",
-        "updated": 1591185595149
+        "updated": 1591185595149,
+        "dir": "rtl"
       },
       {
         "short_name": "DHNT",
         "full_name": "Delitzsch's Hebrew New Testament 1877, 1998 (with vowels)",
-        "updated": 1672568934565
+        "updated": 1672568934565,
+        "dir": "rtl"
       }
     ]
   },

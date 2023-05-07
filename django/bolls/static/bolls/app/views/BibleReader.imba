@@ -390,7 +390,6 @@ tag bible-reader
 					setCookie('username', state.user.username)
 					state.user.name = userdata.name || ''
 					setCookie('name', state.user.name)
-					console.log(userdata.bookmarksMap)
 					if userdata.bookmarksMap
 						userBookmarkMap = userdata.bookmarksMap
 						setCookie('userBookmarkMap', JSON.stringify(userBookmarkMap))
@@ -2790,7 +2789,7 @@ tag bible-reader
 
 			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
 				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=textDirection(verses[0]..text) [margin: auto; max-width: {settings.font.max-width}em]>
+				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
@@ -2860,7 +2859,7 @@ tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> state.lang.reload
 
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=textDirection(parallel_verses[0]..text) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -3126,8 +3125,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.20 🗓 "
-						<time dateTime='2023-04-20'> "20.04.2023"
+						"🍇 v2.2.21 🗓 "
+						<time dateTime='2023-05-07'> "07.05.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
