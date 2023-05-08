@@ -52,6 +52,10 @@ SELECT book_number, count(chapter) FROM verses where verse = 1 GROUP BY book_num
 SELECT count(verse) FROM verses where book_number < 67;
 SELECT count(verse) FROM bolls_verses where book < 67 and translation='KJV';
 
+-- Insert this to bolls_verses with translation KJV, book 43, chapter 4 verse 50
+INSERT INTO bolls_verses (translation, book, chapter, verse, text) VALUES ('KJV', 43, 4, 50, 'Jesus saith unto him, Go thy way; thy son liveth. And the man believed the word that Jesus had spoken unto him, and he went his way.');
+
+docker exec -i database psql -U postgres_user postgres_db -c "INSERT INTO bolls_verses (translation, book, chapter, verse, text) VALUES ('KJV', 43, 4, 50, 'Jesus saith unto him, Go thy way; thy son liveth. And the man believed the word that Jesus had spoken unto him, and he went his way.');"
 
 ----------
 UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;

@@ -50,6 +50,17 @@ def getTranslation(request, translation):
         "book", "chapter", "verse"
     )
 
+    # Index first the commentary to speed up the process
+    commentary_index = {}
+    for item in all_commentaries:
+        if (
+            item.book,
+            item.chapter,
+            item.verse,
+        ) not in commentary_index:
+            commentary_index[(item.book, item.chapter, item.verse)] = []
+        commentary_index[(item.book, item.chapter, item.verse)].append(item)
+
     def serializeVerse(obj):
         verse = {
             "pk": obj.pk,
@@ -60,14 +71,10 @@ def getTranslation(request, translation):
             "text": obj.text,
         }
         comment = ""
-        for item in all_commentaries:
-            if (
-                item.verse == obj.verse
-                and item.chapter == obj.chapter
-                and item.book == obj.book
-            ):
+        if (obj.book, obj.chapter, obj.verse) in commentary_index:
+            for item in commentary_index[(obj.book, obj.chapter, obj.verse)]:
                 if len(comment) > 0:
-                    comment = "%s<br>" % (comment)
+                    comment += "<br>"
                 comment = "%s%s" % (comment, item.text)
 
         if len(comment) > 0:
