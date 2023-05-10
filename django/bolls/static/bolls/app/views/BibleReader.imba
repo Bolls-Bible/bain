@@ -2816,7 +2816,7 @@ tag bible-reader
 								if settings.verse_number
 									unless settings.verse_break
 										<span> ' '
-									<span.verse style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007' + verse.verse + "\u2007"
+									<span.verse dir="ltr" style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007' + verse.verse + "\u2007"
 								else
 									<span	> ' '
 								<span innerHTML=verse.text
@@ -2884,7 +2884,7 @@ tag bible-reader
 								if settings.verse_number
 									unless settings.verse_break
 										<span> ' '
-									<span.verse style=super_style @click=goToVerse("p{parallel_verse.verse}")> '\u2007\u2007\u2007', parallel_verse.verse, "\u2007"
+									<span.verse dir="ltr" style=super_style @click=goToVerse("p{parallel_verse.verse}")> '\u2007\u2007\u2007', parallel_verse.verse, "\u2007"
 								else
 									<span> ' '
 								<span innerHTML=parallel_verse.text
@@ -3125,8 +3125,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.23 🗓 "
-						<time dateTime='2023-05-09'> "09.05.2023"
+						"🍇 v2.2.24 🗓 "
+						<time dateTime='2023-05-10'> "10.05.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
