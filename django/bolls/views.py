@@ -140,7 +140,7 @@ def search(request, translation, piece=""):
     d = []
     piece = piece.strip()
 
-    if len(piece) > 2:
+    if len(piece) > 2 or piece.isdigit():
         results_of_search = []
         if match_whole:
             if match_case:

@@ -1136,12 +1136,15 @@ tag bible-reader
 			return yes
 		return no
 
+	def isNumber str
+		return !isNaN(str) && !isNaN(parseFloat(str))
+
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input
 
-		# If the query is long enough -- do the search again.
-		if search.search_input.length > 2
+		# If the query is long enough -- do the search
+		if query.length > 2 || isNumber(query)
 			clearSpace!
 			$generalsearch.blur!
 			popUp 'search'
@@ -3125,8 +3128,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.24 🗓 "
-						<time dateTime='2023-05-10'> "10.05.2023"
+						"🍇 v2.2.25 🗓 "
+						<time dateTime='2023-05-21'> "21.05.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
