@@ -41,7 +41,9 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 -- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
-UPDATE bolls_verses SET text = ('Filho meu, ouve a instrução de teu pai e não menosprezes o ensino de tua mãe.') where translation='KJA' and book=20 and chapter=1 and verse=8;
+UPDATE bolls_verses SET text = ('Filho meu, ouve a instrução de teu pai e não menosprezes o ensino de tua mãe.') where translation='KJVf' and book=20 and chapter=1 and verse=8;
+UPDATE bolls_verses SET text = ('And immediately Jesus stretched forth his hand, and caught him, and said unto him, O thou of little faith, wherefore didst thou doubt?') where translation='KJV' and book=40 and chapter=14 and verse=31
+
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
 YLT/24/36/3/
 
