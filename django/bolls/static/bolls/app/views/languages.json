@@ -139,6 +139,18 @@
         "updated": 1635188106109
       },
       {
+        "short_name": "SPE",
+        "full_name": "Samaritan Pentateuch in English, 2013",
+        "info": "http://en.wikipedia.org/wiki/Samaritan_Pentateuch",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "LBP",
+        "full_name": "Aramaic Of The Peshitta: Lamsa, 1933",
+        "info": "http://en.wikipedia.org/wiki/Lamsa_Bible",
+        "updated": 1635188106109
+      },
+      {
         "short_name": "AMP",
         "full_name": "Amplified Bible, 2015",
         "info": "http://en.wikipedia.org/wiki/Amplified_Bible",
