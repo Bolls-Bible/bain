@@ -1756,6 +1756,21 @@ note-body ul li,
   list-style-type: disc;
 }
 
+.profile_note a {
+  color: var(--acc-color);
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.profile_note a:hover {
+  color: var(--acc-color-hover);
+}
+
+.profile_note img {
+  max-width: 100%;
+  height: auto;
+}
+
 mark-down * {
   transition: none !important;
 }

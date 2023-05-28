@@ -543,6 +543,9 @@ export class State
 			else lang = english
 		setCookie('language', lngg)
 
+	def cleanUpCopyText text
+		return text.join(' ').trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
+
 	def fallbackCopyTextToClipboard text
 		let textArea = document.createElement("textarea")
 		textArea.value = text
@@ -578,15 +581,15 @@ export class State
 		showNotification('copied')
 
 	def copyToClipboard copyobj
-		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title
+		let text = '«' + cleanUpCopyText(copyobj.text) + '»\n\n' + copyobj.title
 		copyTextToClipboard(text)
 
 	def shareCopying copyobj
-		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
+		let text = '«' + cleanUpCopyText(copyobj.text) + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
 		copyTextToClipboard(text)
 
 	def internationalShareCopying copyobj
-		let text = '«' + copyobj.text.join(' ').trim().replace(/<[^>]*>/gi, '') + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life/international" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
+		let text = '«' + cleanUpCopyText(copyobj.text) + '»\n\n' + copyobj.title + ' ' + copyobj.translation + ' ' + "https://bolls.life/international" + '/'+ copyobj.translation + '/' + copyobj.book + '/' + copyobj.chapter + '/' + versePart(copyobj.verse) + '/'
 		copyTextToClipboard(text)
 
 	def versePart verses
