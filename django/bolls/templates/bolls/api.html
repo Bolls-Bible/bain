@@ -320,8 +320,8 @@ window.fetch("/get-paralel-verses/", {
 		chapter: 1, // number of chapter
 	}),
 })
-.then(do |response| response.json())
-.then(do |resdata|
+.then(do(response) response.json())
+.then(do(resdata)
 	translations_with_verses = resdata
 	console.log console.log
 )</pre
@@ -391,70 +391,20 @@ window.fetch("/get-paralel-verses/", {
 
     <h2 id="Fetch a verse">Fetch a verse(s)</h2>
     <p>
-      You may need this a lot. To fetch a single verse of a few verses of a
-      single translation you should use the compare API as I mantion it above.
-      Just pass the translation code as array with single item, chapter number,
-      book code and array with verse / verses and you will get it.
+      To fetch a single verse construct a link like this:
     </p>
-    <p>Imba example.</p>
     <pre>
-window.fetch("/get-paralel-verses/", {
-	method: "POST",
-	cache: "no-cache",
-	headers: {
-		"Content-Type": "application/json"
-	},
-	body: JSON.stringify({
-		// Here show what translation should it be. You may add there a few translations
-		translations: ['YLT'],
-
-		// It may be a single verse there [3], or any number of verses,
-		// and if they exist they will be returned
-		verses: [3, 4, 5],
-
-		book: 43, // an id of the book
-		chapter: 1, // number of chapter
-	}),
-})
-.then(do |response| response.json())
-.then(do |resdata|
-	translations_with_verses = resdata
-	console.log(resdata)
-)</pre
-    >
-    <p>Curl code</p>
-    <pre>
-curl --location --request POST 'https://bolls.life/get-paralel-verses/' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "translations": "[\"ESV\"]",
-    "verses": "[1]",
-    "book": 9,
-    "chapter": 4
-}'</pre
-    >
-    <p>Here is example of the response. YLT translation, Job (18) 2:6</p>
-    <pre>
-[
-  [
-    {
-      "pk": 36112,
-      "translation": "YLT",
-      "book": 18,
-      "chapter": 2,
-      "verse": 6,
-      "text": "And Jehovah saith unto the Adversary, 'Lo, he [is] in thy hand; only his life take care of.'"
-    }
-  ]
-]</pre
-    >
+      https://bolls.life/get-text/&lt;slug:translation&gt;/&lt;int:book&gt;/&lt;int:chapter&gt;/&lt;int:verse&gt;/</pre>
     <p>
-      As you see it is the same as
-      <a href="#compare">Compare translation API</a>. More detailes about the
-      fields of this request see the
-      <a href="#compare">Compare translation API</a>.
+      Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation
+      like <code>YLT</code> or <code>UBIO</code> or <code>SYNOD</code>, and
+      <code>&lt;int:book&gt;</code> with <code>&lt;int:chapter&gt;</code> and <code>&lt;int:verse&gt;</code> are
+      numbers of a book, chapter and verse. For example by the next url you will get first verse of
+      the first chapter of Genesis in NKJV translation:
     </p>
-
+    <pre><a target="_blank"
+			href="https://bolls.life/get-verse/NKJV/1/1/1/">https://bolls.life/get-verse/NKJV/1/1/1/</a></pre>
+      
     <h2 id="Fetch any verses">Fetch any verses</h2>
     <p class="last-update">New from 28 June 2022.</p>
     <p>

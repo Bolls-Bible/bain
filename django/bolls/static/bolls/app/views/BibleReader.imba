@@ -3033,11 +3033,11 @@ tag bible-reader
 						if state.show_languages
 							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
 								<button.butt .active_butt=('ukr'==state.language) @click=(do state.setLanguage('ukr'))> "Українська"
-								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "Русский"
 								<button.butt .active_butt=('eng'==state.language) @click=(do state.setLanguage('eng'))> "English"
 								<button.butt .active_butt=('de'==state.language) @click=(do state.setLanguage('de'))> "Deutsch"
 								<button.butt .active_butt=('pt'==state.language) @click=(do state.setLanguage('pt'))> "Portuguese"
 								<button.butt .active_butt=('es'==state.language) @click=(do state.setLanguage('es'))> "Español"
+								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "Русский"
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
 					state.lang.parallel
 					<p.checkbox> <span>
@@ -3128,7 +3128,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.28 🗓 "
+						"🍇 v2.2.29 🗓 "
 						<time dateTime='2023-05-28'> "28.05.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"

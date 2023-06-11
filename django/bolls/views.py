@@ -42,7 +42,7 @@ def cross_origin(response):
     return response
 
 
-def getTranslation(request, translation):
+def getTranslation(_, translation):
     all_verses = Verses.objects.filter(translation=translation).order_by(
         "book", "chapter", "verse"
     )
@@ -95,7 +95,7 @@ def getChapter(translation, book, chapter):
     return d
 
 
-def getText(request, translation, book, chapter):
+def getText(_, translation, book, chapter):
     return cross_origin(
         JsonResponse(getChapter(translation, book, chapter), safe=False)
     )
@@ -125,7 +125,7 @@ def getChapterWithCommentaries(translation, book, chapter):
     return d
 
 
-def getChapterWithComments(request, translation, book, chapter):
+def getChapterWithComments(_, translation, book, chapter):
     return cross_origin(
         JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False)
     )
@@ -598,6 +598,37 @@ def getVerses(request):
         return HttpResponse("The request should be POSTed", status=400)
 
 
+def getVerse(_, translation, book, chapter, verse):
+    verses = Verses.objects.filter(
+        book=book, chapter=chapter, translation=translation, verse=verse
+    )
+
+    result_verse = {}
+    if len(verses):
+        result_verse = {
+            "pk": verses[0].pk,
+            "verse": verses[0].verse,
+            "text": verses[0].text,
+        }
+    else:
+        return HttpResponse("The verse is not found", status=404)
+
+    commentaries = Commentary.objects.filter(
+        book=book, chapter=chapter, translation=translation, verse=verse
+    )
+
+    comment = ""
+    for item in commentaries:
+        if item.verse == result_verse["verse"]:
+            if len(comment) > 0:
+                comment += "<br>"
+            comment += item.text
+    if len(comment) > 0:
+        result_verse["comment"] = comment
+
+    return JsonResponse(result_verse, safe=False)
+
+
 def saveBookmarks(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -1044,7 +1075,7 @@ def importNotes(request):
         return HttpResponse(status=405)
 
 
-def sw(request):
+def sw():
     # return HttpResponse(status=404) # for dev only
     # get the file for the service worker
     sw_file = open(os.path.join(BASE_DIR, "bolls/static/service-worker.js"), "r")
