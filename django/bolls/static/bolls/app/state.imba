@@ -328,7 +328,6 @@ export class State
 		let begtime = Date.now()
 
 		let response = await window.fetch('/sw/delete-translation/' + translation)
-		console.log response
 		if response.status == 200
 			console.log( "Deleted ", translation, ". Time: ", (Date.now() - begtime) / 1000)
 			translations_in_downloading.splice(translations_in_downloading.indexOf(translation), 1)
@@ -440,7 +439,6 @@ export class State
 
 		for verse in bookmarkobj.verses
 			# If a bookmark already exist -- first remove it, then add a new version
-			console.log bookmarkobj
 			if bookmarks.find(do |element| return element.verse == verse)
 				deleteBookmarks([verse])
 			bookmarks_to_save.push({
@@ -640,7 +638,7 @@ export class State
 			.then(do |response| response.json())
 			.then(do showNotification('deleted'))
 			.catch(do |err|
-				console.log err
+				console.error err
 				deleteLater (pks)
 			)
 		else deleteLater (pks)

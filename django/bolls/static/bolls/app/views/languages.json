@@ -159,13 +159,19 @@
       {
         "short_name": "MSG",
         "full_name": "The Message, 2002",
-        "info": "http://messagebible.com/",
+        "info": "http://messagebible.com",
         "updated": 1635188106109
       },
       {
         "short_name": "LSV",
         "full_name": "Literal Standard Version",
         "info": "http://www.lsvbible.com/",
+        "updated": 1635188106109
+      },
+      {
+        "short_name": "BSB",
+        "full_name": "The Holy Bible, Berean Standard Bible",
+        "info": "http://berean.bible",
         "updated": 1635188106109
       }
     ]
@@ -446,7 +452,6 @@
       {
         "short_name": "JNT",
         "full_name": "Еврейский Новый Завет в переводе и комментариях Давида Стерна",
-        "info": "http://bohooslav.github.io/bolls_info/JNT/",
         "updated": 1635446313426
       },
       {
@@ -493,7 +498,7 @@
       {
         "short_name": "BTX3",
         "full_name": "La Biblia Textual 3ra Edicion",
-        "info": "http://www.labiblia.org/paginas/btx/",
+        "info": "http://www.labiblia.org/paginas/btx",
         "updated": 1635446313426
       },
       {
@@ -529,7 +534,7 @@
       {
         "short_name": "LBLA",
         "full_name": "La Biblia de las Américas, 1997",
-        "info": "http://www.lockman.org/lbla/la-biblia-de-las-americas-biblia-de-estudio-lbla/",
+        "info": "http://www.lockman.org/lbla/la-biblia-de-las-americas-biblia-de-estudio-lbla",
         "updated": 1635446313426
       }
     ]

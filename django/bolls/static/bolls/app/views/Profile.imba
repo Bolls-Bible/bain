@@ -48,6 +48,8 @@ tag profile-page
 	collections = []
 	tab = 0
 	list_for_display = []
+	filterTranslation
+	filterBook
 
 	def setaleup
 		highlights_range = {
@@ -152,7 +154,12 @@ tag profile-page
 		if highlights_range.loaded != highlights_range.to
 			highlights_range.from = highlights_range.loaded
 
-			const url = "/get-profile-bookmarks/" + highlights_range.from + '/' + highlights_range.to + '/'
+			const url = new URL("/get-profile-bookmarks/{highlights_range.from}/{highlights_range.to}/", window.origin)
+
+			if filterTranslation
+				url.searchParams.append('translation', filterTranslation)
+			if filterBook
+				url.searchParams.append('book', filterBook)
 
 			let bookmarksdata
 			if window.navigator.onLine
@@ -339,7 +346,6 @@ tag profile-page
 
 
 	def importNotes
-		console.log store.import_data
 		importing = yes
 		window.fetch('/import-notes/', {
 			method: "POST",
@@ -359,6 +365,17 @@ tag profile-page
 		).catch(do(error)
 			console.error error
 		)
+
+	def getFilterBooks
+		if filterTranslation
+			return BOOKS[filterTranslation]
+		else return BOOKS['YLT']
+
+	def updatedFilters event
+		highlights_range.to = 32
+		highlights_range.loaded = 0
+		highlights = []
+		getProfileBookmarks!
 
 	def render
 		<self @scroll=scroll>
@@ -386,11 +403,25 @@ tag profile-page
 									<button.butt @click=showIEport> 'Import / Export Bookmarks'
 									<button.butt @click=showDeleteForm> state.lang.delete_account
 
-			<div.nav>
-				<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> state.lang.all
-				<button.tab .active-tab=tab==1 @click=getSearchedBookmarks(0)> state.lang.collections
-				<button.tab .active-tab=tab==2 @click=getBookmarksWithNotes> state.lang.notes
+			<div[pos:sticky t:0 bgc:$bgc zi:1]>
+				<div.bookmark_filters>
+					<.bookmark_select_wrapper>
+						<select bind=filterTranslation @change=updatedFilters>
+							<option value=false> state.lang.translation
+							for own translation, value of BOOKS
+								<option value=translation> translation
 
+					<.bookmark_select_wrapper>
+						<select bind=filterBook @change=updatedFilters>
+							<option value=false> "-- {state.lang.book} --"
+							for book in getFilterBooks!
+								<option value=book.bookid> book.name
+					
+				<div.nav>
+					<button.tab .active-tab=tab==0 @click=getProfileBookmarks()> state.lang.all
+					<button.tab .active-tab=tab==1 @click=getSearchedBookmarks(0)> state.lang.collections
+					<button.tab .active-tab=tab==2 @click=getBookmarksWithNotes> state.lang.notes
+				
 			if tab == 1
 				<.collectionsflex [flex-wrap: wrap max-height:24vh of:auto]>
 					if collections.length > 8
@@ -518,6 +549,43 @@ tag profile-page
 
 
 	css
+		.bookmark_filters
+			d:flex
+
+		.bookmark_select_wrapper
+			position: relative
+
+		select
+			font-size: 1rem
+			position: relative
+			font-weight: 400
+			font-style: normal
+			font-stretch: normal
+			padding: 0 1.75rem 0 0.5rem
+			display: block
+			height: 100%
+			color: inherit
+			font-size: 1rem
+			line-height: 1.75rem
+			letter-spacing: .025em
+			appearance: none
+			border: none
+			background: transparent
+			width: 100%
+			min-width: 140px
+			cursor: pointer
+			z-index: 10
+		
+		.bookmark_select_wrapper::after
+			content: '⏷'
+			position: absolute
+			d:block
+			p:0 8px
+			fs:1.2em
+			lh:1.75rem
+			t:0 r:0
+			pointer-events: none;
+
 		.nav
 			d:flex
 

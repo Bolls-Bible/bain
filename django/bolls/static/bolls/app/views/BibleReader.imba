@@ -199,6 +199,10 @@ const fonts = [
 		code: "'JetBrains Mono', monospace"
 	},
 	{
+		name: "Bookerly"
+		code: "'Bookerly', sans-serif"
+	},
+	{
 		name: "Deutsch Gothic",
 		code: "'Deutsch Gothic', sans-serif"
 	},
@@ -857,7 +861,6 @@ tag bible-reader
 		for book in BOOKS[translation]
 			if book.bookid == bookid
 				return book.name
-		console.log(book, BOOKS[translation])
 		return bookid
 
 
@@ -3128,8 +3131,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.2.29 🗓 "
-						<time dateTime='2023-05-28'> "28.05.2023"
+						"🍇 v2.3.0 🗓 "
+						<time dateTime='2023-06-26'> "26.06.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

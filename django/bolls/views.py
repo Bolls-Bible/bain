@@ -422,8 +422,19 @@ def mapBookmarks(bookmarkslist):
 def getProfileBookmarks(request, range_from, range_to):
     if request.user.is_authenticated:
         user = request.user
+
+        translation = request.GET.get("translation", "")
+        book = request.GET.get("book", None)
+        filter_options = {}
+        if translation:
+            filter_options["verse__translation"] = translation
+        if book:
+            filter_options["verse__book"] = book
+
         bookmarks = mapBookmarks(
-            user.bookmarks_set.all().order_by("-date", "verse")[range_from:range_to]
+            user.bookmarks_set.filter(**filter_options).order_by("-date", "verse")[
+                range_from:range_to
+            ]
         )
         return JsonResponse(bookmarks, safe=False)
     return JsonResponse([], safe=False)
