@@ -10,7 +10,7 @@ WORKDIR /code
 
 # install psycopg2 dependencies
 RUN apt update -y \
-    && apt install -y postgresql postgresql-contrib netcat
+    && apt install -y postgresql postgresql-contrib netcat-traditional
 
 # # lint
 # RUN pip install --upgrade pip
