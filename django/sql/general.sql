@@ -41,8 +41,12 @@ SELECT * FROM bolls_verses where translation='LXX' ORDER BY BOOK, CHAPTER, VERSE
 
 -- SELECT book, count(chapter) FROM bolls_verses where translation='NBS' and verse = 1 GROUP BY book;
 
-UPDATE bolls_verses SET text = ('Filho meu, ouve a instrução de teu pai e não menosprezes o ensino de tua mãe.') where translation='KJVf' and book=20 and chapter=1 and verse=8;
-UPDATE bolls_verses SET text = ('And immediately Jesus stretched forth his hand, and caught him, and said unto him, O thou of little faith, wherefore didst thou doubt?') where translation='KJV' and book=40 and chapter=14 and verse=31
+
+
+UPDATE bolls_verses SET text = ('— Eu sou o bom Pastor. Conheço as minhas ovelhas, assim como o meu Pai me conhece. E as minhas ovelhas me conhecem,') where translation='VFL' and book=43 and chapter=10 and verse=14
+INSERT INTO bolls_verses(translation, book, chapter, verse, text) values ('VFL', 43, 10, 15, 'assim como eu conheço o Pai. Eu dou a minha vida pelas ovelhas.');
+UPDATE bolls_verses SET text = ('Foi um profeta deles mesmos, lá da ilha de Creta, que disse: “Os cretenses são sempre mentirosos, feras terríveis e comilões preguiçosos”.') where translation='VFL' and book=56 and chapter=1 and verse=12
+
 
 SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
 YLT/24/36/3/
