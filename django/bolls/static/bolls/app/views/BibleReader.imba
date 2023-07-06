@@ -468,8 +468,12 @@ tag bible-reader
 	def mount
 		# silly analog of routed
 		let link = window.location.pathname.split('/')
-		if link[1] && link[2] && link[3]
-			getChapter link[1], parseInt(link[2]), parseInt(link[3]), parseInt(link[4])
+		if 'international' in link
+			if link[2] && link[3] && link[4]
+				getChapter settings.translation || link[2], parseInt(link[3]), parseInt(link[4]), parseInt(link[5])
+		else
+			if link[1] && link[2] && link[3]
+				getChapter link[1], parseInt(link[2]), parseInt(link[3]), parseInt(link[4])
 
 		document.addEventListener('selectionchange', onSelectionChange.bind(self))
 		window.addEventListener('popstate', onPopState.bind(self))
@@ -1333,7 +1337,7 @@ tag bible-reader
 		return 'rgb(' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ')'
 
 	def decreaseFontSize
-		if settings.font.size > 16
+		if settings.font.size > 14
 			settings.font.size -= 2
 			setCookie('font', settings.font.size)
 
@@ -3131,8 +3135,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.0 🗓 "
-						<time dateTime='2023-06-26'> "26.06.2023"
+						"🍇 v2.3.1 🗓 "
+						<time dateTime='2023-07-06'> "06.07.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
