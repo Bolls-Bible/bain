@@ -19936,49 +19936,49 @@
   "TB": [
     {
       "bookid": 1,
-      "name": "Genesis",
+      "name": "Kejadian",
       "chapters": 50,
       "chronorder": 1
     },
     {
       "bookid": 2,
-      "name": "Exodus",
+      "name": "Keluaran",
       "chapters": 40,
       "chronorder": 3
     },
     {
       "bookid": 3,
-      "name": "Leviticus",
+      "name": "Imamat",
       "chapters": 27,
       "chronorder": 4
     },
     {
       "bookid": 4,
-      "name": "Numbers",
+      "name": "Bilangan",
       "chapters": 36,
       "chronorder": 5
     },
     {
       "bookid": 5,
-      "name": "Deuteronomy",
+      "name": "Ulangan",
       "chapters": 34,
       "chronorder": 6
     },
     {
       "bookid": 6,
-      "name": "Joshua",
+      "name": "Yosua",
       "chapters": 24,
       "chronorder": 7
     },
     {
       "bookid": 7,
-      "name": "Judges",
+      "name": "Hakim-hakim",
       "chapters": 21,
       "chronorder": 8
     },
     {
       "bookid": 8,
-      "name": "Ruth",
+      "name": "Rut",
       "chapters": 4,
       "chronorder": 9
     },
@@ -19996,25 +19996,25 @@
     },
     {
       "bookid": 11,
-      "name": "1 Kings",
+      "name": "1 Raja-raja",
       "chapters": 22,
       "chronorder": 15
     },
     {
       "bookid": 12,
-      "name": "2 Kings",
+      "name": "2 Raja-raja",
       "chapters": 25,
       "chronorder": 28
     },
     {
       "bookid": 13,
-      "name": "1 Chronicles",
+      "name": "1 Tawarikh",
       "chapters": 29,
       "chronorder": 12
     },
     {
       "bookid": 14,
-      "name": "2 Chronicles",
+      "name": "2 Tawarikh",
       "chapters": 36,
       "chronorder": 16
     },
@@ -20026,67 +20026,67 @@
     },
     {
       "bookid": 16,
-      "name": "Nehemiah",
+      "name": "Nehemia",
       "chapters": 13,
       "chronorder": 38
     },
     {
       "bookid": 17,
-      "name": "Esther",
+      "name": "Ester",
       "chapters": 10,
       "chronorder": 36
     },
     {
       "bookid": 18,
-      "name": "Job",
+      "name": "Ayub",
       "chapters": 42,
       "chronorder": 2
     },
     {
       "bookid": 19,
-      "name": "Psalm",
+      "name": "Mazmur",
       "chapters": 150,
       "chronorder": 13
     },
     {
       "bookid": 20,
-      "name": "Proverbs",
+      "name": "Amsal",
       "chapters": 31,
       "chronorder": 17
     },
     {
       "bookid": 21,
-      "name": "Ecclesiastes",
+      "name": "Pengkhotbah",
       "chapters": 12,
       "chronorder": 18
     },
     {
       "bookid": 22,
-      "name": "Song of Solomon",
+      "name": "Kidung Agung",
       "chapters": 8,
       "chronorder": 14
     },
     {
       "bookid": 23,
-      "name": "Isaiah",
+      "name": "Yesaya",
       "chapters": 66,
       "chronorder": 25
     },
     {
       "bookid": 24,
-      "name": "Jeremiah",
+      "name": "Yeremia",
       "chapters": 52,
       "chronorder": 29
     },
     {
       "bookid": 25,
-      "name": "Lamentations",
+      "name": "Ratapan",
       "chapters": 5,
       "chronorder": 30
     },
     {
       "bookid": 26,
-      "name": "Ezekiel",
+      "name": "Yehezkiel",
       "chapters": 48,
       "chronorder": 32
     },
@@ -20104,7 +20104,7 @@
     },
     {
       "bookid": 29,
-      "name": "Joel",
+      "name": "Yoel",
       "chapters": 3,
       "chronorder": 20
     },
@@ -20116,19 +20116,19 @@
     },
     {
       "bookid": 31,
-      "name": "Obadiah",
+      "name": "Obaja",
       "chapters": 1,
       "chronorder": 31
     },
     {
       "bookid": 32,
-      "name": "Jonah",
+      "name": "Yunus",
       "chapters": 4,
       "chronorder": 19
     },
     {
       "bookid": 33,
-      "name": "Micah",
+      "name": "Mikha",
       "chapters": 7,
       "chronorder": 22
     },
@@ -20140,127 +20140,127 @@
     },
     {
       "bookid": 35,
-      "name": "Habakkuk",
+      "name": "Habakuk",
       "chapters": 3,
       "chronorder": 27
     },
     {
       "bookid": 36,
-      "name": "Zephaniah",
+      "name": "Zefanya",
       "chapters": 3,
       "chronorder": 26
     },
     {
       "bookid": 37,
-      "name": "Haggai",
+      "name": "Hagai",
       "chapters": 2,
       "chronorder": 34
     },
     {
       "bookid": 38,
-      "name": "Zechariah",
+      "name": "Zakharia",
       "chapters": 14,
       "chronorder": 35
     },
     {
       "bookid": 39,
-      "name": "Malachi",
+      "name": "Maleakhi",
       "chapters": 4,
       "chronorder": 39
     },
     {
       "bookid": 40,
-      "name": "Matthew",
+      "name": "Matius",
       "chapters": 28,
       "chronorder": 40
     },
     {
       "bookid": 41,
-      "name": "Mark",
+      "name": "Markus",
       "chapters": 16,
       "chronorder": 58
     },
     {
       "bookid": 42,
-      "name": "Luke",
+      "name": "Lukas",
       "chapters": 24,
       "chronorder": 52
     },
     {
       "bookid": 43,
-      "name": "John",
+      "name": "Yohanes",
       "chapters": 21,
       "chronorder": 66
     },
     {
       "bookid": 44,
-      "name": "Acts",
+      "name": "Kisah Para Rasul",
       "chapters": 28,
       "chronorder": 54
     },
     {
       "bookid": 45,
-      "name": "Romans",
+      "name": "Roma",
       "chapters": 16,
       "chronorder": 46
     },
     {
       "bookid": 46,
-      "name": "1 Corinthians",
+      "name": "1 Korintus",
       "chapters": 16,
       "chronorder": 44
     },
     {
       "bookid": 47,
-      "name": "2 Corinthians",
+      "name": "2 Korintus",
       "chapters": 13,
       "chronorder": 45
     },
     {
       "bookid": 48,
-      "name": "Galatians",
+      "name": "Galatia",
       "chapters": 6,
       "chronorder": 41
     },
     {
       "bookid": 49,
-      "name": "Ephesians",
+      "name": "Efesus",
       "chapters": 6,
       "chronorder": 47
     },
     {
       "bookid": 50,
-      "name": "Philippians",
+      "name": "Filipi",
       "chapters": 4,
       "chronorder": 49
     },
     {
       "bookid": 51,
-      "name": "Colossians",
+      "name": "Kolose",
       "chapters": 4,
       "chronorder": 50
     },
     {
       "bookid": 52,
-      "name": "1 Thessalonians",
+      "name": "1 Tesalonika",
       "chapters": 5,
       "chronorder": 42
     },
     {
       "bookid": 53,
-      "name": "2 Thessalonians",
+      "name": "2 Tesalonika",
       "chapters": 3,
       "chronorder": 43
     },
     {
       "bookid": 54,
-      "name": "1 Timothy",
+      "name": "1 Timotius",
       "chapters": 6,
       "chronorder": 55
     },
     {
       "bookid": 55,
-      "name": "2 Timothy",
+      "name": "2 Timotius",
       "chapters": 4,
       "chronorder": 59
     },
@@ -20272,61 +20272,61 @@
     },
     {
       "bookid": 57,
-      "name": "Philemon",
+      "name": "Filemon",
       "chapters": 1,
       "chronorder": 51
     },
     {
       "bookid": 58,
-      "name": "Hebrews",
+      "name": "Ibrani",
       "chapters": 13,
       "chronorder": 53
     },
     {
       "bookid": 59,
-      "name": "James",
+      "name": "Yakobus",
       "chapters": 5,
       "chronorder": 48
     },
     {
       "bookid": 60,
-      "name": "1 Peter",
+      "name": "1 Petrus",
       "chapters": 5,
       "chronorder": 56
     },
     {
       "bookid": 61,
-      "name": "2 Peter",
+      "name": "2 Petrus",
       "chapters": 3,
       "chronorder": 60
     },
     {
       "bookid": 62,
-      "name": "1 John",
+      "name": "1 Yohanes",
       "chapters": 5,
       "chronorder": 61
     },
     {
       "bookid": 63,
-      "name": "2 John",
+      "name": "2 Yohanes",
       "chapters": 1,
       "chronorder": 62
     },
     {
       "bookid": 64,
-      "name": "3 John",
+      "name": "3 Yohanes",
       "chapters": 1,
       "chronorder": 63
     },
     {
       "bookid": 65,
-      "name": "Jude",
+      "name": "Yudas",
       "chapters": 1,
       "chronorder": 64
     },
     {
       "bookid": 66,
-      "name": "Revelation",
+      "name": "Wahyu",
       "chapters": 22,
       "chronorder": 65
     }
