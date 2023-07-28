@@ -88,7 +88,7 @@ catch error
 
 let settingsp = {
 	display: no
-	translation: 'WLCC'
+	translation: 'WLCa'
 	book: 1
 	chapter: 1
 	edited_version: settings.translatoin
@@ -425,7 +425,7 @@ tag bible-reader
 			show_filters: no
 			counter: 50
 			results:0
-			filter: 0
+			filter: ''
 			loading: no
 			change_translation: no
 			bookid_of_results: []
@@ -1146,6 +1146,11 @@ tag bible-reader
 	def isNumber str
 		return !isNaN(str) && !isNaN(parseFloat(str))
 
+	def getSearchTranslation
+		if settingsp.edited_version == settingsp.translation && settingsp.display
+			return settingsp.edited_version
+		return settings.translation
+
 	def getSearchText e
 		# Clear the searched text to preserver the request for breaking
 		let query = search.search_input
@@ -1158,8 +1163,8 @@ tag bible-reader
 			search.search_result_header = ''
 			loading = yes
 
-			search.translation = searchTranslation!
-			const url = '/search/' + search.translation + '/?search=' + window.encodeURIComponent(query) + '&match_case=' + search.match_case + '&match_whole=' + search.match_whole
+			search.translation = getSearchTranslation!
+			const url = '/search/' + search.translation + '/?search=' + window.encodeURIComponent(query) + '&match_case=' + search.match_case + '&match_whole=' + search.match_whole + '&book=' + search.filter
 
 			search_verses = {}
 			try
@@ -1173,17 +1178,11 @@ tag bible-reader
 
 			search.bookid_of_results = []
 			search.results = 0
-			search.nt = no
-			search.ot = no
 			for verse in search_verses
 				if !search.bookid_of_results.find(do |element| return element == verse.book)
 					search.bookid_of_results.push verse.book
 
 				search.results += (verse.text.match(/<mark>/g) || []).length
-				if ntBook(verse.book)
-					search.nt = yes
-				else
-					search.ot = yes
 
 			closeSearch!
 			imba.commit!
@@ -1277,13 +1276,6 @@ tag bible-reader
 
 		search.suggestions.translations = suggestTranslations(query)
 
-
-	def searchTranslation
-		if settingsp.edited_version == settingsp.translation && settingsp.display
-			return settingsp.edited_version
-		return settings.translation
-
-
 	def addFilter book
 		page_search.matches = []
 		page_search.rects = []
@@ -1299,9 +1291,10 @@ tag bible-reader
 		search.counter = 50
 		let search_body = document.getElementById('search_body')
 		search_body.scrollTo(0,0)
+		getSearchText!
 
 
-	def getFilteredASearchVerses
+	def getFilteredSearchVerses
 		if search.filter
 			if search.filter == "ot"
 				return search_verses.filter(do |verse| !ntBook(verse.book))
@@ -1312,6 +1305,8 @@ tag bible-reader
 		else
 			return search_verses
 
+	def isBookPresentInSearchResults bookid
+		return search.bookid_of_results.find(do |element| return element == bookid)
 
 
 	def changeTheme theme
@@ -3135,7 +3130,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.3 🗓 "
+						"🍇 v2.3.4 🗓 "
 						<time dateTime='2023-07-14'> "14.07.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
@@ -3406,7 +3401,7 @@ tag bible-reader
 							if search_verses.length
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
-										<div[d:hflex bg:$bgc ai:center jc:space-between p:0 8px pos:sticky t:-8px]>
+										<div[d:hflex bg:$bgc ai:center jc:space-between p:0 8px pos:sticky t:-8px zi:24]>
 											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> state.lang.addfilter
 											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
 												<title> state.lang.close
@@ -3414,20 +3409,17 @@ tag bible-reader
 										if search.filter
 											<button.book_in_list @click=dropFilter> state.lang.drop_filter
 
-										if search.ot
-											<button.book_in_list[ta:left] @click=addFilter("ot")> state.lang.ot
-
-										if search.nt
-											<button.book_in_list[ta:left] @click=addFilter("nt")> state.lang.nt
+										<button.book_in_list[ta:left] @click=addFilter("ot")> state.lang.ot
+										<button.book_in_list[ta:left] @click=addFilter("nt")> state.lang.nt
 
 										if settingsp.edited_version == settingsp.translation && settingsp.display
 											<>
-												for book in parallel_books when search.bookid_of_results.find(do |element| return element == book.bookid)
-													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) dir="auto" @click=addFilter(book.bookid)> book.name
+												for book in parallel_books
+													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) .fruitless_book_in_filter=(!isBookPresentInSearchResults(book.bookid)) dir="auto" @click=addFilter(book.bookid)> book.name
 										else
 											<>
-												for book in books when search.bookid_of_results.find(do |element| return element == book.bookid)
-													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) dir="auto" @click=addFilter(book.bookid)> book.name
+												for book in books
+													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) .fruitless_book_in_filter=(!isBookPresentInSearchResults(book.bookid)) dir="auto" @click=addFilter(book.bookid)> book.name
 
 							<article.search_hat#gs_hat [pos:relative]>
 								<svg.close_search [min-width:24px] @click=closeSearch(true) viewBox="0 0 20 20">
@@ -3460,24 +3452,23 @@ tag bible-reader
 										<title> state.lang.addfilter
 										<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
-								if search.suggestions.books
-									if search.suggestions.books.length or search.suggestions.translations.length
-										<.search_suggestions>
-											for book in search.suggestions.books
-												<text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
-													searchSuggestionText(book)
+								if search.suggestions.books..length or search.suggestions.translations..length
+									<.search_suggestions>
+										for book in search.suggestions.books
+											<text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+												searchSuggestionText(book)
 
 
-											for translation in search.suggestions.translations
-												<li.book_in_list.focusable tabIndex="0" [display: flex] @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
-													<span>
-														<b> translation.short_name
-														', '
-														translation.full_name
+										for translation in search.suggestions.translations
+											<li.book_in_list.focusable tabIndex="0" [display: flex] @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
+												<span>
+													<b> translation.short_name
+													', '
+													translation.full_name
 
 							if search.search_result_header
 								<article.search_body id="search_body" @scroll=searchPagination>
-									let filtered_books = getFilteredASearchVerses()
+									let filtered_books = getFilteredSearchVerses()
 									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  filtered_books.length, ' ', state.lang.totalyresultsofsearch
 
 									<>

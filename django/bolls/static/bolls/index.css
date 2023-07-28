@@ -1123,6 +1123,10 @@ html[data-light="light"] .Notifications p {
   text-align: inherit;
 }
 
+.fruitless_book_in_filter {
+  opacity: 0.75;
+}
+
 .parallel {
   height: 100%;
   overflow-y: auto;
