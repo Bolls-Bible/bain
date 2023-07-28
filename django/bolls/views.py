@@ -136,6 +136,7 @@ def search(request, translation, piece=""):
         piece = request.GET.get("search", "")
     match_case = request.GET.get("match_case", "") == "true"
     match_whole = request.GET.get("match_whole", "") == "true"
+    book = request.GET.get("book", None)
 
     d = []
     piece = piece.strip()
@@ -143,14 +144,26 @@ def search(request, translation, piece=""):
     if len(piece) > 2 or piece.isdigit():
         results_of_search = []
         if match_whole:
+            linear_search_params = {
+                "translation": translation,
+            }
+
+            if book:
+                if isinstance(book, str):
+                    if book == "ot":
+                        linear_search_params["book__lt"] = 40
+                    else:
+                        linear_search_params["book__gt"] = 40
+                else:
+                    linear_search_params["book"] = book
+
             if match_case:
-                results_of_search = Verses.objects.filter(
-                    translation=translation, text__contains=piece
-                ).order_by("book", "chapter", "verse")
+                linear_search_params["text__contains"] = piece
             else:
-                results_of_search = Verses.objects.filter(
-                    translation=translation, text__icontains=piece
-                ).order_by("book", "chapter", "verse")
+                linear_search_params["text__icontains"] = piece
+            results_of_search = Verses.objects.filter(**linear_search_params).order_by(
+                "book", "chapter", "verse"
+            )
         else:
             query_set = []
 
@@ -171,6 +184,14 @@ def search(request, translation, piece=""):
                         + json.dumps(word)
                         + ")"
                     )
+            if book:
+                if isinstance(book, str):
+                    if book == "ot":
+                        query_set.append("Q(book__lt=40)")
+                    else:
+                        query_set.append("Q(book__gt=40)")
+                else:
+                    query_set.append('Q(book="' + book + '")')
 
             query = " & ".join(query_set)
 
@@ -220,6 +241,9 @@ def search(request, translation, piece=""):
                 for word in piece.split():
                     if word == piece:
                         break
+                    # word may be just an article or an `I` which may replace all i`s in all words
+                    if len(word) < 2:
+                        continue
                     mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
                     highlighted_text = mark_replacement.sub(
                         "<mark>" + word + "</mark>", highlighted_text
