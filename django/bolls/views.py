@@ -202,9 +202,16 @@ def search(request, translation, piece=""):
             if len(results_of_exec_search) < 24:
                 vector = SearchVector("text")
                 query = SearchQuery(piece)
+
+                search_params = {
+                    "translation": translation,
+                }
+                if book:
+                    search_params["book"] = book
+
                 results_of_rank = (
                     Verses.objects.annotate(rank=SearchRank(vector, query))
-                    .filter(translation=translation, rank__gt=(0.05))
+                    .filter(**search_params, rank__gt=(0.05))
                     .order_by("-rank")
                 )
 
@@ -214,7 +221,7 @@ def search(request, translation, piece=""):
                         Verses.objects.annotate(
                             rank=TrigramWordSimilarity(piece, "text")
                         )
-                        .filter(translation=translation, rank__gt=0.5)
+                        .filter(**search_params, rank__gt=0.5)
                         .order_by("-rank")
                     )
 
