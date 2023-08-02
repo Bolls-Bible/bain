@@ -207,7 +207,13 @@ def search(request, translation, piece=""):
                     "translation": translation,
                 }
                 if book:
-                    search_params["book"] = book
+                    if isinstance(book, str):
+                        if book == "ot":
+                            search_params["book__lt"] = 40
+                        else:
+                            search_params["book__gt"] = 40
+                    else:
+                        search_params["book"] = book
 
                 results_of_rank = (
                     Verses.objects.annotate(rank=SearchRank(vector, query))
