@@ -3,7 +3,7 @@ version: "3.8"
 services:
   database:
     image: postgres:alpine
-    restart: always
+    restart: on-failure
     container_name: database
     environment:
       - POSTGRES_USER=postgres_user
@@ -21,7 +21,7 @@ services:
     build:
       context: ./django/
       dockerfile: Dockerfile.dev
-    restart: always
+    restart: on-failure
     command: python manage.py runserver 0:8000
     # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
     container_name: django
@@ -59,7 +59,7 @@ services:
     build: ./django/bolls/static/bolls/
     # context: ./django/bolls/static/bolls/
     # dockerfile: Dockerfile
-    restart: always
+    restart: on-failure
     container_name: imba
     command: npm start
     # required for SELinux
@@ -70,7 +70,7 @@ services:
 
   nginx:
     build: ./nginx_dev
-    restart: always
+    restart: on-failure
     container_name: nginx
     labels:
       - "traefik.enable=true"
