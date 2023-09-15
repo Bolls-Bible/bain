@@ -674,7 +674,7 @@ def getVerse(_, translation, book, chapter, verse):
     if len(comment) > 0:
         result_verse["comment"] = comment
 
-    return JsonResponse(result_verse, safe=False)
+    return cross_origin(JsonResponse(result_verse, safe=False))
 
 
 def saveBookmarks(request):
