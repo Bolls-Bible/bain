@@ -36,6 +36,8 @@ urlpatterns = [
     ),
     path("search/<slug:translation>/<str:piece>/", views.search),
     path("search/<slug:translation>/", views.search),
+    path("find/<slug:translation>/<str:piece>/", views.search),
+    path("find/<slug:translation>/", views.search),
     path("get-books/<slug:translation>/", views.getBooks),
     path("get-text/<slug:translation>/<int:book>/<int:chapter>/", views.getText),
     path(
