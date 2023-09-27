@@ -48,8 +48,15 @@ INSERT INTO bolls_verses(translation, book, chapter, verse, text) values ('VFL',
 UPDATE bolls_verses SET text = ('Foi um profeta deles mesmos, lá da ilha de Creta, que disse: “Os cretenses são sempre mentirosos, feras terríveis e comilões preguiçosos”.') where translation='VFL' and book=56 and chapter=1 and verse=12
 
 
-SELECT * FROM bolls_verses where translation = 'YLT' and book = 24 and chapter = 36 and verse = 3;
-YLT/24/36/3/
+SELECT * FROM bolls_verses where translation = 'SUV' and book = 24 and chapter = 36 and verse = 3;
+SUV/1/6/4
+SELECT * FROM bolls_verses where translation = 'SUV' and book = 1 and chapter = 6 and verse = 4;
+UPDATE bolls_verses SET text = (' Nao Wanefili walikuwako duniani siku zile; tena, baada ya hayo, wana wa Mungu walipoingia kwa binti za wanadamu, wakazaa nao wana; hao ndio waliokuwa watu hodari zamani, watu wenye sifa.') where translation = 'SUV' and book = 1 and chapter = 6 and verse = 4;
+INSERT INTO bolls_verses (translation, book, chapter, verse, text) VALUES ('TR', 40, 1, 1, 'βιβλος γενεσεως ιησου χριστου υιου δαβιδ υιου αβρααμ');
+
+docker exec -i db psql -U django -d bain -c "INSERT INTO bolls_verses (translation, book, chapter, verse, text) VALUES ('TR', 40, 1, 1, 'βιβλος γενεσεως ιησου χριστου υιου δαβιδ υιου αβρααμ');"
+docker exec -i database psql -U postgres_user -d postgres_db -c "INSERT INTO bolls_verses (translation, book, chapter, verse, text) VALUES ('TR', 40, 1, 1, 'βιβλος γενεσεως ιησου χριστου υιου δαβιδ υιου αβρααμ');"
+
 
 UPDATE bolls_verses SET book = 66 where translation='HOM' and book=67;
 delete FROM bolls_verses where translation='NJB' and book = 72;

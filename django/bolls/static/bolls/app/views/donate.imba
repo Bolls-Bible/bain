@@ -26,12 +26,16 @@ tag donate
 							<path d="M0 0h24v24H0z" fill="none">
 							<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
 
-				<a target="_blank" rel="noreferrer" href="https://www.paypal.com/donate/?hosted_button_id=D6TEK8Q99J7SN">
-					<h3[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover]>
-						<svg[fill:inherit] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
-							<path d="M0 0h24v24H0z" fill="none">
-							<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
-						"PayPal (USD)"
+				# <a target="_blank" rel="noreferrer" href="https://www.paypal.com/donate/?hosted_button_id=D6TEK8Q99J7SN">
+				# 	<h3[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover]>
+				# 		<svg[fill:inherit] xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px">
+				# 			<path d="M0 0h24v24H0z" fill="none">
+				# 			<path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
+				# 		"PayPal (USD)"
+				
+				<h3[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover] @click=state.copyTextToClipboard("bpavlisinec@gmail.com")>
+					<span> "PayPal "
+					<b> "bpavlisinec@gmail.com"
 
 				<h3 @click=state.copyTextToClipboard("7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq")>
 					<span> "SOL "
