@@ -580,13 +580,15 @@ def getParallelVerses(request):
                                 }
                             )
                     response.append(verses)
-                return JsonResponse(response, safe=False)
+                return cross_origin(JsonResponse(response, safe=False))
             else:
-                return HttpResponse("Body fields are incorrect", status=400)
+                return cross_origin(
+                    HttpResponse("Body fields are incorrect", status=400)
+                )
         except:
-            return HttpResponse("Body json is incorrect", status=400)
+            return cross_origin(HttpResponse("Body json is incorrect", status=400))
     else:
-        return HttpResponse("The request should be POSTed", status=400)
+        return cross_origin(HttpResponse("The request should be POSTed", status=400))
 
 
 @csrf_exempt
@@ -635,15 +637,19 @@ def getVerses(request):
                                     }
                                 )
                     response.append(verses)
-                return JsonResponse(response, safe=False)
+                return cross_origin(JsonResponse(response, safe=False))
             else:
-                return HttpResponse("Body fields are incorrect", status=400)
+                return cross_origin(
+                    HttpResponse("Body fields are incorrect", status=400)
+                )
         except:
-            return HttpResponse(
-                "Body fields are incorrect" + str(request.body), status=400
+            return cross_origin(
+                HttpResponse(
+                    "Body fields are incorrect" + str(request.body), status=400
+                )
             )
     else:
-        return HttpResponse("The request should be POSTed", status=400)
+        return cross_origin(HttpResponse("The request should be POSTed", status=400))
 
 
 def getVerse(_, translation, book, chapter, verse):
@@ -659,7 +665,7 @@ def getVerse(_, translation, book, chapter, verse):
             "text": verses[0].text,
         }
     else:
-        return HttpResponse("The verse is not found", status=404)
+        return cross_origin(HttpResponse("The verse is not found", status=404))
 
     commentaries = Commentary.objects.filter(
         book=book, chapter=chapter, translation=translation, verse=verse
@@ -1056,7 +1062,9 @@ def getBooks(_, translation):
             data = json.load(json_file)
             return cross_origin(JsonResponse(data[translation], safe=False))
     except:
-        return HttpResponse("Wrong translation: " + translation, status=404)
+        return cross_origin(
+            HttpResponse("Wrong translation: " + translation, status=404)
+        )
 
 
 def downloadNotes(request):
