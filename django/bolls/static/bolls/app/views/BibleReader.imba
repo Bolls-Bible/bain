@@ -3121,17 +3121,17 @@ tag bible-reader
 				<footer>
 					<p.footer_links>
 						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
-						<a target="_blank" rel="noreferrer" href="https://github.com/Bohooslav/bain/"> "GitHub"
+						<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
 						<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
-						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com/"> "Django"
+						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.5 🗓 "
-						<time dateTime='2023-09-27'> "27.09.2023"
+						"🍇 v2.3.6 🗓 "
+						<time dateTime='2023-10-31'> "31.10.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

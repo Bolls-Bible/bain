@@ -284,6 +284,8 @@ def search(request, translation, piece=""):
 
 
 def cleanhtml(raw_html):
+    # remove strong numbers. They are not needed in the description
+    raw_html = re.sub(r"<S>(.*?)</S>", "", raw_html)
     cleanr = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
     cleantext = re.sub(cleanr, "", raw_html)
     return cleantext
