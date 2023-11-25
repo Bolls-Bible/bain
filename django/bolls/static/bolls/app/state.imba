@@ -63,7 +63,7 @@ export class State
 		user.name = getCookie('name') || ''
 
 
-		if window.navigator.userAgent.indexOf('Android') > -1 && window.navigator.userAgent.indexOf(' Bolls.2.1') > -1
+		if window.navigator.userAgent.indexOf('Android') > -1 && window.navigator.userAgent.indexOf(' Bolls') > -1
 			pswv = yes
 			english["SUPPORT"].length = 4
 			ukrainian["SUPPORT"].length = 4
@@ -127,7 +127,7 @@ export class State
 		if getCookie('dictionary')
 			dictionary = getCookie('dictionary')
 		else
-			if language == 'ru' or language = 'ukr'
+			if language == 'ru' or language == 'ukr'
 				dictionary = 'RUSD'
 			else
 				dictionary = 'BDBT'

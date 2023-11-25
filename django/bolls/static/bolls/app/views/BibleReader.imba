@@ -809,6 +809,9 @@ tag bible-reader
 		if big_modal_block_content == "show_note"
 			big_modal_block_content = ''
 			return
+		
+		if big_modal_block_content or choosen.length > 0
+			window.history.back()
 
 		# Clean all the variables in order to free space around the text
 		bible_menu_left = -300
@@ -2516,12 +2519,49 @@ tag bible-reader
 					host_rectangle.left = viewportRectangle.left
 				else
 					host_rectangle.right = window.innerWidth - viewportRectangle.right
-				
-				if selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
-					host_rectangle.strong = strongHunber(selected, selection.focusNode.previousSibling.textContent)
-				else
-					if selection.anchorNode.nextSibling..textContent
-						host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
+				# Iterate through selected range nodes and find the first node having S tag type
+				# Avoid using rangeContainer.childNodes cus it containes nodes outside of the selection
+				# use document.createNodeIterator instead
+				let iterator = document.createNodeIterator(rangeContainer, NodeFilter.SHOW_ALL)
+				let node = iterator.nextNode()
+				# always omit the first node cus it's the text node before the selection
+				let frst_node_omitten = no
+				while node
+					# If we run out of nodes, instead of instanteniously writing the possible null into node, I wanna preserve the last node in the node variable
+					let next_node = iterator.nextNode()
+					if !next_node
+						break
+					node = next_node
+
+					# check if the node is inside the selection
+					if !selection.containsNode(node, true)
+						if frst_node_omitten
+							node = iterator.previousNode()
+							break
+						else
+							continue
+
+					# First node is never interesting. Strong number always follows the word, not preceeds it.
+					if !frst_node_omitten
+						frst_node_omitten = yes
+						continue
+
+					# Strong numbers are always inside S tag
+					if node.tagName == 'S' or node.tagName == 's'
+						host_rectangle.strong = strongHunber(selected, node.textContent)
+						break
+
+				if !host_rectangle.strong
+					# If no S tag found, try at first to find the strong number in the next node
+					if node
+						host_rectangle.strong = strongHunber(selected, (node.nextSibling || node).textContent)
+					# Otherwise try our old approach
+					elif selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
+						host_rectangle.strong = strongHunber(selected, selection.focusNode.previousSibling.textContent)
+					else
+						if selection.anchorNode.nextSibling..textContent
+							host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
+
 				imba.commit!
 
 
@@ -2535,7 +2575,9 @@ tag bible-reader
 		loadDefinitions!
 		setTimeout(&, 300) do $dictionarysearch.select!
 
-
+	def showStongNumberDefinition
+		if host_rectangle..strong
+			loadDefinitions(host_rectangle.strong)
 
 	def stripVowels rawString
 		# Clear Hebrew
@@ -3120,7 +3162,7 @@ tag bible-reader
 
 				<footer>
 					<p.footer_links>
-						<a target="_blank" rel="noreferr	er" href="http://t.me/bollsbible"> "Telegram"
+						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
@@ -3130,8 +3172,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.6 🗓 "
-						<time dateTime='2023-10-31'> "31.10.2023"
+						"🍇 v2.3.7 🗓 "
+						<time dateTime='2023-11-26'> "26.11.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3752,6 +3794,7 @@ tag bible-reader
 					@hotkey('f').prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 					@hotkey('mod+d').prevent.stop=showDictionaryView
+					@hotkey('alt+s').prevent.stop=showStongNumberDefinition
 					@hotkey('escape').force.prevent.stop=clearSpace
 					@hotkey('mod+y').prevent.stop=fixDrawers
 					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)

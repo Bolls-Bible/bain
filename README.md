@@ -90,7 +90,7 @@ python manage.py clearsessions
 
 # Become a maintainer
 
-You will get full access to this repo.
+Contact me in any way you want. I will be happy to add you as a maintainer.
 
 ### [How to add a new translation](./django/HOW_TO_ADD_A_NEW_TRANSLATION.md)
 ### [How to add a new dictionary](./django/HOW_TO_ADD_A_NEW_DICTIONARY.md)
