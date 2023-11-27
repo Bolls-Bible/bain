@@ -2571,8 +2571,8 @@ tag bible-reader
 		if selected
 			store.definition_search = selected
 		clearSpace!
-		popUp 'dictionary'
 		loadDefinitions!
+		popUp 'dictionary'
 		setTimeout(&, 300) do $dictionarysearch.select!
 
 	def showStongNumberDefinition
@@ -3172,8 +3172,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.7 🗓 "
-						<time dateTime='2023-11-26'> "26.11.2023"
+						"🍇 v2.3.8 🗓 "
+						<time dateTime='2023-11-28'> "28.11.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
