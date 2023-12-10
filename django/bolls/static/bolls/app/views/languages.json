@@ -79,6 +79,12 @@
         "updated": 1635188106109
       },
       {
+        "short_name": "LSB",
+        "full_name": "The Legacy Standard Bible",
+        "info": "http://lsbible.org/",
+        "updated": 1702218835084
+      },
+      {
         "short_name": "NASB",
         "full_name": "New American Standard Bible (1995)",
         "info": "http://wikipedia.org/wiki/New_American_Standard_Bible",

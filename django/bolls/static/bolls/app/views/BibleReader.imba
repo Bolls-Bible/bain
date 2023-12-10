@@ -1491,7 +1491,7 @@ tag bible-reader
 					store.note += vrs.note
 
 	def addToChosen pk, id, parallel
-		unless document.getSelection().isCollapsed
+		if !document.getSelection().isCollapsed or big_modal_block_content
 			return no
 		if !settings_menu_left || !bible_menu_left
 			return clearSpace()
@@ -3172,8 +3172,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.8 🗓 "
-						<time dateTime='2023-11-28'> "28.11.2023"
+						"🍇 v2.3.9 🗓 "
+						<time dateTime='2023-12-10'> "10.12.2023"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
