@@ -55,6 +55,7 @@ urlpatterns = [
         "get-profile-bookmarks/<int:range_from>/<int:range_to>/",
         views.getProfileBookmarks,
     ),
+    path("get-verse-counts/<slug:translation>/", views.getVerseCounts),
     path("dictionary-definition/<slug:dict>/<str:query>/", views.searchInDictionary),
     path("get-dictionary/<slug:dictionary>/", views.getDictionary),
     # AAA

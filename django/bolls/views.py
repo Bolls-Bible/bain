@@ -1165,3 +1165,18 @@ def saveCompareTranslations(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)
+
+
+def getVerseCounts(request, translation):
+    try:
+        verses = Verses.objects.filter(translation=translation)
+        verses_coun_map = {}
+        for verse in verses:
+            if verse.book not in verses_coun_map:
+                verses_coun_map[verse.book] = {}
+            if verse.chapter not in verses_coun_map[verse.book]:
+                verses_coun_map[verse.book][verse.chapter] = 0
+            verses_coun_map[verse.book][verse.chapter] += 1
+        return cross_origin(JsonResponse(verses_coun_map, safe=False))
+    except:
+        return HttpResponse(status=400, content="Translation is not found")
