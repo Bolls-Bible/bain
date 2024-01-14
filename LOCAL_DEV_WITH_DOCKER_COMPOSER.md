@@ -3,9 +3,9 @@
 ### Basic commands to run the application locally
 
 ```bash
-docker-compose -f dev-docker-compose.yml build
-
-docker-compose -f dev-docker-compose.yml up -d
+docker compose -f dev-docker-compose.yml build
+docker network create web
+docker compose -f dev-docker-compose.yml up -d
 ```
 
 Then restore the database from a [backup file](https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql)
@@ -50,11 +50,17 @@ Now you should be able to open the application in your browser at http://bolls.l
 
 ```bash
 
-docker-compose -f dev-docker-compose.yml up -d --force-recreate
+docker compose -f dev-docker-compose.yml up -d --force-recreate
 
-docker-compose -f dev-docker-compose.yml ps
+docker compose -f dev-docker-compose.yml ps
 
-docker-compose -f dev-docker-compose.yml logs -f --tail 8
+docker compose -f dev-docker-compose.yml logs -f --tail 8
 
-docker-compose -f dev-docker-compose.yml stop
+docker compose -f dev-docker-compose.yml stop
+
+docker compose -f docker-compose.dev.yml exec django python manage.py migrate --noinput 
+
+docker cp ./django/sql/unaccent_plus.rules  db:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+
+docker exec -i db psql -U django -d cotton -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 ```
