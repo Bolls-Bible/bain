@@ -39,6 +39,11 @@ def cross_origin(response):
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    response["Cross-Origin-Opener-Policy"] = "unsafe-none"
+    response["Cross-Origin-Embedder-Policy"] = "unsafe-none"
+    response["Cross-Origin-Resource-Policy"] = "cross-origin"
+    response["Content-Security-Policy"] = "cross-origin"
+    response["referrer-policy"] = "unsafe-url"
     return response
 
 
