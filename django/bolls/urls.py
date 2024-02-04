@@ -56,6 +56,7 @@ urlpatterns = [
         views.getProfileBookmarks,
     ),
     path("get-verse-counts/<slug:translation>/", views.getVerseCounts),
+    path("get-random-verse/<slug:translation>/", views.getRandomVerse),
     path("dictionary-definition/<slug:dict>/<str:query>/", views.searchInDictionary),
     path("get-dictionary/<slug:dictionary>/", views.getDictionary),
     # AAA

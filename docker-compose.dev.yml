@@ -32,10 +32,12 @@ services:
       - ./django:/code
     expose:
       - 8000
+    ports:
+      - 8000:8000
     environment:
       - DEBUG=1
       # - SECRET_KEY=SECRET_KEY_SECRET # use default one
-      - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1
+      - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1 localhost
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=postgres_db
       - SQL_USER=postgres_user
@@ -52,6 +54,7 @@ services:
       # - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
       - internal
+      - web
     depends_on:
       - database
 

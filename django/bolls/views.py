@@ -1138,7 +1138,7 @@ def importNotes(request):
         return HttpResponse(status=405)
 
 
-def sw():
+def sw(request):
     # return HttpResponse(status=404) # for dev only
     # get the file for the service worker
     sw_file = open(os.path.join(BASE_DIR, "bolls/static/service-worker.js"), "r")
@@ -1184,4 +1184,20 @@ def getVerseCounts(request, translation):
             verses_coun_map[verse.book][verse.chapter] += 1
         return cross_origin(JsonResponse(verses_coun_map, safe=False))
     except:
+        return HttpResponse(status=400, content="Translation is not found")
+
+
+def getRandomVerse(request, translation):
+    try:
+        verse = Verses.objects.filter(translation=translation).order_by("?").first()
+        return cross_origin(JsonResponse({
+            "pk": verse.pk,
+            "translation": verse.translation,
+            "book": verse.book,
+            "chapter": verse.chapter,
+            "verse": verse.verse,
+            "text": verse.text,
+        }, safe=False))
+    except Exception as error:
+        print(error)
         return HttpResponse(status=400, content="Translation is not found")

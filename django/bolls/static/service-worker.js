@@ -2,7 +2,7 @@ importScripts("/static/bolls/jszip.min.js");
 importScripts("/static/bolls/dexie.min.js");
 importScripts("/static/bolls/scripts.js");
 
-const CACHE_NAME = "v2.3.10";
+const CACHE_NAME = "v2.4.0";
 const urlsToCache = [
   "/",
   "/static/bolls/dist/assets/index.js",
@@ -39,6 +39,8 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(deleteDictionary(url));
   } else if (url.includes("/sw/search-definitions/")) {
     event.respondWith(dictionarySearch(url));
+  } else if (url.includes("/sw/get-random-verse/")) {
+    event.respondWith(getRandomVerse(url));
     // All the other stuff
   } else {
     event.respondWith(

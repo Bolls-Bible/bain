@@ -70,6 +70,7 @@
       <li><a href="#compare">Compare versions</a></li>
       <li><a href="#Fetch a verse">Fetch a verse</a></li>
       <li><a href="#Fetch any verses">Fetch any verses</a></li>
+      <li><a href="#Random verse">Random verse</a></li>
       <li>
         <a href="#dictionary"
           >Dictionary definition for Hebrew and Greek words</a
@@ -579,8 +580,7 @@ https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</p
     "short_definition": "Ur",
     "weight": 1
   }
-]
-	</pre
+]</pre
     >
     <p>Every definition contains next fields:</p>
     <ul>
@@ -604,6 +604,40 @@ https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</p
       Also there is an optional flag <code>extended</code> which when equals to <code>true</code> will return results of extended search. For example try this query:
     <pre><a target="_blank" href="https://bolls.life/dictionary-definition/BDBT/אֹ֑ור/?extended=true">https://bolls.life/dictionary-definition/BDBT/אֹ֑ור/?extended=true</a></pre>
   </p>
+  <h2 id="Random verse">Random verse</h2>
+  <p class="last-update">New from 4 Feb 2024.</p>
+  <p>
+    To get a random verse from the Bible you should form a url in the next way:
+  </p>
+  <pre>https://bolls.life/get-random-verse/&lt;slug:translation&gt;/</pre>
+  <p>
+    Where <code>&lt;slug:translation&gt;</code> is a translation abbreviation
+    like <code>YLT</code> or <code>UBIO</code> or <code>SYNOD</code>. For
+    example by the next url you will get a random verse from the Bible in YLT
+    translation:
+  </p>
+  <pre><a target="_blank" href="https://bolls.life/get-random-verse/YLT/">https://bolls.life/get-random-verse/YLT/</a></pre>
+  <p>Curl code</p>
+  <pre>curl --location --request GET 'https://bolls.life/get-random-verse/YLT/'</pre>
+  <p>Result:</p>
+  <pre>
+{
+  "pk": 31073,
+  "translation": "YLT",
+  "book": 9,
+  "chapter": 24,
+  "verse": 19,
+  "text": "and that a man doth find his enemy, and hath sent him away in a good manner; and Jehovah doth repay thee good for that which thou didst to me this day."
+}</pre>
+  <p>Where:</p>
+  <ul>
+    <li>The <code>pk</code> field is an id of the verse in database.</li>
+    <li>The <code>translation</code> field is a translation of the verse.</li>
+    <li>The <code>book</code> field is a book of the verse.</li>
+    <li>The <code>chapter</code> field is a chapter of the book in which the verse is found.</li>
+    <li>The <code>verse</code> field is a number of the verse in its chapter.</li>
+    <li>The <code>text</code> field contains html text of the verse.</li>
+  </ul>  
 
     <h3 id="Notes">Notes</h3>
     <ul>

@@ -146,7 +146,6 @@ let download_dictionaries = no
 # Some messy stuff
 let addcollection = no
 let choosen_categories = []
-window.on_pops_tate = no
 let loading = no
 let menuicons = yes
 let fixdrawers = no
@@ -658,7 +657,6 @@ tag bible-reader
 			getParallelText settingsp.translation, book, chapter, verse, yes
 		if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 		clearSpace!
-		window.on_pops_tate = no
 		if verse
 			if verse.length > 1
 				findVerse(verse[0], verse[verse.length - 1])
@@ -723,7 +721,7 @@ tag bible-reader
 			setTimeout(&, 100) do
 				chapter_headers.fontsize2 = 2
 				scrollToY($secondparallel,0)
-		if !window.on_pops_tate && verses && !verse && settingsp.display
+		if verses && !verse && settingsp.display
 			show_parallel_verse_picker = true
 
 	def theChapterExistInThisTranslation translation, book, chapter
@@ -748,9 +746,6 @@ tag bible-reader
 
 
 	def findVerse id, endverse, highlight = yes
-		if id == -1 && verses.length > 0
-			id = Math.round(Math.random() * (verses.length - 1) + 1)
-
 		setTimeout(&,250) do
 			const verse = document.getElementById(id)
 			if verse
@@ -1933,7 +1928,7 @@ tag bible-reader
 
 	def popUp modal_name
 		big_modal_block_content = modal_name
-		window.history.pushState(no, modal_name)
+		window.history.pushState({}, modal_name)
 
 	def makeNote
 		if big_modal_block_content
@@ -2289,9 +2284,19 @@ tag bible-reader
 		focus!
 
 	def randomVerse
-		const random_book = books[Math.round(Math.random() * books.length) - 1]
-		const random_chapter = Math.round(Math.random() * (random_book.chapters - 1) + 1)
-		getText settings.translation, random_book.bookid, random_chapter, -1
+		try
+			// check if the translation is available offline and make offline request
+			if state.downloaded_translations.indexOf(settings.translation) != -1
+				const randomVerse = await loadData("/sw/get-random-verse/{settings.translation}/")
+				getText settings.translation, randomVerse.book, randomVerse.chapter, randomVerse.verse
+			else
+				if window.navigator.onLine
+					const randomVerse = await loadData("/get-random-verse/{settings.translation}/")
+					getText settings.translation, randomVerse.book, randomVerse.chapter, randomVerse.verse
+		catch error
+			console.error error
+			state.showNotification('error')
+
 
 
 
@@ -3172,8 +3177,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.3.10 🗓 "
-						<time dateTime='2024-1-15'> "15.1.2024"
+						"🍇 v2.4.0 🗓 "
+						<time dateTime='2024-2-4'> "4.2.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

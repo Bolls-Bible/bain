@@ -207,3 +207,33 @@ async function dictionarySearch(url) {
       });
     });
 }
+
+async function getRandomVerse(url) {
+  const translation = url.split("/")[5];
+  return db
+    .transaction("r", db.verses, () => {
+      return db.verses
+        .where({ translation: translation })
+        .count()
+        .then((count) => {
+          return db.verses
+            .where({ translation: translation })
+            .offset(Math.floor(Math.random() * count))
+            .limit(1)
+            .toArray()
+            .then((data) => {
+              console.log(data);
+              return new Response(JSON.stringify(data[0]), {
+                status: 200,
+                statusText: "Random verse",
+              });
+            });
+        });
+    })
+    .catch((e) => {
+      return new Response(translation, {
+        status: 500,
+        statusText: e.message,
+      });
+    });
+}
