@@ -459,10 +459,15 @@ tag bible-reader
 				host_rectangle = null
 
 	def onPopState event
-		clearSpace!
-		if event.state
-			if event.state.translation && event.state.book && event.state.chapter
-				return getChapter event.state.translation, event.state.book, event.state.chapter, event.state.verse
+		clearSpace { onPopState: yes }
+		# The event.state is not very reliable, may be null sometimes, hence we use window.location.pathname
+		let link = window.location.pathname.split('/')
+		if 'international' in link
+			if link[2] && link[3] && link[4]
+				getChapter settings.translation || link[2], parseInt(link[3]), parseInt(link[4]), parseInt(link[5])
+		else
+			if link[1] && link[2] && link[3]
+				getChapter link[1], parseInt(link[2]), parseInt(link[3]), parseInt(link[4])
 
 	def mount
 		# silly analog of routed
@@ -616,9 +621,9 @@ tag bible-reader
 			chapter = settings.chapter
 			changeParallel = no
 
-		# const locations_are_different = "/{translation}/{book}/{chapter}/" != window.location.pathname
-		if verses.length
-			if verses[0].translation == translation && verses[0].book == book && verses[0].chapter == chapter
+		const locations_are_same = window.location.pathname.includes("/{translation}/{book}/{chapter}/")
+		if verses.length > 0 and locations_are_same
+			if settings.translation == translation && settings.book == book && settings.chapter == chapter
 				return
 
 		loading = yes
@@ -680,7 +685,7 @@ tag bible-reader
 			changeParallel = no
 
 		if parallel_verses.length && !settingsp.display
-			if parallel_verses[0].translation == translation && parallel_verses[0].book == book && parallel_verses[0].chapter == chapter
+			if settingsp.translation == translation && settingsp.book == book && settingsp.chapter == chapter
 				return
 
 		if chronorder
@@ -799,13 +804,13 @@ tag bible-reader
 				highlightLinkedVerses verse, endverse
 
 
-	def clearSpace
+	def clearSpace { onPopState } = {}
 		# If user write a note then instead of clearing everything just hide the note panel.
 		if big_modal_block_content == "show_note"
 			big_modal_block_content = ''
 			return
-		
-		if big_modal_block_content or choosen.length > 0
+
+		if (big_modal_block_content and not onPopState) or choosen.length > 0
 			window.history.back()
 
 		# Clean all the variables in order to free space around the text
@@ -1516,7 +1521,7 @@ tag bible-reader
 			choosen.push(id)
 			pushCollectionIfExist(pk)
 			window.history.pushState(
-				no,
+				{},
 				'',
 				window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/' + id + '/')
 
@@ -2157,7 +2162,7 @@ tag bible-reader
 		welcome = 'false'
 		setCookie('welcome', no)
 		window.history.pushState(
-			no,
+			{},
 			"Welcome 🤗",
 			window.location.origin + '/' + settings.translation + '/' + settings.book + '/' + settings.chapter + '/'
 		)
@@ -2507,7 +2512,8 @@ tag bible-reader
 		# The feature is not available offline without downloads
 		if window.navigator.onLine or state.downloaded_dictionaries.length
 			let range = selection.getRangeAt(0)
-			let rangeContainer = range.commonAncestorContainer
+			# let rangeContainer = range.commonAncestorContainer
+			let rangeContainer = range.endContainer.parentElement
 
 			if $main.contains(rangeContainer)
 				let viewportRectangle = range.getBoundingClientRect()
@@ -2530,7 +2536,7 @@ tag bible-reader
 				let iterator = document.createNodeIterator(rangeContainer, NodeFilter.SHOW_ALL)
 				let node = iterator.nextNode()
 				# always omit the first node cus it's the text node before the selection
-				let frst_node_omitten = no
+				let first_node_omitten = no
 				while node
 					# If we run out of nodes, instead of instanteniously writing the possible null into node, I wanna preserve the last node in the node variable
 					let next_node = iterator.nextNode()
@@ -2540,15 +2546,15 @@ tag bible-reader
 
 					# check if the node is inside the selection
 					if !selection.containsNode(node, true)
-						if frst_node_omitten
+						if first_node_omitten
 							node = iterator.previousNode()
 							break
 						else
 							continue
 
 					# First node is never interesting. Strong number always follows the word, not preceeds it.
-					if !frst_node_omitten
-						frst_node_omitten = yes
+					if !first_node_omitten
+						first_node_omitten = yes
 						continue
 
 					# Strong numbers are always inside S tag
@@ -2703,19 +2709,22 @@ tag bible-reader
 			getText event.detail.translation, event.detail.book, event.detail.chapter, event.detail.verse
 
 	def purcheCache
-		# unregister service worker and purge cache
-		if window.navigator.serviceWorker != undefineds
-			window.navigator.serviceWorker.getRegistrations().then(do(registrations)
-				for registration in registrations
-					await registration.unregister()
-			)
+		# ask confirmation
+		const confirmed = await window.confirm(state.lang.purge_cache + '?')
+		if confirmed
+			# unregister service worker and purge cache
+			if window.navigator.serviceWorker != undefineds
+				window.navigator.serviceWorker.getRegistrations().then(do(registrations)
+					for registration in registrations
+						await registration.unregister()
+				)
 
-		window.caches.keys().then(do(cacheNames)	
-			for cacheName in cacheNames
-				await window.caches.delete(cacheName)
-			)
-		# & reload
-		window.history.go()
+			window.caches.keys().then(do(cacheNames)	
+				for cacheName in cacheNames
+					await window.caches.delete(cacheName)
+				)
+			# & reload
+			window.history.go()
 
 	def render
 		if isApple
@@ -3167,7 +3176,7 @@ tag bible-reader
 
 				<footer>
 					<p.footer_links>
-						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Telegram"
+						<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Official Telegram"
 						<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
 						<a target="_blank" href="/api"> "API "
 						<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
@@ -3175,10 +3184,10 @@ tag bible-reader
 						<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 						<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
-						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "Telegram 📱"
+						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.0 🗓 "
-						<time dateTime='2024-2-4'> "4.2.2024"
+						"🍇 v2.4.1 🗓 "
+						<time dateTime='2024-3-3'> "3.3.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

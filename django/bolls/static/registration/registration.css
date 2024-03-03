@@ -110,6 +110,12 @@ form {
   width: 100%;
 }
 
+form > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 label {
   margin-top: 32px;
   color: inherit;
