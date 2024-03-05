@@ -603,6 +603,7 @@ tag bible-reader
 		imba.commit()
 
 	def getText translation, book, chapter, verse
+		getChapter translation, book, chapter, verse
 		window.history.pushState({
 				translation: translation,
 				book: book,
@@ -612,7 +613,6 @@ tag bible-reader
 			'',
 			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + (verse ? verse : ''))
 
-		getChapter translation, book, chapter, verse
 
 	def getChapter translation, book, chapter, verse
 		let changeParallel = yes
@@ -1626,7 +1626,7 @@ tag bible-reader
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					verses: JSON.stringify(choosenid),
+					verses: choosenid,
 					color: store.highlight_color,
 					date: Date.now(),
 					collections: collections
@@ -1974,8 +1974,8 @@ tag bible-reader
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					translations: JSON.stringify(compare_translations),
-					verses: JSON.stringify(choosen_for_comparison),
+					translations: compare_translations,
+					verses: choosen_for_comparison,
 					book: compare_parallel_of_book,
 					chapter: compare_parallel_of_chapter,
 				}),
@@ -2005,8 +2005,8 @@ tag bible-reader
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					translations: JSON.stringify([translation.short_name]),
-					verses: JSON.stringify(choosen_for_comparison),
+					translations: [translation.short_name],
+					verses: choosen_for_comparison,
 					book: compare_parallel_of_book,
 					chapter: compare_parallel_of_chapter,
 				}),
@@ -2565,7 +2565,7 @@ tag bible-reader
 				if !host_rectangle.strong
 					# If no S tag found, try at first to find the strong number in the next node
 					if node
-						host_rectangle.strong = strongHunber(selected, (node.nextSibling || node).textContent)
+						host_rectangle.strong = strongHunber(selected, node.textContent)
 					# Otherwise try our old approach
 					elif selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
 						host_rectangle.strong = strongHunber(selected, selection.focusNode.previousSibling.textContent)
@@ -3186,8 +3186,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.1 🗓 "
-						<time dateTime='2024-3-3'> "3.3.2024"
+						"🍇 v2.4.2 🗓 "
+						<time dateTime='2024-3-5'> "5.3.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

@@ -70,6 +70,15 @@ class BollsTestCase(TestCase):
         }, content_type='application/json')
         self.assertIn(
             b'and the light in the darkness did shine, and the darkness did not perceive it.', request.content)
+        # Same test but with translations and verses as lists
+        request = self.client.post('/get-paralel-verses/', data={
+            "translations": ['YLT', 'WEB', 'UBIO'],
+            "verses": [3, 4, 5],
+            "book": 43,
+            "chapter": 1,
+        }, content_type='application/json')
+        self.assertIn(
+            b'and the light in the darkness did shine, and the darkness did not perceive it.', request.content)
 
     # these files should be in place
     # https://bolls.life/static/bolls/app/views/languages.json

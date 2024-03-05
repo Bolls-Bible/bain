@@ -283,7 +283,7 @@ export class State
 							"Content-Type": "application/json"
 						},
 						body: JSON.stringify({
-							verses: JSON.stringify(bookmark.verses),
+							verses: bookmark.verses,
 							color: bookmark.color,
 							date: bookmark.date,
 							collections: bookmark.collections
@@ -632,7 +632,7 @@ export class State
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					verses: JSON.stringify(pks),
+					verses: pks,
 				}),
 			})
 			.then(do |response| response.json())

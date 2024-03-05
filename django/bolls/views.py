@@ -1,7 +1,6 @@
 from django.db.models import F, Func
 import re
 import os
-import ast
 import unicodedata
 import json
 from django.db.models import Count, Q
@@ -528,6 +527,14 @@ def getCategories(request):
     return JsonResponse({"data": []}, safe=False)
 
 
+# Backward compatibility with the old version of the API
+# For some weird reasons, before I required lists stringified separately in the body
+def getSafeArray(array):
+    # if array is string, convert it to array
+    if isinstance(array, str):
+        return json.loads(array)
+    return array
+
 @csrf_exempt
 def getParallelVerses(request):
     if request.method == "POST":
@@ -536,15 +543,15 @@ def getParallelVerses(request):
             if (
                 received_json_data["chapter"] > 0
                 and received_json_data["book"] > 0
-                and len(received_json_data["translations"]) > 5
-                and len(received_json_data["verses"]) > 2
+                and len(received_json_data["translations"]) > 0
+                and len(received_json_data["verses"]) > 0
             ):
                 book = received_json_data["book"]
                 chapter = received_json_data["chapter"]
                 response = []
                 query_set = []
-                for translation in ast.literal_eval(received_json_data["translations"]):
-                    for verse in ast.literal_eval(received_json_data["verses"]):
+                for translation in getSafeArray(received_json_data["translations"]):
+                    for verse in getSafeArray(received_json_data["verses"]):
                         query_set.append(
                             'Q(translation="'
                             + translation
@@ -560,9 +567,9 @@ def getParallelVerses(request):
                 query = " | ".join(query_set)
                 queryres = Verses.objects.filter(eval(query))
 
-                for translation in ast.literal_eval(received_json_data["translations"]):
+                for translation in getSafeArray(received_json_data["translations"]):
                     verses = []
-                    for verse in ast.literal_eval(received_json_data["verses"]):
+                    for verse in getSafeArray(received_json_data["verses"]):
                         v = [
                             x
                             for x in queryres
@@ -711,7 +718,7 @@ def saveBookmarks(request):
             note=note,
         )
 
-    for verseid in ast.literal_eval(received_json_data["verses"]):
+    for verseid in getSafeArray(received_json_data["verses"]):
         try:
             verse = Verses.objects.get(pk=verseid)
             # If there is an existing bookmark -- update it
@@ -769,7 +776,7 @@ def saveHistory(request):
 def deleteBookmarks(request):
     if request.user.is_authenticated:
         received_json_data = json.loads(request.body)
-        removeBookmarks(request.user, ast.literal_eval(received_json_data["verses"]))
+        removeBookmarks(request.user, getSafeArray(received_json_data["verses"]))
         return JsonResponse({"response": "200"}, safe=False)
     else:
         return HttpResponse(status=401)
