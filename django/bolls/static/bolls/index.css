@@ -307,14 +307,21 @@ body {
 
 .choose_parallel {
   min-height: 36px;
+  display: flex;
 }
 
-.choose_parallel p {
+.choose_parallel button {
   display: inline-block;
-  width: 50%;
+  width: 100%;
+}
+
+.choose_parallel button:nth-child(2) {
+  width: 40%;
 }
 
 .translation_name {
+  background-color: transparent;
+  border: none;
   font-weight: bold;
   text-align: center;
   font-size: 20px;
@@ -1777,6 +1784,13 @@ note-body ul li,
 
 mark-down * {
   transition: none !important;
+}
+
+.unsetbtn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 @media all and (display-mode: standalone) {

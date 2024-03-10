@@ -65,8 +65,8 @@ docker cp ./django/sql/unaccent_plus.rules  db:/usr/local/share/postgresql/tsear
 docker exec -i db psql -U django -d cotton -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
 docker cp ./django/sql/unaccent_plus.rules  database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION UNACCENT;"
-docker exec -i database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY UNACCENT (RULES='unaccent_plus')"
+docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
+docker exec -i database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
 docker compose -f docker-compose.dev.yml  exec -T django python manage.py test --keepdb
 ```

@@ -96,7 +96,7 @@ DATABASES = {
 
 if 'test' in sys.argv and '--keepdb' in sys.argv:
     DATABASES['default']['TEST'] = {
-        'NAME': 'bain'
+        'NAME': os.environ.get("SQL_DATABASE", 'bain')
     }
 
 # Password validation

@@ -437,10 +437,6 @@ tag bible-reader
 			deleteBookmarks(bookmarks-to-delete)
 			window.localStorage.removeItem("bookmarks-to-delete")
 
-		window.strongDefinition = do(topic)
-			store.definition_search = topic
-			loadDefinitions!
-			imba.commit!
 
 	def hidePanels event
 		if !fixdrawers && (event.clientY < 0 || event.clientX < 0 || (event.clientX > window.innerWidth || event.clientY > window.innerHeight))
@@ -486,6 +482,10 @@ tag bible-reader
 		document.onmouseleave = hidePanels
 		window.onmouseout = hidePanels
 
+		window.strongDefinition = do(topic)
+			store.definition_search = topic
+			loadDefinitions!
+ 
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
@@ -493,6 +493,7 @@ tag bible-reader
 		document.body.onmouseleave = noop
 		document.onmouseleave = noop
 		window.onmouseout = noop
+		window.strongDefinition = null
 
 	def searchPagination e
 		if e.target.scrollTop > e.target.scrollHeight - e.target.clientHeight - 512 && search.counter < search_verses.length
@@ -1101,6 +1102,14 @@ tag bible-reader
 			search.change_translation = no
 		show_list_of_translations = no
 
+	def swapTranslations
+		let main_translation = settings.translation
+		let main_book = settings.book
+		let main_chapter = settings.chapter
+		getText(settingsp.translation, settingsp.book, settingsp.chapter)
+		getParallelText(main_translation, main_book, main_chapter)
+
+
 	def changeTranslation translation
 		if settingsp.edited_version == settingsp.translation && settingsp.display
 			switchTranslation translation, yes
@@ -1171,21 +1180,23 @@ tag bible-reader
 
 			search_verses = {}
 			try
-				search_verses = await loadData(url)
+				let res = await window.fetch(url)
+				# extract Exact_matches from headers
+				search.results = res.headers.get("exact_matches")
+				search_verses = await res.json()
 			catch error
 				console.error error
 				if state.downloaded_translations.indexOf(search.translation) != -1
-					search_verses = await state.getSearchedTextFromStorage(search)
+					let { data, exact_matches } = await state.getSearchedTextFromStorage(search)
+					search_verses = data
+					search.results = exact_matches
 				else
 					search_verses = []
 
 			search.bookid_of_results = []
-			search.results = 0
 			for verse in search_verses
 				if !search.bookid_of_results.find(do |element| return element == verse.book)
 					search.bookid_of_results.push verse.book
-
-				search.results += (verse.text.match(/<mark>/g) || []).length
 
 			closeSearch!
 			imba.commit!
@@ -2583,7 +2594,6 @@ tag bible-reader
 			store.definition_search = selected
 		clearSpace!
 		loadDefinitions!
-		popUp 'dictionary'
 		setTimeout(&, 300) do $dictionarysearch.select!
 
 	def showStongNumberDefinition
@@ -2655,7 +2665,7 @@ tag bible-reader
 			for pattern in patterns
 				let matches = [... definition.definition.matchAll(pattern)]
 				for match in matches
-					definition.definition = definition.definition.replace(match[0], "<a onclick='javascript:strongDefinition(\"{match[1]}\");'>")
+					definition.definition = definition.definition.replace(match[0], "<a onclick='strongDefinition(\"{match[1]}\")'>")
 
 		# Unlink TWOT links
 		patterns = [
@@ -2734,20 +2744,21 @@ tag bible-reader
 			<nav .lock-books=settings.lock_books_menu @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
 				if settingsp.display
 					<.choose_parallel>
-						<p.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
-						<p.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation)> settingsp.translation
+						<button.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
+						<button.translation_name [fw:black] @click=swapTranslations> "⇄"
+						<button.translation_name title=translationFullName(settingsp.translation) .current_translation=(settingsp.edited_version == settingsp.translation) @click=changeEditedParallel(settingsp.translation)> settingsp.translation
 				<header[d:flex jc:space-between cursor:pointer]>
 					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=state.lang.chronological_order>
 						<title> state.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
 					if settingsp.edited_version == settingsp.translation && settingsp.display
-						<p.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+						<button.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settingsp.edited_version
 							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
 								<title> state.lang.open
 								<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
 					else
-						<p.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
+						<button.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settings.translation
 							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
 								<title> state.lang.open
@@ -3186,8 +3197,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.2 🗓 "
-						<time dateTime='2024-3-5'> "5.3.2024"
+						"🍇 v2.4.3 🗓 "
+						<time dateTime='2024-3-10'> "10.3.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3528,7 +3539,7 @@ tag bible-reader
 									<p.total_msg> search.search_result_header, ': ', search.results, ' / ',  filtered_books.length, ' ', state.lang.totalyresultsofsearch
 
 									<>
-										for verse, key in filtered_books
+										for verse, key in filtered_books when key < search.counter
 											<a.search_item>
 												<text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
 												<.search_res_verse_header>

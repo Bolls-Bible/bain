@@ -498,20 +498,20 @@ export class State
 			return finded_verses
 		))
 
-	def getSearchedTextFromStorage search
+	def getSearchedTextFromStorage search\{translation: string, search_input: string}
 		let begtime = Date.now()
 
-		def resolveSearch data
+		def resolveSearch data, exact_matches
 			console.log("Found ", data.length, " objects. Time: ", (Date.now() - begtime) / 1000)
-			return data
+			return {data, exact_matches}
 
 		const url = '/sw/search-verses/' + search.translation + '/' + search.search_input.toLowerCase()
 		let response = await window.fetch(url)
 		if response.status == 200
 			let data = await response.json()
-			return resolveSearch(data)
+			return resolveSearch(data, response.headers.get('exact-matches'))
 		else
-			return resolveSearch([])
+			return resolveSearch([], 0)
 
 	# Used at Profile page
 	def getBookmarksFromStorage

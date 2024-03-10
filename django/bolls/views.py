@@ -33,7 +33,7 @@ def index(request):
     return render(request, bolls_index)
 
 
-def cross_origin(response):
+def cross_origin(response, headers={}):
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -43,6 +43,9 @@ def cross_origin(response):
     response["Cross-Origin-Resource-Policy"] = "cross-origin"
     response["Content-Security-Policy"] = "cross-origin"
     response["referrer-policy"] = "unsafe-url"
+    # add custom headers
+    for key, value in headers.items():
+        response[key] = value
     return response
 
 
@@ -267,6 +270,11 @@ def search(request, translation, piece=""):
                     )
             return highlighted_text
 
+        # count number of allexact matches
+        exact_matches = 0
+        for obj in results_of_search:
+            exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
+
         for obj in results_of_search[0:1024]:
             d.append(
                 {
@@ -284,7 +292,7 @@ def search(request, translation, piece=""):
                 "readme": "Your query is not longer than 2 characters! And don't forget to trim it)"
             }
         ]
-    return cross_origin(JsonResponse(d, safe=False))
+    return cross_origin(JsonResponse(d, safe=False), headers={'Exact_matches': exact_matches})
 
 
 def cleanhtml(raw_html):

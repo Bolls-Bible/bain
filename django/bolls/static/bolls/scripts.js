@@ -108,9 +108,28 @@ async function searchVerses(url) {
         })
         .toArray()
         .then((data) => {
+          // get NUMBER of exact matches
+          let exact_matches = 0;
+          for (let i = 0; i < data.length; i++) {
+            exact_matches += (
+              data[i].text.match(new RegExp(search_input, "g")) || []
+            ).length;
+          }
+          // highlight exact matches with <mark> tag
+          data.forEach((verse) => {
+            search_input_parts.forEach((search_input_part) => {
+              verse.text = verse.text.replace(
+                new RegExp(search_input_part, "gi"),
+                (match) => `<mark>${match}</mark>`
+              );
+            });
+          });
           return new Response(JSON.stringify(data), {
             status: 200,
             statusText: "Search verses",
+            headers: {
+              "exact-matches": exact_matches,
+            },
           });
         });
     })

@@ -63,7 +63,7 @@ class BollsTestCase(TestCase):
 
     def test_parallel_verses(self):
         request = self.client.post('/get-paralel-verses/', data={
-            "translations": "['YLT', 'WEB', 'UBIO']",
+            "translations": "[\"YLT\",\"WEB\",\"UBIO\"]",
             "verses": "[3, 4, 5]",
             "book": 43,
             "chapter": 1,
