@@ -267,16 +267,16 @@ tag bible-reader
 		#compare_translations = new_translations
 		if window.navigator.onLine && state.user.username
 			window.fetch("/save-compare-translations/", {
-					method: "PUT",
-					cache: "no-cache",
-					headers: {
-						'X-CSRFToken': state.get_cookie('csrftoken'),
-						"Content-Type": "application/json"
-					},
-					body: JSON.stringify({
-						translations: JSON.stringify(new_translations),
-					})
+				method: "PUT",
+				cache: "no-cache",
+				headers: {
+					'X-CSRFToken': state.get_cookie('csrftoken'),
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					translations: JSON.stringify(new_translations),
 				})
+			})
 		window.localStorage.setItem("compare_translations", JSON.stringify(new_translations))
 
 
@@ -573,8 +573,8 @@ tag bible-reader
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-						history: JSON.stringify(history),
-					})
+					history: JSON.stringify(history),
+				})
 			})
 			.then(do |response| if(response.status !== 200)
 				throw new Error(response.statusText)
@@ -606,13 +606,13 @@ tag bible-reader
 	def getText translation, book, chapter, verse
 		getChapter translation, book, chapter, verse
 		window.history.pushState({
-				translation: translation,
-				book: book,
-				chapter: chapter,
-				verse: verse,
-			}
-			'',
-			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + (verse ? verse : ''))
+			translation: translation,
+			book: book,
+			chapter: chapter,
+			verse: verse,
+		}
+		'',
+		window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + (verse ? verse : ''))
 
 
 	def getChapter translation, book, chapter, verse
@@ -1798,27 +1798,27 @@ tag bible-reader
 			syncHistory!
 
 	def clearHistory
-		turnHistory()
+		turnHistory!
 		history = []
 		window.localStorage.setItem("history", "[]")
 		if state.user.username
-			window.fetch("/history/", {
-				method: "DELETE",
-				cache: "no-cache",
-				headers: {
-					'X-CSRFToken': state.get_cookie('csrftoken'),
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
+			try
+				const response = await window.fetch("/history/", {
+					method: "DELETE",
+					cache: "no-cache",
+					headers: {
+						'X-CSRFToken': state.get_cookie('csrftoken'),
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
 						history: "[]",
 						purge_date: Date.now!
 					})
-			})
-			.then(do |response| response.json())
-			.catch(do |error|
+				})
+				await response.json()
+			catch error
 				console.error(error)
-				state.showNotification('error'))
-			# .then(do |data| log data)
+				state.showNotification('error')
 
 	def turnCollections
 		if addcollection
@@ -2223,7 +2223,7 @@ tag bible-reader
 		if e.target.classList.contains('ref--firstparallel')
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
-				chapter_headers.fontsize1 = 12 / settings.font.size
+				chapter_headers.fontsize1 = 16 / settings.font.size
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize1 = testsize
 			else
@@ -2231,7 +2231,7 @@ tag bible-reader
 		else
 			let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
 			if testsize * settings.font.size < 12
-				chapter_headers.fontsize2 = 12 / settings.font.size
+				chapter_headers.fontsize2 = 16 / settings.font.size
 			elif e.target.scrollTop > 0
 				chapter_headers.fontsize2 = testsize
 			else
@@ -2253,7 +2253,7 @@ tag bible-reader
 	def triggerNavigationIcons
 		let testsize = 2 - ((scrollTop * 4) / window.innerHeight)
 		if testsize * settings.font.size < 12
-			chapter_headers.fontsize1 = 12 / settings.font.size
+			chapter_headers.fontsize1 = 16 / settings.font.size
 		elif scrollTop > 0
 			chapter_headers.fontsize1 = testsize
 		else
@@ -2626,7 +2626,7 @@ tag bible-reader
 				definitions_history_index += 1
 				definitions_history[definitions_history_index] = store.definition_search
 				definitions_history.length = definitions_history_index + 1
-			clearSpace!
+			clearSpace { onPopState: yes }
 			popUp 'dictionary'
 			loading = yes
 			if window.navigator.onLine
@@ -2868,7 +2868,7 @@ tag bible-reader
 					if verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
 							#main_header_arrow_size = "min(64px, max({max_header_font}em, {chapter_headers.fontsize1}em))"
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
+							<h1[lh:1 padding-block:0.2em m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize1}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settings.translation)>
 								<a.arrow @click.prevent.stop=prevChapter() [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> state.lang.prev
@@ -2936,7 +2936,7 @@ tag bible-reader
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
-							<h1[lh:1 m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize2}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settingsp.translation)>
+							<h1[lh:1 padding-block:0.2em m: 0 ff: {settings.font.family} fw: {settings.font.weight + 200} fs:max({max_header_font}em, {chapter_headers.fontsize2}em) d@md:flex ai@md:center jc@md:space-between direction:ltr] title=translationFullName(settingsp.translation)>
 								<a.arrow @click.prevent.stop=prevChapter(yes) [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=state.lang.prev href="{prevChapterLink()}">
 									<svg.arrow_prev width="16" height="10" viewBox="0 0 8 5">
 										<title> state.lang.prev
@@ -3197,8 +3197,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.3 🗓 "
-						<time dateTime='2024-3-10'> "10.3.2024"
+						"🍇 v2.4.4 🗓 "
+						<time dateTime='2024-3-17'> "17.3.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
