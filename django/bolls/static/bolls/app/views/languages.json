@@ -57,6 +57,18 @@
         "full_name": "Chinese Union (Traditional) 和合本",
         "info": "http://en.wikipedia.org/wiki/Chinese_Union_Version",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "CUNP",
+        "full_name": "新標點和合本串珠 - Chinese Union New Punctuation Cross References, 1988",
+        "info": "http://en.wikipedia.org/wiki/Chinese_Union_Version",
+        "updated": 1591185595149
+      },
+      {
+        "short_name": "CUNPS",
+        "full_name": "新标点和合本 - Chinese Union New Punctuation (Simplified), 1988",
+        "info": "http://en.wikipedia.org/wiki/Chinese_Union_Version",
+        "updated": 1591185595149
       }
     ]
   },

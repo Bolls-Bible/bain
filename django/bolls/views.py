@@ -543,6 +543,7 @@ def getSafeArray(array):
         return json.loads(array)
     return array
 
+
 @csrf_exempt
 def getParallelVerses(request):
     if request.method == "POST":

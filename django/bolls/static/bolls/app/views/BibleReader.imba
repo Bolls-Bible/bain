@@ -375,6 +375,7 @@ tag bible-reader
 		show_chapters_of = settings.book
 		switchTranslation(settings.translation, no)
 		settings.filtered_books = filteredBooks('books')
+		settingsp.filtered_books = filteredBooks('parallel_books')
 
 		if getCookie('parallel_display') == 'true'
 			toggleParallelMode!
@@ -642,6 +643,7 @@ tag bible-reader
 		setCookie('translation', translation)
 		settings.name_of_book = nameOfBook(settings.book, settings.translation)
 		settings.filtered_books = filteredBooks('books')
+		settingsp.filtered_books = filteredBooks('parallel_books')
 		saveToHistory(translation, book, chapter, verse, no)
 		let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
 		try
@@ -2283,10 +2285,10 @@ tag bible-reader
 
 	def filterBooks
 		scrollToY($books,0)
-		if settingsp.display && settingsp.edited_version == settingsp.translation
-			settingsp.filtered_books = filteredBooks('parallel_books')
-		else
-			settings.filtered_books = filteredBooks('books')
+		# if settingsp.display && settingsp.edited_version == settingsp.translation
+		settingsp.filtered_books = filteredBooks('parallel_books')
+		# else
+		settings.filtered_books = filteredBooks('books')
 
 	def goToVerse id
 		if settings.parallel_synch
@@ -2620,14 +2622,16 @@ tag bible-reader
 		if selected_text
 			store.definition_search = selected_text
 
+		clearSpace { onPopState: yes }
+		popUp 'dictionary'
+
 		definitions = []
 		if store.definition_search && (window.navigator.onLine or state.downloaded_dictionaries.length)
 			if definitions_history.indexOf(store.definition_search) == -1
 				definitions_history_index += 1
 				definitions_history[definitions_history_index] = store.definition_search
 				definitions_history.length = definitions_history_index + 1
-			clearSpace { onPopState: yes }
-			popUp 'dictionary'
+
 			loading = yes
 			if window.navigator.onLine
 				try
@@ -2905,7 +2909,7 @@ tag bible-reader
 
 								if verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
-										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
+										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
 
 								if settings.verse_break
 									<br>
@@ -2972,7 +2976,7 @@ tag bible-reader
 
 								if parallel_verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
-										<span[c:$acc-color @hover:$acc-color-hover]> '✦'
+										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
 
 								if settings.verse_break
 									<br>
@@ -3197,8 +3201,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.4 🗓 "
-						<time dateTime='2024-3-17'> "17.3.2024"
+						"🍇 v2.4.5 🗓 "
+						<time dateTime='2024-3-31'> "31.3.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

@@ -1,6 +1,6 @@
 ----------- INSERTING OF THE TEXT TO THE DB
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/HAC.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/KB.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/HAC.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/KB.csv' DELIMITER ',' CSV HEADER;
 
 
 COPY bolls_verses(translation, book, chapter, verse, text) FROM '/home/b/imba/Bibles/w.csv' DELIMITER ',' CSV HEADER;
@@ -20,11 +20,20 @@ docker cp ./LBP.csv database:verses.csv
 docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
 
 
+----------- DOCKER HELPER COMMANDS -----------
+ docker cp ./CUNPS.csv database:verses.csv
+ docker cp ./commentaries.csv database:commentaries.csv
+ 
+ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+ 
+ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_commentary(translation, book, chapter, verse, text) FROM 'commentaries.csv' DELIMITER ',' CSV HEADER;"
+ 
+
 
 ALTER TABLE dictionary
   ADD dictionary TEXT DEFAULT "BDBT" NOT NULL;
 
-\copy bolls_dictionary(topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '/home/bohuslav/projects/bolls_data/eng.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_dictionary(topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '/home/bohuslav/prj/translations/eng.csv' DELIMITER ',' CSV HEADER;
 
 INSERT inTO bolls_verses(translation, book, chapter, verse, text) values ('RV1960', 1, 1, 1, 'En el principio creó Dios los cielos y la tierra.');
 
@@ -79,17 +88,17 @@ UPDATE bolls_bookmarks SET verse_id = y where verse_id = x;
 
 psql    --host=144.126.148.204    --port=5432    --username=bain    --password    --dbname=bain
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/VFL.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/NIV.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/VFL.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/NIV.csv' DELIMITER ',' CSV HEADER;
 
 
-\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '~/projects/bolls_data/ylt.csv' DELIMITER '|' CSV HEADER;
-\copy bolls_dictionary(id,topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '~/projects/bolls_data/bdbt.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_verses(id, translation, book, chapter, verse, text) FROM '~/prj/translations/ylt.csv' DELIMITER '|' CSV HEADER;
+\copy bolls_dictionary(id,topic,definition,lexeme,transliteration,pronunciation,short_definition,dictionary) FROM '~/prj/translations/bdbt.csv' DELIMITER '|' CSV HEADER;
 
 
 
-\copy (SELECT * FROM bolls_verses where translation='YLT') TO '~/projects/bolls_data/ylt.csv' WITH CSV DELIMITER '|';
-\copy (SELECT * FROM bolls_dictionary where dictionary='BDBT') TO '~/projects/bolls_data/bdbt.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_verses where translation='YLT') TO '~/prj/translations/ylt.csv' WITH CSV DELIMITER '|';
+\copy (SELECT * FROM bolls_dictionary where dictionary='BDBT') TO '~/prj/translations/bdbt.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_verses) TO '/home/bohuslav/verses.csv' WITH CSV DELIMITER '|';
 \copy (SELECT calculate_translation_hashes()) TO '/home/b/hashes.csv' WITH CSV DELIMITER '|';
 \copy (SELECT * FROM bolls_bookmarks) TO 'bookmarks.csv' WITH CSV DELIMITER '|';
@@ -126,5 +135,5 @@ UPDATE bolls_verses SET translation = ('DELETED') where translation = 'KJV';
 
 
 
-\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/projects/bolls_data/PHIL.csv' DELIMITER ',' CSV HEADER;
+\copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/PHIL.csv' DELIMITER ',' CSV HEADER;
 \copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/django/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;
