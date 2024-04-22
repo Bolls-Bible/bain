@@ -1171,9 +1171,10 @@ tag bible-reader
 
 		# If the query is long enough -- do the search
 		if query.length > 2 || isNumber(query)
-			clearSpace!
+			if big_modal_block_content !== 'search'
+				clearSpace!
+				popUp 'search'
 			$generalsearch.blur!
-			popUp 'search'
 			search.search_result_header = ''
 			loading = yes
 
@@ -1945,8 +1946,9 @@ tag bible-reader
 		translations.find(do |translation| return translation.short_name == tr).full_name
 
 	def popUp modal_name
-		big_modal_block_content = modal_name
-		window.history.pushState({}, modal_name)
+		if big_modal_block_content !== modal_name
+			big_modal_block_content = modal_name
+			window.history.pushState({}, modal_name)
 
 	def makeNote
 		if big_modal_block_content
@@ -3201,8 +3203,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.5 🗓 "
-						<time dateTime='2024-3-31'> "31.3.2024"
+						"🍇 v2.4.6 🗓 "
+						<time dateTime='2024-4-22'> "22.4.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

@@ -48,9 +48,7 @@ urlpatterns = [
         "get-verse/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/",
         views.getVerse,
     ),
-    path(
-        "get-bookmarks/<slug:translation>/<int:book>/<int:chapter>/", views.getBookmarks
-    ),
+    path("get-bookmarks/<slug:translation>/<int:book>/<int:chapter>/", views.getBookmarks),
     path(
         "get-profile-bookmarks/<int:range_from>/<int:range_to>/",
         views.getProfileBookmarks,

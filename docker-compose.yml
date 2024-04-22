@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   DB_SERVICE_NAME:
     image: postgres:alpine
@@ -50,6 +48,12 @@ services:
       - INTERNAL_NETWORK_NAME
     depends_on:
       - DB_SERVICE_NAME
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 
   NGINX_SERVICE_NAME:
