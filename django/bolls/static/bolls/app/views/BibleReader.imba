@@ -87,13 +87,14 @@ catch error
 	console.log "This browser doesn't support window.matchMedia: ", error
 
 let settingsp = {
-	display: no
+	enabled: no
 	translation: 'WLCa'
 	book: 1
 	chapter: 1
 	edited_version: settings.translatoin
 	name_of_book: ''
 	filtered_books: []
+	
 }
 
 let chapter_headers = {
@@ -661,7 +662,7 @@ tag bible-reader
 			if window.navigator.onLine
 				state.showNotification('error')
 
-		if settings.parallel_synch && settingsp.display && changeParallel
+		if settings.parallel_synch && settingsp.enabled && changeParallel
 			getParallelText settingsp.translation, book, chapter, verse, yes
 		if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
 		clearSpace!
@@ -687,7 +688,7 @@ tag bible-reader
 			chapter = settingsp.chapter
 			changeParallel = no
 
-		if parallel_verses.length && !settingsp.display
+		if parallel_verses.length && !settingsp.enabled
 			if settingsp.translation == translation && settingsp.book == book && settingsp.chapter == chapter
 				return
 
@@ -696,7 +697,7 @@ tag bible-reader
 			toggleChronorder!
 		switchTranslation translation, yes
 		settingsp.translation = translation
-		settingsp.edited_version = translation
+		settingsp.edited_version = settings.translation
 		settingsp.book = book
 		settingsp.chapter = chapter
 		settingsp.name_of_book = nameOfBook(settingsp.book, settingsp.translation)
@@ -713,12 +714,12 @@ tag bible-reader
 		catch error
 			console.error('Error: ', error)
 			state.showNotification('error')
-		if settings.parallel_synch && settingsp.display && changeParallel && not caller
+		if settings.parallel_synch && settingsp.enabled && changeParallel && not caller
 			getText settings.translation, book, chapter, verse
 		if state.user.username
 			getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
 		imba.commit()
-		setCookie('parallel_display', settingsp.display)
+		setCookie('parallel_display', settingsp.enabled)
 		saveToHistory translation, book, chapter, 0, yes
 		setCookie('parallel_translation', translation)
 		setCookie('parallel_book', book)
@@ -729,7 +730,7 @@ tag bible-reader
 			setTimeout(&, 100) do
 				chapter_headers.fontsize2 = 2
 				scrollToY($secondparallel,0)
-		if verses && !verse && settingsp.display
+		if verses && !verse && settingsp.enabled
 			show_parallel_verse_picker = true
 
 	def theChapterExistInThisTranslation translation, book, chapter
@@ -764,7 +765,7 @@ tag bible-reader
 					topScroll -= (window.innerHeight * 0.05)
 
 				let scroll_time
-				if settingsp.display
+				if settingsp.enabled
 					# verse.parentNode.parentNode.scroll({left:0, top: topScroll, behavior: 'smooth'})
 					scroll_time = scrollToY(verse.parentNode.parentNode, topScroll)
 				else
@@ -868,11 +869,15 @@ tag bible-reader
 		setCookie('chronorder', chronorder.toString())
 
 	def nameOfBook bookid, translation
+		if !translation
+			return bookid
 		for book in BOOKS[translation]
 			if book.bookid == bookid
 				return book.name
 		return bookid
 
+	get editedTranslation
+		return settingsp.enabled ? settingsp.edited_version : settings.translation
 
 	def pageSearch event
 		let selectionStart = 0
@@ -957,7 +962,7 @@ tag bible-reader
 			def getSearchSelectionTopOffset rect_top
 				if parallel == 'ps'
 					return rect_top + search_body.scrollTop - search_body.offsetTop - search_body.parentNode.offsetTop
-				elif settingsp.display
+				elif settingsp.enabled
 					if window.innerWidth < 639 && parallel
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop + iOS_keaboard_height
 					else
@@ -967,7 +972,7 @@ tag bible-reader
 			def getSearchSelectionLeftOffset rect_left
 				if parallel == 'ps'
 					return rect_left - search_body.offsetLeft - search_body.parentNode.offsetLeft
-				elif settingsp.display
+				elif settingsp.enabled
 					if window.innerWidth > 639 && parallel
 						return rect_left - chapter_articles[parallel].parentNode.offsetLeft - DRAWERARROWWIDTH!
 					else
@@ -1086,16 +1091,16 @@ tag bible-reader
 			popUp 'show_support'
 
 	def toggleParallelMode
-		if settingsp.display
-			settingsp.display = no
+		if settingsp.enabled
+			settingsp.enabled = no
 			clearSpace()
 		else
-			settingsp.display = yes
+			settingsp.enabled = yes
 			if settings.parallel_synch
 				getParallelText(settingsp.translation, settings.book, settings.chapter)
 			else
 				getParallelText(settingsp.translation, settingsp.book, settingsp.chapter)
-		setCookie('parallel_display', settingsp.display)
+		setCookie('parallel_display', settingsp.enabled)
 
 	def changeEditedParallel translation
 		settingsp.edited_version = translation
@@ -1113,7 +1118,7 @@ tag bible-reader
 
 
 	def changeTranslation translation
-		if settingsp.edited_version == settingsp.translation && settingsp.display
+		if settingsp.edited_version == settingsp.translation && settingsp.enabled
 			switchTranslation translation, yes
 			if parallel_books.find(do |element| return element.bookid == settingsp.book)
 				getParallelText(translation, settingsp.book, settingsp.chapter)
@@ -1161,7 +1166,7 @@ tag bible-reader
 		return !isNaN(str) && !isNaN(parseFloat(str))
 
 	def getSearchTranslation
-		if settingsp.edited_version == settingsp.translation && settingsp.display
+		if settingsp.edited_version == settingsp.translation && settingsp.enabled
 			return settingsp.edited_version
 		return settings.translation
 
@@ -1512,7 +1517,7 @@ tag bible-reader
 		store.highlight_color = getRandomColor()
 		# # If the verse is in area under bottom section
 		# scroll to it, to see the full verse
-		if !settingsp.display
+		if !settingsp.enabled
 			const verse = document.getElementById(id)
 			const top_offset_of_verse = verse.offsetHeight + verse.offsetTop + 200 - scrollTop
 			if top_offset_of_verse > window.innerHeight
@@ -1864,7 +1869,7 @@ tag bible-reader
 		window.localStorage.setItem('categories', JSON.stringify(categories))
 
 	def currentTranslation translation
-		if settingsp.display
+		if settingsp.enabled
 			if settingsp.edited_version == settingsp.translation
 				return translation == settingsp.translation
 			else
@@ -1904,8 +1909,8 @@ tag bible-reader
 	def backInHistory h, parallel
 		if parallel != undefined
 			getParallelText(h.translation, h.book, h.chapter, h.verse)
-			settingsp.display = yes
-			setCookie('parallel_display', settingsp.display)
+			settingsp.enabled = yes
+			setCookie('parallel_display', settingsp.enabled)
 		else
 			getText(h.translation, h.book, h.chapter, h.verse)
 
@@ -2287,9 +2292,7 @@ tag bible-reader
 
 	def filterBooks
 		scrollToY($books,0)
-		# if settingsp.display && settingsp.edited_version == settingsp.translation
 		settingsp.filtered_books = filteredBooks('parallel_books')
-		# else
 		settings.filtered_books = filteredBooks('books')
 
 	def goToVerse id
@@ -2346,14 +2349,14 @@ tag bible-reader
 		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !store.show_history && !choosenid.length
 			if window.innerWidth > 600
 				if touch.dx < -32
-					settingsp.display && touch.clientX > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
+					settingsp.enabled && touch.clientX > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.clientX > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
+					settingsp.enabled && touch.clientX > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
 			else
 				if touch.dx < -32
-					settingsp.display && touch.clientY > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
+					settingsp.enabled && touch.clientY > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
 				elif touch.dx > 32
-					settingsp.display && touch.clientY > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
+					settingsp.enabled && touch.clientY > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
 
 		slidetouch = null
 		inzone = no
@@ -2416,7 +2419,7 @@ tag bible-reader
 		if parallel
 			return $secondparallel.clientHeight
 		else
-			if settingsp.display
+			if settingsp.enabled
 				return $firstparallel.clientHeight
 			return $main.clientHeight
 
@@ -2424,7 +2427,7 @@ tag bible-reader
 		if parallel
 			return $secondparallel.clientWidth
 		else
-			if settingsp.display
+			if settingsp.enabled
 				return $firstparallel.clientWidth
 			return $main.clientWidth
 
@@ -2748,7 +2751,7 @@ tag bible-reader
 
 		<self id="reader" tabIndex="0" .display_none=hideReader! @scroll=triggerNavigationIcons @mousemove=mousemove @gotoverse=openSearchVerse .fixscroll=(big_modal_block_content)>
 			<nav .lock-books=settings.lock_books_menu @touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer style="left: {bible_menu_left}px; {boxShadow(bible_menu_left)}{(onzone || inzone) ? 'transition:none;' : ''}">
-				if settingsp.display
+				if settingsp.enabled
 					<.choose_parallel>
 						<button.translation_name title=translationFullName(settings.translation) .current_translation=(settingsp.edited_version == settings.translation) @click=changeEditedParallel(settings.translation)> settings.translation
 						<button.translation_name [fw:black] @click=swapTranslations> "⇄"
@@ -2757,7 +2760,7 @@ tag bible-reader
 					<svg.chronological_order @click=toggleChronorder .hide_chron_order=show_list_of_translations .chronological_order_in_use=chronorder viewBox="0 0 20 20" title=state.lang.chronological_order>
 						<title> state.lang.chronological_order
 						<path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-7.59V4h2v5.59l3.95 3.95-1.41 1.41L9 10.41z">
-					if settingsp.edited_version == settingsp.translation && settingsp.display
+					if settingsp.edited_version == settingsp.translation && settingsp.enabled
 						<button.translation_name title=state.lang.change_translation @click=(show_list_of_translations = !show_list_of_translations)>
 							settingsp.edited_version
 							<svg.arrow_next[min-width:16px h:0.65em ml:4px pt:4px] width="16" height="10" viewBox="0 0 8 5">
@@ -2803,9 +2806,9 @@ tag bible-reader
 											<p.book_in_list> state.lang["no_translation_downloaded"]
 
 
-				<$books.books-container dir="auto" .lower=(settingsp.display) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
+				<$books.books-container dir="auto" .lower=(settingsp.enabled) [pb: 256px pt:{iOS_keaboard_height ? iOS_keaboard_height * 0.8 : 0}px]>
 					<>
-						if settingsp.display && settingsp.edited_version == settingsp.translation
+						if settingsp.enabled && settingsp.edited_version == settingsp.translation
 							<>
 								for book in settingsp.filtered_books
 									<div key=book.bookid>
@@ -2865,9 +2868,9 @@ tag bible-reader
 						'|'
 						<button @click=loadDefinitions(host_rectangle.strong)> host_rectangle.strong
 
-			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.display
-				[pos:{settingsp.display ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
-				<section$firstparallel .parallel=settingsp.display @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
+			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.enabled
+				[pos:{settingsp.enabled ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
+				<section$firstparallel .parallel=settingsp.enabled @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
 						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
@@ -2904,13 +2907,13 @@ tag bible-reader
 									>
 								if bukmark and not nextVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
-										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+										<note-up style=super_style parallelMode=settingsp.enabled bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 											<svg viewBox="0 0 20 20" alt=state.lang.note>
 												<title> state.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if verse.comment and settings.verse_commentary
-									<note-up style=super_style parallelMode=settingsp.display bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+									<note-up style=super_style parallelMode=settingsp.enabled bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
 
 								if settings.verse_break
@@ -2937,7 +2940,7 @@ tag bible-reader
 							<br>
 							<a.reload @click=(do window.location.reload(yes))> state.lang.reload
 
-				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.display ? 'inline-block' : 'none'}]>
+				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.enabled ? 'inline-block' : 'none'}]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
@@ -2971,13 +2974,13 @@ tag bible-reader
 									[background-image: {getHighlight(parallel_verse.pk, 'parallel_bookmarks')}]>
 								if bukmark and not nextParallelVerseHasTheSameBookmark(verse_index)
 									if bukmark.collection || bukmark.note
-										<note-up style=super_style parallelMode=settingsp.display bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
+										<note-up style=super_style parallelMode=settingsp.enabled bookmark=bukmark containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
 											<svg viewBox="0 0 20 20" alt=state.lang.note>
 												<title> state.lang.note
 												<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 
 								if parallel_verse.comment and settings.verse_commentary
-									<note-up style=super_style parallelMode=settingsp.display bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
+									<note-up style=super_style parallelMode=settingsp.enabled bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
 										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
 
 								if settings.verse_break
@@ -3113,7 +3116,7 @@ tag bible-reader
 								<button.butt .active_butt=('pt'==state.language) @click=(do state.setLanguage('pt'))> "Portuguese"
 								<button.butt .active_butt=('es'==state.language) @click=(do state.setLanguage('es'))> "Español"
 								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "Русский"
-				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.display>
+				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.enabled>
 					state.lang.parallel
 					<p.checkbox> <span>
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelSynch .checkbox_turned=settings.parallel_synch>
@@ -3203,8 +3206,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.6 🗓 "
-						<time dateTime='2024-4-22'> "22.4.2024"
+						"🍇 v2.4.7 🗓 "
+						<time dateTime='2024-4-24'> "24.4.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3485,7 +3488,7 @@ tag bible-reader
 										<button.book_in_list[ta:left] @click=addFilter("ot")> state.lang.ot
 										<button.book_in_list[ta:left] @click=addFilter("nt")> state.lang.nt
 
-										if settingsp.edited_version == settingsp.translation && settingsp.display
+										if settingsp.edited_version == settingsp.translation && settingsp.enabled
 											<>
 												for book in parallel_books
 													<button.book_in_list.book_in_filter .selected=(search.filter==book.bookid) .fruitless_book_in_filter=(!isBookPresentInSearchResults(book.bookid)) dir="auto" @click=addFilter(book.bookid)> book.name
@@ -3549,7 +3552,7 @@ tag bible-reader
 											<a.search_item>
 												<text-as-html.search_res_verse_text data=verse innerHTML=verse.text>
 												<.search_res_verse_header>
-													<span> nameOfBook(verse.book, (settingsp.display ? settingsp.edited_version : settings.translation)), ' '
+													<span> nameOfBook(verse.book, self.editedTranslation), ' '
 													<span> verse.chapter, ':'
 													<span> verse.verse
 													<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) viewBox="0 0 561 561" alt=state.lang.copy>
@@ -3559,7 +3562,7 @@ tag bible-reader
 														<title> state.lang.open_in_parallel
 														<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 										if search.filter then <div[p:12px 0px ta:center]>
-											state.lang.filter_name + ' ' + nameOfBook(search.filter, (settingsp.display ? settingsp.edited_version : settings.translation))
+											state.lang.filter_name + ' ' + nameOfBook(search.filter, self.editedTranslation)
 											<br>
 											<button[d: inline-block; mt: 12px].more_results @click=dropFilter> state.lang.drop_filter
 									unless search_verses.length

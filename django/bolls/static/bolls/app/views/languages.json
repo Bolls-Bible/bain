@@ -73,6 +73,17 @@
     ]
   },
   {
+    "language": "Czech Ceský",
+    "translations": [
+      {
+        "short_name": "CSP09",
+        "full_name": "Ceský studijní preklad",
+        "info": "http://cs.wikipedia.org/wiki/%C4%8Cesk%C3%BD_studijn%C3%AD_p%C5%99eklad",
+        "updated": 1713956432231
+      }
+    ]
+  },
+  {
     "language": "English",
     "translations": [
       {
@@ -230,6 +241,12 @@
         "full_name": "The Holy Bible, Berean Standard Bible",
         "info": "http://berean.bible",
         "updated": 1635188106109
+      },
+      {
+        "short_name": "MEV",
+        "full_name": "Modern English Version",
+        "info": "http://en.wikipedia.org/wiki/Modern_English_Version",
+        "updated": 1713944506081
       }
     ]
   },

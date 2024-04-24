@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = "CUNPS"
+translation = "CSP09"
 
 
 def parseLinks(text):
@@ -42,11 +42,11 @@ df = pd.read_csv("mybcommentaries.csv", sep=",")
 
 del df["chapter_number_to"]
 del df["verse_number_to"]
-del df["marker"]
 
 df["translation"] = translation
-df["text"] = df.apply(lambda row: parseLinks(row["text"]), axis=1)
+df["text"] = df.apply(lambda row: parseLinks(f'{row["marker"]} {row["text"]}'), axis=1)
 df.rename(columns={"book_number": "book", "chapter_number_from": "chapter", "verse_number_from": "verse"}, inplace=True)
+del df["marker"]
 
 col = df.pop("translation")
 df.insert(0, col.name, col)
