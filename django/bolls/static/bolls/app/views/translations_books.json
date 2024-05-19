@@ -27023,175 +27023,175 @@
     {
       "bookid": 2,
       "name": "שמות",
-      "chronorder": 2,
+      "chronorder": 3,
       "chapters": 40
     },
     {
       "bookid": 3,
       "name": "ויקרא",
-      "chronorder": 3,
+      "chronorder": 4,
       "chapters": 27
     },
     {
       "bookid": 4,
       "name": "במדבר",
-      "chronorder": 4,
+      "chronorder": 5,
       "chapters": 36
     },
     {
       "bookid": 5,
       "name": "דברים",
-      "chronorder": 5,
+      "chronorder": 6,
       "chapters": 34
     },
     {
       "bookid": 6,
       "name": "יהושע",
-      "chronorder": 6,
+      "chronorder": 7,
       "chapters": 24
     },
     {
       "bookid": 7,
       "name": "שופטים",
-      "chronorder": 7,
+      "chronorder": 8,
       "chapters": 21
     },
     {
       "bookid": 8,
       "name": "רות",
-      "chronorder": 8,
+      "chronorder": 9,
       "chapters": 4
     },
     {
       "bookid": 9,
       "name": "שמואל א",
-      "chronorder": 9,
+      "chronorder": 10,
       "chapters": 31
     },
     {
       "bookid": 10,
       "name": "שמואל ב",
-      "chronorder": 10,
+      "chronorder": 11,
       "chapters": 24
     },
     {
       "bookid": 11,
       "name": "מלכים א",
-      "chronorder": 11,
+      "chronorder": 15,
       "chapters": 22
     },
     {
       "bookid": 12,
       "name": "מלכים ב",
-      "chronorder": 12,
+      "chronorder": 28,
       "chapters": 25
     },
     {
       "bookid": 13,
       "name": "דברי הימים א",
-      "chronorder": 13,
+      "chronorder": 12,
       "chapters": 29
     },
     {
       "bookid": 14,
       "name": "דברי הימים ב",
-      "chronorder": 14,
+      "chronorder": 16,
       "chapters": 36
     },
     {
       "bookid": 15,
       "name": "עזרא",
-      "chronorder": 15,
+      "chronorder": 37,
       "chapters": 10
     },
     {
       "bookid": 16,
       "name": "נחמיה",
-      "chronorder": 16,
+      "chronorder": 38,
       "chapters": 13
     },
     {
       "bookid": 17,
       "name": "אסתר",
-      "chronorder": 17,
+      "chronorder": 36,
       "chapters": 10
     },
     {
       "bookid": 18,
       "name": "איוב",
-      "chronorder": 18,
+      "chronorder": 2,
       "chapters": 42
     },
     {
       "bookid": 19,
       "name": "תהלים",
-      "chronorder": 19,
+      "chronorder": 13,
       "chapters": 150
     },
     {
       "bookid": 20,
       "name": "משלי",
-      "chronorder": 20,
+      "chronorder": 17,
       "chapters": 31
     },
     {
       "bookid": 21,
       "name": "קהלת",
-      "chronorder": 21,
+      "chronorder": 18,
       "chapters": 12
     },
     {
       "bookid": 22,
       "name": "שיר השירים",
-      "chronorder": 22,
+      "chronorder": 14,
       "chapters": 8
     },
     {
       "bookid": 23,
       "name": "ישעיהו",
-      "chronorder": 23,
+      "chronorder": 25,
       "chapters": 66
     },
     {
       "bookid": 24,
       "name": "ירמיהו",
-      "chronorder": 24,
+      "chronorder": 29,
       "chapters": 52
     },
     {
       "bookid": 25,
       "name": "איכה",
-      "chronorder": 25,
+      "chronorder": 30,
       "chapters": 5
     },
     {
       "bookid": 26,
       "name": "יחזקאל",
-      "chronorder": 26,
+      "chronorder": 32,
       "chapters": 48
     },
     {
       "bookid": 27,
       "name": "דניאל",
-      "chronorder": 27,
+      "chronorder": 33,
       "chapters": 12
     },
     {
       "bookid": 28,
       "name": "הושע",
-      "chronorder": 28,
+      "chronorder": 23,
       "chapters": 14
     },
     {
       "bookid": 29,
       "name": "יואל",
-      "chronorder": 29,
+      "chronorder": 20,
       "chapters": 4
     },
     {
       "bookid": 30,
       "name": "עמוס",
-      "chronorder": 30,
+      "chronorder": 21,
       "chapters": 9
     },
     {
@@ -27203,43 +27203,43 @@
     {
       "bookid": 32,
       "name": "יונה",
-      "chronorder": 32,
+      "chronorder": 19,
       "chapters": 4
     },
     {
       "bookid": 33,
       "name": "מיכה",
-      "chronorder": 33,
+      "chronorder": 22,
       "chapters": 7
     },
     {
       "bookid": 34,
       "name": "נחום",
-      "chronorder": 34,
+      "chronorder": 24,
       "chapters": 3
     },
     {
       "bookid": 35,
       "name": "חבקוק",
-      "chronorder": 35,
+      "chronorder": 27,
       "chapters": 3
     },
     {
       "bookid": 36,
       "name": "צפניה",
-      "chronorder": 36,
+      "chronorder": 26,
       "chapters": 3
     },
     {
       "bookid": 37,
       "name": "חגי",
-      "chronorder": 37,
+      "chronorder": 34,
       "chapters": 2
     },
     {
       "bookid": 38,
       "name": "זכריה",
-      "chronorder": 38,
+      "chronorder": 35,
       "chapters": 14
     },
     {

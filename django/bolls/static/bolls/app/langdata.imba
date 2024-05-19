@@ -142,6 +142,7 @@ export const english = {
 	"saved": "Saved",
 	"saveto": "Save to",
 	"search": "Search",
+	"setlocalfont": "Set local font",
 	"share_via": "Share via",
 	"share": "Share"
 	"shortcuts": "Shortcuts",
@@ -329,6 +330,7 @@ export const ukrainian = {
 	"saved": "Збережено",
 	"saveto": "Зберегти до",
 	"search": "Пошук",
+	"setlocalfont": "Вибрати локальний шрифт",
 	"share_via": "Поділитися через",
 	"share": "Поділитися"
 	"shortcuts": "Гярячі клавіші",
@@ -516,6 +518,7 @@ export const russian = {
 	"saved": "Сохранено",
 	"saveto": "Сохранить к",
 	"search": "Поиск",
+	"setlocalfont": "Выбрать локальный шрифт",
 	"share_via": "Отправить по",
 	"share": "Поделиться"
 	"shortcuts": "Горячие клавиши",
@@ -703,6 +706,7 @@ export const portuguese = {
 	"saved": "Salvo",
 	"saveto": "Salvar em",
 	"search": "Procurar",
+	"setlocalfont": "Escolha uma fonte local",
 	"share_via": "Compartilhar via",
 	"share": "Compartilhar"
 	"shortcuts": "Atalhos",
@@ -890,6 +894,7 @@ export const espanol = {
 	"saved": "Guardado",
 	"saveto": "Guardar en",
 	"search": "Buscar",
+	"setlocalfont": "Elegir fuente local",
 	"share_via": "Compartir via",
 	"share": "Compartir",
 	"shortcuts": "Atajos",
@@ -1078,6 +1083,7 @@ export const german = {
 	"saved": "Gerettet",
 	"saveto": "Speichern unter",
 	"search": "Suchen",
+	"setlocalfont": "Lokale Schrift auswählen",
 	"share_via": "Teilen per",
 	"share": "Teilen"
 	"shortcuts": "Abkürzung",

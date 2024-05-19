@@ -2,7 +2,7 @@ importScripts("/static/bolls/jszip.min.js");
 importScripts("/static/bolls/dexie.min.js");
 importScripts("/static/bolls/scripts.js");
 
-const CACHE_NAME = "v2.4.7";
+const CACHE_NAME = "v2.4.8";
 const urlsToCache = [
   "/",
   "/static/bolls/dist/assets/index.js",

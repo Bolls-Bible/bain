@@ -35,6 +35,21 @@ if isMobile && isSmallScreen && document.cookie.indexOf( "mobileFullSiteClicked=
 	MOBILE_PLATFORM = yes
 
 const DRAWERARROWWIDTH = do Math.min(32, Math.max(16, window.innerWidth * 0.02))
+let print = console.log
+
+let localFonts = new Set()
+def checkFonts()
+	if window.queryLocalFonts !== undefined
+		// The Local Font Access API is supported
+		// Query for all available fonts.
+		try
+			const availableFonts = await window.queryLocalFonts();
+			for fontData of availableFonts
+				localFonts.add(fontData.family)
+		catch err
+			console.error(err.name, err.message);
+	print(localFonts)
+checkFonts()
 
 def noop
 	return
@@ -134,6 +149,7 @@ let store =
 	show_themes: no
 	show_dictionaries: no
 	definition_search: ''
+	font_search: ''
 
 # Dictionary
 let host_rectangle = null
@@ -512,9 +528,11 @@ tag bible-reader
 		if parallel
 			if settingsp.translation != translation || !parallel_books.length
 				parallel_books = BOOKS[translation]
+				settingsp.filtered_books = filteredBooks('parallel_books')
 		else
 			if settings.translation != translation || !books.length
 				books = BOOKS[translation]
+				settings.filtered_books = filteredBooks('books')
 
 	def saveToHistory translation, book, chapter, verse, parallel
 		if state.user.username && window.navigator.onLine
@@ -1118,7 +1136,8 @@ tag bible-reader
 
 
 	def changeTranslation translation
-		if settingsp.edited_version == settingsp.translation && settingsp.enabled
+		print('changeTranslation', translation)
+		if settingsp.enabled && settingsp.edited_version == settingsp.translation
 			switchTranslation translation, yes
 			if parallel_books.find(do |element| return element.bookid == settingsp.book)
 				getParallelText(translation, settingsp.book, settingsp.chapter)
@@ -1127,7 +1146,6 @@ tag bible-reader
 				settingsp.book = parallel_books[0].bookid
 				settingsp.chapter = 1
 			settingsp.translation = translation
-			setCookie('translation', translation)
 		else
 			switchTranslation translation, no
 			if books.find(do |element| return element.bookid == settings.book)
@@ -1370,6 +1388,13 @@ tag bible-reader
 		settings.font.name = font.name
 		setCookie('font-family', font.code)
 		setCookie('font-name', font.name)
+	
+	def setLocalFontFamily font
+		clearSpace!
+		settings.font.family = font
+		settings.font.name = font
+		setCookie('font-family', font)
+		setCookie('font-name', font)
 
 	def showChapters bookid
 		if bookid != show_chapters_of
@@ -2745,6 +2770,10 @@ tag bible-reader
 			# & reload
 			window.history.go()
 
+	def toggleFontModal
+		clearSpace()
+		popUp("font")
+
 	def render
 		if isApple
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
@@ -2852,7 +2881,7 @@ tag bible-reader
 					<path[m: auto] d=svg_paths.close>
 
 			<div
-				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
+				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({bibleIconTransform(yes)}px) zi:2]
 				@click=toggleBibleMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=!bibleIconTransform(yes) .arrow_prev=bibleIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> state.lang.change_book
@@ -3000,7 +3029,7 @@ tag bible-reader
 						<p.in_offline> state.lang.this_translation_is_unavailable
 
 			<div
-				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:{big_modal_block_content ? -1 : 2}]
+				[w:2vw w:min(32px, max(16px, 2vw)) h:100% pos:sticky t:0 bg@hover:#8881 o:0 @hover:1 d:flex ai:center jc:center cursor:pointer transform:translateX({settingsIconTransform(yes)}px) zi:2]
 				@click=toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 				<svg .arrow_next=settingsIconTransform(yes) .arrow_prev=!settingsIconTransform(yes) [fill:$acc-color] width="16" height="10" viewBox="0 0 8 5">
 					<title> state.lang.other
@@ -3103,6 +3132,8 @@ tag bible-reader
 							<.popup_menu [l:0 y@off:-32px o@off:0] ease>
 								for font in fonts
 									<button.butt[ff: {font.code}] .active_butt=font.name==settings.font.name @click=setFontFamily(font)> font.name
+								if localFonts.size
+									<button.butt @click=toggleFontModal> '+ More'
 
 				<menu-popup bind=state.show_languages>
 					<.nighttheme.flex.popup_menu_box @click=(do state.show_languages = !state.show_languages)>
@@ -3115,7 +3146,7 @@ tag bible-reader
 								<button.butt .active_butt=('de'==state.language) @click=(do state.setLanguage('de'))> "Deutsch"
 								<button.butt .active_butt=('pt'==state.language) @click=(do state.setLanguage('pt'))> "Portuguese"
 								<button.butt .active_butt=('es'==state.language) @click=(do state.setLanguage('es'))> "Español"
-								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "Русский"
+								<button.butt .active_butt=('ru'==state.language) @click=(do state.setLanguage('ru'))> "русский"
 				<button.nighttheme.parent_checkbox.flex @click=toggleParallelMode .checkbox_turned=settingsp.enabled>
 					state.lang.parallel
 					<p.checkbox> <span>
@@ -3174,7 +3205,7 @@ tag bible-reader
 						<path fill="none" d="M0 0h24v24H0z">
 						<path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z">
 					state.lang.help
-				<.help @click=turnSupport() id="animated-heart">
+				<.help @click=turnSupport id="animated-heart">
 					<svg.helpsvg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
 						<title> state.lang.support
 						<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="firebrick" >
@@ -3206,8 +3237,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.7 🗓 "
-						<time dateTime='2024-4-24'> "24.4.2024"
+						"🍇 v2.4.8 🗓 "
+						<time dateTime='2024-5-19'> "19.5.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3472,6 +3503,21 @@ tag bible-reader
 										<div[display:flex flex-direction:column pt:25% lh:1.6]>
 											<p> state.lang.nothing
 											<p[pt:16px]> state.lang.dictionary_help
+
+						elif big_modal_block_content == 'font'
+							<article.search_hat>
+								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
+									<title> state.lang.close
+									<path[m: auto] d=svg_paths.close>
+								<h1> state.lang.setlocalfont
+
+							<article.search_body>
+								<input[w:100% bg:transparent font:inherit c:inherit p:0 8px fs:1.2em min-width:128px bd:none bdb@invalid:1px solid $acc-bgc bxs:none] bind=store.font_search minLength=2 type='text' placeholder=(state.lang.search) aria-label=state.lang.search>
+
+								for font of localFonts when font.toLowerCase().includes(store.font_search.toLowerCase())
+									<div[d:flex jc:space-between flw:wrap p:0.5rem bg@hover:var(--acc-bgc-hover) rd:0.25rem cursor:pointer] @click=(do state.font = font; setCookie("font", font)) @click=setLocalFontFamily(font)>
+										<strong> font
+										<span[font-family: {font}]> "The quick brown fox jumps over the lazy dog."
 
 						else	# MAIN SEARCH
 							if search_verses.length
