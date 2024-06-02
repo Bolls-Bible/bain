@@ -2625,6 +2625,7 @@ tag bible-reader
 		if selected
 			store.definition_search = selected
 		clearSpace!
+		clearSpace!
 		loadDefinitions!
 		setTimeout(&, 300) do $dictionarysearch.select!
 
@@ -3237,8 +3238,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.8 🗓 "
-						<time dateTime='2024-5-19'> "19.5.2024"
+						"🍇 v2.4.9 🗓 "
+						<time dateTime='2024-6-2'> "2.6.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
