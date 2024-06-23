@@ -272,38 +272,11 @@
   font-display: swap;
 }
 @font-face {
-  font-family: Tinos;
-  src: local("Tinos Regular"), local("Tinos-Regular"),
-    url(Tinos-Regular.woff2) format("woff2"),
-    url(Tinos-Regular.woff) format("woff");
-  font-weight: 400;
+  font-family: "Ezra SIL";
+  src: local("Ezra SIL"), local("EzraSIL"), url("EzraSIL.woff2") format("woff2"),
+    url("EzraSIL.woff") format("woff");
+  font-weight: normal;
   font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: Tinos;
-  src: local("Tinos Italic"), local("Tinos-Italic"),
-    url(Tinos-Italic.woff2) format("woff2"),
-    url(Tinos-Italic.woff) format("woff");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-@font-face {
-  font-family: Tinos;
-  src: local("Tinos Bold"), local("Tinos-Bold"),
-    url(Tinos-Bold.woff2) format("woff2"), url(Tinos-Bold.woff) format("woff");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: Tinos;
-  src: local("Tinos Bold Italic"), local("Tinos-BoldItalic"),
-    url(Tinos-BoldItalic.woff2) format("woff2"),
-    url(Tinos-BoldItalic.woff) format("woff");
-  font-weight: 700;
-  font-style: italic;
   font-display: swap;
 }
 @font-face {
@@ -496,62 +469,61 @@
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly'), local('Bookerly-Regular'),
-      url('Bookerly-Regular.woff2') format('woff2'),
-      url('Bookerly-Regular.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly"), local("Bookerly-Regular"),
+    url("Bookerly-Regular.woff2") format("woff2"),
+    url("Bookerly-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly Light Italic'), local('Bookerly-LightItalic'),
-      url('Bookerly-LightItalic.woff2') format('woff2'),
-      url('Bookerly-LightItalic.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly Light Italic"), local("Bookerly-LightItalic"),
+    url("Bookerly-LightItalic.woff2") format("woff2"),
+    url("Bookerly-LightItalic.woff") format("woff");
   font-weight: 300;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly Bold Italic'), local('Bookerly-BoldItalic'),
-      url('Bookerly-BoldItalic.woff2') format('woff2'),
-      url('Bookerly-BoldItalic.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly Bold Italic"), local("Bookerly-BoldItalic"),
+    url("Bookerly-BoldItalic.woff2") format("woff2"),
+    url("Bookerly-BoldItalic.woff") format("woff");
   font-weight: bold;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly Bold'), local('Bookerly-Bold'),
-      url('Bookerly-Bold.woff2') format('woff2'),
-      url('Bookerly-Bold.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly Bold"), local("Bookerly-Bold"),
+    url("Bookerly-Bold.woff2") format("woff2"),
+    url("Bookerly-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly Light'), local('Bookerly-Light'),
-      url('Bookerly-Light.woff2') format('woff2'),
-      url('Bookerly-Light.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly Light"), local("Bookerly-Light"),
+    url("Bookerly-Light.woff2") format("woff2"),
+    url("Bookerly-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bookerly';
-  src: local('Bookerly Italic'), local('Bookerly-Italic'),
-      url('Bookerly-Italic.woff2') format('woff2'),
-      url('Bookerly-Italic.woff') format('woff');
+  font-family: "Bookerly";
+  src: local("Bookerly Italic"), local("Bookerly-Italic"),
+    url("Bookerly-Italic.woff2") format("woff2"),
+    url("Bookerly-Italic.woff") format("woff");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
 }
-

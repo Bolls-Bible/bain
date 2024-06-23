@@ -48,7 +48,6 @@ def checkFonts()
 				localFonts.add(fontData.family)
 		catch err
 			console.error(err.name, err.message);
-	print(localFonts)
 checkFonts()
 
 def noop
@@ -161,7 +160,7 @@ let download_dictionaries = no
 
 
 # Some messy stuff
-let addcollection = no
+let showAddCollection = no
 let choosen_categories = []
 let loading = no
 let menuicons = yes
@@ -203,8 +202,8 @@ const fonts = [
 		code: "'Bellefair', serif"
 	},
 	{
-		name: "Tinos",
-		code: "'Tinos', serif"
+		name: "Ezra SIL",
+		code: "'Ezra SIL', serif"
 	},
 	{
 		name: "Roboto Slab",
@@ -534,19 +533,19 @@ tag bible-reader
 				books = BOOKS[translation]
 				settings.filtered_books = filteredBooks('books')
 
-	def saveToHistory translation, book, chapter, verse, parallel
+	def saveToHistory translation, book, chapter, verse
 		if state.user.username && window.navigator.onLine
 			history = await loadData('/history')
 
 		if getCookie("history")
 			history = JSON.parse(getCookie("history")) || []
-		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.parallel == parallel)
+		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation)
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
 
 		history.sort(do(a, b) return b.date - a.date)
 
-		history.unshift({translation: translation, book: book, chapter: chapter, verse: verse, parallel: parallel, date:Date.now!})
+		history.unshift({translation: translation, book: book, chapter: chapter, verse: verse, date:Date.now!})
 		if history.length > 256
 			history.length = 256
 
@@ -663,7 +662,7 @@ tag bible-reader
 		settings.name_of_book = nameOfBook(settings.book, settings.translation)
 		settings.filtered_books = filteredBooks('books')
 		settingsp.filtered_books = filteredBooks('parallel_books')
-		saveToHistory(translation, book, chapter, verse, no)
+		saveToHistory(translation, book, chapter, verse)
 		let url = "/get-chapter/" + translation + '/' + book + '/' + chapter + '/'
 		try
 			verses = []
@@ -738,7 +737,7 @@ tag bible-reader
 			getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'parallel_bookmarks')
 		imba.commit()
 		setCookie('parallel_display', settingsp.enabled)
-		saveToHistory translation, book, chapter, 0, yes
+		saveToHistory translation, book, chapter, 0
 		setCookie('parallel_translation', translation)
 		setCookie('parallel_book', book)
 		setCookie('parallel_chapter', chapter)
@@ -825,6 +824,15 @@ tag bible-reader
 			else
 				highlightLinkedVerses verse, endverse
 
+	def closeVerseOptions
+		choosen = []
+		choosenid = []
+		show_collections = no
+		choosen_parallel = no
+		showAddCollection = no
+		store.show_color_picker = no
+		choosen_categories = []
+
 
 	def clearSpace { onPopState } = {}
 		# If user write a note then instead of clearing everything just hide the note panel.
@@ -838,27 +846,21 @@ tag bible-reader
 		# Clean all the variables in order to free space around the text
 		bible_menu_left = -300
 		settings_menu_left = -300
-		search.search_div = no
 		onzone = no
 		inzone = no
+		search.search_div = no
 		store.show_history = no
 		search.show_filters = no
 		search.counter = 50
-		choosen = []
-		choosenid = []
 		definitions = []
-		addcollection = no
-		store.show_color_picker = no
-		show_collections = no
-		choosen_parallel = no
 		store.show_fonts = no
 		show_language_of = ''
 		show_translations_for_comparison = no
 		show_parallel_verse_picker = no
 		show_verse_picker = no
 		show_share_box = no
-		choosen_categories = []
 		host_rectangle = null
+		closeVerseOptions!
 
 		# unless the user is typing something focus the reader in order to enable arrow navigation on the text
 		unless page_search.d
@@ -1854,8 +1856,8 @@ tag bible-reader
 				state.showNotification('error')
 
 	def turnCollections
-		if addcollection
-			addcollection = no
+		if showAddCollection
+			showAddCollection = no
 		else
 			show_collections = !show_collections
 			store.show_color_picker = no
@@ -1873,7 +1875,7 @@ tag bible-reader
 					categories = JSON.parse(window.localStorage.getItem('categories'))
 
 	def addCollection
-		addcollection = yes
+		showAddCollection = yes
 		focusElement 'newcollectioninput'
 
 	def addNewCollection collection
@@ -2624,8 +2626,6 @@ tag bible-reader
 		const selected = selection.toString!.trim!
 		if selected
 			store.definition_search = selected
-		clearSpace!
-		clearSpace!
 		loadDefinitions!
 		setTimeout(&, 300) do $dictionarysearch.select!
 
@@ -2653,6 +2653,7 @@ tag bible-reader
 		if selected_text
 			store.definition_search = selected_text
 
+		closeVerseOptions!
 		clearSpace { onPopState: yes }
 		popUp 'dictionary'
 
@@ -3238,8 +3239,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.4.9 🗓 "
-						<time dateTime='2024-6-2'> "2.6.2024"
+						"🍇 v2.5.0 🗓 "
+						<time dateTime='2024-6-23'> "23.6.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3627,17 +3628,17 @@ tag bible-reader
 								<svg.svgBack viewBox="0 0 20 20" @click=turnCollections>
 									<title> state.lang.back
 									<path d="M3.828 9l6.071-6.071-1.414-1.414L0 10l.707.707 7.778 7.778 1.414-1.414L3.828 11H20V9H3.828z">
-								if addcollection
+								if showAddCollection
 									<p.saveto> state.lang.newcollection
 								else
 									<p.saveto> state.lang.saveto
-									<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=state.lang.addcollection>
+									<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=state.lang.showAddCollection>
 										<title> state.lang.addcollection
 										<line x1="0" y1="10" x2="20" y2="10">
 										<line x1="10" y1="0" x2="10" y2="20">
 
 							<.mark_grid [pt:0 pb:8px]>
-								if addcollection
+								if showAddCollection
 									<input.newcollectioninput placeholder=state.lang.newcollection id="newcollectioninput" bind=store.newcollection @keydown.enter.addNewCollection(store.newcollection) @keyup.validateNewCollectionInput type="text">
 								elif categories.length
 									<>
@@ -3649,7 +3650,7 @@ tag bible-reader
 									<div[min-width: 16px]>
 								else
 									<p[m: 8px auto].collection.add_new_collection @click=addCollection> state.lang.addcollection
-							if (store.newcollection && addcollection) || (choosen_categories.length && !addcollection)
+							if (store.newcollection && showAddCollection) || (choosen_categories.length && !showAddCollection)
 								<button.cancel.add_new_collection @click=addNewCollection(store.newcollection)> state.lang.save
 							else
 								<button.cancel @click=turnCollections> state.lang.cancel
