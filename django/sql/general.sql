@@ -21,13 +21,18 @@ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_ver
 
 
 ----------- DOCKER HELPER COMMANDS -----------
- docker cp ./RSVCE.csv database:verses.csv
+ docker cp ./CUV23.csv database:verses.csv
  docker cp ./commentaries.csv database:commentaries.csv
  
- docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse,  text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
  
  docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_commentary(translation, book, chapter, verse, text) FROM 'commentaries.csv' DELIMITER ',' CSV HEADER;"
 
+
+ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+
+delete FROM bolls_verses where translation='NJB' and book = 72;
+ docker exec -i database psql -U postgres_user -d postgres_db -c "delete FROM bolls_verses where translation='CUV23'"
 
 
 ALTER TABLE dictionary
@@ -90,6 +95,7 @@ psql    --host=144.126.148.204    --port=5432    --username=bain    --password  
 
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/VFL.csv' DELIMITER '|' CSV HEADER;
 \copy bolls_verses(translation, book, chapter, verse, text) FROM '/home/bohuslav/prj/translations/NIV.csv' DELIMITER ',' CSV HEADER;
+
 
 
 \copy bolls_verses(id, translation, book, chapter, verse, text) FROM '~/prj/translations/ylt.csv' DELIMITER '|' CSV HEADER;

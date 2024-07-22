@@ -2665,12 +2665,7 @@ tag bible-reader
 				definitions_history.length = definitions_history_index + 1
 
 			loading = yes
-			if window.navigator.onLine
-				try
-					definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}?extended={settings.extended_dictionary_search ? 'true' : ''}")
-				catch error
-					console.error error
-			elif state.dictionary in state.downloaded_dictionaries
+			def loadDefinitionsFromOffline
 				let unvoweled_query = stripVowels(store.definition_search)
 				search_results = await state.searchDefinitionsOffline {dictionary: state.dictionary, query: unvoweled_query}
 				definitions = []
@@ -2682,6 +2677,16 @@ tag bible-reader
 							score: score
 						})
 				definitions = definitions.sort(do |a, b| b.score - a.score)
+
+			if window.navigator.onLine
+				try
+					definitions = await loadData("/dictionary-definition/{state.dictionary}/{store.definition_search}?extended={settings.extended_dictionary_search ? 'true' : ''}")
+				catch error
+					console.error error
+					if state.dictionary in state.downloaded_dictionaries
+						loadDefinitionsFromOffline()
+			elif state.dictionary in state.downloaded_dictionaries
+				loadDefinitionsFromOffline()
 			loading = no
 			expanded_definition = 0
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
@@ -3239,8 +3244,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.0 🗓 "
-						<time dateTime='2024-6-23'> "23.6.2024"
+						"🍇 v2.5.1 🗓 "
+						<time dateTime='2024-7-23'> "23.7.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

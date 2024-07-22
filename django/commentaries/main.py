@@ -1,9 +1,9 @@
 import pandas as pd
 import re
-from books_map import *
+from .books_map import *
 
 
-translation = "CSP09"
+translation = "CUV23"
 
 
 def parseLinks(text):
