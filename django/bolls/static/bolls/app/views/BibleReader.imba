@@ -2904,7 +2904,7 @@ tag bible-reader
 						'|'
 						<button @click=loadDefinitions(host_rectangle.strong)> host_rectangle.strong
 
-			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.enabled
+			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.enabled .hide_comments=!settings.verse_commentary
 				[pos:{settingsp.enabled ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.enabled @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
 					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
@@ -3244,7 +3244,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.1 🗓 "
+						"🍇 v2.5.2 🗓 "
 						<time dateTime='2024-7-23'> "23.7.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
@@ -3918,7 +3918,6 @@ tag bible-reader
 		mb:auto
 		border-bottom:1px solid $acc-bgc-hover
 
-
 	css .aside_button
 		w:100% h:46px bg:transparent @hover:$acc-bgc-hover d:flex ai:center font:inherit p:0 12px
 
@@ -3980,7 +3979,7 @@ tag bible-reader
 		rd:16px
 		ofy:auto
 		-webkit-overflow-scrolling:touch
-
+	
 	css .search_option
 		w:24px min-width:24px mr:8px
 		o:0.5 @hover: 0.75

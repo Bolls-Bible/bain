@@ -436,6 +436,10 @@ body {
   height: 100vh;
 }
 
+.hide_comments sup {
+  display: none;
+}
+
 nav input[type="text"] {
   margin: 16px;
   width: 268px;
