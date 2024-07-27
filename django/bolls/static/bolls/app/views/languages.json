@@ -264,6 +264,12 @@
         "full_name": "Revised Standard Version Catholic Edition",
         "info": "http://en.wikipedia.org/wiki/Revised_Standard_Version_Catholic_Edition",
         "updated": 1713944506081
+      },
+      {
+        "short_name": "NABRE",
+        "full_name": "New American Bible (Revised Edition)",
+        "info": "http://en.wikipedia.org/wiki/New_American_Bible_Revised_Edition",
+        "updated": 1713944506081
       }
     ]
   },

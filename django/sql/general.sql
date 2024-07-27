@@ -21,7 +21,7 @@ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_ver
 
 
 ----------- DOCKER HELPER COMMANDS -----------
- docker cp ./CUV23.csv database:verses.csv
+ docker cp ./NABRE.csv database:verses.csv
  docker cp ./commentaries.csv database:commentaries.csv
  
  docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse,  text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"

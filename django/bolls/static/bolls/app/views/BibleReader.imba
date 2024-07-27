@@ -422,12 +422,12 @@ tag bible-reader
 					state.user = {}
 			catch err
 				console.error('Error: ', err)
-				state.showNotification('error')
+				# state.showNotification('error')
 
 		if window.message
 			state.showNotification(window.message)
 		if getCookie('chronorder') == 'true'
-			toggleChronorder!
+			setChronorder yes
 		highlights = JSON.parse(getCookie("highlights")) || []
 		menuicons = !(getCookie('menuicons') == 'false')
 		fixdrawers = getCookie('fixdrawers') == 'true'
@@ -651,8 +651,7 @@ tag bible-reader
 		clearSpace()
 		document.title = nameOfBook(book, translation) + ' ' + chapter + ' ' + translations.find(do |element| element.short_name == translation).full_name + " Bolls Bible"
 		if chronorder
-			chronorder = !chronorder
-			toggleChronorder!
+			setChronorder(yes)
 		settings.book = book
 		settings.chapter = chapter
 		settings.translation = translation
@@ -672,7 +671,6 @@ tag bible-reader
 			else
 				verses = await loadData(url)
 			loading = no
-
 		catch error
 			loading = no
 			console.error('Error: ', error)
@@ -710,8 +708,7 @@ tag bible-reader
 				return
 
 		if chronorder
-			chronorder = !chronorder
-			toggleChronorder!
+			setChronorder(yes)
 		switchTranslation translation, yes
 		settingsp.translation = translation
 		settingsp.edited_version = settings.translation
@@ -874,19 +871,19 @@ tag bible-reader
 		imba.commit()
 
 
-	def toggleChronorder
-		if chronorder
-			parallel_books.sort(do |book, koob| return book.bookid - koob.bookid)
-			books.sort(do |book, koob| return book.bookid - koob.bookid)
-		else
-			parallel_books.sort(do |book, koob| return book.chronorder - koob.chronorder)
-			books.sort(do |book, koob| return book.chronorder - koob.chronorder)
+	def setChronorder shouldUseChronorder
+		let orderBy = shouldUseChronorder ? 'chronorder' : 'bookid'
+		parallel_books.sort(do |book, koob| return book[orderBy] - koob[orderBy])
+		books.sort(do |book, koob| return book[orderBy] - koob[orderBy])
 
 		settingsp.filtered_books = filteredBooks('parallel_books')
 		settings.filtered_books = filteredBooks('books')
 
-		chronorder = !chronorder
+		chronorder = shouldUseChronorder
 		setCookie('chronorder', chronorder.toString())
+
+	def toggleChronorder
+		setChronorder !chronorder
 
 	def nameOfBook bookid, translation
 		if !translation
@@ -1138,7 +1135,6 @@ tag bible-reader
 
 
 	def changeTranslation translation
-		print('changeTranslation', translation)
 		if settingsp.enabled && settingsp.edited_version == settingsp.translation
 			switchTranslation translation, yes
 			if parallel_books.find(do |element| return element.bookid == settingsp.book)
@@ -1836,7 +1832,7 @@ tag bible-reader
 		turnHistory!
 		history = []
 		window.localStorage.setItem("history", "[]")
-		if state.user.username
+		if state.user.username && window.navigator.onLine
 			try
 				const response = await window.fetch("/history/", {
 					method: "DELETE",
@@ -2035,10 +2031,10 @@ tag bible-reader
 				imba.commit()
 			)
 			.catch(do |error|
-				if state.downloaded_translations.indexOf(settings.translation) != -1
-					getCompareTranslationsFromDB!
 				console.error error
 				loading = no
+				if state.downloaded_translations.indexOf(settings.translation) != -1
+					return getCompareTranslationsFromDB!
 				state.showNotification('error'))
 
 	def addTranslation translation
@@ -2346,8 +2342,6 @@ tag bible-reader
 		catch error
 			console.error error
 			state.showNotification('error')
-
-
 
 
 
@@ -3244,8 +3238,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.2 🗓 "
-						<time dateTime='2024-7-23'> "23.7.2024"
+						"🍇 v2.5.3 🗓 "
+						<time dateTime='2024-7-28'> "28.7.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
