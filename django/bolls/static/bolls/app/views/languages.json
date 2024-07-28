@@ -416,6 +416,21 @@
     ]
   },
   {
+    "language": "Nepali नेपाली",
+    "translations": [
+      {
+        "short_name": "NNRV",
+        "full_name": "Nepali New Revised Version, 2012",
+        "updated": 1722188869687
+      },
+      {
+        "short_name": "NEPS",
+        "full_name": "सरल नेपाली पवित्र बाइबल",
+        "updated": 1722188869687
+      }
+    ]
+  },
+  {
     "language": "Indonesian",
     "translations": [
       {
@@ -521,8 +536,12 @@
       {
         "short_name": "VFL",
         "full_name": "Bíblia Sagrada: Versão Fácil de Ler",
-        "info": "",
         "updated": 1688657206480
+      },
+      {
+        "short_name": "NAA",
+        "full_name": "Nova Almeida Atualizada 2017",
+        "updated": 1722193929648
       }
     ]
   },

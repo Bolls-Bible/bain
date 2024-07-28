@@ -426,8 +426,7 @@ tag bible-reader
 
 		if window.message
 			state.showNotification(window.message)
-		if getCookie('chronorder') == 'true'
-			setChronorder yes
+		setChronorder getCookie('chronorder') == 'true'
 		highlights = JSON.parse(getCookie("highlights")) || []
 		menuicons = !(getCookie('menuicons') == 'false')
 		fixdrawers = getCookie('fixdrawers') == 'true'
@@ -3238,8 +3237,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.3 🗓 "
-						<time dateTime='2024-7-28'> "28.7.2024"
+						"🍇 v2.5.4 🗓 "
+						<time dateTime='2024-7-29'> "29.7.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

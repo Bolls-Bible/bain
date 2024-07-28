@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = "NABRE"
+translation = "NAA"
 
 
 def parseLinks(text):

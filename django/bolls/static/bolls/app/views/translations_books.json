@@ -35092,5 +35092,1199 @@
       "chronorder": 73,
       "chapters": 6
     }
+  ],
+  "NNRV": [
+    {
+      "bookid": 1,
+      "name": "उत्‍पत्ति",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "प्रस्‍थान",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "लेवीहरू",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "गन्ती",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "व्यवस्था",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "यहोशू",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "न्यायकर्ताहरू",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "रूथ",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "१ शमूएल",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "२ शमूएल",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "१ राजाहरू",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "२ राजाहरू",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "१ इतिहास",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "२ इतिहास",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "एज्रा",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "नहेम्‍याह",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "एस्‍तर",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "अय्‍यूब",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "भजनसंग्रह",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "हितोपदेश",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "उपदेशक",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "श्रेष्‍ठगीत",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "यशैया",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "यर्मिया",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "विलाप",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "इजकिएल",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "दानिएल",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "होशे",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "योएल",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "आमोस",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "ओबदिया",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "योना",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "मीका",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "नहूम",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "हबकूक",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "सपन्‍याह",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "हाग्‍गै",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "जकरिया",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "मलाकी",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "मत्ती",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "मर्कूस",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "लूका",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "यूहन्‍ना",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "प्रेरित",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "रोमी",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "१ कोरिन्थी",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "२ कोरिन्थी",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "गलाती",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "एफिसी",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "फिलिप्पी",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "कलस्सी",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "१ थेसलोनिकी",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "२ थेसलोनिकी",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "१ तिमोथी",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "२ तिमोथी",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "तीतस",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "फिलेमोन",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "हिब्रू",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "याकूब",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "१ पत्रुस",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "२ पत्रुस",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "१ यूहन्‍ना",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "२ यूहन्‍ना",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "३ यूहन्‍ना",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "यहूदा",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "प्रकाश",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "NEPS": [
+    {
+      "bookid": 1,
+      "name": "उत्‍पत्ति",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "प्रस्‍थान",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "लेवी",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "गन्ती",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "व्यवस्था",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "यहोशू",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "न्यायकर्ता",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "रूथ",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "१ शमूएल",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 शमूएल",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "१ राजा",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "२ राजा",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "१ इतिहास",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "२ इतिहास",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "एज्रा",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "नहेम्‍याह",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "एस्‍तर",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "अय्‍यूब",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "भजनसंग्रह",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "हितोपदेश",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "उपदेशक",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "श्रेष्‍ठगीत",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "यशैया",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "यर्मिया",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "विलाप",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "इजकिएल",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "दानिएल",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "होशे",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "योएल",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "आमोस",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "ओबदिया",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "योना",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "मीका",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "नहूम",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "हबकूक",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "सपन्‍याह",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "हाग्‍गै",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "जकरिया",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "मलाकी",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "मत्ती",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "मर्कूस",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "लूका",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "यूहन्‍ना",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "प्रेरित",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "रोमी",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "१ कोरिन्थी",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "२ कोरिन्थी",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "गलाती",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "एफिसी",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "फिलिप्पी",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "कलस्सी",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "१ थेसलोनिकी",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "२ थेसलोनिकी",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "१ तिमोथी",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "२ तिमोथी",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "तीतस",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "फिलेमोन",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "हिब्रू",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "याकूब",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "१ पत्रुस",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "२ पत्रुस",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "१ यूहन्‍ना",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "२ यूहन्‍ना",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "३ यूहन्‍ना",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "यहूदा",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "प्रकाश",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "NAA": [
+    {
+      "bookid": 1,
+      "name": "Gênesis",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Êxodo",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Levítico",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Números",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deuteronômio",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Josué",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Juízes",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Rute",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1Reis",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2Reis",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1Crônicas",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2Crônicas",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Esdras",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Neemias",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Ester",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Jó",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Salmos",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Provérbios",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Eclesiastes",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cântico dos Cânticos",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Isaías",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jeremias",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentações",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezequiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Oseias",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joel",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amós",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Obadias",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Miqueias",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Naum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuque",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sofonias",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Ageu",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacarias",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malaquias",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "Mateus",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marcos",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Lucas",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "João",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Atos",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romanos",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1Coríntios",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2Coríntios",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Gálatas",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Efésios",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Filipenses",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Colossenses",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1Tessalonicenses",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2Tessalonicenses",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1Timóteo",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2Timóteo",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tito",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Filemom",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Hebreus",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Tiago",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1Pedro",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2Pedro",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1João",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2João",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3João",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Judas",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalipse",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }
