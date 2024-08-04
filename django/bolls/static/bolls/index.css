@@ -436,6 +436,10 @@ body {
   height: 100vh;
 }
 
+sup {
+  font-size: 0.7em;
+}
+
 .hide_comments sup {
   display: none;
 }
