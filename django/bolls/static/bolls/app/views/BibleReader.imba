@@ -2541,8 +2541,8 @@ tag bible-reader
 		const selection = window.getSelection!
 		const selected = selection.toString!.trim!
 
-		# Trigger the definition popup only when a single hebrew or greekword is selected
-		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/)
+		# Trigger the definition popup only when a single hebrew or greekword is selected or there are Strong tags init <S> or <s>
+		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/) or selection.anchorNode.parentElement.querySelectorAll("s").length 
 		if [...selected.matchAll(/\s/g)].length > 1 or selected == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
@@ -3237,7 +3237,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.5 🗓 "
+						"🍇 v2.5.6 🗓 "
 						<time dateTime='2024-8-4'> "4.8.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
