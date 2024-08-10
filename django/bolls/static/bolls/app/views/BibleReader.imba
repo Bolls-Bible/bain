@@ -1135,7 +1135,7 @@ tag bible-reader
 
 	def changeTranslation translation
 		if settingsp.enabled && settingsp.edited_version == settingsp.translation
-			switchTranslation translation, yes
+			switchTranslation(translation, yes)
 			if parallel_books.find(do |element| return element.bookid == settingsp.book)
 				getParallelText(translation, settingsp.book, settingsp.chapter)
 			else
@@ -1144,7 +1144,7 @@ tag bible-reader
 				settingsp.chapter = 1
 			settingsp.translation = translation
 		else
-			switchTranslation translation, no
+			switchTranslation(translation, no)
 			if books.find(do |element| return element.bookid == settings.book)
 				getText(translation, settings.book, settings.chapter)
 			else
@@ -2773,6 +2773,19 @@ tag bible-reader
 	def toggleFontModal
 		clearSpace()
 		popUp("font")
+	
+	def openTranslationInParallel translation
+		settingsp.enabled = yes
+		setCookie('parallel_display', settingsp.enabled)
+		parallel_books = BOOKS[translation]
+		settingsp.filtered_books = filteredBooks('parallel_books')
+		if parallel_books.find(do |element| return element.bookid == settingsp.book)
+			getParallelText(translation, settingsp.book, settingsp.chapter)
+		else
+			getParallelText(translation, parallel_books[0].bookid, 1)
+			settingsp.book = parallel_books[0].bookid
+			settingsp.chapter = 1
+		settingsp.translation = translation
 
 	def render
 		if isApple
@@ -3237,7 +3250,7 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.7 🗓 "
+						"🍇 v2.5.8 🗓 "
 						<time dateTime='2024-8-4'> "4.8.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
@@ -3577,16 +3590,23 @@ tag bible-reader
 								if search.suggestions.books..length or search.suggestions.translations..length
 									<.search_suggestions>
 										for book in search.suggestions.books
-											<text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
-												searchSuggestionText(book)
-
+											<.flex>
+												<text-as-html.book_in_list.focusable tabIndex="0" data={translation:search.suggestions.translation, book:book.bookid, chapter:search.suggestions.chapter, verse:search.suggestions.verse}>
+													searchSuggestionText(book)
+												<svg.open_in_parallel.focusable [margin-left: 4px] tabIndex="0" viewBox="0 0 400 338" @click=backInHistory({translation: search.suggestions.translation, book: book.bookid, chapter: search.suggestions.chapter,verse: search.suggestions.verse}, yes) @keydown.enter=backInHistory({translation: search.suggestions.translation, book: book.bookid, chapter: search.suggestions.chapter,verse: search.suggestions.verse}, yes)>
+													<title> state.lang.open_in_parallel
+													<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 
 										for translation in search.suggestions.translations
-											<li.book_in_list.focusable tabIndex="0" [display: flex] @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
-												<span>
-													<b> translation.short_name
-													', '
-													translation.full_name
+											<.flex>
+												<li.book_in_list.focusable [display: flex] tabIndex="0" @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
+													<span>
+														<b> translation.short_name
+														', '
+														translation.full_name
+												<svg.open_in_parallel.focusable tabIndex="0" [margin-left: 4px] viewBox="0 0 400 338" @click=openTranslationInParallel(translation.short_name) @keydown.enter=openTranslationInParallel(translation.short_name)>
+													<title> state.lang.open_in_parallel
+													<path d=svg_paths.columnssvg [fill:inherit fill-rule:evenodd stroke:none stroke-width:1.81818187]>
 
 							if search.search_result_header
 								<article.search_body id="search_body" @scroll=searchPagination>

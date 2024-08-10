@@ -170,7 +170,7 @@ html[data-transitions="false"] * {
   border-radius: 8px;
 }
 
-.focusable:focus {
+.focusable:focus, .focusable:focus-within {
   outline: 1px solid var(--acc-color-hover);
   outline-offset: -1px;
 }
