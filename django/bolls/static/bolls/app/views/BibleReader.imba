@@ -84,6 +84,7 @@ let settings =
 	parallel_synch: yes
 	lock_books_menu: no
 	extended_dictionary_search: no
+	enable_dynamic_contrast: no
 
 	get light
 		if this.theme == 'dark' or this.theme == 'black'
@@ -149,6 +150,7 @@ let store =
 	show_dictionaries: no
 	definition_search: ''
 	font_search: ''
+	contrast: 100
 
 # Dictionary
 let host_rectangle = null
@@ -430,9 +432,15 @@ tag bible-reader
 		highlights = JSON.parse(getCookie("highlights")) || []
 		menuicons = !(getCookie('menuicons') == 'false')
 		fixdrawers = getCookie('fixdrawers') == 'true'
+
+		store.contrast = parseInt(getCookie('contrast')) || store.contrast
+		if getCookie('enable_dynamic_contrast') == 'true' 
+			toggleDynamicContrast!
+
 		compare_translations.push(settings.translation)
 		compare_translations.push(settingsp.translation)
 		if JSON.parse(getCookie("compare_translations")) then compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
+		
 		search =
 			search_div: no
 			search_input: ''
@@ -448,6 +456,7 @@ tag bible-reader
 			suggestions: {}
 			match_case: getCookie('match_case') == 'true'
 			match_whole: getCookie('match_whole') == 'true'
+		
 		let bookmarks-to-delete = JSON.parse(getCookie("bookmarks-to-delete"))
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
@@ -883,6 +892,19 @@ tag bible-reader
 
 	def toggleChronorder
 		setChronorder !chronorder
+	
+	def changeContrast event
+		setCookie('contrast', store.contrast.toString())
+		# set filter to the body
+		document.body.style.filter = 'contrast(' + store.contrast + '%)'
+
+	def toggleDynamicContrast
+		settings.enable_dynamic_contrast = !settings.enable_dynamic_contrast
+		setCookie('enable_dynamic_contrast', settings.enable_dynamic_contrast.toString())
+		if settings.enable_dynamic_contrast
+			document.body.style.filter = 'contrast(' + store.contrast + '%)'
+		else
+			document.body.style.filter = 'none'
 
 	def nameOfBook bookid, translation
 		if !translation
@@ -1472,7 +1494,8 @@ tag bible-reader
 			getText(settings.translation, books[current_index - 1].bookid, 1)
 
 	def mousemove e
-		if not MOBILE_PLATFORM and not fixdrawers
+		const isRangeInputFocues = document.activeElement.tagName == 'INPUT' && document.activeElement.type == 'range'
+		if not MOBILE_PLATFORM and not fixdrawers and not isRangeInputFocues
 			if e.x < 32
 				bible_menu_left = 0
 			elif e.x > window.innerWidth - 32
@@ -3191,6 +3214,21 @@ tag bible-reader
 					<button.nighttheme.parent_checkbox.flex @click=fixDrawers .checkbox_turned=fixdrawers>
 						state.lang.fixdrawers
 						<p.checkbox> <span>
+				<button.nighttheme.parent_checkbox.flex @click=toggleDynamicContrast .checkbox_turned=settings.enable_dynamic_contrast>
+					state.lang.dynamic_contrast
+					<p.checkbox> <span>
+				if settings.enable_dynamic_contrast
+					<.contrast-slider>
+						<p.flex>
+							state.lang.contrast
+							<span[ml:auto]> store.contrast
+						<input id="contrast" type="range" min=20 max=200 step=5 bind=store.contrast @input=changeContrast>
+						<datalist id="contrast">
+							<option value="20" label="20">
+							<option value="60" label="60">
+							<option value="100" label="100">
+							<option value="150" label="150">
+							<option value="200" label="200">
 
 				if window.navigator.onLine
 					if state.db_is_available
@@ -3250,8 +3288,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.5.9 🗓 "
-						<time dateTime='2024-8-15'> "15.8.2024"
+						"🍇 v2.6.0 🗓 "
+						<time dateTime='2024-8-25'> "25.8.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -4042,4 +4080,32 @@ tag bible-reader
 			bgc:transparent @hover:$acc-bgc-hover
 			fs:inherit font:inherit c:inherit
 			cursor:pointer
+		
+		.contrast-slider
+			input
+				w:100%
+				accent-color: $acc-color
+				-webkit-appearance: none
+				appearance: none
+				bgc: $acc-bgc @hover: $acc-bgc-hover
+				outline: none
+				mt:0.5rem
+				rd:full
+				h:0.5rem
+
+			datalist
+				display: flex
+				justify-content: space-between
+				width: 100%
+				margin-top: 7px
+				padding: 0 5px
+
+			input[type="range"]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb
+				-webkit-appearance: none
+				height: 1.25rem
+				width: 1.25rem
+				border-radius: 50%
+				background: $acc-color
+				cursor: ew-resize
+			
 

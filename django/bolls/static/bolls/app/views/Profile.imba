@@ -570,7 +570,7 @@ tag profile-page
 			letter-spacing: .025em
 			appearance: none
 			border: none
-			background: transparent
+			background: $bgc
 			width: 100%
 			min-width: 140px
 			cursor: pointer
@@ -580,6 +580,7 @@ tag profile-page
 			content: '⏷'
 			position: absolute
 			d:block
+			zi: 11
 			p:0 8px
 			fs:1.2em
 			lh:1.75rem
