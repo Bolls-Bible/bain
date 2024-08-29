@@ -59,7 +59,7 @@ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_com
 
 Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then **zip it**. You may find examples in that folder. Otherwise the user will not be able to download it.
 
-If it times out try to get it from inside container, `wget -O verses.json -timeout=0 localhost:8000/get-translation/<translation-abbrevition>/`.
+If it times out try to get it from inside container, `wget -O verses.json -timeout=0 localhost:8000/get-translation/<translation-abbreviation>/`.
 
 ### Test it.
 

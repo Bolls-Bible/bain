@@ -3,7 +3,7 @@ import re
 from books_map import *
 
 
-translation = "NAA"
+translation = "S00"
 
 
 def parseLinks(text):
@@ -11,7 +11,7 @@ def parseLinks(text):
         return ""
 
     text = re.sub(r"(<[/]?span[^>]*)>", "", text)  # Clean up unneeded spans
-    text = re.sub(r"( class=\'\w+\')", "", text)  # Avoid unneded classes on anchors
+    text = re.sub(r"( class=\'\w+\')", "", text)  # Avoid unneeded classes on anchors
 
     pieces = text.split("'")
 

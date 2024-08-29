@@ -95,6 +95,35 @@
     ]
   },
   {
+    "language": "Dutch Nederlands",
+    "translations": [
+      {
+        "short_name": "NLD",
+        "full_name": "De Heilige Schrift, Petrus Canisiusvertaling, 1939",
+        "info": "http://nl.wikipedia.org/wiki/Petrus_Canisiusvertaling",
+        "updated": 1591292348391
+      },
+      {
+        "short_name": "DSV",
+        "full_name": "Statenvertaling met Strong's, 1619",
+        "info": "http://wikipedia.org/wiki/Statenvertaling",
+        "updated": 1724959078850
+      },
+      {
+        "short_name": "SVRJ",
+        "full_name": "Statenvertaling Jongbloed-editie (1995)",
+        "info": "http://wikipedia.org/wiki/Statenvertaling",
+        "updated": 1724959078850
+      },
+      {
+        "short_name": "HSV17",
+        "full_name": "Herziene Statenvertaling, 2017",
+        "info": "http://wikipedia.org/wiki/Statenvertaling",
+        "updated": 1724959078850
+      }
+    ]
+  },
+  {
     "language": "English",
     "translations": [
       {
@@ -325,6 +354,12 @@
         "updated": 1591185595149
       },
       {
+        "short_name": "S00",
+        "full_name": "Schlachter 2000",
+        "info": "http://wikipedia.org/wiki/Schlachter_Bible",
+        "updated": 1591185595149
+      },
+      {
         "short_name": "LUT",
         "full_name": "Luther (1912)",
         "info": "http://wikipedia.org/wiki/Luther_Bible",
@@ -465,17 +500,6 @@
         "short_name": "NR06",
         "full_name": "Nuova Riveduta, 2006",
         "updated": 1591185595149
-      }
-    ]
-  },
-  {
-    "language": "Netherlands Nederland",
-    "translations": [
-      {
-        "short_name": "NLD",
-        "full_name": "De Heilige Schrift, Petrus Canisiusvertaling, 1939",
-        "info": "http://nl.wikipedia.org/wiki/Petrus_Canisiusvertaling",
-        "updated": 1591292348391
       }
     ]
   },

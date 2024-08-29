@@ -16,12 +16,12 @@ docker exec -i <database_container> psql -U <database_user> -d <database_name> -
 docker exec -i database_container psql -U database_user -d database_name -c "sql_command"
 
 -- ADD NEW TRANSLATION TO LOCAL DEV DB IN DOCKER CONTAINER --
-docker cp ./LBP.csv database:verses.csv
+docker cp ./DSV+.csv database:verses.csv
 docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
 
 
 ----------- DOCKER HELPER COMMANDS -----------
- docker cp ./NAA.csv database:verses.csv
+ docker cp ./S00.csv database:verses.csv
  docker cp ./commentaries.csv database:commentaries.csv
  
  docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse,  text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
@@ -32,7 +32,7 @@ docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_ver
  docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
 
  delete FROM bolls_verses where translation='NJB' and book = 72;
- docker exec -i database psql -U postgres_user -d postgres_db -c "delete FROM bolls_verses where translation='CUV23'"
+ docker exec -i database psql -U postgres_user -d postgres_db -c "delete FROM bolls_verses where translation='DSV+'"
 
 
 ALTER TABLE dictionary

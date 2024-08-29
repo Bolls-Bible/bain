@@ -2553,12 +2553,21 @@ tag bible-reader
 						return yes
 		return no
 
-	def strongHunber query, number
-		// check if the text containe hebrew symbols
-		if query.match(/[\u0590-\u05FF]/)
+	def strongHunber selection, number
+		# checking for Hebrew symbols is not reliable for cases when translation is English or Dutch but we're still at the old testament
+		# And at the same time parallel mode may be selected and selection may be either in one or another parallel which may be both NT and OT
+		# So we need to check to what translation the selection belongs
+		if settingsp.enabled
+			if $secondparallel.contains(selection.anchorNode)
+				if settingsp.book < 40
+					return 'H' + number
+				else
+					return 'G' + number
+		if settings.book < 40
 			return 'H' + number
 		else
 			return 'G' + number
+
 
 	def showDefOptions
 		const selection = window.getSelection!
@@ -2620,19 +2629,19 @@ tag bible-reader
 
 					# Strong numbers are always inside S tag
 					if node.tagName == 'S' or node.tagName == 's'
-						host_rectangle.strong = strongHunber(selected, node.textContent)
+						host_rectangle.strong = strongHunber(selection, node.textContent)
 						break
 
 				if !host_rectangle.strong
 					# If no S tag found, try at first to find the strong number in the next node
 					if node
-						host_rectangle.strong = strongHunber(selected, node.textContent)
+						host_rectangle.strong = strongHunber(selection, node.textContent)
 					# Otherwise try our old approach
 					elif selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
-						host_rectangle.strong = strongHunber(selected, selection.focusNode.previousSibling.textContent)
+						host_rectangle.strong = strongHunber(selection, selection.focusNode.previousSibling.textContent)
 					else
 						if selection.anchorNode.nextSibling..textContent
-							host_rectangle.strong = strongHunber(selected, selection.anchorNode.nextSibling.textContent)
+							host_rectangle.strong = strongHunber(selection, selection.anchorNode.nextSibling.textContent)
 
 				imba.commit!
 
@@ -2979,7 +2988,7 @@ tag bible-reader
 
 								if verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.enabled bookmark=verse.comment containerWidth=layerWidth(no) containerHeight=layerHeight(no)>
-										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
+										<span[c:$acc-color @hover:$acc-color-hover]> '†'
 
 								if settings.verse_break
 									<br>
@@ -3046,7 +3055,7 @@ tag bible-reader
 
 								if parallel_verse.comment and settings.verse_commentary
 									<note-up style=super_style parallelMode=settingsp.enabled bookmark=parallel_verse.comment containerWidth=layerWidth(yes) containerHeight=layerHeight(yes)>
-										<span[c:$acc-color @hover:$acc-color-hover]> '🟇'
+										<span[c:$acc-color @hover:$acc-color-hover]> '†'
 
 								if settings.verse_break
 									<br>
@@ -3288,8 +3297,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.0 🗓 "
-						<time dateTime='2024-8-25'> "25.8.2024"
+						"🍇 v2.6.1 🗓 "
+						<time dateTime='2024-8-30'> "30.8.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
