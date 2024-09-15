@@ -58,7 +58,8 @@ docker compose -f dev-docker-compose.yml logs -f --tail 8
 
 docker compose -f dev-docker-compose.yml stop
 
-docker compose -f docker-compose.dev.yml exec django python manage.py migrate --noinput 
+docker compose -f docker-compose.dev.yml exec django python manage.py makemigrations
+docker compose -f docker-compose.dev.yml exec django python manage.py migrate --noinput
 
 docker cp ./django/sql/unaccent_plus.rules  db:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
 

@@ -11,7 +11,7 @@ import "./menu-popup.imba"
 import "./mark-down.imba"
 import './orderable-list.imba'
 import {thanks_to} from './thanks_to.imba'
-import {svg_paths, swirl} from "./svg_paths.imba"
+import {svg_paths, swirl, Heart} from "./svg_paths.imba"
 import {scrollToY} from './smooth_scrolling.imba'
 
 let html = document.documentElement
@@ -85,6 +85,7 @@ let settings =
 	lock_books_menu: no
 	extended_dictionary_search: no
 	enable_dynamic_contrast: no
+	favorite_translations: []
 
 	get light
 		if this.theme == 'dark' or this.theme == 'black'
@@ -439,7 +440,10 @@ tag bible-reader
 
 		compare_translations.push(settings.translation)
 		compare_translations.push(settingsp.translation)
-		if JSON.parse(getCookie("compare_translations")) then compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
+		if JSON.parse(getCookie("compare_translations"))
+			compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
+		if JSON.parse(getCookie("favorite_translations"))
+			settings.favorite_translations = JSON.parse(getCookie("favorite_translations"))
 		
 		search =
 			search_div: no
@@ -563,7 +567,9 @@ tag bible-reader
 	def syncHistory
 		if state.user.username && window.navigator.onLine
 			let cloud_history = await loadData('/history')
-			if cloud_history.compare_translations..length then #compare_translations = JSON.parse(cloud_history.compare_translations)
+			if cloud_history.compare_translations..length
+				#compare_translations = JSON.parse(cloud_history.compare_translations) || []
+				settings.favorite_translations = JSON.parse(cloud_history.favorite_translations) || []
 			# Merge local history and server copy
 			history = JSON.parse(getCookie("history")) || []
 			try
@@ -607,6 +613,25 @@ tag bible-reader
 				throw new Error(response.statusText)
 			).catch(do |e| console.error(e))
 
+
+	def toggleTranslationFavor translation_short_name
+		if translation_short_name in settings.favorite_translations
+			settings.favorite_translations.splice(settings.favorite_translations.indexOf(translation_short_name), 1)
+		else
+			settings.favorite_translations.unshift(translation_short_name)
+		if window.navigator.onLine && state.user.username
+			window.fetch("/api/save-favorite-translations/", {
+				method: "PUT",
+				cache: "no-cache",
+				headers: {
+					'X-CSRFToken': state.get_cookie('csrftoken'),
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					translations: JSON.stringify(settings.favorite_translations),
+				})
+			})
+		window.localStorage.setItem("favorite_translations", JSON.stringify(settings.favorite_translations))
 
 	def loadData url
 		let res = await window.fetch(url)
@@ -2709,9 +2734,9 @@ tag bible-reader
 				catch error
 					console.error error
 					if state.dictionary in state.downloaded_dictionaries
-						loadDefinitionsFromOffline()
+						await loadDefinitionsFromOffline()
 			elif state.dictionary in state.downloaded_dictionaries
-				loadDefinitionsFromOffline()
+				await loadDefinitionsFromOffline()
 			loading = no
 			expanded_definition = 0
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
@@ -2806,6 +2831,11 @@ tag bible-reader
 		clearSpace()
 		popUp("font")
 	
+	def translationHeartFill trabbr
+		if settings.favorite_translations.includes(trabbr)
+			return 'currentColor'
+		return 'none'
+
 	def openTranslationInParallel translation
 		settingsp.enabled = yes
 		setCookie('parallel_display', settingsp.enabled)
@@ -2854,6 +2884,12 @@ tag bible-reader
 
 				if show_list_of_translations
 					<div[m:16px 0 @off:0 p:8px h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:256px @off:0 y@off:-16px] ease>
+						# show favorites first
+						if settings.favorite_translations.length
+							<[d:flex flw:wrap ai:center p:10px]>
+								<Heart [size:1em stroke:$c @hover:$acc-color fill: currentColor]>
+								for favorite in settings.favorite_translations
+									<span.translation_name [w:auto p:0 8px] @click=changeTranslation(favorite)> favorite
 						for language in languages
 							<div key=language.language>
 								<p.book_in_list[justify-content:start] .pressed=(language.language == show_language_of) .selected=(language.translations.find(do |translation| currentTranslation(translation.short_name))) @click=showLanguageTranslations(language.language)>
@@ -2872,10 +2908,8 @@ tag bible-reader
 														<b> translation.short_name
 														', '
 														translation.full_name
-													if translation.info then <a href=translation.info title=translation.info target="_blank" rel="noreferrer">
-														<svg[size:20px min-width:20px min-height:20px ml:16px] viewBox="0 0 24 24">
-															<title> translation.info
-															<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+													<[d:flex fld:column ml:4px]>
+														<Heart [size:1em stroke:$c @hover:$acc-color fill: {translationHeartFill(translation.short_name)}] @click.prevent.stop=toggleTranslationFavor(translation.short_name)>
 										if no_translation_downloaded
 											<p.book_in_list> state.lang["no_translation_downloaded"]
 
@@ -3297,8 +3331,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.1 🗓 "
-						<time dateTime='2024-8-30'> "30.8.2024"
+						"🍇 v2.6.2 🗓 "
+						<time dateTime='2024-9-15'> "15.9.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3961,7 +3995,9 @@ tag bible-reader
 
 					@hotkey('alt+right').prevent.stop=window.history.forward!
 					@hotkey('alt+left').prevent.stop=window.history.back!
-					>
+
+					@hotkey('mod+,').prevent.stop=turnHelpBox
+				>
 
 
 

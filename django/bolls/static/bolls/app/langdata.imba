@@ -159,6 +159,7 @@ export const english = {
 		"Open Bible search: <b>s</b> or <b>f</>",
 		"Open chapter search: <b>Ctrl + f</b>",
 		"Open dictionary search: <b>Ctrl + d</b>",
+		"Open this help: <b>Ctrl + ,</b>"
 	],
 	"signin": "Sign up",
 	"skip_conflicts": "Skip conflicting bookmarks",
@@ -349,6 +350,7 @@ export const ukrainian = {
 		"Відкрити Біблійний пошук: <b>s</b> або <b>f</>",
 		"Відкрити пошук в главі: <b>Ctrl + f</b>",
 		"Відкрити пошук у словнику: <b>Ctrl + d</b>",
+		"Відкрити цю допомогу: <b>Ctrl + ,</b>"
 	],
 	"signin": "Зареєструватися",
 	"skip_conflicts": "Пропускати конфліктні закладки",
@@ -539,6 +541,7 @@ export const russian = {
 		"Открыть поиск в Библии: <b>s</b> или <b>f</>",
 		"Открыть поиск в главе: <b>Ctrl + f</b>",
 		"Открыть поиск в словаре: <b>Ctrl + d</b>",
+		"Открыть эту помощъ: <b>Ctrl + ,</b>"
 	],
 	"signin": "Зарегистрироваться",
 	"skip_conflicts": "Пропустить конфликтующие закладки",
@@ -729,6 +732,7 @@ export const portuguese = {
 		"Open Bible search: <b>s</b> or <b>f</>",
 		"Open chapter search: <b>Ctrl + f</b>",
 		"Abrir pesquisa de dicionário: <b>Ctrl + d</b>",
+		"Abra esta ajuda: <b>Ctrl + ,</b>"
 	],
 	"signin": "Inscrever-se",
 	"skip_conflicts": "Ignorar favoritos conflitantes",
@@ -919,6 +923,7 @@ export const espanol = {
 		"Open Bible search: <b>s</b> or <b>f</>",
 		"Open chapter search: <b>Ctrl + f</b>",
 		"Búsqueda de diccionario abierto: <b>Ctrl + d</b>",
+		"Abrir esta ayuda: <b>Ctrl + ,</b>"
 	],
 	"signin": "Registrarse",
 	"skip_conflicts": "Omitir marcadores en conflicto",
@@ -1110,6 +1115,7 @@ export const german = {
 		"Open Bible search: <b>s</b> or <b>f</>",
 		"Open chapter search: <b>Ctrl + f</b>",
 		"Wörterbuchsuche öffnen: <b>Ctrl + d</b>",
+		"Diese Hilfe öffnen: <b>Ctrl + ,</b>"
 	],
 	"signin": "Sign up",
 	"skip_conflicts": "Widersprüchliche Lesezeichen überspringen",

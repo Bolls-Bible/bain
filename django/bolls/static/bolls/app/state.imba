@@ -97,7 +97,7 @@ export class State
 					language = 'pt'
 					document.lastChild.lang = "pt"
 					if !window.translation
-						setCookie('translation', 'ARA')
+						setCookie('translation', 'TB10')
 				when 'de'
 					language = 'de'
 					document.lastChild.lang = "de"

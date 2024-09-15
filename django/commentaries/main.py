@@ -1,13 +1,13 @@
 import pandas as pd
 import re
-from books_map import *
+from books_map import books_map, books_short_names
 
 
-translation = "S00"
+translation = "TB10"
 
 
 def parseLinks(text):
-    if type(text) == float:
+    if type(text) is float:
         return ""
 
     text = re.sub(r"(<[/]?span[^>]*)>", "", text)  # Clean up unneeded spans
@@ -38,21 +38,65 @@ def parseLinks(text):
 # print(parseLinks("<a href='B:230 102:25'>Ps. 102:25</a>; <a href='B:290 40:21'>Is. 40:21</a>; (<a href='B:500 1:1-3'>John 1:1–3</a>; <a href='B:650 1:10'>Heb. 1:10</a>)"))
 
 
-df = pd.read_csv("mybcommentaries.csv", sep=",")
+def generate_links_from_cross_references(row):
+    # book,chapter,verse,verse_end,book_to,chapter_to,verse_to_start,verse_to_end,votes</a>
+    # Result should be something liek <a href='/NBV07/1/25/20'>20</a>
+    link = f"<a href='/{translation}/{row['book_to']}/{row['chapter_to']}/{row['verse_to_start']}"
+    if row["verse_to_end"] > 0:
+        link += f"-{row['verse_to_end']}"
+    link += f"'>{books_short_names[row['book_to']]} {row['chapter_to']}:{row['verse_to_start']}"
+    if row["verse_to_end"] > 0:
+        link += f"-{row['verse_to_end']}"
+    link += "</a>"
+    return link
 
-del df["chapter_number_to"]
-del df["verse_number_to"]
 
-df["translation"] = translation
-df["text"] = df.apply(lambda row: parseLinks(f'{row["marker"]} {row["text"]}'), axis=1)
-df.rename(columns={"book_number": "book", "chapter_number_from": "chapter", "verse_number_from": "verse"}, inplace=True)
-del df["marker"]
+def convert_cross_references_into_links():
+    # load the cross_references.csv
+    df = pd.read_csv("cross_references.csv", sep=",")
+    # book,chapter,verse,verse_end,book_to,chapter_to,verse_to_start,verse_to_end,votes
+    del df["votes"]
 
-col = df.pop("translation")
-df.insert(0, col.name, col)
-# translation,book,chapter,verse,text
+    df["text"] = df.apply(generate_links_from_cross_references, axis=1)
 
-df.to_csv(
-    "commentaries.csv",
-    index=False,
-)
+    # resulting dataframe should look like this: translation,book,chapter,verse,text
+    del df["book_to"]
+    del df["chapter_to"]
+    del df["verse_to_start"]
+    del df["verse_to_end"]
+    del df["verse_end"]
+
+    # add the translation column
+    # df["translation"] = translation
+    # col = df.pop("translation")
+    df.insert(0, "translation", translation)
+    return df
+
+
+def main():
+    df = pd.read_csv("mybcommentaries.csv", sep=",")
+
+    del df["chapter_number_to"]
+    del df["verse_number_to"]
+
+    df["text"] = df.apply(lambda row: parseLinks(f'{row["marker"]} {row["text"]}'), axis=1)
+    df.rename(columns={"book_number": "book", "chapter_number_from": "chapter", "verse_number_from": "verse"}, inplace=True)
+    del df["marker"]
+
+    df.insert(0, "translation", translation)
+    # translation,book,chapter,verse,text
+    # cross_references_df = convert_cross_references_into_links()
+    # # add the cross_references_df to df
+    # df = pd.concat([df, cross_references_df], ignore_index=True)
+
+    print(df.head())
+    print(df.columns)
+
+    df.to_csv(
+        "commentaries.csv",
+        index=False,
+    )
+
+
+if __name__ == "__main__":
+    main()

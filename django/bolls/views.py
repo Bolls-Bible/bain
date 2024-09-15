@@ -714,7 +714,7 @@ def historyOf(user):
 
 
 def historyData(user):
-    default_response_obj = {"history": [], "purge_date": 0, "compare_translations": []}
+    default_response_obj = {"history": "[]", "purge_date": 0, "compare_translations": "[]", "favorite_translations": "[]"}
     if user.is_authenticated:
         try:
             obj = user.history_set.get(user=user)
@@ -722,6 +722,7 @@ def historyData(user):
                 "history": obj.history,
                 "purge_date": obj.purge_date,
                 "compare_translations": obj.compare_translations,
+                "favorite_translations": obj.favorite_translations
             }
         except History.MultipleObjectsReturned:
             user.history_set.filter(user=user).delete()
@@ -1067,6 +1068,26 @@ def saveCompareTranslations(request):
         except History.MultipleObjectsReturned:
             user.history_set.all().delete()
             user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=405)
+
+
+def saveFavoriteTranslations(request):
+    if request.method == "PUT" and request.user.is_authenticated:
+        received_json_data = json.loads(request.body)
+        user = request.user
+        try:
+            history = user.history_set.get(user=user)
+            history.favorite_translations = received_json_data["translations"]
+            history.save()
+
+        except History.DoesNotExist:
+            user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
+
+        except History.MultipleObjectsReturned:
+            user.history_set.all().delete()
+            user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)

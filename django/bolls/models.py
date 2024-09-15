@@ -39,6 +39,7 @@ class History(models.Model):
     history = models.TextField()
     purge_date = models.PositiveBigIntegerField(default=0)
     compare_translations = models.TextField(null=True, default=None)
+    favorite_translations = models.TextField(null=True, default=None)
 
 
 class Dictionary(models.Model):

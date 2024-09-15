@@ -23,6 +23,7 @@ urlpatterns = [
     path("download-notes/", views.downloadNotes),
     path("import-notes/", views.importNotes),
     path("save-compare-translations/", views.saveCompareTranslations),
+    path("api/save-favorite-translations/", views.saveFavoriteTranslations),
     path("get-translation/<slug:translation>/", views.getTranslation),
     path("get-paralel-verses/", views.getParallelVerses),
     path("get-verses/", views.getVerses, name="getVerses"),
