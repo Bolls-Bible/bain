@@ -618,7 +618,7 @@ tag bible-reader
 		if translation_short_name in settings.favorite_translations
 			settings.favorite_translations.splice(settings.favorite_translations.indexOf(translation_short_name), 1)
 		else
-			settings.favorite_translations.unshift(translation_short_name)
+			settings.favorite_translations.push(translation_short_name)
 		if window.navigator.onLine && state.user.username
 			window.fetch("/api/save-favorite-translations/", {
 				method: "PUT",
@@ -3331,8 +3331,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.2 🗓 "
-						<time dateTime='2024-9-15'> "15.9.2024"
+						"🍇 v2.6.3 🗓 "
+						<time dateTime='2024-9-22'> "22.9.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3522,6 +3522,14 @@ tag bible-reader
 								<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=state.lang.create>
 									<title> state.lang.create
 									<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+							<article[o:0.8 fs:0.8em]>
+								# display here the choosen verses
+								let chosenVersesToIterate = choosen_parallel == 'first' ? verses : parallel_verses
+								for verse in chosenVersesToIterate
+									<>
+										if verse.pk in choosenid
+											<span innerHTML=verse.text id=verse.pk>
+											' '
 							<mark-down store=store lemon=state.lang.write_something_awesone>
 
 						elif big_modal_block_content == "dictionary"
@@ -4055,9 +4063,9 @@ tag bible-reader
 		bdt@lt-lg:1px solid $acc-bgc
 
 	css #navigation > div
-		padding:3vw @lt-lg:4px
-		width:calc(100% / 3) @lg:calc(26px + 6vw)
-		height:48px @lg:calc(26px + 6vw)
+		padding:3em @lt-lg:4px
+		width:calc(100% / 3) @lg:auto
+		height:48px @lg:auto
 		c@hover:$acc-color-hover
 		fill:$acc-color @hover:$acc-color-hover @lt-lg:$c
 		d@lt-lg:vflex jc:center ai:center

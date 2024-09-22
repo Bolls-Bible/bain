@@ -3,3 +3,4 @@ Disallow: /admin/
 Allow: /
 Sitemap: http://bolls.life/static/sitemap0.xml
 Sitemap: http://bolls.life/static/sitemap1.xml
+Sitemap: http://bolls.life/static/sitemap2.xml
