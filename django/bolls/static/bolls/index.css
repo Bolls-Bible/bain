@@ -517,9 +517,7 @@ footer a,
   padding-bottom: 4px;
 }
 
-text-as-html s,
-main s,
-.bookmark_text s {
+s {
   display: none;
 }
 

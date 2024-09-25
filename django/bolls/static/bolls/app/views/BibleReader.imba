@@ -1862,6 +1862,22 @@ tag bible-reader
 		window.open("viber://forward?text={window.encodeURIComponent(sharedText())}", '_blank')
 		clearSpace()
 
+	def copyComparisonList
+		let msg = highlighted_title
+
+		for translation in comparison_parallel
+			let verses = []
+			let texts = []
+			for verse in translation
+				if verse.text
+					texts.push(verse.text)
+					verses.push(verse.verse)
+			const firstVerse = translation[0]
+			if firstVerse.text
+				msg += '\n\n«' + state.cleanUpCopyText(texts) + '»\n\n' + firstVerse.translation + ' ' + "https://bolls.life" + '/'+ firstVerse.translation + '/' + firstVerse.book + '/' + firstVerse.chapter + '/' + state.versePart(verses) + '/'
+
+		state.copyTextToClipboard(msg)
+
 	def getNameOfBookFromHistory translation, bookid
 		let books = []
 		books = BOOKS[translation]
@@ -3331,8 +3347,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.3 🗓 "
-						<time dateTime='2024-9-22'> "22.9.2024"
+						"🍇 v2.6.4 🗓 "
+						<time dateTime='2024-9-25'> "25.9.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3382,7 +3398,10 @@ tag bible-reader
 									<title> state.lang.close
 									<path[m: auto] d=svg_paths.close>
 								<h1> highlighted_title
-								<svg.filter_search @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=state.lang.addcollection [stroke:$c stroke-width:2px]>
+								<svg.filter_search [stroke:$c stroke-width:2px] viewBox="0 0 561 561" @click=copyComparisonList>
+									<title> state.lang.copy
+									<path d=svg_paths.copy>
+								<svg.filter_search [stroke:$c stroke-width:2px] @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=state.lang.addcollection>
 									<title> state.lang.compare
 									<line x1="0" y1="10" x2="20" y2="10">
 									<line x1="10" y1="0" x2="10" y2="20">

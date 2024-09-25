@@ -18,7 +18,7 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import JsonResponse, HttpResponse
 
-from bolls.books_map import *
+from bolls.books_map import books_map
 from bolls.forms import SignUpForm
 
 from .models import Verses, Bookmarks, History, Note, Commentary, Dictionary

@@ -2,7 +2,10 @@ importScripts("/static/bolls/jszip.min.js");
 importScripts("/static/bolls/dexie.min.js");
 importScripts("/static/bolls/scripts.js");
 
-const CACHE_NAME = "v2.6.3";
+const CACHE_NAME = "v2.6.4";
+const STATICS_CACHE = "statics-v1.0.0";
+const TEXTS_CACHE = "texts-v1.0.0";
+
 const urlsToCache = [
   "/",
   "/static/bolls/dist/assets/index.js",
@@ -51,21 +54,32 @@ self.addEventListener("fetch", (event) => {
             resp ||
             fetch(event.request).then((response) => {
               var responseClone = response.clone();
-              if (
+              const texts_cache_eligible =
                 event.request.url.includes("get-chapter/") ||
                 event.request.url.includes("get-text/") ||
                 event.request.url.includes("search/") ||
-                event.request.url.includes("dictionary-definition/") ||
+                event.request.url.includes("dictionary-definition/");
+              const statics_cache_eligible =
                 event.request.destination == "font" ||
                 event.request.destination == "script" ||
                 event.request.destination == "style" ||
                 event.request.destination == "manifest" ||
-                event.request.destination == "image"
-              ) {
+                event.request.destination == "image";
+              if (texts_cache_eligible || statics_cache_eligible) {
                 console.log("Populating cache with ", event.request.url);
-                caches.open(CACHE_NAME).then((cache) => {
-                  cache.put(event.request, responseClone);
-                });
+                if (texts_cache_eligible) {
+                  caches.open(TEXTS_CACHE).then((cache) => {
+                    cache.put(event.request, responseClone);
+                  });
+                } else if (statics_cache_eligible) {
+                  caches.open(STATICS_CACHE).then((cache) => {
+                    cache.put(event.request, responseClone);
+                  });
+                } else {
+                  caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                  });
+                }
               }
               return response;
             })
@@ -79,7 +93,7 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  const expectedCaches = [CACHE_NAME];
+  const expectedCaches = [CACHE_NAME, STATICS_CACHE, TEXTS_CACHE];
   event.waitUntil(
     caches
       .keys()
