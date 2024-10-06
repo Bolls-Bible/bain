@@ -61,11 +61,14 @@ for language in languages
 	translations = translations.concat(language.translations)
 
 let settings =
-	theme: 'light'
-	accent: 'blue'
 	translation: 'YLT'
 	book: 1
 	chapter: 1
+	name_of_book: ''
+	filtered_books: []
+
+	theme: 'light'
+	accent: 'blue'
 	font:
 		size: 20
 		family: "sans, sans-serif"
@@ -74,13 +77,12 @@ let settings =
 		weight: 400
 		max-width: 40
 		align: ''
+
 	verse_number: yes
 	verse_break: no
 	verse_picker: no
 	verse_commentary: yes
 	transitions: yes
-	name_of_book: ''
-	filtered_books: []
 	parallel_synch: yes
 	lock_books_menu: no
 	extended_dictionary_search: no
@@ -2865,6 +2867,10 @@ tag bible-reader
 			settingsp.chapter = 1
 		settingsp.translation = translation
 
+	def logout
+		await window.fetch("/accounts/logout/", {method:"POST", headers:{'X-CSRFToken': state.get_cookie('csrftoken')}})
+		window.location.replace("/")
+
 	def render
 		if isApple
 			iOS_keaboard_height = Math.abs(inner_height - window.innerHeight)
@@ -3147,7 +3153,7 @@ tag bible-reader
 								<path d="M0 0h24v24H0z" fill="none">
 								<path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z">
 							<a.username [c:$fill-on-hover]> state.userName
-						<a.prof_btn [ws:pre] @click.stop.prevent=(window.location = "/accounts/logout/") href="/accounts/logout/"> state.lang.logout
+						<a.prof_btn [ws:pre] @click.stop.prevent=logout> state.lang.logout
 					else
 						<a.prof_btn @click.stop.prevent=(window.location = "/accounts/login/") href="/accounts/login/"> state.lang.login
 						<a.prof_btn.signin @click.stop.prevent=(window.location = "/signup/") href="/signup/"> state.lang.signin
@@ -3347,8 +3353,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.4 🗓 "
-						<time dateTime='2024-9-25'> "25.9.2024"
+						"🍇 v2.6.5 🗓 "
+						<time dateTime='2024-10-6'> "6.10.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -4003,6 +4009,7 @@ tag bible-reader
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 					@hotkey('mod+d').prevent.stop=showDictionaryView
 					@hotkey('alt+s').prevent.stop=showStongNumberDefinition
+					@hotkey('alt+r').prevent.stop=randomVerse
 					@hotkey('escape').force.prevent.stop=clearSpace
 					@hotkey('mod+y').prevent.stop=fixDrawers
 					@hotkey('mod+alt+h').prevent.stop=(menuicons = !menuicons, setCookie("menuicons", menuicons), imba.commit!)
