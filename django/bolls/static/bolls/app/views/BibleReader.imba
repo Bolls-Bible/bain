@@ -13,6 +13,7 @@ import './orderable-list.imba'
 import {thanks_to} from './thanks_to.imba'
 import {svg_paths, swirl, Heart} from "./svg_paths.imba"
 import {scrollToY} from './smooth_scrolling.imba'
+import { scoreSearch } from './scoreSearch.js'
 
 let html = document.documentElement
 
@@ -756,7 +757,7 @@ tag bible-reader
 		parallel_verses = []
 		try
 			if state.downloaded_translations.indexOf(translation) != -1
-				parallel_verses = await state.getChapterFromDB(translation, book, chapter, verse)
+				parallel_verses = await state.getChapterFromDB(translation, book, chapter)
 			else
 				parallel_verses = await loadData(url)
 			imba.commit()
@@ -827,34 +828,25 @@ tag bible-reader
 	def highlightLinkedVerses verse, endverse
 		if isIOS
 			return
+
 		setTimeout(&, 250) do
 			const versenode = document.getElementById(verse)
-			if versenode
-				if endverse
-					let nodes = []
-					for id in [verse..endverse]
-						if id <= verses.length
-							nodes.push document.getElementById(id)
-					if window.getSelection
-						const selection = window.getSelection()
-						selection.removeAllRanges()
-						for node in nodes
-							const range = document.createRange()
-							range.selectNodeContents(node)
-							selection.addRange(range)
-					else
-						console.warn("Could not select text in node: Unsupported browser.")
-				else
-					if window.getSelection
-						const window_selection = window.getSelection()
-						const selection_range = document.createRange()
-						selection_range.selectNodeContents(versenode)
-						window_selection.removeAllRanges()
-						window_selection.addRange(selection_range)
-					else
-						console.warn("Could not select text in node: Unsupported browser.")
+			unless versenode
+				return highlightLinkedVerses verse, endverse
+
+			const selection = window.getSelection()
+			selection.removeAllRanges()
+			if endverse
+				for id in [parseInt(verse) .. parseInt(endverse)]
+					if id <= verses.length
+						const range = document.createRange()
+						const node = document.getElementById(id)
+						range.selectNodeContents(node.nextSibling || node)
+						selection.addRange(range)
 			else
-				highlightLinkedVerses verse, endverse
+				const range = document.createRange()
+				range.selectNodeContents(versenode.nextSibling || versenode)
+				selection.addRange(range)
 
 	def closeVerseOptions
 		choosen = []
@@ -1273,10 +1265,6 @@ tag bible-reader
 			closeSearch!
 			imba.commit!
 
-
-	def moreSearchResults
-		search.counter += 50
-		pageSearch()
 
 	def closeSearch close
 		loading = no
@@ -2176,32 +2164,6 @@ tag bible-reader
 	def boxShadow grade
 		settings.light == 'light' ? "box-shadow: 0 0 {(grade + 300) / 5}px rgba(0, 0, 0, 0.067);" : ''
 
-	### Used only for books filtering ###
-	# Compute a search relevance score for an item.
-	def scoreSearch item, search_query
-		item = item.toLowerCase!
-		search_query = search_query.toLowerCase!
-		let score = 0
-		let p = 0 # Position within the `item`
-		# Look through each character of the search string, stopping at the end(s)...
-		for char in search_query
-			# Figure out if the current letter is found in the rest of the `item`.
-			const index = item.indexOf(char, p)
-			# If not, punish & continue to the next character.
-			if index < 0
-				score--
-				continue
-
-			if index - p === 0
-				score++
-
-			#  If it is, add to the score...
-			score++
-			#  ... and skip the position within `item` forward.
-			p = index + 1
-		return score
-
-
 	def filteredBooks books
 		let result = []
 
@@ -2832,7 +2794,7 @@ tag bible-reader
 		const confirmed = await window.confirm(state.lang.purge_cache + '?')
 		if confirmed
 			# unregister service worker and purge cache
-			if window.navigator.serviceWorker != undefineds
+			if window.navigator.serviceWorker != undefined
 				window.navigator.serviceWorker.getRegistrations().then(do(registrations)
 					for registration in registrations
 						await registration.unregister()
@@ -3029,7 +2991,7 @@ tag bible-reader
 										<span> ' '
 									<span.verse dir="ltr" style=super_style @click=goToVerse(verse.verse)> '\u2007\u2007\u2007' + verse.verse + "\u2007"
 								else
-									<span	> ' '
+									<span> ' '
 								<span innerHTML=verse.text
 								 		id=verse.verse
 										@click.wait(200ms)=addToChosen(verse.pk, verse.verse, 'first')
@@ -3298,7 +3260,7 @@ tag bible-reader
 				if window.navigator.onLine
 					if state.db_is_available
 						<.help @click=toggleDownloads>
-							<svg.helpsvg @click=toggleDownloads viewBox="0 0 212.646728515625 159.98291015625">
+							<svg.helpsvg viewBox="0 0 212.646728515625 159.98291015625" aria-hidden-true>
 								<title> state.lang.download_translations
 								<g transform="matrix(1.5 0 0 1.5 0 128)">
 									<path d=svg_paths.download>
@@ -3353,8 +3315,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.5 🗓 "
-						<time dateTime='2024-10-6'> "6.10.2024"
+						"🍇 v2.6.6 🗓 "
+						<time dateTime='2024-11-11'> "11.11.2024"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -4109,7 +4071,7 @@ tag bible-reader
 		rd:16px
 		ofy:auto
 		-webkit-overflow-scrolling:touch
-	
+
 	css .search_option
 		w:24px min-width:24px mr:8px
 		o:0.5 @hover: 0.75
@@ -4148,18 +4110,18 @@ tag bible-reader
 
 		.disabled
 			o:0.5
-			transform:nonel
+			transform:none
 
 		.host_rectangle
 			bg:$acc-bgc rd:4px
 			bd:1px solid $acc-bgc-hover
-		
+
 		.host_rectangle button
 			p: 8px
 			bgc:transparent @hover:$acc-bgc-hover
 			fs:inherit font:inherit c:inherit
 			cursor:pointer
-		
+
 		.contrast-slider
 			input
 				w:100%

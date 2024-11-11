@@ -124,6 +124,119 @@ def getChapterWithComments(_, translation, book, chapter):
     return cross_origin(JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False))
 
 
+def find(translation, piece, book, match_case, match_whole):
+    d = []
+    results_of_search = []
+    if match_whole:
+        linear_search_params = {
+            "translation": translation,
+        }
+
+        if book:
+            if isinstance(book, str):
+                if book == "ot":
+                    linear_search_params["book__lt"] = 40
+                else:
+                    linear_search_params["book__gt"] = 40
+            else:
+                linear_search_params["book"] = book
+
+        if match_case:
+            linear_search_params["text__contains"] = piece
+        else:
+            linear_search_params["text__icontains"] = piece
+        results_of_search = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
+    else:
+        query_set = []
+
+        for word in piece.split():
+            if match_case:
+                query_set.append('Q(translation="' + translation + '", text__contains=' + json.dumps(word) + ")")
+            else:
+                query_set.append('Q(translation="' + translation + '", text__icontains=' + json.dumps(word) + ")")
+        if book:
+            if isinstance(book, str):
+                if book == "ot":
+                    query_set.append("Q(book__lt=40)")
+                else:
+                    query_set.append("Q(book__gt=40)")
+            else:
+                query_set.append('Q(book="' + book + '")')
+
+        query = " & ".join(query_set)
+
+        results_of_exec_search = Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse")
+
+        if len(results_of_exec_search) < 24:
+            vector = SearchVector("text")
+            query = SearchQuery(piece)
+
+            search_params = {
+                "translation": translation,
+            }
+            if book:
+                if isinstance(book, str):
+                    if book == "ot":
+                        search_params["book__lt"] = 40
+                    else:
+                        search_params["book__gt"] = 40
+                else:
+                    search_params["book"] = book
+
+            results_of_rank = Verses.objects.annotate(rank=SearchRank(vector, query)).filter(**search_params, rank__gt=(0.05)).order_by("-rank")
+
+            results_of_search = []
+            if len(results_of_rank) < 24:
+                results_of_similarity = (
+                    Verses.objects.annotate(rank=TrigramWordSimilarity(piece, "text")).filter(**search_params, rank__gt=0.5).order_by("-rank")
+                )
+
+                results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
+
+            results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+
+            if len(results_of_exec_search) > 0:
+                results_of_search = list(results_of_exec_search) + list(set(results_of_search) - set(results_of_exec_search))
+        else:
+            results_of_search = results_of_exec_search
+
+    def highlightHeadline(text):
+        highlighted_text = text
+        mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
+        highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
+        if not match_whole:
+            for word in piece.split():
+                if word == piece:
+                    break
+                # word may be just an article or an `I` which may replace all i`s in all words
+                if len(word) < 2:
+                    continue
+                mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
+                highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
+        return highlighted_text
+
+    # count number of all exact matches
+    exact_matches = 0
+    for obj in results_of_search:
+        exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
+
+    for obj in results_of_search[0:1024]:
+        d.append(
+            {
+                "pk": obj.pk,
+                "translation": obj.translation,
+                "book": obj.book,
+                "chapter": obj.chapter,
+                "verse": obj.verse,
+                "text": highlightHeadline(obj.text),
+            }
+        )
+    return {
+        "results": d,
+        "exact_matches": exact_matches
+    }
+
+
 def search(request, translation, piece=""):
     if len(piece) == 0:
         piece = request.GET.get("search", "")
@@ -131,116 +244,25 @@ def search(request, translation, piece=""):
     match_whole = request.GET.get("match_whole", "") == "true"
     book = request.GET.get("book", None)
 
-    d = []
     piece = piece.strip()
 
     if len(piece) > 2 or piece.isdigit():
-        results_of_search = []
-        if match_whole:
-            linear_search_params = {
-                "translation": translation,
-            }
+        result = find(translation, piece, book, match_case, match_whole)
+        return cross_origin(JsonResponse(result["results"], safe=False), headers={"Exact_matches": result["exact_matches"]})
+    else:
+        return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
 
-            if book:
-                if isinstance(book, str):
-                    if book == "ot":
-                        linear_search_params["book__lt"] = 40
-                    else:
-                        linear_search_params["book__gt"] = 40
-                else:
-                    linear_search_params["book"] = book
 
-            if match_case:
-                linear_search_params["text__contains"] = piece
-            else:
-                linear_search_params["text__icontains"] = piece
-            results_of_search = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
-        else:
-            query_set = []
+def v2Search(request, translation):
+    piece = request.GET.get("search", "")
+    match_case = request.GET.get("match_case", "") == "true"
+    match_whole = request.GET.get("match_whole", "") == "true"
+    book = request.GET.get("book", None)
 
-            for word in piece.split():
-                if match_case:
-                    query_set.append('Q(translation="' + translation + '", text__contains=' + json.dumps(word) + ")")
-                else:
-                    query_set.append('Q(translation="' + translation + '", text__icontains=' + json.dumps(word) + ")")
-            if book:
-                if isinstance(book, str):
-                    if book == "ot":
-                        query_set.append("Q(book__lt=40)")
-                    else:
-                        query_set.append("Q(book__gt=40)")
-                else:
-                    query_set.append('Q(book="' + book + '")')
-
-            query = " & ".join(query_set)
-
-            results_of_exec_search = Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse")
-
-            if len(results_of_exec_search) < 24:
-                vector = SearchVector("text")
-                query = SearchQuery(piece)
-
-                search_params = {
-                    "translation": translation,
-                }
-                if book:
-                    if isinstance(book, str):
-                        if book == "ot":
-                            search_params["book__lt"] = 40
-                        else:
-                            search_params["book__gt"] = 40
-                    else:
-                        search_params["book"] = book
-
-                results_of_rank = Verses.objects.annotate(rank=SearchRank(vector, query)).filter(**search_params, rank__gt=(0.05)).order_by("-rank")
-
-                results_of_search = []
-                if len(results_of_rank) < 24:
-                    results_of_similarity = (
-                        Verses.objects.annotate(rank=TrigramWordSimilarity(piece, "text")).filter(**search_params, rank__gt=0.5).order_by("-rank")
-                    )
-
-                    results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
-
-                results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
-
-                if len(results_of_exec_search) > 0:
-                    results_of_search = list(results_of_exec_search) + list(set(results_of_search) - set(results_of_exec_search))
-            else:
-                results_of_search = results_of_exec_search
-
-        def highlightHeadline(text):
-            highlighted_text = text
-            mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
-            highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
-            if not match_whole:
-                for word in piece.split():
-                    if word == piece:
-                        break
-                    # word may be just an article or an `I` which may replace all i`s in all words
-                    if len(word) < 2:
-                        continue
-                    mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
-                    highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
-            return highlighted_text
-
-        # count number of all exact matches
-        exact_matches = 0
-        for obj in results_of_search:
-            exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
-
-        for obj in results_of_search[0:1024]:
-            d.append(
-                {
-                    "pk": obj.pk,
-                    "translation": obj.translation,
-                    "book": obj.book,
-                    "chapter": obj.chapter,
-                    "verse": obj.verse,
-                    "text": highlightHeadline(obj.text),
-                }
-            )
-        return cross_origin(JsonResponse(d, safe=False), headers={"Exact_matches": exact_matches})
+    piece = piece.strip()
+    if len(piece) > 2 or piece.isdigit():
+        result = find(translation, piece, book, match_case, match_whole)
+        return cross_origin(JsonResponse(result, safe=False))
     else:
         return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
 

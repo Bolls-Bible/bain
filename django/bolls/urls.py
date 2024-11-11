@@ -35,10 +35,14 @@ urlpatterns = [
         "get-notes-bookmarks/<int:range_from>/<int:range_to>/",
         views.getBookmarksWithNotes,
     ),
+
     path("search/<slug:translation>/<str:piece>/", views.search),
     path("search/<slug:translation>/", views.search),
     path("find/<slug:translation>/<str:piece>/", views.search),
     path("find/<slug:translation>/", views.search),
+
+    path("v2/find/<slug:translation>", views.v2Search),
+
     path("get-books/<slug:translation>/", views.getBooks),
     path("get-text/<slug:translation>/<int:book>/<int:chapter>/", views.getText),
     path(
@@ -57,9 +61,11 @@ urlpatterns = [
     path("get-verse-counts/<slug:translation>/", views.getVerseCounts),
     path("get-random-verse/<slug:translation>/", views.getRandomVerse),
     path("dictionary-definition/<slug:dict>/<str:query>/", views.searchInDictionary),
+    path("dictionary-definition/<slug:dict>/<str:query>", views.searchInDictionary),
     path("get-dictionary/<slug:dictionary>/", views.getDictionary),
     # AAA
     path("<slug:translation>/<str:piece>/", views.search),
+
     path("<slug:translation>/<int:book>/<int:chapter>/", views.linkToChapter),
     path("<slug:translation>/<int:book>/<int:chapter>/<int:verse>/", views.linkToVerse),
     path(

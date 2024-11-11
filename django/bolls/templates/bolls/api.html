@@ -194,13 +194,14 @@ curl --location --request GET 'https://bolls.life/get-chapter/NKJV/22/8/'</pre
     </p>
 
     <h2 id="Search">Search</h2>
+    <p class="last-update">Updated at: 11 November 2024.</p>
     <p>
       To find verses by a slug or a string you need to form a url in the next
       manner:
     </p>
 
     <pre>
-https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=&lt;bool:match_case&gt;&match_whole=&lt;bool:match_whole&gt;</pre
+https://bolls.life/v2/find/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=&lt;bool:match_case&gt;&match_whole=&lt;bool:match_whole&gt;</pre
     >
 
     <p>
@@ -224,32 +225,36 @@ https://bolls.life/&lt;slug:translation&gt;?search=&lt;str:piece&gt;&match_case=
       found:
     </p>
 
-    <pre><a target="_blank" href="https://bolls.life/find/YLT/?search=haggi">https://bolls.life/find/YLT/?search=haggi&match_case=false&match_whole=true</a></pre>
+    <pre><a target="_blank" href="https://bolls.life/v2/find/YLT?search=haggi">https://bolls.life/v2/find/YLT?search=haggi&match_case=false&match_whole=true</a></pre>
 
     <p>
       The result of this request will be a list of top 1024 found verses in the
       given translation, where every verse will have some several fields:
     </p>
     <ul id="verse_fields">
-      <li>The <code>pk</code> field is an id of the verse in database.</li>
-      <li>The <code>translation</code> field is a translation of search.</li>
-      <li>The <code>book</code> field is a book of the verse.</li>
-      <li>
-        The <code>chapter</code> field is a chapter of the book in which the
-        verse is found.
-      </li>
-      <li>
-        The <code>verse</code> field is a number of the verse in its chapter.
-      </li>
-      <li>The <code>text</code> field contains html text of the verse.</li>
-      <li>
-        The optional <code>comment</code> field contains translators commentary
-        to the verse if such exist.
-      </li>
+      <li>The <code>exact_matches</code> contains total number of exact matches</li>
+      <li>The <code>results</code> is an array of the next objexts</li>
+      <ul>
+        <li>The <code>pk</code> field is an id of the verse in database.</li>
+        <li>The <code>translation</code> field is a translation of search.</li>
+        <li>The <code>book</code> field is a book of the verse.</li>
+        <li>
+          The <code>chapter</code> field is a chapter of the book in which the
+          verse is found.
+        </li>
+        <li>
+          The <code>verse</code> field is a number of the verse in its chapter.
+        </li>
+        <li>The <code>text</code> field contains html text of the verse.</li>
+        <li>
+          The optional <code>comment</code> field contains translators commentary
+          to the verse if such exist.
+        </li>
+      </ul>
     </ul>
     <p>Curl code</p>
     <pre>
-curl --location --request GET 'https://bolls.life/find/YLT/?search=haggi&match_case=false&match_whole=true'</pre
+curl --location --request GET 'https://bolls.life/v2/find/YLT?search=haggi&match_case=false&match_whole=true'</pre
     >
     <h2 id="Get a translation">Get a translation</h2>
     <p>You can get a full translation in json or zip:</p>

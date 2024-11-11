@@ -19,6 +19,7 @@ export class State
 	show_languages = no
 	language
 	lang
+
 	notifications = []
 	user = {}
 
