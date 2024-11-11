@@ -68,7 +68,8 @@ services:
     build: ./django/bolls/static/bolls/
     # context: ./django/bolls/static/bolls/
     # dockerfile: Dockerfile
-    restart: on-failure
+    # restart: on-failure
+    restart: no
     container_name: imba
     command: npm start
     # required for SELinux
@@ -101,7 +102,7 @@ services:
 
   traefik:
     image: traefik:latest
-    restart: unless-stopped
+    restart: on-failure
     container_name: traefik
     command:
       - "--api.insecure=true"
