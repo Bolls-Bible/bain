@@ -3,9 +3,9 @@
 ### Basic commands to run the application locally
 
 ```bash
-docker compose -f dev-docker-compose.yml build
+docker compose -f docker-compose.dev.yml build
 docker network create web
-docker compose -f dev-docker-compose.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 ```
 
 Then restore the database from a [backup file](https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql)
@@ -50,13 +50,13 @@ Now you should be able to open the application in your browser at http://bolls.l
 
 ```bash
 
-docker compose -f dev-docker-compose.yml up -d --force-recreate
+docker compose -f docker-compose.dev.yml up -d --force-recreate
 
-docker compose -f dev-docker-compose.yml ps
+docker compose -f docker-compose.dev.yml ps
 
-docker compose -f dev-docker-compose.yml logs -f --tail 8
+docker compose -f docker-compose.dev.yml logs -f --tail 8
 
-docker compose -f dev-docker-compose.yml stop
+docker compose -f docker-compose.dev.yml stop
 
 docker compose -f docker-compose.dev.yml exec django python manage.py makemigrations
 docker compose -f docker-compose.dev.yml exec django python manage.py migrate --noinput
