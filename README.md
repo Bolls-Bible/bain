@@ -71,7 +71,7 @@ After that you should be able to debug it.
 
 ### Docker Compose setup
 
-Go to [LOCAL_DEV_WITH_DOCKER_COMPOSER.md](LOCAL_DEV_WITH_DOCKER_COMPOSER.md) for mpore info
+Go to [LOCAL_DEV_WITH_DOCKER_COMPOSER.md](LOCAL_DEV_WITH_DOCKER_COMPOSER.md) for more info
 
 ### Checklist before any deploy
 
