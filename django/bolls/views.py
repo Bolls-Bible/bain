@@ -35,9 +35,9 @@ def index(request):
 
 def cross_origin(response, headers={}):
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"  # REMOVE POST?
     response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With,X-CSRFToken,Content-Type"
     response["Cross-Origin-Opener-Policy"] = "unsafe-none"
     response["Cross-Origin-Embedder-Policy"] = "unsafe-none"
     response["Cross-Origin-Resource-Policy"] = "cross-origin"
@@ -124,7 +124,7 @@ def getChapterWithComments(_, translation, book, chapter):
     return cross_origin(JsonResponse(getChapterWithCommentaries(translation, book, chapter), safe=False))
 
 
-def find(translation, piece, book, match_case, match_whole):
+def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     d = []
     results_of_search = []
     if match_whole:
@@ -220,7 +220,7 @@ def find(translation, piece, book, match_case, match_whole):
     for obj in results_of_search:
         exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
 
-    for obj in results_of_search[0:1024]:
+    for obj in results_of_search[(page * limit - limit):(page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -233,7 +233,8 @@ def find(translation, piece, book, match_case, match_whole):
         )
     return {
         "results": d,
-        "exact_matches": exact_matches
+        "exact_matches": 3,
+        "total": len(results_of_search),
     }
 
 
@@ -258,10 +259,12 @@ def v2Search(request, translation):
     match_case = request.GET.get("match_case", "") == "true"
     match_whole = request.GET.get("match_whole", "") == "true"
     book = request.GET.get("book", None)
+    page = request.GET.get("page", 1)
+    limit = request.GET.get("limit", 128)
 
     piece = piece.strip()
     if len(piece) > 2 or piece.isdigit():
-        result = find(translation, piece, book, match_case, match_whole)
+        result = find(translation, piece, book, match_case, match_whole, int(page), int(limit))
         return cross_origin(JsonResponse(result, safe=False))
     else:
         return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
@@ -415,9 +418,9 @@ def getBookmarks(request, translation, book, chapter):
         return JsonResponse([], safe=False)
 
 
-def mapBookmarks(bookmarkslist):
+def mapBookmarks(bookmarksList):
     bookmarks = []
-    for bookmark in bookmarkslist:
+    for bookmark in bookmarksList:
         note = ""
         if bookmark.note is not None:
             note = bookmark.note.text
@@ -458,6 +461,10 @@ def getProfileBookmarks(request, range_from, range_to):
 
 
 def getSearchedProfileBookmarks(request, query, range_from, range_to):
+    # handle unauthorized users
+    if not request.user.is_authenticated:
+        return JsonResponse([], safe=False)
+
     user = request.user
     bookmarks = (mapBookmarks(user.bookmarks_set.all().filter(collection__icontains=query).order_by("-date", "verse")[range_from:range_to]),)
     return JsonResponse(bookmarks, safe=False)
@@ -496,6 +503,10 @@ def getSafeArray(array):
 
 @csrf_exempt
 def getParallelVerses(request):
+    # Handle preflight requests
+    if request.method == "OPTIONS":
+        return cross_origin(HttpResponse(status=204))
+
     if request.method == "POST":
         try:
             received_json_data = json.loads(request.body)
@@ -514,12 +525,12 @@ def getParallelVerses(request):
                         query_set.append('Q(translation="' + translation + '", book=' + str(book) + ", chapter=" + str(chapter) + ", verse=" + str(verse) + ")")
 
                 query = " | ".join(query_set)
-                queryres = Verses.objects.filter(eval(query))
+                queryResults = Verses.objects.filter(eval(query))
 
                 for translation in getSafeArray(received_json_data["translations"]):
                     verses = []
                     for verse in getSafeArray(received_json_data["verses"]):
-                        v = [x for x in queryres if ((x.verse == verse) & (x.translation == translation))]
+                        v = [x for x in queryResults if ((x.verse == verse) & (x.translation == translation))]
                         if len(v):
                             for item in v:
                                 verses.append(
@@ -744,7 +755,7 @@ def historyData(user):
                 "history": obj.history,
                 "purge_date": obj.purge_date,
                 "compare_translations": obj.compare_translations,
-                "favorite_translations": obj.favorite_translations
+                "favorite_translations": obj.favorite_translations,
             }
         except History.MultipleObjectsReturned:
             user.history_set.filter(user=user).delete()

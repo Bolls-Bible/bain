@@ -1,0 +1,234 @@
+import GenericReader from '../lib/GenericReader'
+
+import ChevronRight from 'lucide-static/icons/chevron-right.svg'
+import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
+
+const cachedInnerHeight = window.innerHeight
+
+import { MOBILE_PLATFORM, isApple } from '../constants'
+
+tag chapter < section
+	prop state\(GenericReader)
+	prop headerFontSize = 2 # rem
+	prop versePrefix = ''
+	maxHeaderFont = 1.2 # rem
+
+	get main
+		return document.getElementById "main"
+
+	def layerHeight 
+		if parallelReader.enabled
+			return self.clientHeight
+		return main.clientHeight
+	
+	get layerWidth
+		if parallelReader.enabled
+			return self.clientWidth
+		return main.clientWidth
+
+	def calculateTopVerse e\Event
+		if activities.scrollLockTimeout != null
+			if activities.blockInSctoll != self
+				return
+
+			clearTimeout(activities.scrollLockTimeout)
+
+		activities.blockInSctoll = self
+		activities.scrollLockTimeout = setTimeout(&, 1000) do
+			activities.blockInSctoll = null
+			activities.scrollLockTimeout = null
+
+		let top_verse = {
+			distance: 999999 # intentionally high number
+			id: ''
+		}
+		
+		const article = activities.blockInSctoll.querySelector('article')
+
+		unless article..children..length
+			return
+		
+		const myBoundingRect = getBoundingClientRect()
+
+		for kid in article.children
+			if kid.id
+				# console.log(kid.offsetTop, activities.blockInSctoll.scrollTop, kid)
+				let new_distance = Math.abs(kid.offsetTop - activities.blockInSctoll.scrollTop - myBoundingRect.top)
+				if new_distance < top_verse.distance
+					top_verse.distance = new_distance
+					top_verse.id = kid.id
+
+		# TODO: implement along parallel reader
+		if top_verse.id
+			let verseToSctollTo = versePrefix ? top_verse.id.match(/\d+/)[0] : "p{top_verse.id}"
+			reader.findVerse verseToSctollTo
+
+	def changeHeadersSizeOnScroll e\Event
+		let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
+		if testsize * theme.fontSize < 12
+			headerFontSize = 16 / theme.fontSize
+		elif e.target.scrollTop > 0
+			headerFontSize = testsize
+		else
+			headerFontSize = 2
+
+		unless versePrefix
+			const last_known_scroll_position = e.target.scrollTop
+			setTimeout(&, 100) do
+				if e.target.scrollTop < last_known_scroll_position || not e.target.scrollTop
+					activities.menuIconsTransform = 0
+				elif e.target.scrollTop > last_known_scroll_position
+					if window.innerWidth >= 1024
+						activities.menuIconsTransform = -100
+					else
+						activities.menuIconsTransform = 100
+
+		if settings.parallel_sync and parallelReader.enabled
+			calculateTopVerse e
+		dictionary.tooltip = null
+		imba.commit!
+
+	def mousemove e\MouseEvent
+		if e.y < 32 && not MOBILE_PLATFORM
+			maxHeaderFont = 1.2
+		else
+			maxHeaderFont = 0
+		
+	# no -- means prev, yes -- means next
+	def getChevron direction\boolean
+		const textDirection = translationTextDirection(state.translation)
+		if (textDirection == 'rtl' && direction) or (textDirection == 'ltr' && !direction)
+			return <svg src=ChevronLeft aria-label=t.prev> 
+		return <svg src=ChevronRight aria-label=t.next>
+
+	def render
+		if isApple
+			activities.IOSKeyboardHeight = Math.abs(cachedInnerHeight - window.innerHeight)
+
+		<self .parallel=parallelReader.enabled
+			@scroll=changeHeadersSizeOnScroll @mousemove=mousemove
+			dir=translationTextDirection(state.translation)>
+			# for rect in pageSearch.rects when rect.mathcid.charAt(0) != versePrefix and activities.activeModal == ''
+			# 	<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+
+			if state.verses.length
+				<header[h:0 mt:4em zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
+					#main_header_arrow_size = "min(64px, max({maxHeaderFont}em, {headerFontSize}em))"
+					<h1
+						[lh:1 padding-block:0.2em m:0 ff: {theme.fontFamily} fw: {theme.fontWeight + 200} fs:max({maxHeaderFont}em, {headerFontSize}em) d@md:flex ai@md:center jc@md:space-between]
+						title=translationFullName(state.translation)>
+						<a.arrow @click.prevent.stop=state.prevChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.prev href="{state.prevChapterLink}">
+							getChevron(no)
+						state.nameOfCurrentBook, ' ', state.chapter
+
+						<a.arrow @click.prevent.stop=state.nextChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.next href=state.nextChapterLink>
+							getChevron(yes)
+				<p[mb:1em p: 0 8px o:0 lh:1 ff: {theme.fontFamily} fw: {theme.fontWeight + 200} fs: {theme.fontSize * 2}px us:none word-break:break-word]> state.nameOfCurrentBook, ' ', state.chapter # since header height is changing takes constant space for header to avoid layout shifts
+				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
+					for verse, verse_index in state.verses
+						let bookmark = state.getBookmark(verse.pk, 'bookmarks')
+						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:{1.2 * headerFontSize}em;"
+
+						if settings.verse_number
+							unless settings.verse_break
+								<span> ' '
+							<a.verse dir="ltr" style=superStyle id="{versePrefix}{verse.verse}" href="#{versePrefix}{verse.verse}"> '\u2007\u2007\u2007' + verse.verse + "\u2007"
+						else
+							<span> ' '
+						<span innerHTML=verse.text
+								id="{versePrefix}{verse.verse}"
+								@click.wait(200ms)=state.selectVerse(verse.pk, verse.verse)
+								[background-image: {state.getHighlight(verse.pk)}]
+							>
+						if bookmark and not nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
+							<note-up style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
+								<svg viewBox="0 0 20 20" alt=t.note>
+									<title> t.note
+									<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
+
+						if verse.comment and settings.verse_commentary
+							<note-up style=superStyle parallelMode=parallelReader.enabled bookmark=verse.comment containerWidth=layerWidth containerHeight=layerHeight(no)>
+								<span[c:$acc @hover:$acc-hover]> '†'
+
+						if settings.verse_break
+							<br>
+							unless settings.verse_number
+								<span.ws> '	'
+				
+				<[d:hcs p:24px 8px 96px overflow:hidden]>
+					<a.arrow [s:4rem] @click.prevent=state.prevChapter title=t.prev href=state.prevChapterLink>
+						getChevron(no)
+					<a.arrow [s:4rem] @click.prevent=state.nextChapter title=t.next href=state.nextChapterLink>
+						getChevron(yes)
+
+			elif !window.navigator.onLine && vault.downloaded_translations.indexOf(state.translation) == -1
+				<p.in_offline>
+					t.this_translation_is_unavailable
+					<br>
+					<a.reload @click=(do window.location.reload(yes))> t.reload
+			elif not state.loading
+				<p.in_offline>
+					t.unexisten_chapter
+					<br>
+					<a.reload @click=(do window.location.reload(yes))> t.reload
+
+	css
+		mah: 100vh
+		overflow-y: auto
+		w:100% max-width:100%
+
+		h1, header
+			text-align: center
+			margin: 1em 0
+			padding: 0
+			position: sticky
+			background-color: $bgc
+			top: 0
+			line-height: 1
+			cursor: pointer
+			word-break: break-word
+
+		h1
+			padding-inline: 0.25rem
+
+		header
+			position: sticky
+			top: 0
+			background-color: $bgc
+			margin: 1em 0
+
+		section .arrowh
+			transition-property: fill, color, background, transform, border-radius
+
+		span
+			background-size: 100% calc(0.2em + 4px)
+			padding-bottom: 4px
+
+		.verse
+			fs: 0.68em
+			c: $acc @hover:$acc-hover
+			bgc@hover:$acc-bgc-hover
+			vertical-align: super
+			white-space: pre
+			border-radius: 0.25rem
+		
+		.arrow
+			c:inherit
+			bgc@hover:$acc-bgc-hover
+			rd@hover:50%
+			transform@hover:rotate(360deg)
+			d:hcc
+
+			svg
+				max-height: 100%
+				max-width: 100%
+
+		@keyframes fade-in
+			0%
+				opacity: 0
+			100%
+				opacity: 1
+		
+		html[data-transitions="true"]
+			h1, article
+				animation: fade-in 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);

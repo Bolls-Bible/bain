@@ -1,0 +1,20 @@
+{
+  "name": "imba",
+  "type": "module",
+  "scripts": {
+    "dev": "imba -w server.imba",
+    "build": "imba build server.imba",
+    "preview": "node dist/server.js",
+    "prod": "npx pm2 start dist/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "@types/serviceworker": "^0.0.106",
+    "imba": "^2.0.0-alpha.237",
+    "imba-phosphor-icons": "^2.2.0",
+    "lucide-static": "^0.460.0",
+    "sortablejs": "^1.15.4"
+  }
+}

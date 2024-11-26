@@ -2,3 +2,4 @@ inject-secrets.sh
 test/
 letsencrypt/
 django/commentaries/commentaries.csv
+.env.dev
