@@ -5,12 +5,12 @@ from django.conf.urls import handler404, handler500, include
 urlpatterns = [
     path("", include("social_django.urls", namespace="social")),
     path("", views.index, name="index"),
-    path("service-worker.js", views.sw, name="sw"),
+    # path("service-worker.js", views.sw, name="sw"),
     path("signup/", views.signUp, name="signup"),
     path("api/", views.api),
-    path("donate/", views.index),
-    path("profile/", views.index),
-    path("downloads/", views.index),
+    # path("donate/", views.index),
+    # path("profile/", views.index),
+    # path("downloads/", views.index),
     path("get-history/", views.getHistory),
     path("save-history/", views.saveHistory),
     path("history/", views.history),
@@ -67,20 +67,20 @@ urlpatterns = [
     # AAA
     path("<slug:translation>/<str:piece>/", views.search),
 
-    path("<slug:translation>/<int:book>/<int:chapter>/", views.linkToChapter),
-    path("<slug:translation>/<int:book>/<int:chapter>/<int:verse>/", views.linkToVerse),
-    path(
-        "<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
-        views.linkToVerses,
-    ),
-    path(
-        "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/",
-        views.linkToVerse,
-    ),
-    path(
-        "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
-        views.linkToVerses,
-    ),
+    # path("<slug:translation>/<int:book>/<int:chapter>/", views.linkToChapter),
+    # path("<slug:translation>/<int:book>/<int:chapter>/<int:verse>/", views.linkToVerse),
+    # path(
+    #     "<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
+    #     views.linkToVerses,
+    # ),
+    # path(
+    #     "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/",
+    #     views.linkToVerse,
+    # ),
+    # path(
+    #     "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
+    #     views.linkToVerses,
+    # ),
     # path('/fixBookmarks/', views.fixBookmarks)
 ]
 

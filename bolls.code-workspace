@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "Django",
+      "path": "django"
+    },
+    {
+      "name": "Imba",
+      "path": "imba"
+    },
+    {
+      "name": "Nginx",
+      "path": "nginx"
+    },
+    {
+      "name": "Nginx Dev",
+      "path": "nginx_dev"
+    },
+    {
+      "name": "Docker root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.ignoreLimitWarning": true,
+    "svg.preview.background": "custom"
+  }
+}

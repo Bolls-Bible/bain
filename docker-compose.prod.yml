@@ -1,0 +1,117 @@
+services:
+  DB_SERVICE_NAME:
+    image: postgres:alpine
+    restart: always
+    container_name: DB_SERVICE_NAME
+    environment:
+      - POSTGRES_USER=POSTGRES_USER_SECRET
+      - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
+      - POSTGRES_DB=POSTGRES_DB_SECRET
+      - PGDATA=PGDATA_SECRET
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - INTERNAL_NETWORK_NAME
+    volumes:
+      - DATABASE_VOLUME_SECRET:/var/lib/postgresql/data
+
+
+  WEB_SERVICE_NAME:
+    build:
+      context: ./django/
+      dockerfile: Dockerfile
+    restart: always
+    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
+    container_name: WEB_CONTAINER_NAME
+    volumes:
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
+    expose:
+      - 8000
+    environment:
+      - DEBUG=DEBUG_SECRET
+      - SECRET_KEY=SECRET_KEY_SECRET
+      - DJANGO_ALLOWED_HOSTS=DJANGO_ALLOWED_HOSTS_SECRET
+      - SQL_ENGINE=SQL_ENGINE_SECRET
+      - SQL_DATABASE=POSTGRES_DB_SECRET
+      - SQL_USER=POSTGRES_USER_SECRET
+      - SQL_PASSWORD=POSTGRES_PASSWORD_SECRET
+      - SQL_HOST=DB_SERVICE_NAME
+      - SQL_PORT=SQL_PORT_SECRET
+      - DATABASE=DATABASE_SECRET
+      - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
+      - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
+      - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
+      - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
+    networks:
+      - INTERNAL_NETWORK_NAME
+    depends_on:
+      - DB_SERVICE_NAME
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+
+  NGINX_SERVICE_NAME:
+    build: ./nginx
+    restart: always
+    container_name: NGINX_CONTAINER_NAME
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls=true"
+      - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
+      - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
+      - "traefik.webservice.frontend.entryPoints=http,https"
+    volumes:
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
+    networks:
+      - INTERNAL_NETWORK_NAME
+    depends_on:
+      - WEB_SERVICE_NAME
+
+
+
+  traefik:
+    image: traefik:latest
+    restart: always
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    networks:
+      - web
+      - internal
+      - internal_dev
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - "/var/letsencrypt:/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  STATIC_VOLUME_NAME:
+  DATABASE_VOLUME_SECRET:
+    driver: local
+
+networks:
+  internal:
+    external: false
+  internal_dev:
+    external: false
+  web:
+    external: true

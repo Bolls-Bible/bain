@@ -113,7 +113,7 @@ let settingsp = {
 	edited_version: settings.translatoin
 	name_of_book: ''
 	filtered_books: []
-	
+
 }
 
 let chapter_headers = {
@@ -363,8 +363,8 @@ tag bible-reader
 		if getCookie('transitions') == 'false'
 			settings.transitions = no
 			html.dataset.transitions = "false"
-		
-		try 
+
+		try
 			let bookmarkMap = JSON.parse(window.localStorage.getItem("userBookmarkMap"))
 			if bookmarkMap
 				userBookmarkMap = bookmarkMap
@@ -438,7 +438,7 @@ tag bible-reader
 		fixdrawers = getCookie('fixdrawers') == 'true'
 
 		store.contrast = parseInt(getCookie('contrast')) || store.contrast
-		if getCookie('enable_dynamic_contrast') == 'true' 
+		if getCookie('enable_dynamic_contrast') == 'true'
 			toggleDynamicContrast!
 
 		compare_translations.push(settings.translation)
@@ -447,7 +447,7 @@ tag bible-reader
 			compare_translations = (JSON.parse(getCookie("compare_translations")).length ? JSON.parse(getCookie("compare_translations")) : no) || compare_translations
 		if JSON.parse(getCookie("favorite_translations"))
 			settings.favorite_translations = JSON.parse(getCookie("favorite_translations"))
-		
+
 		search =
 			search_div: no
 			search_input: ''
@@ -463,7 +463,7 @@ tag bible-reader
 			suggestions: {}
 			match_case: getCookie('match_case') == 'true'
 			match_whole: getCookie('match_whole') == 'true'
-		
+
 		let bookmarks-to-delete = JSON.parse(getCookie("bookmarks-to-delete"))
 		if bookmarks-to-delete
 			deleteBookmarks(bookmarks-to-delete)
@@ -479,7 +479,7 @@ tag bible-reader
 			imba.commit!
 
 	def onSelectionChange
-		if window.getSelection().toString().length > 0		
+		if window.getSelection().toString().length > 0
 			this.showDefOptions!
 		setTimeout(&, 150) do
 			let selection = document.getSelection()
@@ -517,7 +517,7 @@ tag bible-reader
 		window.strongDefinition = do(topic)
 			store.definition_search = topic
 			loadDefinitions!
- 
+
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
@@ -911,7 +911,7 @@ tag bible-reader
 
 	def toggleChronorder
 		setChronorder !chronorder
-	
+
 	def changeContrast event
 		setCookie('contrast', store.contrast.toString())
 		# set filter to the body
@@ -1422,7 +1422,7 @@ tag bible-reader
 		settings.font.name = font.name
 		setCookie('font-family', font.code)
 		setCookie('font-name', font.name)
-	
+
 	def setLocalFontFamily font
 		clearSpace!
 		settings.font.family = font
@@ -2036,7 +2036,7 @@ tag bible-reader
 			big_modal_block_content = ''
 		else
 			popUp 'show_note'
-		
+
 	def toggleCompare
 		if choosen.length then choosen_for_comparison = choosen
 		if choosen_parallel == 'second'
@@ -2579,7 +2579,7 @@ tag bible-reader
 		const selected = selection.toString!.trim!
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected or there are Strong tags init <S> or <s>
-		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/) or selection.anchorNode.parentElement.querySelectorAll("s").length 
+		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/) or selection.anchorNode.parentElement.querySelectorAll("s").length
 		if [...selected.matchAll(/\s/g)].length > 1 or selected == '' or not hebrew_or_greek
 			host_rectangle = null
 			return imba.commit!
@@ -2675,7 +2675,7 @@ tag bible-reader
 		res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 		return res
 
-	# Get query results from the dictionary, or Strong's number 
+	# Get query results from the dictionary, or Strong's number
 	def loadDefinitions query
 		let selected_text = window.getSelection!.toString!.trim!
 		if typeof query === 'string' # imba may pass the event object from input
@@ -2780,7 +2780,7 @@ tag bible-reader
 
 	def closecp
 		store.show_color_picker = no
-	
+
 	def toggleExtendedDictionarySearch
 		settings.extended_dictionary_search = !settings.extended_dictionary_search
 		setCookie 'extended_dictionary_search', settings.extended_dictionary_search
@@ -2800,7 +2800,7 @@ tag bible-reader
 						await registration.unregister()
 				)
 
-			window.caches.keys().then(do(cacheNames)	
+			window.caches.keys().then(do(cacheNames)
 				for cacheName in cacheNames
 					await window.caches.delete(cacheName)
 				)
@@ -2810,7 +2810,7 @@ tag bible-reader
 	def toggleFontModal
 		clearSpace()
 		popUp("font")
-	
+
 	def translationHeartFill trabbr
 		if settings.favorite_translations.includes(trabbr)
 			return 'currentColor'
@@ -4148,5 +4148,3 @@ tag bible-reader
 				border-radius: 50%
 				background: $acc-color
 				cursor: ew-resize
-			
-

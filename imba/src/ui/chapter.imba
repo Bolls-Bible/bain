@@ -8,10 +8,10 @@ const cachedInnerHeight = window.innerHeight
 import { MOBILE_PLATFORM, isApple } from '../constants'
 
 tag chapter < section
-	prop state\(GenericReader)
+	prop me\(GenericReader)
 	prop headerFontSize = 2 # rem
 	prop versePrefix = ''
-	maxHeaderFont = 1.2 # rem
+	minHeaderFont = 1.2 # rem
 
 	get main
 		return document.getElementById "main"
@@ -90,13 +90,13 @@ tag chapter < section
 
 	def mousemove e\MouseEvent
 		if e.y < 32 && not MOBILE_PLATFORM
-			maxHeaderFont = 1.2
+			minHeaderFont = 1.2
 		else
-			maxHeaderFont = 0
+			minHeaderFont = 0
 		
 	# no -- means prev, yes -- means next
 	def getChevron direction\boolean
-		const textDirection = translationTextDirection(state.translation)
+		const textDirection = translationTextDirection(me.translation)
 		if (textDirection == 'rtl' && direction) or (textDirection == 'ltr' && !direction)
 			return <svg src=ChevronLeft aria-label=t.prev> 
 		return <svg src=ChevronRight aria-label=t.next>
@@ -107,26 +107,28 @@ tag chapter < section
 
 		<self .parallel=parallelReader.enabled
 			@scroll=changeHeadersSizeOnScroll @mousemove=mousemove
-			dir=translationTextDirection(state.translation)>
+			dir=translationTextDirection(me.translation)>
 			# for rect in pageSearch.rects when rect.mathcid.charAt(0) != versePrefix and activities.activeModal == ''
 			# 	<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
-			if state.verses.length
-				<header[h:0 mt:4em zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
-					#main_header_arrow_size = "min(64px, max({maxHeaderFont}em, {headerFontSize}em))"
+			if me.verses.length
+				<header[h:0 mt:2em zi:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:max({minHeaderFont}em, min({headerFontSize}em, 8vw))] @click=activities.toggleBooksMenu(!!versePrefix)>
+					#main_header_arrow_size = "min(64px, max({minHeaderFont}em, {headerFontSize}em))"
 					<h1
-						[lh:1 padding-block:0.2em m:0 ff: {theme.fontFamily} fw: {theme.fontWeight + 200} fs:max({maxHeaderFont}em, {headerFontSize}em) d@md:flex ai@md:center jc@md:space-between]
-						title=translationFullName(state.translation)>
-						<a.arrow @click.prevent.stop=state.prevChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.prev href="{state.prevChapterLink}">
-							getChevron(no)
-						state.nameOfCurrentBook, ' ', state.chapter
+						[lh:1 padding-block:0.2em m:0 d@md:flex ai@md:center jc@md:space-between font:inherit]
+						title=translationFullName(me.translation)>
 
-						<a.arrow @click.prevent.stop=state.nextChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.next href=state.nextChapterLink>
+						<a.arrow @click.prevent.stop=me.prevChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.prev href="{me.prevChapterLink}">
+							getChevron(no)
+
+						me.nameOfCurrentBook, ' ', me.chapter
+
+						<a.arrow @click.prevent.stop=me.nextChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.next href=me.nextChapterLink>
 							getChevron(yes)
-				<p[mb:1em p: 0 8px o:0 lh:1 ff: {theme.fontFamily} fw: {theme.fontWeight + 200} fs: {theme.fontSize * 2}px us:none word-break:break-word]> state.nameOfCurrentBook, ' ', state.chapter # since header height is changing takes constant space for header to avoid layout shifts
+				<p[mb:1em padding-inline:.5rem o:0 lh:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:min({theme.fontSize * 2}px, 8vw) us:none word-break:break-word]> me.nameOfCurrentBook, ' ', me.chapter # since header height is changing, this takes constant space for header to avoid layout shifts
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
-					for verse, verse_index in state.verses
-						let bookmark = state.getBookmark(verse.pk, 'bookmarks')
+					for verse, verse_index in me.verses
+						let bookmark = me.getBookmark(verse.pk, 'bookmarks')
 						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:{1.2 * headerFontSize}em;"
 
 						if settings.verse_number
@@ -137,8 +139,8 @@ tag chapter < section
 							<span> ' '
 						<span innerHTML=verse.text
 								id="{versePrefix}{verse.verse}"
-								@click.wait(200ms)=state.selectVerse(verse.pk, verse.verse)
-								[background-image: {state.getHighlight(verse.pk)}]
+								@click.wait(200ms)=me.selectVerse(verse.pk, verse.verse)
+								[background-image: {me.getHighlight(verse.pk)}]
 							>
 						if bookmark and not nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 							<note-up style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
@@ -155,18 +157,18 @@ tag chapter < section
 							unless settings.verse_number
 								<span.ws> '	'
 				
-				<[d:hcs p:24px 8px 96px overflow:hidden]>
-					<a.arrow [s:4rem] @click.prevent=state.prevChapter title=t.prev href=state.prevChapterLink>
+				<[d:hcs p:24px .5rem 96px overflow:hidden]>
+					<a.arrow [s:4rem] @click.prevent=me.prevChapter title=t.prev href=me.prevChapterLink>
 						getChevron(no)
-					<a.arrow [s:4rem] @click.prevent=state.nextChapter title=t.next href=state.nextChapterLink>
+					<a.arrow [s:4rem] @click.prevent=me.nextChapter title=t.next href=me.nextChapterLink>
 						getChevron(yes)
 
-			elif !window.navigator.onLine && vault.downloaded_translations.indexOf(state.translation) == -1
+			elif !window.navigator.onLine && vault.downloaded_translations.indexOf(me.translation) == -1
 				<p.in_offline>
 					t.this_translation_is_unavailable
 					<br>
 					<a.reload @click=(do window.location.reload(yes))> t.reload
-			elif not state.loading
+			elif not me.loading
 				<p.in_offline>
 					t.unexisten_chapter
 					<br>

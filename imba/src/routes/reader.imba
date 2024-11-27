@@ -36,6 +36,7 @@ tag reader
 		document.body.onmouseleave = hidePanels.bind(self)
 		document.onmouseleave = hidePanels.bind(self)
 		window.onmouseout = hidePanels.bind(self)
+		window.onresize = imba.commit
 
 		window.strongDefinition = do(topic)
 			dictionary.query = topic
@@ -199,9 +200,9 @@ tag reader
 					.parallel_text=parallelReader.enabled .hide-comments=!settings.verse_commentary .parallels=parallelReader.enabled
 					[pos:{parallelReader.enabled ? 'relative' : 'static'} ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight} ta:{theme.align} fl:1]
 					>
-					<chapter id="main-reader" state=reader [padding-inline:{readerPadding!}] />
+					<chapter id="main-reader" me=reader [padding-inline:{readerPadding!}] />
 					if parallelReader.enabled
-						<chapter id="parallel-reader" state=parallelReader [padding-inline:{readerPadding(no)}] versePrefix="p" />
+						<chapter id="parallel-reader" me=parallelReader [padding-inline:{readerPadding(no)}] versePrefix="p" />
 				
 				<button.drawer-handle
 					[transform:translateX({settingsIconTransform}px)]
@@ -335,7 +336,7 @@ tag reader
 				-webkit-overflow-scrolling: touch
 		
 		.drawer-handle
-			w:2vw w:min(32px, max(16px, 2vw))
+			w:2vw w:min(1.5rem, max(1rem, 2vw))
 			h:100vh
 			bgc:gray4/25
 			o:0 @hover:1

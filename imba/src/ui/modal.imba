@@ -298,21 +298,22 @@ tag modal < section
 							<button @click=openDictionaryDownloads title=t.download>
 								<svg src=CloudDownload aria-hidden=yes>
 
-						<menu-popup bind=activities.show_dictionaries [pos:relative]>
-							<[transform@important:none p:0.5rem 0px c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]
-								@click=(do activities.show_dictionaries = !activities.show_dictionaries)>
-								dictionary.currentDictionary
-								<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=activities.show_dictionaries>
-							if activities.show_dictionaries
-								<.popup-menu [l:0 t:42% y@off:-2rem o@off:0] ease>
-									for entry in dictionary.dictionaries
-										<button .active-butt=(dictionary.currentDictionary==entry.abbr) @click=(do
-												dictionary.currentDictionary = entry.abbr
-												dictionary.loadDefinitions!
-												)> entry.name
+						<[d:flex flw:wrap g:0.5rem]>
+							<menu-popup bind=activities.show_dictionaries [pos:relative fl:2 miw:16rem]>
+								<[transform@important:none padding-block:.5rem c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]
+									@click=(do activities.show_dictionaries = !activities.show_dictionaries)>
+									dictionary.currentDictionary
+									<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=activities.show_dictionaries>
+								if activities.show_dictionaries
+									<.popup-menu [l:0 t:42% y@off:-2rem o@off:0] ease>
+										for entry in dictionary.dictionaries
+											<button .active-butt=(dictionary.currentDictionary==entry.abbr) @click=(do
+													dictionary.currentDictionary = entry.abbr
+													dictionary.loadDefinitions!
+													)> entry.name
 
 							if window.navigator.onLine
-								<button.option-box.checkbox-parent [fs:0.85em]
+								<button.option-box.checkbox-parent [fs:0.85em w:auto fl:1 mr:auto ws:pre padding-block:0.5rem]
 									@click=(do settings.extended_dictionary_search = !settings.extended_dictionary_search) .checkbox-turned=settings.extended_dictionary_search>
 									<span[ml:auto]> t.extended_search
 									<.checkbox [m:0 .5rem 0 1.5rem]> <span>
