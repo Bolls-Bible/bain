@@ -23,6 +23,7 @@ class Activities
 	show_filters = no
 	show_sharing = no
 	show_comparison_optinos = no
+	show_dictionary_downloads = no
 
 	IOSKeyboardHeight = 0
 	blockInSctoll = null
@@ -155,7 +156,12 @@ class Activities
 		openModal 'search'
 		search.generateSuggestions!
 		setTimeout(&, 300) do
-			search.inputElement.select!
+			search.inputElement\(HTMLInputElement).select!
+
+	def toggleDownloads
+		cleanUp!
+		openModal 'downloads'
+		show_dictionary_downloads = no
 
 	def getSelectedVersesTitle translation\string, book\number, chapter\number, verses\number[]
 		let row = getBookName(translation, book) + ' ' + chapter + ':'
@@ -170,7 +176,7 @@ class Activities
 				else row += ',' + id
 		return row
 	
-	@computed get selectedversesTitle
+	@computed get selectedVersesTitle
 		if selectedParallel == 'main'
 			return getSelectedVersesTitle(reader.translation, reader.book, reader.chapter, selectedVerses) + ' ' + reader.translation
 		return

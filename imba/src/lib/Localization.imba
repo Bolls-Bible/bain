@@ -63,6 +63,7 @@ class Localization
 				else
 					#language = 'eng'
 					document.documentElement.lang = "en"
+					setDefaultTranslation 'YLT'
 			language = #language
 
 	set language newLang
@@ -83,7 +84,7 @@ class Localization
 		return #lang
 	
 	def setDefaultTranslation translation\string
-		lang = 'eng'
+		language = 'eng'
 		document.documentElement.lang = "en"
 		if !window.translation
 			setValue('translation', translation)

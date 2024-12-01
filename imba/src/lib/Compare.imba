@@ -41,7 +41,7 @@ class Compare
 		loading = yes
 
 		def getCompareTranslationsFromDB
-			list = await vault.getParallelVersesFromStorage(translations, versesToCompare, bookToCompare, chapterToCompare)
+			list = await vault.getCompareVerses(translations, versesToCompare, bookToCompare, chapterToCompare)
 			loading = no
 			activities.openModal 'compare'
 

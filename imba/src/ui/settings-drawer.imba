@@ -204,7 +204,7 @@ tag settings-drawer < aside
 
 			if window.navigator.onLine
 				if vault.available
-					<.settings-btn @click=toggleDownloads>
+					<.settings-btn @click=activities.toggleDownloads>
 						<svg src=CloudDownload aria-hidden=true>
 						t.download_translations
 				<a.settings-btn href='/downloads/' target="_blank" @click=install>

@@ -1,6 +1,6 @@
-// # Compute a search relevance score for an text.
 /**
- *
+ * Compute search relevance score for a string.
+ * 
  * @param {string} text
  * @param {string} query
  * @returns {number} score

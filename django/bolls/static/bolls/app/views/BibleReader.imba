@@ -3395,7 +3395,7 @@ tag bible-reader
 								unless compare_translations.length
 									<button[m: 16px auto; d: flex].more_results @click=(do show_translations_for_comparison = !show_translations_for_comparison)> state.lang.add_translation_btn
 
-						elif big_modal_block_content == 'show_downloads'
+						elif big_modal_block_content == 'downloads'
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> state.lang.close

@@ -19,33 +19,6 @@ const colors = [
 	'OliveDrab'
 	'RoyalBlue'
 	'RebeccaPurple'
-	# '#984da5'
-	# "#000"
-	# "#f00"
-	# "#f0f"
-	# "#00f"
-	# "#0f0"
-	# "#0ff"
-	# "#ff0"
-	# "#000"
-	# 'rose5'
-	# # 'pink5'
-	# 'fuchsia5'
-	# # 'purple5'
-	# 'violet5'
-	# # 'indigo5'
-	# 'blue5'
-	# # 'sky5'
-	# 'cyan5'
-	# # 'teal5'
-	# 'emerald5'
-	# # 'green5'
-	# # 'lime5'
-	# 'yellow5'
-	# # 'amber5'
-	# 'orange5'
-	# # 'red5'
-	# # "#000"
 ]
 
 tag verse-actions < section
@@ -121,8 +94,8 @@ tag verse-actions < section
 		>
 		<svg.chevron src=ChevronDown @click=close>
 		<header>
-			<span role="button" @click=activities.copyTextToClipboard(activities.selectedversesTitle)>
-				activities.selectedversesTitle
+			<span role="button" @click=activities.copyTextToClipboard(activities.selectedVersesTitle)>
+				activities.selectedVersesTitle
 			<button @click=close> t.save
 
 		<ul>
@@ -145,7 +118,7 @@ tag verse-actions < section
 						<svg src=Share aria-hidden=yes>
 						t.share
 						if activities.show_sharing
-							<.popup-menu [l:0.5rem top:unset b:calc(100% + 4px) y@off:2rem o@off:0 w:14rem] ease>
+							<.popup-menu [l:0 @lt-sm:0.5rem top:unset b:calc(100% + 4px) y@off:2rem o@off:0 w:14rem] ease>
 								<button @click=shareViaWhatsApp>
 									<svg src=ICONS.WHATSAPP_LOGO aria-hidden=yes>
 									"What's App"

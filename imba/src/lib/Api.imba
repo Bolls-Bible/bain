@@ -1,5 +1,6 @@
 class API
-	baseUrl = 'http://bolls.local'
+	baseUrl = ''
+	# baseUrl = 'http://bolls.local'
 	# baseUrl = 'https://bolls.life'
 
 	def getJson pathname\string

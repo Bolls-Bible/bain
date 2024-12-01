@@ -165,6 +165,7 @@ global css
 
 	button
 		border: none
+		cursor: pointer
 	
 	.ws, nav, button, aside, .platform-item, img, .mark-grid, #page-search, .collectionshat
 		user-select: none
@@ -308,3 +309,12 @@ global css
 		cursor:pointer
 		fs:inherit rd:0.25rem
 		p:0.5rem 1rem
+
+	@keyframes spin
+		0% 
+			transform: rotate(0deg)
+		100%
+			transform: rotate(360deg)
+	
+	.spin
+		animation: spin 1s linear infinite

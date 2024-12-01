@@ -62,7 +62,7 @@ class Reader < GenericReader
 			verses = []
 			imba.commit!
 			if vault.downloaded_translations.indexOf(translation) != -1
-				verses = await vault.getChapterFromDB(translation, book, chapter)
+				verses = await vault.getChapter(translation, book, chapter)
 			else
 				verses = await API.getJson("/get-chapter/{translation}/{book}/{chapter}/")
 		catch error

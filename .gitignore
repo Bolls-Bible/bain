@@ -3,3 +3,5 @@ test/
 letsencrypt/
 django/commentaries/commentaries.csv
 .env.dev
+traefik/certs/local-cert.pem
+traefik/certs/local-key.pem

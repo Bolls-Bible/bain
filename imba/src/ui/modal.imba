@@ -10,6 +10,7 @@ import Filter from 'lucide-static/icons/filter.svg'
 import Copy from 'lucide-static/icons/copy.svg'
 import ListPlus from 'lucide-static/icons/list-plus.svg'
 import Send from 'lucide-static/icons/send.svg'
+import LoaderPinwheel from 'lucide-static/icons/loader-pinwheel.svg'
 
 import languages from '../data/languages.json'
 import { MOBILE_PLATFORM, translations, contributors } from '../constants'
@@ -19,6 +20,7 @@ import * as ICONS from 'imba-phosphor-icons'
 
 tag modal < section
 	fontsQuery = ''
+	expandedLanguage = ''
 
 	def changeTranslation translation\string
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
@@ -46,7 +48,7 @@ tag modal < section
 			parallelReader.verse = verse.verse
 	
 	def copyComparisonList
-		let msg = activities.selectedversesTitle
+		let msg = activities.selectedVersesTitle
 
 		for translation in compare.list
 			let verses = []
@@ -76,6 +78,69 @@ tag modal < section
 			return 1
 		else
 			return compare.search.toLowerCase() in language.language.toLowerCase()
+
+	def openDictionariesDownloads
+		activities.cleanUp!
+		activities.activeModal = 'downloads'
+		activities.show_dictionary_downloads = yes
+
+	def expandLanguageDownloads language\string
+		if language != expandedLanguage
+			expandedLanguage = language
+		else expandedLanguage = ''
+
+
+
+	def translationDownloadStatus translation\string
+		if vault.translationsDownloadQueue.find(do |tr| return tr == translation)
+			return 'processing'
+		elif vault.downloaded_translations.indexOf(translation) != -1
+			return 'delete'
+		else
+			return 'download'
+
+	def dictionaryDownloadStatus dictionary\string
+		if vault.dictionariesDownloadQueue.find(do |tr| return tr == dictionary)
+			return 'processing'
+		elif vault.downloaded_dictionaries.indexOf(dictionary) != -1
+			return 'delete'
+		else
+			return 'download'
+
+	def offlineTranslationAction tr\string
+		if vault.translationsDownloadQueue.find(do |translation| return translation == tr)
+			return
+		elif vault.downloaded_translations.indexOf(tr) != -1
+			vault.deleteTranslation(tr)
+		else
+			vault.downloadTranslation(tr)
+
+	def offlineDictionaryAction dict\string
+		if vault.dictionariesDownloadQueue.find(do |translation| return translation == dict)
+			return
+		elif vault.downloaded_dictionaries.indexOf(dict) != -1
+			vault.deleteDictionary(dict)
+		else
+			vault.downloadDictionary(dict)
+
+	def downloadStatusIcon status\string
+		switch status
+			when 'processing'
+				return <svg.spin src=LoaderPinwheel aria-hidden=yes>
+			when 'delete'
+				return <svg src=ICONS.TRASH aria-hidden=yes>
+			else
+				return <svg src=CloudDownload aria-hidden=yes>
+
+	def deleteAllDownloads
+		if activities.show_dictionary_downloads
+			vault.clearDictionariesTable!
+		else
+			vault.clearVersesTable!
+
+	def openDictionaryDownloads
+		activities.openModal 'downloads'
+		activities.show_dictionary_downloads = yes
 
 	def render
 		<self
@@ -126,7 +191,7 @@ tag modal < section
 						<header [pos:relative]>
 							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X aria-hidden=yes>
-							<h2> activities.selectedversesTitle
+							<h2> activities.selectedVersesTitle
 							<button @click=copyComparisonList title=t.copy>
 								<svg src=Copy aria-hidden=yes>
 							
@@ -164,88 +229,57 @@ tag modal < section
 							unless compare.translations.length
 								<button[m: 16px auto; d: flex].more_results @click=(do activities.show_comparison_optinos = !activities.show_comparison_optinos)> t.add_translation_btn
 
-					when 'show_downloads'
+					when 'downloads'
 						<header>
-							<svg src=ICONS.X [c@hover:red4] @click=activities.cleanUp aria-label=t.close>
-							<h2[transform@important:none pos:relative c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer d:flex w:100% h:50px jc:center ai:center us:none]
-								@click=(download_dictionaries = !download_dictionaries)>
+							<button @click=activities.cleanUp title=t.close>
+								<svg src=ICONS.X [c@hover:red4] aria-hidden=yes>
+							<h2[transform@important:none pos:relative c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer d:flex w:100% jc:center ai:center us:none]
+								@click=(activities.show_dictionary_downloads = !activities.show_dictionary_downloads)>
 								<span>
-									if download_dictionaries
+									if activities.show_dictionary_downloads
 										t.download_dictionaries
 									else
 										t.download_translations
-								<span[p:0 .5rem m:auto 0]>
-									<svg [fill:inherit min-width:16px] width="16" height="10" viewBox="0 0 8 5">
-										<title> 'expand'
-										<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								<svg src=ChevronDown aria-hidden=yes>
 
-							if state.deleting_of_all_dictionaries
-								<svg.close_search.animated_downloading width="16" height="16" viewBox="0 0 16 16">
+							if vault.deletingEverything
+								<svg.spin src=LoaderPinwheel>
 									<title> t.loading
-									<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
 							else
-								<svg.close_search @click=(do state.clearDictionariesTable()) viewBox="0 0 12 16" alt=t.delete>
-									<title> t.remove_all_dictionaries
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-						<article.modal-body>
-							if download_dictionaries
-								<div[o@off:0] ease>
-									let no_dictionary_downloaded = yes
-									for dictionary in dictionaries
-										if window.navigator.onLine || state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
-											no_dictionary_downloaded = no
-											<a[d:flex py:.5rem pl:.5rem cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-hover rd:.5rem] @click=offlineDictionaryAction(dictionary.abbr)>
-												if state.dictionaries_in_downloading.find(do |dict| return dict == dictionary.abbr)
-													<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-														<title> t.loading
-														<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
-												elif state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
-													<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=t.delete>
-														<title> t.delete
-														<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-												else
-													<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-														<title> t.download
-														<g transform="matrix(1.5 0 0 1.5 0 128)">
-															<path d=svg_paths.download>
-												<span> "{t[dictionaryDownloadStatus(dictionary.abbr)]} {<b> dictionary.abbr}, {dictionary.name}"
-									if no_dictionary_downloaded
-										t["no_dictionary_downloaded"]
+								<button @click=deleteAllDownloads title=(activities.show_dictionary_downloads ? t.remove_all_dictionaries : t.remove_all_translations)>
+									<svg src=ICONS.TRASH [c@hover:red4] aria-hidden=yes>
+
+						<ul.modal-body>
+							if activities.show_dictionary_downloads
+								let no_dictionary_downloaded = yes
+								for dictionary in dictionary.dictionaries when window.navigator.onLine || state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
+									no_dictionary_downloaded = no
+									<button.downloadListItem @click=offlineDictionaryAction(dictionary.abbr)>
+										const status = dictionaryDownloadStatus(dictionary.abbr)
+										downloadStatusIcon(status)
+										<span> "{t[status]} {<b> dictionary.abbr}, {dictionary.name}"
+								if no_dictionary_downloaded
+									t["no_dictionary_downloaded"]
 
 							else
-								<div>
-									for language in languages
-										<div key=language.language>
-											<a.li dir="auto" [jc: start pl: 0px] .pressed=(language.language == show_language_of) @click=showLanguageTranslations(language.language)>
-												language.language
-												<svg[ml: auto] width="16" height="10" viewBox="0 0 8 5">
-													<title> t.open
-													<polygon points="4,3 1,0 0,1 4,5 8,1 7,0">
+								for language in languages
+									<li key=language.language>
+										<a.li [jc: start pl: 0px] dir="auto" @click=expandLanguageDownloads(language.language)>
+											language.language
+											<svg[ml: auto] src=ChevronDown [transform:rotate(180deg)]=(language.language == expandedLanguage) aria-label=t.open>
 
-											if language.language == show_language_of
-												<ul[o@off:0 m:0 0 16px @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
-													let no_translation_downloaded = yes
-													for tr in language.translations
-														if window.navigator.onLine || state.downloaded_translations.indexOf(tr.short_name) != -1
-															no_translation_downloaded = no
-															<a[d:flex py:.5rem pl:.5rem cursor:pointer bgc@hover:$acc-bgc-hover fill:$c @hover:$acc-hover rd:.5rem] @click=offlineTranslationAction(tr.short_name)>
-																if state.translations_in_downloading.find(do |translation| return translation == tr.short_name)
-																	<svg.remove_parallel.close_search.animated_downloading  [fill:inherit] width="16" height="16" viewBox="0 0 16 16">
-																		<title> t.loading
-																		<path d=svg_paths.loading [marker:none c:#000 of:visible fill:$c]>
-																elif state.downloaded_translations.indexOf(tr.short_name) != -1
-																	<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 12 16" alt=t.delete>
-																		<title> t.delete
-																		<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2H9C9 1.45 8.55 1 8 1H5C4.45 1 4 1.45 4 2H2C1.45 2 1 2.45 1 3V4C1 4.55 1.45 5 2 5V14C2 14.55 2.45 15 3 15H10C10.55 15 11 14.55 11 14V5C11.55 5 12 4.55 12 4V3C12 2.45 11.55 2 11 2ZM10 14H3V5H4V13H5V5H6V13H7V5H8V13H9V5H10V14ZM11 4H2V3H11V4Z">
-																else
-																	<svg.remove_parallel.close_search [fill:inherit]  viewBox="0 0 212.646728515625 159.98291015625">
-																		<title> t.download
-																		<g transform="matrix(1.5 0 0 1.5 0 128)">
-																			<path d=svg_paths.download>
-																<span> "{t[translationDownloadStatus(tr.short_name)]} {<b> tr.short_name}, {tr.full_name}"
+										if language.language == expandedLanguage
+											<ul[o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0 of:hidden] dir="auto" ease>
+												let no_translation_downloaded = yes
+												for tr in language.translations when window.navigator.onLine || vault.downloaded_translations.includes(tr.short_name)
+													no_translation_downloaded = no
+													<button.downloadListItem @click=offlineTranslationAction(tr.short_name)>
+														const status = translationDownloadStatus(tr.short_name)
+														downloadStatusIcon(status)
+														<span> "{t[status]} {<b> tr.short_name}, {tr.full_name}"
 
-													if no_translation_downloaded
-														t["no_translation_downloaded"]
+												if no_translation_downloaded
+													t["no_translation_downloaded"]
 
 					when 'support'
 						<header>
@@ -266,8 +300,8 @@ tag modal < section
 					when "show_note"
 						<header>
 							<svg src=ICONS.X [c@hover:red4] @click=activities.cleanUp aria-label=t.close>
-							<h2> t.note, ', ', highlighted_title
-							<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango alt=t.create>
+							<h2> t.note, ', ', activities.selectedVersesTitle
+							<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango title=t.create>
 								<title> t.create
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
 						<article[o:0.8 fs:0.8em]>
@@ -298,25 +332,24 @@ tag modal < section
 							<button @click=openDictionaryDownloads title=t.download>
 								<svg src=CloudDownload aria-hidden=yes>
 
-						<[d:flex flw:wrap g:0.5rem]>
-							<menu-popup bind=activities.show_dictionaries [pos:relative fl:2 miw:16rem]>
-								<[transform@important:none padding-block:.5rem c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]
-									@click=(do activities.show_dictionaries = !activities.show_dictionaries)>
-									dictionary.currentDictionary
-									<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=activities.show_dictionaries>
-								if activities.show_dictionaries
-									<.popup-menu [l:0 t:42% y@off:-2rem o@off:0] ease>
-										for entry in dictionary.dictionaries
-											<button .active-butt=(dictionary.currentDictionary==entry.abbr) @click=(do
-													dictionary.currentDictionary = entry.abbr
-													dictionary.loadDefinitions!
-													)> entry.name
+						<menu-popup bind=activities.show_dictionaries [pos:relative ]>
+							<[transform@important:none padding-block:.5rem c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]
+								@click=(do activities.show_dictionaries = !activities.show_dictionaries)>
+								dictionary.currentDictionary
+								<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=activities.show_dictionaries>
+							if activities.show_dictionaries
+								<.popup-menu [l:0 t:100% y@off:-2rem o@off:0] ease>
+									for entry in dictionary.dictionaries
+										<button .active-butt=(dictionary.currentDictionary==entry.abbr) @click=(do
+												dictionary.currentDictionary = entry.abbr
+												dictionary.loadDefinitions!
+												)> entry.name
 
-							if window.navigator.onLine
-								<button.option-box.checkbox-parent [fs:0.85em w:auto fl:1 mr:auto ws:pre padding-block:0.5rem]
-									@click=(do settings.extended_dictionary_search = !settings.extended_dictionary_search) .checkbox-turned=settings.extended_dictionary_search>
-									<span[ml:auto]> t.extended_search
-									<.checkbox [m:0 .5rem 0 1.5rem]> <span>
+						if window.navigator.onLine
+							<button.option-box.checkbox-parent [fs:0.85em mr:auto ws:pre padding-block:0.5rem]
+								@click=(do settings.extended_dictionary_search = !settings.extended_dictionary_search) .checkbox-turned=settings.extended_dictionary_search>
+								<span[ml:auto]> t.extended_search
+								<.checkbox [margin-inline:1.5rem .5rem]> <span>
 						if !dictionary.loading && dictionary.history.length
 							<ul#definitions.modal-body>
 								for definition, index in dictionary.definitions when index < 64
@@ -606,3 +639,13 @@ tag modal < section
 
 			p
 				line-height: 2
+		
+		.downloadListItem
+			d:hcl g:.5rem
+			py:.5rem pl:.5rem
+			bgc:transparent @hover:$acc-bgc-hover
+			c:$c @hover:$acc-hover
+			rd:.5rem w:100% font:inherit
+
+			svg
+				w:1.5rem h:1.5rem

@@ -117,7 +117,7 @@ tag books-drawer < nav
 						activeTranslation
 						<svg[min-width:16px h:1.1em mb:-0.2em transform:rotate({180 * +unfoldTranslationsList}deg)] src=ChevronDown aria-label="">
 					if vault.available
-						<svg src=CloudDownload role="button" @click=toggleDownloads aria-label=t.download>
+						<svg src=CloudDownload role="button" @click=activities.toggleDownloads aria-label=t.download>
 				
 			if unfoldTranslationsList
 				<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-2rem] ease>

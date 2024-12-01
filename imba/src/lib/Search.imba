@@ -158,7 +158,7 @@ class Search
 			catch error
 				console.error error
 				if vault.downloaded_translations.indexOf(reader.translation) != -1
-					let { data, exact_matches } = await vault.getSearchedTextFromStorage(self)
+					let { data, exact_matches } = await vault.search(self)
 					results = data
 					exactMatchesCount = exact_matches
 				else

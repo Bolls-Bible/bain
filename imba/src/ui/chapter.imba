@@ -64,7 +64,7 @@ tag chapter < section
 			reader.findVerse verseToSctollTo
 
 	def changeHeadersSizeOnScroll e\Event
-		let testsize = 2 - ((e.target.scrollTop * 4) / window.innerHeight)
+		let testsize = 2 - ((e.target.scrollTop * 8) / window.innerHeight)
 		if testsize * theme.fontSize < 12
 			headerFontSize = 16 / theme.fontSize
 		elif e.target.scrollTop > 0
@@ -112,10 +112,10 @@ tag chapter < section
 			# 	<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
 			if me.verses.length
-				<header[h:0 mt:2em zi:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:max({minHeaderFont}em, min({headerFontSize}em, 8vw))] @click=activities.toggleBooksMenu(!!versePrefix)>
+				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
 					#main_header_arrow_size = "min(64px, max({minHeaderFont}em, {headerFontSize}em))"
 					<h1
-						[lh:1 padding-block:0.2em m:0 d@md:flex ai@md:center jc@md:space-between font:inherit]
+						[lh:1 padding-block:0.2em m:0 d@md:flex ai@md:center jc@md:space-between font:inherit ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:max({minHeaderFont}em, min({headerFontSize}em, 8vw))]
 						title=translationFullName(me.translation)>
 
 						<a.arrow @click.prevent.stop=me.prevChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.prev href="{me.prevChapterLink}">
@@ -125,7 +125,7 @@ tag chapter < section
 
 						<a.arrow @click.prevent.stop=me.nextChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.next href=me.nextChapterLink>
 							getChevron(yes)
-				<p[mb:1em padding-inline:.5rem o:0 lh:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:min({theme.fontSize * 2}px, 8vw) us:none word-break:break-word]> me.nameOfCurrentBook, ' ', me.chapter # since header height is changing, this takes constant space for header to avoid layout shifts
+				<p[padding-inline:.5rem o:0 lh:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:min({theme.fontSize * 2}px, 8vw) us:none word-break:break-word]> me.nameOfCurrentBook, ' ', me.chapter # since header height is changing, this takes constant space for header to avoid layout shifts
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
 						let bookmark = me.getBookmark(verse.pk, 'bookmarks')

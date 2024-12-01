@@ -1,6 +1,6 @@
+import localization from './Localization'
 import activities from './Activities'
 import dictionary from './Dictionary'
-import localization from './Localization'
 import notifications from './Notifications'
 import pageSearch from './PageSearch'
 import parallelReader from './ParallelReader'

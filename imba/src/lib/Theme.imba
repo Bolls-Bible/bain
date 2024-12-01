@@ -110,7 +110,7 @@ class Theme
 		fontName = getValue('font-name') ?? "Sans Serif"
 		lineHeight = getValue('line-height') ?? 1.8
 		fontWeight = getValue('font-weight') ?? 400
-		maxWidth = getValue('max-width') ?? 40
+		maxWidth = getValue('max-width') ?? 32
 		align = getValue('align') ?? ''
 		transitions = getValue('transitions') ?? yes
 		accent = getValue('accent') ?? 'blue'

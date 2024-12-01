@@ -69,8 +69,7 @@ services:
     build:
       context: ./imba/
       dockerfile: Dockerfile.dev
-    # restart: on-failure
-    restart: no
+    restart: on-failure
     container_name: imba
     command: npm run dev
     # required for SELinux
@@ -92,12 +91,13 @@ services:
     container_name: nginx
     labels:
       - "traefik.enable=true"
-      # - "traefik.http.routers.nginx-router.tls=true"
+      - "traefik.http.routers.nginx-router.tls=true"
       - "traefik.http.routers.nginx-router.rule=Host(`bolls.local`)"
       # - "traefik.http.routers.nginx-router.service=whoami1_service"
       - "traefik.http.services.nginx-router.loadbalancer.server.port=80"
       # - "traefik.http.routers.nginx-router.tls.certresolver=myresolver"
-      - "traefik.webservice.frontend.entryPoints=http"
+      # - "traefik.webservice.frontend.entryPoints=http"
+
     # required for SELinux
     security_opt:
       - label:disable
@@ -131,14 +131,16 @@ services:
       - internal
     ports:
       - 80:80
-      # - 443:443
-      - 8080:8080
+      - 443:443
     # required for SELinux
     security_opt:
       - label:disable
     volumes:
       - "/var/letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/config/static.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/config/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./traefik/certs:/etc/certs:ro
 
 networks:
   internal:
