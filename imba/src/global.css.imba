@@ -166,6 +166,7 @@ global css
 	button
 		border: none
 		cursor: pointer
+		bgc:transparent
 	
 	.ws, nav, button, aside, .platform-item, img, .mark-grid, #page-search, .collectionshat
 		user-select: none
@@ -318,3 +319,10 @@ global css
 	
 	.spin
 		animation: spin 1s linear infinite
+
+	.current_occurrence
+		bgc: $acc-bgc
+		filter: saturate(4)
+
+	.another_occurrences
+		bgc: $acc-bgc-hover

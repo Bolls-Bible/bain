@@ -87,48 +87,63 @@ async function deleteTranslation(url) {
       });
     });
 }
+function isNTBook(bookid) {
+  return bookid >= 43 && bookid <= 66;
+}
+async function searchVerses(urlStr) {
+  const url = new URL(urlStr);
+  const url_parts = url.pathname.split("/");
+  const translation = url_parts[3];
+  const query = decodeURI(url_parts[4]);
+  const query_parts = query.split(" ");
+  const PAGE_SIZE = 128;
+  const filterBook = url.searchParams.get("book");
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const filterNumber = parseInt(filterBook);
 
-async function searchVerses(url) {
-  const url_parts = url.split("/");
-  const translation = url_parts[5];
-  const search_input = decodeURI(url_parts[6]);
-  const search_input_parts = search_input.split(" ");
   return db
     .transaction("r", db.verses, () => {
       return db.verses
         .where({ translation: translation })
         .filter((verse) => {
+          if (filterBook) {
+            if (!filterNumber) {
+              if (filterBook === "ot") {
+                if (isNTBook(verse.book)) return false;
+              } else if (filterBook === "nt") {
+                if (!isNTBook(verse.book)) return false;
+              }
+            } else if (filterNumber !== verse.book) return false;
+          }
           let lowercased_text = verse.text.toLowerCase();
+
           // If a few words are searched, all words must be present
-          if (search_input_parts.length > 1)
-            return search_input_parts
-              .map((search_input_part) =>
-                lowercased_text.includes(search_input_part)
-              )
+          if (query_parts.length > 1)
+            return query_parts
+              .map((query_part) => lowercased_text.includes(query_part))
               .reduce((a, b) => a && b);
-          return lowercased_text.includes(search_input);
+          return lowercased_text.includes(query);
         })
         .toArray()
         .then((data) => {
           // get NUMBER of exact matches
           let exact_matches = 0;
           for (let i = 0; i < data.length; i++) {
-            exact_matches += (
-              data[i].text.match(new RegExp(search_input, "g")) || []
-            ).length;
+            exact_matches += (data[i].text.match(new RegExp(query, "g")) || [])
+              .length;
           }
           // highlight exact matches with <mark> tag
           data.forEach((verse) => {
-            search_input_parts.forEach((search_input_part) => {
+            query_parts.forEach((query_part) => {
               verse.text = verse.text.replace(
-                new RegExp(search_input_part, "gi"),
+                new RegExp(query_part, "gi"),
                 (match) => `<mark>${match}</mark>`
               );
             });
           });
           return new Response(
             JSON.stringify({
-              data,
+              data: data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
               exact_matches,
               total: data.length,
             }),

@@ -13,9 +13,9 @@ class Search
 	@observable query\string = ''
 	currentQuery = ''
 	loading = no
-	@observable results\Verse[] = []
+	results\Verse[] = []
 	exactMatchesCount = 0
-	@observable filter\number|string = ''
+	filter\number|string = ''
 	resultBooks = []
 	suggestions = {}
 	@observable match_case\boolean = getValue('match_case')
@@ -27,21 +27,10 @@ class Search
 	@autorun
 	def saveMatchCase
 		setValue('match_case', match_case)
-	
+
 	@autorun
 	def saveMatchWhole
 		setValue('match_whole', match_whole)
-
-	@computed get filteredResults
-		if filter
-			if filter == "ot"
-				return results.filter(do |verse| !isNTBook(verse.book))
-			elif filter == "nt"
-				return results.filter(do |verse| isNTBook(verse.book))
-			else
-				return results.filter(do |verse| verse.book == filter)
-		else
-			return results
 
 	get pages\number
 		return Math.ceil(total / pageSize)
@@ -135,58 +124,57 @@ class Search
 	def run
 		# Clear the searched text to avoid 400 error
 		# If the query is long enough -- do the search
-		if query.length > 2 || isNumber(query)
-			if activities.activeModal !== 'search'
-				activities.cleanUp!
-				activities.openModal 'search'
-			inputElement..blur!
-			if currentQuery != query
-				page = 1
-			currentQuery = ''
-			loading = yes
-
-			const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page
-
-			results = []
-			total = 0
-			try
-				let res = await API.getJson(url)
-				results = res["results"]
-				exactMatchesCount = res["exact_matches"]
-				total = res["total"]
-				console.log 'Search results:', results
-			catch error
-				console.error error
-				if vault.downloaded_translations.indexOf(reader.translation) != -1
-					let { data, exact_matches } = await vault.search(self)
-					results = data
-					exactMatchesCount = exact_matches
-				else
-					results = []
-
-			resultBooks = []
-			for verse in results
-				if !resultBooks.find(do |element| return element == verse.book)
-					resultBooks.push verse.book
-
-			loading = no
+		if query.length <= 2 && !isNumber(query)
+			return
+		if activities.activeModal !== 'search'
 			activities.cleanUp!
 			activities.openModal 'search'
-			
+		inputElement..blur!
+		if currentQuery != query
+			page = 1
+		currentQuery = query
+		loading = yes
+
+		const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page
+
+		results = []
+		total = 0
+		try
+			let res = await API.getJson(url)
+			results = res["results"]
+			exactMatchesCount = res["exact_matches"]
+			total = res["total"]
+			console.log 'Search results:', results
+		catch error
+			console.error error
+			if vault.downloaded_translations.indexOf(reader.translation) != -1
+				let result = await vault.search(reader.translation + '/' + query.toLowerCase() + '?book=' + filter + '&page=' + page)
+				console.log 'Search results:', result
+				results = result.data
+				total = result.total
+				exactMatchesCount = result.exact_matches
+			else
+				results = []
+
+		resultBooks = []
+		for verse in results
+			if !resultBooks.find(do |element| return element == verse.book)
+				resultBooks.push verse.book
+
+		loading = no
+		imba.commit!
+		
 
 	def addFilter book\number|string
 		filter = book
 		activities.show_filters = no
 		page = 1
-		let search_body = document.getElementById('search_body')
-		search_body.scrollTo(0,0)
+		run!
 
 	def dropFilter
 		filter = ''
 		activities.show_filters = no
 		page = 1
-		let search_body = document.getElementById('search_body')
-		search_body.scrollTo(0,0)
 		run!
 
 	def getSuggestionText book

@@ -12,6 +12,7 @@ import dictionaries from "../data/dictionaries.json"
 import { getValue, setValue } from '../utils'
 
 import { MOBILE_PLATFORM } from '../constants'
+import { scoreSearch } from '../utils'
 
 class Dictionary
 	definitions = []
@@ -36,7 +37,7 @@ class Dictionary
 			else
 				currentDictionary = 'BDBT'
 
-	def strongHunber selection\string, number\number
+	def strongNumber selection\Selection, number\string
 		# checking for Hebrew symbols is not reliable for cases when translation is English or Dutch but we're still at the old testament
 		# And at the same time parallel mode may be selected and selection may be either in one or another parallel which may be both NT and OT
 		# So we need to check to what translation the selection belongs
@@ -113,19 +114,19 @@ class Dictionary
 
 					# Strong numbers are always inside S tag
 					if node.tagName == 'S' or node.tagName == 's'
-						tooltip.strong = strongHunber(selection, node.textContent)
+						tooltip.strong = strongNumber(selection, node.textContent)
 						break
 
 				if !tooltip.strong
 					# If no S tag found, try at first to find the strong number in the next node
 					if node
-						tooltip.strong = strongHunber(selection, node.textContent)
+						tooltip.strong = strongNumber(selection, node.textContent)
 					# Otherwise try our old approach
 					elif selection.anchorOffset > 1 && selection.focusNode.previousSibling..textContent
-						tooltip.strong = strongHunber(selection, selection.focusNode.previousSibling.textContent)
+						tooltip.strong = strongNumber(selection, selection.focusNode.previousSibling.textContent)
 					else
 						if selection.anchorNode.nextSibling..textContent
-							tooltip.strong = strongHunber(selection, selection.anchorNode.nextSibling.textContent)
+							tooltip.strong = strongNumber(selection, selection.anchorNode.nextSibling.textContent)
 
 				imba.commit!
 
@@ -136,7 +137,7 @@ class Dictionary
 			query = selected
 		loadDefinitions!
 		setTimeout(&, 300) do
-			const dictionarySearchInput\HTMLInputElement = document.getElementById('dictionarysearch')
+			const dictionarySearchInput\(as HTMLInputElement) = document.getElementById('dictionarysearch')
 			dictionarySearchInput..select!
 
 	def showStongNumberDefinition
@@ -176,9 +177,9 @@ class Dictionary
 			loading = yes
 			def loadDefinitionsFromOffline
 				let unvoweled_query = stripVowels(query)
-				search_results = await vault.searchDefinitionsOffline({dictionary: currentDictionary, query: unvoweled_query})
+				let offlineResults = await vault.searchDefinitions({dictionary: currentDictionary, query: unvoweled_query})
 				definitions = []
-				for definition in search_results
+				for definition in offlineResults
 					const score = scoreSearch(definition.lexeme, unvoweled_query)
 					if score or definition.topic == query.toUpperCase!
 						definitions.push({

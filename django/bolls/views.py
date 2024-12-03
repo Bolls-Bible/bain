@@ -233,7 +233,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
         )
     return {
         "results": d,
-        "exact_matches": 3,
+        "exact_matches": exact_matches,
         "total": len(results_of_search),
     }
 

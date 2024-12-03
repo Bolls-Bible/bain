@@ -1,27 +1,33 @@
 import parallelReader from './ParallelReader.imba'
 import activities from './Activities'
+import search from './Search'
+import reader from './Reader'
+
+import type { HighlightRectangular } from './types'
 
 class PageSearch
 	on = no
 	query = ''
 	matches = []
-	current_occurence = 1
-	rects = []
+	current_occurrence = 1
+	rects\HighlightRectangular[] = []
 
 	get drawerOffset
-		return Math.min(32, Math.max(16, window.innerWidth * 0.02))
+		// query select a button with className drawer-handle
+		const drawerHandle = document.querySelector('.drawer-handle')
+		return drawerHandle..clientWidth
 	
 	get inputElement\HTMLInputElement
-		document.getElementById('pagesearch')
+		document.getElementById('pageSearch')
 
 
-	def pageSearch event
+	def run event = null
 		let selectionStart = 0
 		if event
 			selectionStart = event.target.selectionStart
 
 		# Show pageSearch box
-		clearSpace()
+		activities.cleanUp!
 		on = yes
 
 		def focusInput
@@ -31,14 +37,14 @@ class PageSearch
 					inputElement.setSelectionRange(selectionStart, selectionStart)
 			else setTimeout(&,50) do focusInput()
 
+		focusInput()
 		# Check if query is not an empty string
 		unless query.length
 			matches = []
 			rects = []
-			focusInput()
 			return 0
 
-		# if the query is not an emty string lets clean it up for regex
+		# if the query is not an empty string lets clean it up for regex
 		let regex_compatible_query
 		unless activities.activeModal
 			regex_compatible_query = query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
@@ -46,18 +52,15 @@ class PageSearch
 			regex_compatible_query = search.query.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
 
 		# Lets get chapter node to iterate verses for match
-		let all_articles = document.getElementsByTagName('article')
+		const main = document.getElementById('main')
 		let chapter_articles = []
-		for article in all_articles
+		for section in main.children
 			# articles that does not have className contain chapters
-			if article.nextSibling
-				if article.nextSibling.className
-					if article.nextSibling.className.includes('arrows')
-						chapter_articles.push(article)
+			for child in section.children
+				if child.tagName == 'ARTICLE' 
+					chapter_articles.push(child)
 
-		let search_body = document.getElementById('search_body')
-
-		def highlightText node, lastIndex, cssclass, parallel
+		def highlightText node, lastIndex, cssClass, parallel
 			# Create range of matched text to get its position in document
 			const range = document.createRange()
 
@@ -96,24 +99,16 @@ class PageSearch
 			range.setEnd(range_node, range_end_index)	# End at last character
 
 			def getSearchSelectionTopOffset rect_top
-				if parallel == 'ps'
-					return rect_top + search_body.scrollTop - search_body.offsetTop - search_body.parentNode.offsetTop
-				elif parallelReader.enabled
+				if parallelReader.enabled
 					if window.innerWidth < 639 && parallel
 						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop + activities.IOSKeyboardHeight
-					else
-						return rect_top + chapter_articles[parallel].parentElement.scrollTop + activities.IOSKeyboardHeight
-				else return rect_top + scrollTop + activities.IOSKeyboardHeight
+				return rect_top + chapter_articles[parallel].parentElement.scrollTop + activities.IOSKeyboardHeight
 
 			def getSearchSelectionLeftOffset rect_left
-				if parallel == 'ps'
-					return rect_left - search_body.offsetLeft - search_body.parentNode.offsetLeft
-				elif parallelReader.enabled
+				if parallelReader.enabled
 					if window.innerWidth > 639 && parallel
 						return rect_left - chapter_articles[parallel].parentNode.offsetLeft - drawerOffset
-					else
-						return rect_left - drawerOffset
-				else return rect_left
+				return rect_left - drawerOffset
 
 			# getClientRects returns metrics of selections
 			const rects = range.getClientRects()
@@ -126,8 +121,8 @@ class PageSearch
 						left: getSearchSelectionLeftOffset(rect.left)
 						height: rect.height
 						width: rect.width
-						class: cssclass
-						mathcid: node.id
+						class: cssClass
+						matchID: node.id
 					}
 					# Save it to and array to display it later
 					selections.push(selection)
@@ -135,10 +130,10 @@ class PageSearch
 
 		def getSelectionHighlightRect child, lastIndex, parallel
 			# Highlight found text
-			if current_occurence == matches.length
-				highlightText(child, lastIndex, 'current_occurence', parallel)
+			if current_occurrence == matches.length
+				highlightText(child, lastIndex, 'current_occurrence', parallel)
 			else
-				highlightText(child, lastIndex, 'another_occurences', parallel)
+				highlightText(child, lastIndex, 'another_occurrences', parallel)
 
 		def matchId node
 			if node.id
@@ -167,49 +162,54 @@ class PageSearch
 			parallel++
 
 		# Gather all rects to one array
-		rects = []
-		let nskrjvnslif = []
-		for match in matches
-			nskrjvnslif = nskrjvnslif.concat match.rects
-		rects = nskrjvnslif
+		rects = matches.flatMap(do(match) match.rects)
+		console.log(rects)
 
 		# After all scroll to results
-		if current_occurence > matches.length - 1
-			current_occurence = 0
+		if current_occurrence > matches.length - 1
+			current_occurrence = 0
 			if matches.length
-				pageSearch!
-		if matches[current_occurence]
-			findVerse(matches[current_occurence].id, no, no)
+				run!
+
+		if matches[current_occurrence]
+			reader.findVerse(matches[current_occurrence].id, 0, no)
 		# focusInput()
 		imba.commit()
 
 
 	def changeSelectionRectClass class_name
-		if matches[current_occurence]
-			let rects = matches[current_occurence].rects
+		if matches[current_occurrence]
+			let rects = matches[current_occurrence].rects
 			for rect in rects
 				rect.class = class_name
 
-	def prevOccurence
-		changeSelectionRectClass('another_occurences')
-		if current_occurence == 0
-			current_occurence = matches.length - 1
+	def prevOccurrence
+		changeSelectionRectClass('another_occurrences')
+		if current_occurrence == 0
+			current_occurrence = matches.length - 1
 		else
-			current_occurence--
-		changeSelectionRectClass('current_occurence')
-		if matches[current_occurence]
-			findVerse(matches[current_occurence].id, no, no)
+			current_occurrence--
+		changeSelectionRectClass('current_occurrence')
+		if matches[current_occurrence]
+			reader.findVerse(matches[current_occurrence].id, 0, no)
 		imba.commit()
 
-	def nextOccurence
-		changeSelectionRectClass('another_occurences')
-		if current_occurence == matches.length - 1
-			current_occurence = 0
+	def nextOccurrence
+		changeSelectionRectClass('another_occurrences')
+		if current_occurrence == matches.length - 1
+			current_occurrence = 0
 		else
-			current_occurence++
-		changeSelectionRectClass('current_occurence')
-		if matches[current_occurence] then findVerse(matches[current_occurence].id, no, no)
+			current_occurrence++
+		changeSelectionRectClass('current_occurrence')
+		if matches[current_occurrence] then reader.findVerse(matches[current_occurrence].id, 0, no)
 		imba.commit()
+
+	def pageSearchKeydownManager event
+		if event.code == "Enter"
+			if event.shiftKey
+				prevOccurrence()
+			else
+				nextOccurrence()
 
 
 const pageSearch = new PageSearch()

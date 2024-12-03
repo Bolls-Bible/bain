@@ -4,9 +4,13 @@ import { MOBILE_PLATFORM } from '../constants'
 
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
+import ChevronUp from 'lucide-static/icons/chevron-up.svg'
+import ChevronDown from 'lucide-static/icons/chevron-down.svg'
 import Search from 'lucide-static/icons/search.svg'
 import BookOpenText from 'lucide-static/icons/book-open-text.svg'
 import SlidersHorizontal from 'lucide-static/icons/sliders-horizontal.svg'
+
+import * as ICONS from 'imba-phosphor-icons'
 
 tag reader
 	initialTouch = null
@@ -15,7 +19,7 @@ tag reader
 	welcomeLock = no
 
 	def onPopState event
-		if event.explicitOriginalTarget.hash
+		if event.target.hash
 			return
 		activities.cleanUp { onPopState: yes }
 		reader.initReaderFromLocation!
@@ -151,7 +155,7 @@ tag reader
 
 	get drawerTransiton
 		(inClosingTouchZone || inTouchZone) ? '0' : '450ms'
-	
+
 	def readerPadding mainReader = yes
 		if parallelReader.enabled
 			# the padding is 0 on the side of the parallel reader
@@ -168,7 +172,7 @@ tag reader
 		if (settings.fixdrawers && window.innerWidth >= 1024)
 			return 300 + activities.booksDrawerOffset
 		return 0
-	
+
 	get settingsIconTransform
 		if (settings.fixdrawers && window.innerWidth >= 1024)
 			return -300 - activities.settingsDrawerOffset
@@ -261,15 +265,39 @@ tag reader
 
 			if activities.activeVerseAction
 				<verse-actions />
-			
+
 			if reader.loading || parallelReader.loading || dictionary.loading || search.loading || compare.loading
 				<loading>
-			
+
+			if pageSearch.on
+				<section#page_search ease>
+					<[d:flex mr:1rem rd:.25rem] [ol:.25rem solid rose8/50]=(!pageSearch.matches.length && pageSearch.query.length)>
+						<input#pageSearch bind=pageSearch.query
+							@input=pageSearch.run @keydown.enter=pageSearch.pageSearchKeydownManager
+							[direction:{textDirection(pageSearch.query)}]
+							placeholder=t.find_in_chapter>
+						<button @click=pageSearch.prevOccurrence title=t.prev
+							[rd:0 bgc:$acc-bgc @hover:$acc-bgc-hover]>
+							<svg src=ChevronUp>
+						<button @click=pageSearch.nextOccurrence title=t.next
+							[border-top-right-radius:.25rem border-bottom-right-radius:.25rem bgc:$acc-bgc @hover:$acc-bgc-hover]>
+							<svg src=ChevronDown>
+
+					if pageSearch.matches.length
+						<p> pageSearch.current_occurrence + 1, ' / ', pageSearch.matches.length
+					elif pageSearch.query.length != 0 && window.innerWidth > 640
+						<p> t.phrase_not_found
+
+					<button[c@hover:red4 ml:auto] @click=activities.cleanUp title=t.close>
+						<svg src=ICONS.X aria-hidden=yes>
+
+
+
 			<global
 				@hotkey('mod+shift+f|mod+k').force.prevent.stop.cleanUpSelection=activities.showSearch
 				@hotkey('s|f|і|а').prevent.stop.cleanUpSelection=activities.showSearch
 				
-				# @hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
+				@hotkey('mod+f').prevent.stop.cleanUpSelection=pageSearch.run
 				# @hotkey('alt+r').prevent.stop=randomVerse
 				@hotkey('mod+y').prevent.stop=(settings.fixdrawers = !settings.fixdrawers)
 				
@@ -341,3 +369,34 @@ tag reader
 			bgc:gray4/25
 			o:0 @hover:1
 			d:hcc cursor:pointer zi:2 c:$acc 
+
+		#page_search
+			pos:fixed b:0 y@off:100% l:0 r:0 zi:1100
+			d:flex ai:center
+			p:.5rem
+			bdt:1px solid $acc-bgc
+			bgc:$bgc
+
+			input
+				inline-size: auto
+				min-width: 4rem;
+				padding: .25rem
+				font-size: 1.25rem
+				background: $acc-bgc focus:$acc-bgc-hover
+				border: 1px solid $acc-bgc
+				color: inherit
+				-webkit-border-radius: .25rem
+				border-radius: .25rem
+				opacity: 0.7 @hover:1 @focus:1
+				border-top-right-radius:0
+				border-bottom-right-radius:0
+			
+			button
+				opacity: 0.7 @hover:1
+				d:hcc
+				svg
+					height: 2rem
+					width: 2.25rem
+					min-width: 2rem
+
+

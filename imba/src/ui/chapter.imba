@@ -100,6 +100,14 @@ tag chapter < section
 		if (textDirection == 'rtl' && direction) or (textDirection == 'ltr' && !direction)
 			return <svg src=ChevronLeft aria-label=t.prev> 
 		return <svg src=ChevronRight aria-label=t.next>
+	
+	def isMyRect matchId\string
+		if activities.activeModal != ''
+			return no
+		if versePrefix == ''
+			// check if there is any letter in the matchId
+			return !matchId.match(/[a-zA-Z]/)
+		return matchId.startsWith(versePrefix)
 
 	def render
 		if isApple
@@ -108,8 +116,9 @@ tag chapter < section
 		<self .parallel=parallelReader.enabled
 			@scroll=changeHeadersSizeOnScroll @mousemove=mousemove
 			dir=translationTextDirection(me.translation)>
-			# for rect in pageSearch.rects when rect.mathcid.charAt(0) != versePrefix and activities.activeModal == ''
-			# 	<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+			<>
+				for rect in pageSearch.rects when isMyRect(rect.matchID) and activities.activeModal == ''
+					<.{rect.class} id=rect.matchID [pos:absolute top:{rect.top}px left:{rect.left}px width:{rect.width}px height:{rect.height}px]>
 
 			if me.verses.length
 				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
@@ -125,6 +134,7 @@ tag chapter < section
 
 						<a.arrow @click.prevent.stop=me.nextChapter [d@lt-md:none max-height:{#main_header_arrow_size} max-width:{#main_header_arrow_size} min-height:{#main_header_arrow_size} min-width:{#main_header_arrow_size}] title=t.next href=me.nextChapterLink>
 							getChevron(yes)
+
 				<p[padding-inline:.5rem o:0 lh:1 ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:min({theme.fontSize * 2}px, 8vw) us:none word-break:break-word]> me.nameOfCurrentBook, ' ', me.chapter # since header height is changing, this takes constant space for header to avoid layout shifts
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
@@ -178,6 +188,7 @@ tag chapter < section
 		mah: 100vh
 		overflow-y: auto
 		w:100% max-width:100%
+		pos:relative
 
 		h1, header
 			text-align: center
@@ -233,4 +244,4 @@ tag chapter < section
 		
 		html[data-transitions="true"]
 			h1, article
-				animation: fade-in 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+				animation: fade-in 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;

@@ -1048,7 +1048,7 @@ tag bible-reader
 						height: rect.height
 						width: rect.width
 						class: cssclass
-						mathcid: node.id
+						matchID: node.id
 					}
 					# Save it to and array to display it later
 					selections.push(selection)
@@ -2963,8 +2963,8 @@ tag bible-reader
 			<main$main .main @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend .parallel_text=settingsp.enabled .hide_comments=!settings.verse_commentary
 				[pos:{settingsp.enabled ? 'relative' : 'static'} ff: {settings.font.family} fs: {settings.font.size}px lh:{settings.font.line-height} fw:{settings.font.weight} ta: {settings.font.align}]>
 				<section$firstparallel .parallel=settingsp.enabled @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settings.translation) [margin: auto; max-width: {settings.font.max-width}em]>
-					for rect in page_search.rects when rect.mathcid.charAt(0) != 'p' and big_modal_block_content == ''
-						<.{rect.class} id=rect.matchid [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
+					for rect in page_search.rects when rect.matchID.charAt(0) != 'p' and big_modal_block_content == ''
+						<.{rect.class} id=rect.matchID [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 
 					if verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu()>
@@ -3033,7 +3033,7 @@ tag bible-reader
 							<a.reload @click=(do window.location.reload(yes))> state.lang.reload
 
 				<section$secondparallel.parallel @scroll=changeHeadersSizeOnScroll dir=translationTextDirection(settingsp.translation) [margin: auto max-width: {settings.font.max-width}em display: {settingsp.enabled ? 'inline-block' : 'none'}]>
-					for rect in page_search.rects when rect.mathcid.charAt(0) == 'p'
+					for rect in page_search.rects when rect.matchID.charAt(0) == 'p'
 						<.{rect.class} [top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px]>
 					if parallel_verses.length
 						<header[h: 0 mt:4em zi:1] @click=toggleBibleMenu(yes)>
@@ -3954,8 +3954,6 @@ tag bible-reader
 						<p> page_search.current_occurence + 1, ' / ', page_search.matches.length
 					elif page_search.query.length != 0 && window.innerWidth > 640
 						<p> state.lang.phrase_not_found, '!'
-						<title> state.lang.delete
-						<path[m:auto] d=svg_paths.close>
 
 					<svg.close_search [ml:auto min-width:26px] @click=clearSpace viewBox="0 0 20 20">
 						<title> state.lang.close

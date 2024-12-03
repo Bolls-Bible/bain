@@ -44,3 +44,12 @@ export type Translation = {
   updated: number;
   dir?: string; // "rtl" | "ltr";
 };
+
+export type HighlightRectangular = {
+  top: number;
+  left: number;
+  height: number;
+  width: number;
+  class: string;
+  matchID: string;
+};

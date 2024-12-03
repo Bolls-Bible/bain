@@ -469,7 +469,7 @@ tag modal < section
 						if search.currentQuery
 							<p[o:0.75]> search.currentQuery, ': ', search.exactMatchesCount, ' / ',  search.total, ' ', t.totalyresultsofsearch
 							<ul.modal-body id="search-results">
-								for verse, key in search.filteredResults
+								for verse, key in search.results
 									<li>
 										<text-as-html[fs:1.2rem cursor:pointer c@hover:$acc-hover] data=verse innerHTML=verse.text>
 										<header[margin-block:0.25rem 1rem o:.75 @hover:1]>
@@ -496,7 +496,7 @@ tag modal < section
 								<li[pos:sticky r:0 bgc:$bgc]> <button @click=search.goToPage(search.page + 1) disabled=(search.page==search.pages) title=t.next>
 									<svg src=ChevronRight aria-hidde-yes>
 							
-							unless search.filteredResults.length
+							unless search.results.length
 								<div[display:vcc padding-block:4rem]>
 									<p> t.nothing
 							if search.filter
@@ -642,10 +642,11 @@ tag modal < section
 		
 		.downloadListItem
 			d:hcl g:.5rem
+			ta:start
 			py:.5rem pl:.5rem
 			bgc:transparent @hover:$acc-bgc-hover
 			c:$c @hover:$acc-hover
 			rd:.5rem w:100% font:inherit
 
 			svg
-				w:1.5rem h:1.5rem
+				w:1.5rem h:1.5rem fls:0

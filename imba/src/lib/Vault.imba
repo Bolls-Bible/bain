@@ -19,8 +19,6 @@ class Vault
 	downloaded_dictionaries\string[] = []
 	dictionaries_current_state = {}
 
-
-
 	def constructor
 		# Initialize the IndexedDB in order to be able to work with downloaded translations and offline bookmarks if such exist.
 
@@ -317,20 +315,20 @@ class Vault
 			return finded_verses
 		))
 
-	def search search\{translation: string, search_input: string}
+	def search searchUrl\string
 		console.time('OFFLINE_SEARCH')
 
-		def resolveSearch data, exact_matches
+		def resolveSearch result
 			console.timeEnd("OFFLINE_SEARCH")
-			return { data, exact_matches }
+			return result
 
-		const url = '/sw/search-verses/' + search.translation + '/' + search.search_input.toLowerCase()
+		const url = '/sw/search-verses/' + searchUrl
 		let response = await window.fetch(url)
 		if response.status == 200
 			let data = await response.json()
-			return resolveSearch(data, response.headers.get('exact-matches'))
+			return resolveSearch(data)
 		else
-			return resolveSearch([], 0)
+			return resolveSearch({ data:[], total:0, exact_matches:0 })
 
 	# Used at Profile page
 	def getBookmarks
@@ -348,6 +346,22 @@ class Vault
 		).catch (do |e|
 			console.error(e)
 		)
+
+	def searchDefinitions search\{dictionary: string, query: string}
+		console.time('OFFLINE_DICTIONARY_SEARCH')
+
+		def resolveSearch data
+			console.log("Found ", data.length, " objects")
+			console.timeEnd("OFFLINE_DICTIONARY_SEARCH")
+			return data
+
+		const url = '/sw/search-definitions/' + search.dictionary + '/' + search.query
+		let response = await window.fetch(url)
+		if response.status == 200
+			let data = await response.json()
+			return resolveSearch(data)
+		else
+			return resolveSearch([])
 
 
 const vault = new  Vault()
