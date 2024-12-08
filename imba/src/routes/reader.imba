@@ -298,7 +298,7 @@ tag reader
 				@hotkey('s|f|і|а').prevent.stop.cleanUpSelection=activities.showSearch
 				
 				@hotkey('mod+f').prevent.stop.cleanUpSelection=pageSearch.run
-				# @hotkey('alt+r').prevent.stop=randomVerse
+				@hotkey('alt+r').prevent.stop=reader.randomVerse
 				@hotkey('mod+y').prevent.stop=(settings.fixdrawers = !settings.fixdrawers)
 				
 				@hotkey('mod+d').prevent.stop=dictionary.showDictionary
@@ -329,7 +329,6 @@ tag reader
 			top: 0
 			bottom: 0
 			width: 300px
-			touch-action: pan-y
 			z-index: 1000
 			background-color: var(--bgc)
 

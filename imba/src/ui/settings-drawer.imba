@@ -62,7 +62,7 @@ tag settings-drawer < aside
 						for accent in theme.accents when accent.name != theme.accent
 							<.accent @click=(do theme.accent = accent.name; activities.show_accents = no) [background-color: {theme.light == 'dark' ? accent.light : accent.dark}]>
 			if !!user.username
-				<a.settings-btn @click.stop.prevent=user.logout route-to='/profile/'>
+				<a.settings-btn route-to='/profile/'>
 					<svg src=VenetianMask aria-hidden=true>
 					user.username
 				<button.settings-btn @click.stop.prevent=user.logout>
@@ -204,7 +204,7 @@ tag settings-drawer < aside
 
 			if window.navigator.onLine
 				if vault.available
-					<.settings-btn @click=activities.toggleDownloads>
+					<button.settings-btn @click=activities.toggleDownloads>
 						<svg src=CloudDownload aria-hidden=true>
 						t.download_translations
 				<a.settings-btn href='/downloads/' target="_blank" @click=install>
@@ -214,13 +214,13 @@ tag settings-drawer < aside
 					<span.font-icon aria-hidden=true> 'א'
 					t.dictionary
 					<svg[p:4px ml:auto] src=SquareArrowOutUpRight aria-label=(t.dictionary + 'link')>
-			<.settings-btn @click=activities.showHelp>
+			<button.settings-btn @click=activities.showHelp>
 				<svg src=ICONS.CARROT aria-hidden=true>
 				t.help
-			<.settings-btn @click=activities.showSupport>
+			<button.settings-btn @click=activities.showSupport>
 				<svg src=HeartHandshake aria-hidden=true>
 				t.support
-			<.settings-btn @click=randomVerse>
+			<button.settings-btn @click=reader.randomVerse>
 				<svg src=Dices aria-hidden=true>
 				t.random
 
@@ -229,7 +229,7 @@ tag settings-drawer < aside
 					<svg src=ICONS.TIP_JAR aria-hidden=true>
 					t.donate
 
-			<.settings-btn @click=purcheCache>
+			<button.settings-btn @click=purcheCache>
 				<svg src=ICONS.BROOM aria-hidden=true>
 				t.purge_cache
 

@@ -13,6 +13,7 @@ import user from './User'
 import vault from './Vault'
 import compare from './Compare'
 
+
 import { translations, RTLTranslations, bookNameIndex } from '../constants'
 
 extend tag element
@@ -63,7 +64,7 @@ extend tag element
 	
 	get compare
 		return compare
-
+	
 	### Utilities ###
 	def textDirection text\string
 		// check if there are present rtl characters

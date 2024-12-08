@@ -41,7 +41,7 @@ class Reader < GenericReader
 				translation = link[1]
 				book = parseInt(link[2])
 				chapter = parseInt(link[3])
-				verse = link[4]
+				console.log(link[4])
 
 	def constructor
 		super()
@@ -97,6 +97,23 @@ class Reader < GenericReader
 			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 		)
 
+	def randomVerse
+		try
+			let randomVerse
+			// check if the translation is available offline and make offline request
+			if vault.downloaded_translations.indexOf(translation) != -1
+				const response = await window.fetch("/sw/get-random-verse/{translation}/")
+				randomVerse = await response.json()
+			else
+				if window.navigator.onLine
+					randomVerse = await API.getJson("/get-random-verse/{translation}/")
+			if randomVerse
+				chapter = randomVerse.chapter
+				book = randomVerse.book
+				verse = randomVerse.verse
+		catch error
+			console.error error
+			notifications.push('error')
 
 
 const reader = new Reader()

@@ -19,10 +19,9 @@ class API
 			cache: "no-cache",
 			headers: {
 				'Content-Type': 'application/json',
-				# 'X-CSRFToken': get_cookie('csrftoken')
+				'X-CSRFToken': get_cookie('csrftoken')
 			},
-			# withCredentials: true,
-			# credentials: 'include'
+			credentials: 'include'
 			body: JSON.stringify(data)
 		})
 	

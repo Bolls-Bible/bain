@@ -15,6 +15,10 @@
   ],
   "settings": {
     "git.ignoreLimitWarning": true,
-    "svg.preview.background": "custom"
+    "svg.preview.background": "custom",
+    "cSpell.words": [
+      "autorun",
+      "imba"
+    ]
   }
 }

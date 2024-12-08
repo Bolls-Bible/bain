@@ -10,7 +10,7 @@ import Facebook from 'lucide-static/icons/facebook.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
-const DEFAULTY = 32
+const DEFAULT_Y = 32
 
 const colors = [
 	'FireBrick'
@@ -23,36 +23,36 @@ const colors = [
 
 tag verse-actions < section
 	#isSliding = null
-	#dy = DEFAULTY
+	#dy = DEFAULT_Y
 
 	def initiateSlideHandling event
 		event.preventDefault()
 		# we want to slide the verse actions up and down
 		#isSliding = event.clientY
-		#dy = DEFAULTY
+		#dy = DEFAULT_Y
 	
 	def finalizeSlideHandling event
 		unless #isSliding
 			return
-		#dy = Math.max(event.clientY - #isSliding, -DEFAULTY) + DEFAULTY
-		if #dy > DEFAULTY * 2
+		#dy = Math.max(event.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
+		if #dy > DEFAULT_Y * 2
 			close!
 		#isSliding = null
-		#dy = DEFAULTY
+		#dy = DEFAULT_Y
 
 	def slide event
 		unless #isSliding
 			return
-		#dy = Math.max(event.clientY - #isSliding, -DEFAULTY) + DEFAULTY
+		#dy = Math.max(event.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
 	
 	def close
 		# should await for the transition-duration property update to achieve smoothness
-		#dy = DEFAULTY
+		#dy = DEFAULT_Y
 		imba.commit!.then do
 			activities.cleanUp!
 	
 	get transitionDuration
-		return #dy == DEFAULTY ? '0.5s' : '0s'
+		return #dy == DEFAULT_Y ? '0.5s' : '0s'
 	
 
 	def byteCount s\string

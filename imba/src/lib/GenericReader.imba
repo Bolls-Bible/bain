@@ -90,9 +90,9 @@ class GenericReader
 			book = books[current_index - 1].bookid
 			chapter = 1
 
-	def getBookmark verse\number
+	def getBookmark verseNumber\number
 		if user.username
-			return bookmarks.find(do |element| return element.verse == verse)
+			return bookmarks.find(do |element| return element.verse == verseNumber)
 
 	def getHighlight pk\number
 		if activities.selectedVersesPKs.length && activities.selectedVersesPKs.includes(pk)
@@ -105,8 +105,8 @@ class GenericReader
 			else
 				return ''
 	
-	def getCollectionOfChoosen verse\number
-		let highlight = bookmarks.find(do |element| return element.verse == verse)
+	def getCollectionOfChoosen verseNumber\number
+		let highlight = bookmarks.find(do |element| return element.verse == verseNumber)
 		if highlight
 			highlight.collection
 		else ''
@@ -170,8 +170,8 @@ class GenericReader
 
 	def mergeNotes
 		activities.note = ''
-		for verse in activities.selectedVersesPKs
-			let vrs = bookmarks.find(do |element| return element.verse == verse)
+		for versePK in activities.selectedVersesPKs
+			let vrs = bookmarks.find(do |element| return element.verse == versePK)
 			if vrs
 				if activities.note.indexOf(vrs.note) < 0
 					activities.note += vrs.note
@@ -179,8 +179,8 @@ class GenericReader
 
 	def showDeleteBookmark
 		let show_delete_bookmark = no
-		for verse in activities.selectedVerses
-			let vrs = bookmarks.find(do |element| return element.verse == verse)
+		for verseNumber in activities.selectedVerses
+			let vrs = bookmarks.find(do |element| return element.verse == verseNumber)
 			#  || parallel_bookmarks.find(do |element| return element.verse == verse)
 			if vrs
 				show_delete_bookmark = yes
@@ -202,27 +202,27 @@ class GenericReader
 
 	def findVerse id, endverse\string|number = undefined, highlight = no
 		setTimeout(&,250) do
-			const verse = document.getElementById(id)
-			if verse
-				verse.scrollIntoView({behavior: theme.scrollBehavior, block: 'start'})
+			const verseNumberElement = document.getElementById(id)
+			if verseNumberElement
+				verseNumberElement.scrollIntoView({behavior: theme.scrollBehavior, block: 'start'})
 				if highlight then highlightLinkedVerses(id, endverse)
 			else
 				findVerse(id, endverse, highlight)
 
 
-	def highlightLinkedVerses verse, endverse
+	def highlightLinkedVerses verseNumber, endverse
 		if isIOS or !window.getSelection
 			return
 
 		setTimeout(&, 250) do
-			const versenode = document.getElementById(verse)
+			const versenode = document.getElementById(verseNumber)
 			unless versenode
-				return highlightLinkedVerses verse, endverse
+				return highlightLinkedVerses verseNumber, endverse
 
 			const selection = window.getSelection()
 			selection.removeAllRanges()
 			if endverse
-				for id in [parseInt(verse) .. parseInt(endverse)]
+				for id in [parseInt(verseNumber) .. parseInt(endverse)]
 					if id <= verses.length
 						const range = document.createRange()
 						const node = document.getElementById(id)

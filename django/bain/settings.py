@@ -33,6 +33,8 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 CSRF_TRUSTED_ORIGINS = ["https://bolls.life", "https://dev.bolls.life"]
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS.append("https://bolls.local")
 
 # Application definition
 INSTALLED_APPS = [
