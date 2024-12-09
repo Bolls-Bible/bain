@@ -53,3 +53,10 @@ export type HighlightRectangular = {
   class: string;
   matchID: string;
 };
+
+export type HistoryEntry = {
+  book: number;
+  chapter: number;
+  verse: number;
+  translation: string;
+};

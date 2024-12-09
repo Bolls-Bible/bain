@@ -1,3 +1,4 @@
+import time
 from django.db.models import F, Func
 import re
 import os
@@ -220,7 +221,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     for obj in results_of_search:
         exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
 
-    for obj in results_of_search[(page * limit - limit):(page * limit)]:
+    for obj in results_of_search[(page * limit - limit) : (page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -787,11 +788,11 @@ def history(request):
             return JsonResponse({"response": "200"}, safe=False)
 
         elif request.method == "DELETE":
-            received_json_data = json.loads(request.body)
             try:
                 obj = user.history_set.get(user=user)
-                obj.history = received_json_data["history"]
-                obj.purge_date = received_json_data["purge_date"]
+                obj.history = "[]"
+                # milliseconds since epoch
+                obj.purge_date = int(round(time.time() * 1000))
                 obj.save()
 
             except History.DoesNotExist:

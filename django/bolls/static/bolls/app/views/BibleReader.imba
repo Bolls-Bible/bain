@@ -3875,7 +3875,7 @@ tag bible-reader
 							<svg[m: 0 8px].close_search @click=turnHistory() viewBox="0 0 20 20">
 									<title> state.lang.close
 									<path d=svg_paths.close>
-							<h1[margin: 0 0 0 8px]> state.lang.history
+							<h2[margin: 0 0 0 8px]> state.lang.history
 							<svg.close_search [p:0 m:0 4px 0 auto w:32px] @click=clearHistory() viewBox="0 0 24 24" alt=state.lang.delete>
 								<title> state.lang.delete
 								<path d="M15 16h4v2h-4v-2zm0-8h7v2h-7V8zm0 4h6v2h-6v-2zM3 20h10V8H3v12zM14 5h-3l-1-1H6L5 5H2v2h12V5z">
