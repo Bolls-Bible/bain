@@ -132,7 +132,7 @@ class Search
 		inputElement..blur!
 		if currentQuery != query
 			page = 1
-		currentQuery = query
+		currentQuery = ''
 		loading = yes
 
 		const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page
@@ -161,6 +161,7 @@ class Search
 			if !resultBooks.find(do |element| return element == verse.book)
 				resultBooks.push verse.book
 
+		currentQuery = query
 		loading = no
 		imba.commit!
 		

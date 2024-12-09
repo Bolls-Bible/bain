@@ -49,7 +49,7 @@ class User
 					name = userdata.name || ''
 					if userdata.bookmarksMap
 						bookmarksMap = userdata.bookmarksMap
-					readingHistory.syncHistory!
+					await readingHistory.syncHistory!
 				else
 					bookmarksMap = {}
 					username = ''

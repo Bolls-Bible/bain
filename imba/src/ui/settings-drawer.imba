@@ -81,7 +81,7 @@ tag settings-drawer < aside
 			<button.settings-btn>
 				<svg src=TextSearch aria-hidden=true>
 				t.find_in_chapter
-			<button.settings-btn @click=readingHistory.showHistory @click=readingHistory.showHistory>
+			<button.settings-btn @click=activities.showHistory>
 				<svg src=Croissant aria-hidden=true>
 				t.history
 			<menu-popup bind=activities.show_themes>

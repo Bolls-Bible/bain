@@ -314,6 +314,45 @@ tag modal < section
 										' '
 						<mark-down store=store lemon=t.write_something_awesone>
 
+					when "history"
+						<header>
+							<button @click=activities.cleanUp title=t.close>
+								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
+							<h2> t.history
+							<button @click=readingHistory.clear title=t.delete>
+								<svg src=ICONS.TRASH aria-hidden=true>
+						if readingHistory.history.length
+							<ul.modal-body>
+								for history in readingHistory.history
+									<li>
+										css
+											d:flex
+											button
+												fs:1.125rem lh:1
+												p:.5rem .25rem
+												c@hover:$acc-hover
+												ta:start
+
+										<button[fl:1] @click=(do()
+											reader.translation = history.translation
+											reader.book = history.book
+											reader.chapter = history.chapter
+											reader.verse = history.verse
+										) dir="auto">
+											getBookName(history.translation, history.book)
+											' '
+											history.chapter
+											if history.verse
+												':'
+												history.verse
+											' '
+											history.translation
+										<button
+											@click=openInParallel({translation:history.translation, book:history.bookid, chapter: history.chapter,verse: history.verse}) title=t.open_in_parallel>
+											<svg src=SquareSplitHorizontal aria-hidden=yes>
+						else
+							<p[pt:1rem]> t.empty_history
+						
 					when "dictionary"
 						<header[pos:relative]>
 							<button[c@hover:red4] @click=activities.cleanUp title=t.close>

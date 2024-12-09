@@ -1,3 +1,4 @@
+import readingHistory from './ReadingHistory'
 import { MOBILE_PLATFORM } from '../constants'
 
 import { getBookName } from '../utils'
@@ -16,7 +17,6 @@ class Activities
 	show_themes = no
 	show_fonts = no
 	show_languages = no
-	show_history = no
 	show_parallel_verse_picker = no
 	show_verse_picker = no
 	show_dictionaries = no
@@ -60,7 +60,6 @@ class Activities
 		show_themes = no
 		show_fonts = no
 		show_languages = no
-		show_history = no
 		show_parallel_verse_picker = no
 		show_verse_picker = no
 		show_dictionaries = no
@@ -83,7 +82,7 @@ class Activities
 		# showAddCollection = no
 		selectedCategories = []
 
-		search.currentQuery = search.query
+		search.currentQuery = ""
 		if search.inputElement
 			search.inputElement.blur()
 
@@ -151,12 +150,17 @@ class Activities
 		cleanUp!
 		openModal 'font'
 	
+	def showHistory
+		cleanUp!
+		readingHistory.syncHistory!
+		openModal 'history'
+	
 	def showSearch
 		cleanUp!
 		openModal 'search'
 		search.generateSuggestions!
 		setTimeout(&, 300) do
-			search.inputElement\(HTMLInputElement).select!
+			search.inputElement\(as HTMLInputElement).select!
 
 	def toggleDownloads
 		cleanUp!
