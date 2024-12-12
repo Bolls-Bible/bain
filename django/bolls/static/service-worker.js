@@ -2,9 +2,9 @@ importScripts("/static/bolls/jszip.min.js");
 importScripts("/static/bolls/dexie.min.js");
 importScripts("/static/bolls/scripts.js");
 
-const CACHE_NAME = "v2.6.6";
-const STATICS_CACHE = "statics-v1.0.0";
-const TEXTS_CACHE = "texts-v1.0.1";
+const CACHE_NAME = "v2.6.7";
+const STATICS_CACHE = "statics-v1.0.1";
+const TEXTS_CACHE = "texts-v1.0.2";
 
 const urlsToCache = [
   "/",
