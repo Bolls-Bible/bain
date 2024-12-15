@@ -1,8 +1,8 @@
 import fs from "fs";
 
 // import translations_books and languages
-import BOOKS from "../bolls/static/bolls/app/views/translations_books.json" with { type: "json" };
-import LANGUAGES from "../bolls/static/bolls/app/views/languages.json" with { type: "json" };
+import BOOKS from "../../django/bolls/static/bolls/app/views/translations_books.json" with { type: "json" };
+import LANGUAGES from "../../django/bolls/static/bolls/app/views/languages.json" with { type: "json" };
 
 const sitemapHeader =
   '<?xml version="1.0" encoding="utf-8" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';

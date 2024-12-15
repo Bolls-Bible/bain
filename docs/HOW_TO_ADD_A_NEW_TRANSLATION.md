@@ -63,7 +63,7 @@ If it times out try to get it from inside container, `wget -O verses.json -timeo
 
 ### Test it.
 
-Check out if it works. If the books chapters are in a proper number, if there are no weird signs. Check out everything that you think should be verified. And if everything is right...
+Check out if it works. If the books chapters are in a proper number, if there are no weird signs. Check out everything that you think should be verified. And if everything is right... let me know and I'll check and deploy it.
 
 
 ### May Jhovah bless you!

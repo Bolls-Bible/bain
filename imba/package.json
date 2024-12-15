@@ -8,13 +8,14 @@
     "prod": "npx pm2 start dist/server.js"
   },
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.2"
   },
   "devDependencies": {
-    "@types/serviceworker": "^0.0.106",
-    "imba": "^2.0.0-alpha.237",
+    "@types/serviceworker": "^0.0.107",
+    "imba": "^2.0.0-alpha.238",
     "imba-phosphor-icons": "^2.2.0",
-    "lucide-static": "^0.460.0",
-    "sortablejs": "^1.15.4"
+    "npm-check-updates": "^17.1.11",
+    "lucide-static": "^0.468.0",
+    "sortablejs": "^1.15.6"
   }
 }
