@@ -2394,16 +2394,16 @@ tag bible-reader
 				touch.dx > 64 ? settings_menu_left = 0 : settings_menu_left = -300
 			else
 				touch.dx < -64 ? settings_menu_left = -300 : settings_menu_left = 0
-		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !search.search_div && !store.show_history && !choosenid.length
+		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 32 && !search.search_div && !store.show_history && !choosenid.length
 			if window.innerWidth > 600
-				if touch.dx < -32
+				if touch.dx < -42
 					settingsp.enabled && touch.clientX > window.innerWidth / 2 ? prevChapter(yes) : prevChapter()
-				elif touch.dx > 32
+				elif touch.dx > 42
 					settingsp.enabled && touch.clientX > window.innerWidth / 2 ? nextChapter(yes) : nextChapter()
 			else
-				if touch.dx < -32
+				if touch.dx < -42
 					settingsp.enabled && touch.clientY > window.innerHeight / 2 ? prevChapter(yes) : prevChapter()
-				elif touch.dx > 32
+				elif touch.dx > 42
 					settingsp.enabled && touch.clientY > window.innerHeight / 2 ? nextChapter(yes) : nextChapter()
 
 		slidetouch = null

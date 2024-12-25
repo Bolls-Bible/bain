@@ -38,6 +38,21 @@
         "updated": 1626349711821
       },
       {
+        "short_name": "PPCH",
+        "full_name": "НОВИЙ ЗАВІТ. Новий переклад Юрія Попченка з давньогрецької на сучасну українську літературну мову",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "GYZ",
+        "full_name": "Канонічний переклад Біблії сучасною українською мовою. Переклав Олександр Гижа. © 2019",
+        "updated": 1626349711821
+      },
+      {
+        "short_name": "UKDER",
+        "full_name": "Велике Відкриття. Діана Деркач, 1992",
+        "updated": 1626349711821
+      },
+      {
         "short_name": "CSL",
         "full_name": "Библия Церковнославянская, 1900",
         "updated": 1626349711821
@@ -256,6 +271,21 @@
       {
         "short_name": "NABRE",
         "full_name": "New American Bible (Revised Edition)",
+        "updated": 1723748851755
+      },
+      {
+        "short_name": "CSB17",
+        "full_name": "Christian Standard Bible, 2017",
+        "updated": 1723748851755
+      },
+      {
+        "short_name": "CEVD",
+        "full_name": "Contemporary English Version, 2006 (with Apocrypha)",
+        "updated": 1723748851755
+      },
+      {
+        "short_name": "CEB",
+        "full_name": "Common English Bible, 2011",
         "updated": 1723748851755
       }
     ]
@@ -533,7 +563,7 @@
     ]
   },
   {
-    "language": "Russian Русский",
+    "language": "russian русский",
     "translations": [
       {
         "short_name": "JNT",
@@ -542,12 +572,12 @@
       },
       {
         "short_name": "NRT",
-        "full_name": "Новый Русский Перевод (НРП)",
+        "full_name": "Новый русский Перевод (НРП)",
         "updated": 1635446313426
       },
       {
         "short_name": "SYNOD",
-        "full_name": "Русский Синодальный Перевод",
+        "full_name": "русский Синодальный Перевод",
         "updated": 1591185595149
       },
       {
