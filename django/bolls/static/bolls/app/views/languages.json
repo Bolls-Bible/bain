@@ -10,7 +10,7 @@
       {
         "short_name": "UKRK",
         "full_name": "Біблія. Пантелеймон Александрович Куліш, Іван Семенович Нечуй-Левицький, Іван Павлович Пулюй, 1903",
-        "updated": 1734041041824
+        "updated": 1735480286432
       },
       {
         "short_name": "HOM",
@@ -40,17 +40,17 @@
       {
         "short_name": "PPCH",
         "full_name": "НОВИЙ ЗАВІТ. Новий переклад Юрія Попченка з давньогрецької на сучасну українську літературну мову",
-        "updated": 1626349711821
+        "updated": 1735480286432
       },
       {
         "short_name": "GYZ",
         "full_name": "Канонічний переклад Біблії сучасною українською мовою. Переклав Олександр Гижа. © 2019",
-        "updated": 1626349711821
+        "updated": 1735480286432
       },
       {
         "short_name": "UKDER",
         "full_name": "Велике Відкриття. Діана Деркач, 1992",
-        "updated": 1626349711821
+        "updated": 1735480286432
       },
       {
         "short_name": "CSL",
@@ -67,6 +67,16 @@
         "short_name": "SVD",
         "updated": 1671955360023,
         "dir": "rtl"
+      }
+    ]
+  },
+  {
+    "language": "Afrikaans",
+    "translations": [
+      {
+        "full_name": "Afrikaans 1933/1953",
+        "short_name": "AFR53",
+        "updated": 1735480286432
       }
     ]
   },
@@ -378,7 +388,7 @@
       {
         "short_name": "WLCa",
         "full_name": "Westminster Leningrad Codex (with vowels, accents and Strong's numbers)",
-        "updated": 1716109547986,
+        "updated": 1735480286432,
         "dir": "rtl"
       },
       {
@@ -419,6 +429,26 @@
         "short_name": "KB",
         "full_name": "Karoli Bible 1908",
         "updated": 1653206484214
+      }
+    ]
+  },
+  {
+    "language": "Hindi हिन्दी",
+    "translations": [
+      {
+        "short_name": "HIOV",
+        "full_name": "Hindi O.V. - Re-edited (BSI)",
+        "updated": 1735480286432
+      }
+    ]
+  },
+  {
+    "language": "Malayalam മലയാളം",
+    "translations": [
+      {
+        "short_name": "MOV",
+        "full_name": "സത്യവേദപുസ്തകം O.V.",
+        "updated": 1735480286432
       }
     ]
   },
@@ -523,7 +553,7 @@
       {
         "short_name": "KJA",
         "full_name": "Bíblia King James Atualizada, 2001",
-        "updated": 1722972452187
+        "updated": 1735480286432
       },
       {
         "short_name": "VFL",
@@ -544,6 +574,11 @@
         "short_name": "NBV07",
         "full_name": "Nova Bíblia Viva, 2007",
         "updated": 1726389786790
+      },
+      {
+        "short_name": "ALM21",
+        "full_name": "Bíblia Almeida Século 21",
+        "updated": 1735480286432
       }
     ]
   },
