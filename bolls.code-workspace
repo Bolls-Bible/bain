@@ -18,7 +18,10 @@
     "svg.preview.background": "custom",
     "cSpell.words": [
       "autorun",
-      "imba"
+      "imba",
+      "mkcert",
+      "psql",
+      "unaccent"
     ]
   }
 }

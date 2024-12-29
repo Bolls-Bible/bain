@@ -77,6 +77,13 @@ restore-db:
 	docker cp sql/restore-indexes-sequences.sql database:/restore-indexes-sequences.sql
 	docker compose exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
 
+	# add UNACCENT rules
+	docker cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+	docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
+	docker exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+
+	# create extension pg_trgm;
+	docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
 
 up:
 	docker compose up

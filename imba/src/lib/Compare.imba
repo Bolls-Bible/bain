@@ -26,6 +26,12 @@ class Compare
 	@autorun def saveTranslations
 		setValue('compare_translations', translations)
 
+	def getCompareTranslationsFromDB
+		const result = await vault.getCompareVerses(translations, versesToCompare, bookToCompare, chapterToCompare)
+		loading = no
+		activities.openModal 'compare'
+		return result
+
 	def load
 		if activities.selectedVerses.length then versesToCompare = activities.selectedVerses
 		if activities.selectedParallel == parallelReader.me
@@ -40,13 +46,8 @@ class Compare
 		activities.openModal 'compare'
 		loading = yes
 
-		def getCompareTranslationsFromDB
-			list = await vault.getCompareVerses(translations, versesToCompare, bookToCompare, chapterToCompare)
-			loading = no
-			activities.openModal 'compare'
-
 		if !window.navigator.onLine && vault.downloaded_translations.indexOf(reader.translation) != -1
-			getCompareTranslationsFromDB!
+			list = await getCompareTranslationsFromDB!
 		else
 			list = []
 			try
@@ -56,14 +57,15 @@ class Compare
 					book: bookToCompare,
 					chapter: chapterToCompare,
 				})
-				loading = no
 				activities.openModal 'compare'
 			catch error
 				console.error error
-				loading = no
 				if vault.downloaded_translations.indexOf(reader.translation) != -1
-					return getCompareTranslationsFromDB!
-				notifications.push('error')
+					list = await getCompareTranslationsFromDB!
+				else
+					notifications.push('error')
+			finally
+				loading = no
 		imba.commit!
 	
 	def addAllTranslations language\{translations: Translation[]}
@@ -84,14 +86,18 @@ class Compare
 					chapter: chapterToCompare,
 				})
 				list = response.concat(list)
+			catch error
+				console.error error
+				if vault.downloaded_translations.indexOf(reader.translation) != -1
+					const response = await getCompareTranslationsFromDB!
+					list = response.concat(list)
+				else
+					notifications.push('error')
+			finally
 				const compareElement = document.getElementById('compare')
 				if compareElement
 					compareElement.scrollIntoView({behavior: 'smooth', block: 'start'})
 				loading = no
-			catch error
-				console.error error
-				loading = no
-				notifications.push('error')
 		else
 			translations.splice(translations.indexOf(translation.short_name), 1)
 			translations = translations

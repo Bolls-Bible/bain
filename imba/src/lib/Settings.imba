@@ -16,7 +16,7 @@ class SettingsState
 	@observable menuicons\boolean = getValue('menuicons') ?? yes
 	@observable contrast\number = getValue('contrast') ?? 105
 	@observable chronorder\boolean = getValue('chronorder') ?? no
-	@observable favoriteTranslations\string[] = getValue('favorite_ranslations') ?? []
+	@observable favoriteTranslations\string[] = getValue('favorite_translations') ?? []
 
 	@autorun def saveVerseNumber
 		setValue('verse_number', verse_number)
@@ -61,7 +61,7 @@ class SettingsState
 		setValue('chronorder', chronorder)
 	
 	@autorun def saveFavoriteTranslations
-		setValue('favorite_ranslations', favoriteTranslations)
+		setValue('favorite_translations', favoriteTranslations)
 		if window.navigator.onLine && user.username
 			API.put('/api/save-favorite-translations/', {
 				// TODO: remove unnecessary JSON.stringify

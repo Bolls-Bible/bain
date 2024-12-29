@@ -77,7 +77,7 @@ tag modal < section
 		unless compare.search.length
 			return 1
 		else
-			return compare.search.toLowerCase() in language.language.toLowerCase()
+			return compare.search.toLowerCase() in language.language.toLowerCase() or language.translations.some(do(translation) filterCompareTranslation(translation) == 0)
 
 	def openDictionariesDownloads
 		activities.cleanUp!
@@ -266,7 +266,7 @@ tag modal < section
 									<li key=language.language>
 										<a.li [jc: start pl: 0px] dir="auto" @click=expandLanguageDownloads(language.language)>
 											language.language
-											<svg[ml: auto] src=ChevronDown [transform:rotate(180deg)]=(language.language == expandedLanguage) aria-label=t.open>
+											<svg[ml:auto] src=ChevronDown [transform:rotate(180deg)]=(language.language == expandedLanguage) aria-label=t.open>
 
 										if language.language == expandedLanguage
 											<ul[o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0 of:hidden] dir="auto" ease>

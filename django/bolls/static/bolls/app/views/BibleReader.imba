@@ -841,11 +841,11 @@ tag bible-reader
 					if id <= verses.length
 						const range = document.createRange()
 						const node = document.getElementById(id)
-						range.selectNodeContents(node.nextSibling || node)
+						range.selectNodeContents(node)
 						selection.addRange(range)
 			else
 				const range = document.createRange()
-				range.selectNodeContents(versenode.nextSibling || versenode)
+				range.selectNodeContents(versenode)
 				selection.addRange(range)
 
 	def closeVerseOptions

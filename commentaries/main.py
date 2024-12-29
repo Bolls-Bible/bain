@@ -3,7 +3,7 @@ import re
 from books_map import books_map, books_short_names
 
 
-translation = "TB10"
+translation = "HIOV"
 
 
 def parseLinks(text):
@@ -89,6 +89,7 @@ def main():
     # # add the cross_references_df to df
     # df = pd.concat([df, cross_references_df], ignore_index=True)
 
+    print("Transformed data:")
     print(df.head())
     print(df.columns)
 
