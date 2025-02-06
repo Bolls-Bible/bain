@@ -1,21 +1,16 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.contrib.staticfiles import finders
 from django.urls import reverse
-from fakeredis import FakeConnection
-from django.conf import settings
 
-settings.CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': '...',
-        'OPTIONS': {
-            'connection_class': FakeConnection,
-            'CONNECTION_POOL_KWARGS': {'connection_class': FakeConnection},
+
+@override_settings(
+    CACHES={
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-snowflake",
         }
     }
-}
-
-
+)
 class BollsTestCase(TestCase):
     # check if translation books are returned
     def test_get_books(self):
