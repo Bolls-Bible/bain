@@ -4,14 +4,14 @@
 
 ```bash
 docker compose -f docker-compose.dev.yml build
-docker network create web
+docker network create oweb
 docker compose -f docker-compose.dev.yml up -d
 ```
 
 Then restore the database from a [backup file](https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql)
 
 ```bash
-docker exec -i database psql -U postgres_user postgres_db < backup.sql
+docker exec -i odatabase psql -U postgres_user postgres_db < backup.sql
 # or
 docker exec -i database psql -U postgres_user postgres_db < backup.dump
 ```

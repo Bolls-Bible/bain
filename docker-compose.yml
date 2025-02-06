@@ -15,6 +15,14 @@ services:
     volumes:
       - DATABASE_VOLUME_SECRET:/var/lib/postgresql/data
 
+  redis:
+    image: redis:alpine
+    restart: on-failure
+    container_name: redis
+    security_opt:
+      - label:disable
+    networks:
+      - INTERNAL_NETWORK_NAME
 
   WEB_SERVICE_NAME:
     build:
@@ -44,10 +52,12 @@ services:
       - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
       - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
       - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
+      - REDIS_URL=redis://redis:6379
     networks:
       - INTERNAL_NETWORK_NAME
     depends_on:
       - DB_SERVICE_NAME
+      - redis
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
       interval: 1m30s

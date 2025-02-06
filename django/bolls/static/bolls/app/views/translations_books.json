@@ -42776,5 +42776,1597 @@
       "chronorder": 65,
       "chapters": 22
     }
+  ],
+  "NTR": [
+    {
+      "bookid": 1,
+      "name": "Geneza",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exodul",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Leviticul",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Numeri",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deuteronom",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Iosua",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Judecători",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Rut",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Regi",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Regi",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Cronici",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Cronici",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Ezra",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Neemia",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Estera",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Iov",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psalmii",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbe",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Eclesiastul",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cântarea Cântărilor",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Isaia",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Ieremia",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Plângeri",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezechiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osea",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Ioel",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Obadia",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Iona",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Mica",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Naum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuc",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Țefania",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Hagai",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zaharia",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Maleahi",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "Matei",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marcu",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luca",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Ioan",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Faptele Apostolilor",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romani",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinteni",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinteni",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galateni",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Efeseni",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Filipeni",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Coloseni",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Tesaloniceni",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Tesaloniceni",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timotei",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timotei",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Titus",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Filimon",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Evrei",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Iacov",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Petru",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Petru",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "I Ioan",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Ioan",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Ioan",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Iuda",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalipsa",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "VDCL": [
+    {
+      "bookid": 1,
+      "name": "Geneza",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exodul",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Leviticul",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Numeri",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deuteronomul",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Iosua",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Judecătorii",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Rut",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Regi",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Regi",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Cronici",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Cronici",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Ezra",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Neemia",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Estera",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Iov",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psalmii",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbele",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Eclesiastul",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cântarea Cântărilor",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Isaia",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Ieremia",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Plângerile",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezechiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osea",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Ioel",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Obadia",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Iona",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Mica",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Naum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuc",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Țefania",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Hagai",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zaharia",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Maleahi",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "Matei",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marcu",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luca",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Ioan",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Faptele Apostolilor",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romani",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinteni",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinteni",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galateni",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Efeseni",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Filipeni",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Coloseni",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Tesaloniceni",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Tesaloniceni",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timotei",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timotei",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tit",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Filimon",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Evrei",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Iacov",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Petru",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Petru",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 Ioan",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Ioan",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Ioan",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Iuda",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalipsa",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "ARC09": [
+    {
+      "bookid": 1,
+      "name": "Primeiro Livro de Moisés chamado Génesis",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Segundo Livro de Moisés chamado Êxodo",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Terceiro Livro de Moisés chamado Levítico",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Quarto Livro de Moisés chamado Números",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Quinto Livro de Moisés chamado Deuteronómio",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "O Livro de Josué",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "O Livro de Juízes",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "O Livro de Ruth",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "O Primeiro Livro de Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "O Segundo Livro de Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "O Primeiro Livro dos Reis",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "O Segundo Livro dos Reis",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "O Primeiro Livro das Crónicas",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "O Segundo Livro das Crónicas",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "O Livro de Esdras",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "O Livro de Neemias",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "O Livro de Ester",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "O Livro de Job",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "O Livro dos Salmos",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Provérbios de Salomão",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Livro do Eclesiastes ou Pregador",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cantares de Salomão",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Isaías",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jeremias",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentações de Jeremias",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezequiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Oséas",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joel",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amós",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Obadias",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Miquéas",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Naúm",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuc",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sofonias",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Ageu",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacarias",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malaquias",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "O Santo Evangelho Segundo S. Mateus",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "O Santo Evangelho Segundo S. Marcos",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "O Santo Evangelho Segundo S. Lucas",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "O Santo Evangelho Segundo S. João",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Atos dos Apóstolos",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Epístola de S. Paulo aos Romanos",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "Primeira Epístola de S. Paulo, Apóstolo, aos Coríntios",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "Segunda Epístola de S. Paulo, Apóstolo, aos Coríntios",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Epístola de S. Paulo, Apóstolo, aos Gálatas",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Epístola de S. Paulo, Apóstolo, aos Efésios",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Epístola de S. Paulo, Apóstolo, aos Filipenses",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Epístola de S. Paulo, Apóstolo, aos Colossenses",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "Primeira Epístola de S. Paulo, Apóstolo, aos Tessalonicenses",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "Segunda Epístola de S. Paulo, Apóstolo, aos Tessalonicenses",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "Primeira Epístola de S. Paulo, Apóstolo, a Timóteo",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "Segunda Epístola de S. Paulo, Apóstolo, a Timóteo",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Epístola de S. Paulo, Apóstolo, a Tito",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Epístola de S. Paulo, Apóstolo, a Filémon",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Epístola de S. Paulo, Apóstolo, aos Hebreus",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Epístola Universal do Apóstolo S. Tiago",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "Primeira Epístola Universal do Apóstolo S. Pedro",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "Segunda Epístola Universal do Apóstolo S. Pedro",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "Primeira Epístola Universal do Apóstolo S. João",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "Segunda Epístola do Apóstolo S. João",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "Terceira Epístola do Apóstolo S. João",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Epístola Universal do Apóstolo S. Judas",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalipse do Apóstolo S. João",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "ACF11": [
+    {
+      "bookid": 1,
+      "name": "O Primeiro Livro de Moisés chamado Gênesis",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "O Segundo Livro de Moisés chamado Êxodo",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "O Terceiro Livro de Moisés chamado Levítico",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "O Quarto Livro de Moisés chamado Números",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "O Quinto Livro de Moisés chamado Deuteronômio",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "O Livro de Josué",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "O Livro dos Juízes",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "O Livro de Rute",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "O Primeiro Livro de Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "O Segundo Livro de Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "O Primeiro Livro dos Reis",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "O Segundo Livro dos Reis",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "O Primeiro Livro das Crônicas",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "O Segundo Livro das Crônicas",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "O Livro de Esdras",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "O Livro de Neemias",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "O Livro de Ester",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "O Livro de Jó",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "O Livro dos Salmos",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Provérbios de Salomão",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Livro do Eclesiastes",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cântico dos Cânticos de Salomão",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Isaías",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jeremias",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentações de Jeremias",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezequiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Oseias",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joel",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amós",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Obadias",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Miqueias",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Naum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuque",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sofonias",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Ageu",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacarias",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malaquias",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "O Evangelho segundo Mateus",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "O Evangelho segundo Marcos",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "O Evangelho segundo Lucas",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "O Evangelho segundo João",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Atos dos Apóstolos",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Epístola de Paulo aos Romanos",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "Primeira Epístola de Paulo aos Coríntios",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "Segunda Epístola de Paulo aos Coríntios",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Epístola de Paulo aos Gálatas",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Epístola de Paulo aos Efésios",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Epístola de Paulo aos Filipenses",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Epístola de Paulo aos Colossenses",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "Primeira Epístola de Paulo aos Tessalonicenses",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "Segunda Epístola de Paulo aos Tessalonicenses",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "Primeira Epístola de Paulo a Timóteo",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "Segunda Epístola de Paulo a Timóteo",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Epístola de Paulo a Tito",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Epístola de Paulo a Filemom",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Epístola aos Hebreus",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Epístola de Tiago",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "Primeira Epístola de Pedro",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "Segunda Epístola de Pedro",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "Primeira Epístola de João",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "Segunda Epístola de João",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "Terceira Epístola de João",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Epístola de Judas",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalipse de João",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }
