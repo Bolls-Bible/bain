@@ -41,7 +41,7 @@ class BollsTestCase(TestCase):
         self.assertIn(b'to be or become light, shine', request.content)
         self.assertEqual(request.status_code, 200)
 
-    # get-paralel-verses
+    # get-parallel-verses
     # check if verses are returned
     def test_get_verses(self):
         request = self.client.post(reverse('getVerses'), data=[
@@ -62,7 +62,7 @@ class BollsTestCase(TestCase):
             b'My refuge, and my bulwark, my God, I trust in Him', request.content)
 
     def test_parallel_verses(self):
-        request = self.client.post('/get-paralel-verses/', data={
+        request = self.client.post('/get-parallel-verses/', data={
             "translations": "[\"YLT\",\"WEB\",\"UBIO\"]",
             "verses": "[3, 4, 5]",
             "book": 43,
@@ -71,7 +71,7 @@ class BollsTestCase(TestCase):
         self.assertIn(
             b'and the light in the darkness did shine, and the darkness did not perceive it.', request.content)
         # Same test but with translations and verses as lists
-        request = self.client.post('/get-paralel-verses/', data={
+        request = self.client.post('/get-parallel-verses/', data={
             "translations": ['YLT', 'WEB', 'UBIO'],
             "verses": [3, 4, 5],
             "book": 43,

@@ -49,12 +49,12 @@ Deploy the translation to main database. Log into linode instance with ssh and c
 
 ```bash
 scp verses.csv root@ip.ip.ip.ip:/root
-docker cp ./NEPS.csv database:verses.csv
-docker cp ./commentaries.csv database:commentaries.csv
+docker cp ./NTR.csv odatabase:verses.csv
+docker cp ./commentaries.csv odatabase:commentaries.csv
 
-docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
+docker exec -i odatabase psql -U postgres_user -d postgres_db -c "\copy bolls_verses(translation, book, chapter, verse, text) FROM 'verses.csv' DELIMITER ',' CSV HEADER;"
 
-docker exec -i database psql -U postgres_user -d postgres_db -c "\copy bolls_commentary(translation, book, chapter, verse, text) FROM 'commentaries.csv' DELIMITER ',' CSV HEADER;"
+docker exec -i odatabase psql -U postgres_user -d postgres_db -c "\copy bolls_commentary(translation, book, chapter, verse, text) FROM 'commentaries.csv' DELIMITER ',' CSV HEADER;"
 ```
 
 Go to `https://bolls.life/get-translation/{abbreviation_of_the_new_translation}` and save the result to `translations` folder inside of `bolls/static/`. The saved filed should have thr translation abbreviation as its name and `.json` as extension. Then **zip it**. You may find examples in that folder. Otherwise the user will not be able to download it.

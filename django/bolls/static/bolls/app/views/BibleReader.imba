@@ -72,8 +72,8 @@ let settings =
 	accent: 'blue'
 	font:
 		size: 20
-		family: "sans, sans-serif"
-		name: "Sans Serif"
+		family: "'Ezra SIL', serif"
+		name: "Ezra SIL"
 		line-height: 1.8
 		weight: 400
 		max-width: 40
@@ -2063,7 +2063,7 @@ tag bible-reader
 			getCompareTranslationsFromDB!
 		else
 			comparison_parallel = []
-			window.fetch("/get-paralel-verses/", {
+			window.fetch("/get-parallel-verses/", {
 				method: "POST",
 				cache: "no-cache",
 				headers: {
@@ -2094,7 +2094,7 @@ tag bible-reader
 		if compare_translations.indexOf(translation.short_name) < 0
 			compare_translations.unshift(translation.short_name)
 			compare_translations = compare_translations
-			window.fetch("/get-paralel-verses/", {
+			window.fetch("/get-parallel-verses/", {
 				method: "POST",
 				cache: "no-cache",
 				headers: {
@@ -3315,8 +3315,8 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.6.8 🗓 "
-						<time dateTime='2024-12-29'> "29.12.2024"
+						"🍇 v2.7.0 🗓 "
+						<time dateTime='2025-02-06'> "6.2.2025"
 					<p[fs:12px]>
 						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
@@ -3964,10 +3964,8 @@ tag bible-reader
 
 			if window.location.pathname != '/profile/'
 				<global
-					@hotkey('mod+shift+f').force.prevent.stop.prepareForHotKey=turnGeneralSearch
-					@hotkey('mod+k').force.prevent.stop.prepareForHotKey=turnGeneralSearch
-					@hotkey('s').prevent.stop.prepareForHotKey=turnGeneralSearch
-					@hotkey('f').prevent.stop.prepareForHotKey=turnGeneralSearch
+					@hotkey('mod+shift+f|mod+k').force.prevent.stop.cleanUpSelection=turnGeneralSearch
+					@hotkey('s|f|і|а').prevent.stop.prepareForHotKey=turnGeneralSearch
 					@hotkey('mod+f').prevent.stop.prepareForHotKey=pageSearch
 					@hotkey('mod+d').prevent.stop=showDictionaryView
 					@hotkey('alt+s').prevent.stop=showStongNumberDefinition

@@ -4,7 +4,7 @@ services:
   database:
     image: postgres:alpine
     restart: on-failure
-    container_name: database
+    container_name: odatabase
     environment:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=postgres_password
@@ -17,6 +17,15 @@ services:
     networks:
       - internal
 
+  redis:
+    image: redis:alpine
+    restart: on-failure
+    container_name: oredis
+    security_opt:
+      - label:disable
+    networks:
+      - internal
+
   django:
     build:
       context: ./django/
@@ -24,7 +33,7 @@ services:
     restart: on-failure
     command: python manage.py runserver 0:8000
     # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
-    container_name: django
+    container_name: odjango
     # required for SELinux
     security_opt:
       - label:disable
@@ -45,6 +54,7 @@ services:
       - SQL_HOST=database
       - SQL_PORT=5432
       - DATABASE=postgres
+      - REDIS_URL=redis://redis:6379
       # May be omitted for dev
       # - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
       # - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
@@ -54,9 +64,10 @@ services:
       # - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
     networks:
       - internal
-      - web
+      - oweb
     depends_on:
       - database
+      - redis
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
       interval: 1m30s
@@ -70,7 +81,7 @@ services:
     # dockerfile: Dockerfile
     # restart: on-failure
     restart: no
-    container_name: imba
+    container_name: oimba
     command: npm start
     # required for SELinux
     security_opt:
@@ -81,7 +92,7 @@ services:
   nginx:
     build: ./nginx_dev
     restart: on-failure
-    container_name: nginx
+    container_name: onginx
     labels:
       - "traefik.enable=true"
       # - "traefik.http.routers.nginx-router.tls=true"
@@ -103,7 +114,7 @@ services:
   traefik:
     image: traefik:latest
     restart: on-failure
-    container_name: traefik
+    container_name: otraefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -117,7 +128,7 @@ services:
       # - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
       # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     networks:
-      - web
+      - oweb
       - internal
     ports:
       - 80:80
@@ -133,5 +144,5 @@ services:
 networks:
   internal:
     external: false
-  web:
+  oweb:
     external: true
