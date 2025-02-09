@@ -3,7 +3,7 @@ import re
 from books_map import books_map, books_short_names
 
 
-translation = "HIOV"
+translation = "ARC09"
 
 
 def parseLinks(text):

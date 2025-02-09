@@ -579,6 +579,16 @@
         "short_name": "ALM21",
         "full_name": "Bíblia Almeida Século 21",
         "updated": 1735480286432
+      },
+      {
+        "short_name": "ARC09",
+        "full_name": "Almeida Revista e Corrigida, 2009",
+        "updated": 1738783423272
+      },
+      {
+        "short_name": "ACF11",
+        "full_name": "Almeida Corrigida Fiel, 2011",
+        "updated": 1738783423272
       }
     ]
   },
@@ -594,6 +604,21 @@
         "short_name": "BW",
         "full_name": "Biblia warszawska, 1975",
         "updated": 1591185595149
+      }
+    ]
+  },
+  {
+    "language": "Romanian Română",
+    "translations": [
+      {
+        "short_name": "VDCL",
+        "full_name": "Traducere Literală Cornilescu 1931",
+        "updated": 1738783423272
+      },
+      {
+        "short_name": "NTR",
+        "full_name": "Noua Traducere Românească, 2016",
+        "updated": 1738783423272
       }
     ]
   },

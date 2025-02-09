@@ -286,7 +286,7 @@ curl --location --request GET 'https://bolls.life/static/translations/YLT.json'<
       compare them you can use this api. The request should be
       <code>POST</code>, and you should pass in the body an object with some
       fields. The request url -=>
-      <code>https://bolls.life/get-parallel-verses</code>, The body of the
+      <code>https://bolls.life/get-parallel-verses/</code>, The body of the
       <code>POST</code> request must have the nest fields:
     </p>
     <ul>
@@ -311,7 +311,7 @@ curl --location --request GET 'https://bolls.life/static/translations/YLT.json'<
       chapter. Imba example.
     </p>
     <pre>
-window.fetch("/get-parallel-verses", {
+window.fetch("/get-parallel-verses/", {
 	method: "POST",
 	cache: "no-cache",
 	headers: {

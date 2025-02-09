@@ -98,7 +98,7 @@ restart:
 
 # Django commands
 createsuperuser:
-	docker compose exec django python manage.py createsuperuser#
+	docker compose exec django python manage.py createsuperuser
 
 migrations:
 	docker compose exec django python manage.py makemigrations

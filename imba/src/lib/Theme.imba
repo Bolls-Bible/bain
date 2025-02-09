@@ -106,8 +106,8 @@ class Theme
 			console.warn error
 		
 		fontSize = getValue('font') ?? 20
-		fontFamily = getValue('font-family') ?? "sans, sans-serif"
-		fontName = getValue('font-name') ?? "Sans Serif"
+		fontFamily = getValue('font-family') ?? "'Ezra SIL', serif"
+		fontName = getValue('font-name') ?? "Ezra SIL"
 		lineHeight = getValue('line-height') ?? 1.8
 		fontWeight = getValue('font-weight') ?? 400
 		maxWidth = getValue('max-width') ?? 32
