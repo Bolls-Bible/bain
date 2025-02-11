@@ -87,6 +87,12 @@ tag verse-actions < section
 	def shareViaWhatsApp
 		window.open("https://api.whatsapp.com/send?text={window.encodeURIComponent(sharedText)}", '_blank')
 		activities.cleanUp!
+	
+	def saveBookmark
+		if activities.selectedParallel == 'main'
+			reader.saveBookmark!
+		else
+			parallelReader.saveBookmark!
 
 
 	<self [y:{#dy}px @off:100% transition-duration:{transitionDuration}] ease
@@ -96,7 +102,7 @@ tag verse-actions < section
 		<header>
 			<span role="button" @click=activities.copyTextToClipboard(activities.selectedVersesTitle)>
 				activities.selectedVersesTitle
-			<button @click=close> t.save
+			<button @click=saveBookmark> t.save
 
 		<ul>
 			<li[d:inline-flex ai:center jc:center cursor:pointer c@hover:$acc m:0 0.25rem]>

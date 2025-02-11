@@ -3,10 +3,13 @@ import { getValue } from '../utils'
 import ALL_BOOKS from '../data/translations_books.json'
 import { isIOS } from '../constants'
 
+import API from './Api'
 import theme from './Theme'
 import settings from './Settings'
 import activities from './Activities'
 import user from './User'
+import vault from './Vault'
+import notifications from './Notifications'
 
 import type { Verse } from './types'
 
@@ -105,14 +108,33 @@ class GenericReader
 			else
 				return ''
 	
-	def getCollectionOfChoosen verseNumber\number
+	def getBookmarks
+		if !user.username
+			return
+
+		let server_bookmarks = []
+		let offline_bookmarks = []
+		if window.navigator.onLine
+			try
+				server_bookmarks = await API.getJson("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
+			catch error
+				console.warn error
+
+		if vault.available
+			offline_bookmarks = await vault.getChapterBookmarks(verses.map(do |verse| return verse.pk))
+
+		bookmarks = offline_bookmarks.concat(server_bookmarks)
+		imba.commit!
+
+
+	def getCollectionOfChosen verseNumber\number
 		let highlight = bookmarks.find(do |element| return element.verse == verseNumber)
 		if highlight
-			highlight.collection
+			return highlight.collection
 		else ''
 
 	def pushCollectionIfExist pk\number
-		for piece in getCollectionOfChoosen(pk).split(' | ')
+		for piece in getCollectionOfChosen(pk).split(' | ')
 			if piece != '' && !activities.selectedCategories.includes(piece)
 				activities.selectedCategories.push(piece)
 
@@ -133,11 +155,11 @@ class GenericReader
 				'',
 				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + id + '/')
 
-		# Check if the user choosed a verse in the same parallel scope
+		# Check if the user chosen a verse in the same parallel scope
 		if activities.selectedVersesPKs.includes(pk)
 			activities.selectedVersesPKs.splice(activities.selectedVersesPKs.indexOf(pk), 1)
 			activities.selectedVerses.splice(activities.selectedVerses.indexOf(id), 1)
-			let collection = getCollectionOfChoosen(pk)
+			let collection = getCollectionOfChosen(pk)
 			if collection
 				for piece in collection.split(' | ')
 					if piece != ''
@@ -215,8 +237,8 @@ class GenericReader
 			return
 
 		setTimeout(&, 250) do
-			const versenode = document.getElementById(verseNumber)
-			unless versenode
+			const verseNode = document.getElementById(verseNumber)
+			unless verseNode
 				return highlightLinkedVerses verseNumber, endverse
 
 			const selection = window.getSelection()
@@ -225,13 +247,71 @@ class GenericReader
 				for id in [parseInt(verseNumber) .. parseInt(endverse)]
 					if id <= verses.length
 						const range = document.createRange()
-						const node = document.getElementById(id)
+						const node = document.getElementById(String(id))
 						range.selectNodeContents(node.nextSibling || node)
 						selection.addRange(range)
 			else
 				const range = document.createRange()
-				range.selectNodeContents(versenode.nextSibling || versenode)
+				range.selectNodeContents(verseNode.nextSibling || verseNode)
 				selection.addRange(range)
+
+	def saveBookmark
+		unless user.username
+			window.location.pathname = "/signup/"
+			return
+
+		if activities.note == '<br>'
+			activities.note = ''
+
+		# TODO: not sure we really need this
+		# if activities.highlight_color.length >= 16
+		# 	if highlights.find(do |element| return element == activities.highlight_color)
+		# 		highlights.splice(highlights.indexOf(highlights.find(do |element| return element == activities.highlight_color)), 1)
+		# 	highlights.push(activities.highlight_color)
+		# 	window.localStorage.setItem("highlights", JSON.stringify(highlights))
+
+		let collections = ''
+		for category, key in activities.selectedCategories
+			collections += category.trim()
+			if key + 1 < activities.selectedCategories.length
+				collections += " | "
+
+		let bookmarkToSave = {
+			verses: activities.selectedVersesPKs,
+			color: activities.highlight_color,
+			date: Date.now(),
+			collections: collections
+			note: activities.note
+		}
+
+		// TODO offline bookmarks will have collections formatter from now on!!!
+		def saveOffline
+			if vault.available
+				vault.saveBookmarksToStorageUntilOnline(bookmarkToSave)
+
+		if window.navigator.onLine
+			try
+				await API.post("/save-bookmarks/", bookmarkToSave)
+				notifications.push('saved')
+			catch e
+				console.error(e)
+				notifications.push('error')
+				saveOffline!
+		else saveOffline!
+
+		for verse in activities.selectedVersesPKs
+			if bookmarks.find(do |bookmark| return bookmark.verse == verse)
+				bookmarks.splice(bookmarks.indexOf(bookmarks.find(do |bookmark| return bookmark.verse == verse)), 1)
+			bookmarks.push({
+				verse: verse,
+				date: Date.now(),
+				color: activities.highlight_color,
+				collection: collections
+				note: activities.note
+			})
+		user.saveUserBookmarkToMap translation, book, chapter, activities.highlight_color
+		activities.cleanUp!
+
 
 
 export default GenericReader

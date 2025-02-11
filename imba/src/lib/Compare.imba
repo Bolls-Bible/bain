@@ -103,7 +103,7 @@ class Compare
 			translations = translations
 			list.splice(list.indexOf(list.find(do |parallel| return parallel[0].translation == translation.short_name)), 1)
 		window.localStorage.setItem("translations", JSON.stringify(translations))
-		activities.show_comparison_optinos = no
+		activities.show_comparison_options = no
 		imba.commit!
 
 const compare = new Compare()

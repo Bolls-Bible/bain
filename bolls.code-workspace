@@ -18,9 +18,15 @@
     "svg.preview.background": "custom",
     "cSpell.words": [
       "autorun",
+      "chronorder",
+      "createsuperuser",
+      "endverse",
       "imba",
+      "lucide",
       "mkcert",
+      "nowrap",
       "psql",
+      "rgba",
       "unaccent"
     ]
   }

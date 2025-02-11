@@ -28,14 +28,14 @@ tag chapter < section
 
 	def calculateTopVerse e\Event
 		if activities.scrollLockTimeout != null
-			if activities.blockInSctoll != self
+			if activities.blockInScroll != self
 				return
 
 			clearTimeout(activities.scrollLockTimeout)
 
-		activities.blockInSctoll = self
+		activities.blockInScroll = self
 		activities.scrollLockTimeout = setTimeout(&, 1000) do
-			activities.blockInSctoll = null
+			activities.blockInScroll = null
 			activities.scrollLockTimeout = null
 
 		let top_verse = {
@@ -43,7 +43,7 @@ tag chapter < section
 			id: ''
 		}
 		
-		const article = activities.blockInSctoll.querySelector('article')
+		const article = activities.blockInScroll.querySelector('article')
 
 		unless article..children..length
 			return
@@ -52,8 +52,8 @@ tag chapter < section
 
 		for kid in article.children
 			if kid.id
-				# console.log(kid.offsetTop, activities.blockInSctoll.scrollTop, kid)
-				let new_distance = Math.abs(kid.offsetTop - activities.blockInSctoll.scrollTop - myBoundingRect.top)
+				# console.log(kid.offsetTop, activities.blockInScroll.scrollTop, kid)
+				let new_distance = Math.abs(kid.offsetTop - activities.blockInScroll.scrollTop - myBoundingRect.top)
 				if new_distance < top_verse.distance
 					top_verse.distance = new_distance
 					top_verse.id = kid.id
@@ -108,6 +108,17 @@ tag chapter < section
 			// check if there is any letter in the matchId
 			return !matchId.match(/[a-zA-Z]/)
 		return matchId.startsWith(versePrefix)
+
+	def nextVerseHasTheSameBookmark verse_index
+		let current_bookmark = me.getBookmark(me.verses[verse_index].pk)
+		if current_bookmark
+			const next_verse = me.verses[verse_index + 1]
+			if next_verse
+				let next_bookmark = me.getBookmark(next_verse.pk)
+				if next_bookmark
+					if next_bookmark.collection == current_bookmark.collection and next_bookmark.note == current_bookmark.note
+						return yes
+		return no
 
 	def render
 		if isApple

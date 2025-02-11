@@ -195,14 +195,14 @@ tag modal < section
 							<button @click=copyComparisonList title=t.copy>
 								<svg src=Copy aria-hidden=yes>
 							
-							<menu-popup bind=activities.show_comparison_optinos>
-								<button @click=(do activities.show_comparison_optinos = !activities.show_comparison_optinos) title=t.compare>
+							<menu-popup bind=activities.show_comparison_options>
+								<button @click=(do activities.show_comparison_options = !activities.show_comparison_options) title=t.compare>
 									<svg src=ListPlus aria-hidden=yes>
-								if activities.show_comparison_optinos
+								if activities.show_comparison_options
 									<.popup-menu [t:0 y@off:-2rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
 										<header[d:hflex bg:$bgc pos:sticky t:0 padding-inline-end:0.5rem]>
 											<input bind=compare.search placeholder=t.search>
-											<button[p:0] title=t.close @click=(activities.show_comparison_optinos = no)>
+											<button[p:0] title=t.close @click=(activities.show_comparison_options = no)>
 												<svg src=ICONS.X [c@hover:red4] aria-hidden=yes>
 
 										if compare.translations.length > translations.length
@@ -227,7 +227,7 @@ tag modal < section
 							<compare-list>
 
 							unless compare.translations.length
-								<button[m: 16px auto; d: flex].more_results @click=(do activities.show_comparison_optinos = !activities.show_comparison_optinos)> t.add_translation_btn
+								<button[m: 16px auto; d: flex].more_results @click=(do activities.show_comparison_options = !activities.show_comparison_options)> t.add_translation_btn
 
 					when 'downloads'
 						<header>
@@ -515,7 +515,7 @@ tag modal < section
 											<span[margin-inline-start:auto]> getBookName(reader.translation, verse.book), ' '
 											<span> verse.chapter, ':'
 											<span> verse.verse
-											<button @click=activities.copyToClipboardFromSerach(verse) title=t.copy>
+											<button @click=activities.copyToClipboardFromSearch(verse) title=t.copy>
 												<svg src=Copy>
 											<button
 												@click=openVerseInParallel({

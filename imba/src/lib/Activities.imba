@@ -22,11 +22,11 @@ class Activities
 	show_dictionaries = no
 	show_filters = no
 	show_sharing = no
-	show_comparison_optinos = no
+	show_comparison_options = no
 	show_dictionary_downloads = no
 
 	IOSKeyboardHeight = 0
-	blockInSctoll = null
+	blockInScroll = null
 	scrollLockTimeout = null
 	menuIconsTransform = 0
 
@@ -71,7 +71,7 @@ class Activities
 
 		# Clean all the variables in order to free space around the text
 		show_filters = no
-		show_comparison_optinos = no
+		show_comparison_options = no
 		dictionary.tooltip = null
 		dictionary.loading = no
 		dictionary.definitions = []
@@ -254,7 +254,7 @@ class Activities
 		let text = '«' + copyObject.text + '»\n\n' + copyObject.title
 		copyTextToClipboard(text)
 
-	# returns a string with the range of verses in formart 1-3 or 1
+	# returns a string with the range of verses in format 1-3 or 1
 	def versesRange verses\number[]
 		verses.length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return b - a)[0]) : verses[0]
 
@@ -274,7 +274,7 @@ class Activities
 		delayedCleanUp!
 
 
-	def copyToClipboardFromSerach copy\Verse
+	def copyToClipboardFromSearch copy\Verse
 		copyWithLink {
 			text: cleanUpCopyTexts([copy.text]),
 			translation: copy.translation,

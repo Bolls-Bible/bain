@@ -77,7 +77,9 @@ class Reader < GenericReader
 		if settings.parallel_sync && parallelReader.enabled
 			parallelReader.book = book
 			parallelReader.chapter = chapter
-		# if state.user.username then getBookmarks("/get-bookmarks/" + translation + '/' + book + '/' + chapter + '/', 'bookmarks')
+
+		getBookmarks!
+
 		if verse
 			if typeof verse === 'string' and verse.includes('-')
 				const parts = verse.split('-')

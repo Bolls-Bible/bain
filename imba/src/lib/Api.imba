@@ -1,6 +1,5 @@
 class API
 	baseUrl = ''
-	# baseUrl = 'http://bolls.local'
 	# baseUrl = 'https://bolls.life'
 
 	def getJson pathname\string
@@ -30,13 +29,13 @@ class API
 		return response.json()
 
 	def post pathname\string, data\object = {}
-		requestJson(pathname, 'POST', data)
+		fetch(pathname, 'POST', data)
 	
 	def put pathname\string, data\object = {}
-		requestJson(pathname, 'PUT', data)
+		fetch(pathname, 'PUT', data)
 	
 	def delete pathname\string, data\object = {}
-		requestJson(pathname, 'DELETE', data)
+		fetch(pathname, 'DELETE', data)
 
 	def get_cookie name\string
 		let cookieValue = null

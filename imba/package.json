@@ -3,14 +3,15 @@
   "type": "module",
   "scripts": {
     "dev": "imba -w server.imba",
-    "build": "imba build server.imba",
+    "build": "imba build --esm server.imba",
     "preview": "node dist/server.js",
-    "prod": "npx pm2 start dist/server.js"
+    "prod": "npx pm2 start server.mjs"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "pm2": "^5.4.3"
   },
   "devDependencies": {
+    "express": "^4.21.2",
     "@types/serviceworker": "^0.0.107",
     "imba": "^2.0.0-alpha.238",
     "imba-phosphor-icons": "^2.2.0",

@@ -167,7 +167,7 @@ let download_dictionaries = no
 
 # Some messy stuff
 let showAddCollection = no
-let choosen_categories = []
+let chosen_categories = []
 let loading = no
 let menuicons = yes
 let fixdrawers = no
@@ -855,7 +855,7 @@ tag bible-reader
 		choosen_parallel = no
 		showAddCollection = no
 		store.show_color_picker = no
-		choosen_categories = []
+		chosen_categories = []
 
 
 	def clearSpace { onPopState } = {}
@@ -1558,8 +1558,8 @@ tag bible-reader
 		let collection = getCollectionOfChoosen(pk)
 		if collection
 			for piece in collection.split(' | ')
-				if piece != '' && !choosen_categories.find(do |element| return element == piece)
-					choosen_categories.push(piece)
+				if piece != '' && !chosen_categories.find(do |element| return element == piece)
+					chosen_categories.push(piece)
 
 	def mergeNotes
 		store.note = ''
@@ -1613,7 +1613,7 @@ tag bible-reader
 				if collection
 					for piece in collection.split(' | ')
 						if piece != ''
-							choosen_categories.splice(choosen_categories.indexOf(choosen_categories.find(do |element| return element == piece)), 1)
+							chosen_categories.splice(chosen_categories.indexOf(chosen_categories.find(do |element| return element == piece)), 1)
 			else
 				choosenid.push(pk)
 				choosen.push(id)
@@ -1673,7 +1673,7 @@ tag bible-reader
 			return
 
 		if store.note == '<br>'
-			store.note == ''
+			store.note = ''
 
 		if store.highlight_color.length >= 16
 			if highlights.find(do |element| return element == store.highlight_color)
@@ -1681,9 +1681,9 @@ tag bible-reader
 			highlights.push(store.highlight_color)
 			window.localStorage.setItem("highlights", JSON.stringify(highlights))
 		let collections = ''
-		for category, key in choosen_categories
+		for category, key in chosen_categories
 			collections += category.trim()
-			if key + 1 < choosen_categories.length
+			if key + 1 < chosen_categories.length
 				collections += " | "
 
 		def saveOffline
@@ -1692,7 +1692,7 @@ tag bible-reader
 					verses: choosenid,
 					color: store.highlight_color,
 					date: Date.now(),
-					collections: choosen_categories
+					collections: chosen_categories
 					note: store.note
 				})
 
@@ -1914,7 +1914,7 @@ tag bible-reader
 				if window.navigator.onLine
 					let data = await loadData("/get-categories/")
 					categories = data.data
-					for category in choosen_categories
+					for category in chosen_categories
 						if !categories.find(do |element| return element == category)
 							categories.unshift category
 					categories = Array.from(new Set(categories))
@@ -1928,10 +1928,10 @@ tag bible-reader
 		focusElement 'newcollectioninput'
 
 	def addNewCollection collection
-		if choosen_categories.find(do |element| return element == collection)
-			choosen_categories.splice(choosen_categories.indexOf(choosen_categories.find(do |element| return element == collection)), 1)
+		if chosen_categories.find(do |element| return element == collection)
+			chosen_categories.splice(chosen_categories.indexOf(chosen_categories.find(do |element| return element == collection)), 1)
 		elif collection
-			choosen_categories.push collection
+			chosen_categories.push collection
 			if !categories.find(do |element| return element == collection)
 				categories.unshift(collection)
 				sendBookmarksToDjango()
@@ -2202,7 +2202,7 @@ tag bible-reader
 		copyobj.title = getHighlightedRow(copyobj.translation, copyobj.book, copyobj.chapter, copyobj.verse)
 		state.shareCopying(copyobj)
 
-	def copyToClipboardFromSerach obj
+	def copyToClipboardFromSearch obj
 		state.shareCopying({
 			text: [obj.text],
 			translation: obj.translation,
@@ -3697,7 +3697,7 @@ tag bible-reader
 													<span> nameOfBook(verse.book, self.editedTranslation), ' '
 													<span> verse.chapter, ':'
 													<span> verse.verse
-													<svg.open_in_parallel @click=copyToClipboardFromSerach(verse) viewBox="0 0 561 561" alt=state.lang.copy>
+													<svg.open_in_parallel @click=copyToClipboardFromSearch(verse) viewBox="0 0 561 561" alt=state.lang.copy>
 														<title> state.lang.copy
 														<path d=svg_paths.copy>
 													<svg.open_in_parallel [margin-left: 4px] viewBox="0 0 400 338" @click=backInHistory({translation: search.translation, book: verse.book, chapter: verse.chapter,verse: verse.verse}, yes)>
@@ -3740,11 +3740,11 @@ tag bible-reader
 											<input.search placeholder=state.lang.search bind=store.collections_search [font:inherit c:inherit w:8em m:4px]>
 									<>
 										for category in categories.filter(do(el) return el.toLowerCase!.indexOf(store.collections_search.toLowerCase!) > -1)
-											<p.collection .add_new_collection=(choosen_categories.find(do |element| return element == category)) @click=addNewCollection(category)> category
+											<p.collection .add_new_collection=(chosen_categories.find(do |element| return element == category)) @click=addNewCollection(category)> category
 									<div[min-width: 16px]>
 								else
 									<p[m: 8px auto].collection.add_new_collection @click=addCollection> state.lang.addcollection
-							if (store.newcollection && showAddCollection) || (choosen_categories.length && !showAddCollection)
+							if (store.newcollection && showAddCollection) || (chosen_categories.length && !showAddCollection)
 								<button.cancel.add_new_collection @click=addNewCollection(store.newcollection)> state.lang.save
 							else
 								<button.cancel @click=turnCollections> state.lang.cancel
@@ -3850,7 +3850,7 @@ tag bible-reader
 										<path d="M 9.0001238,20.550118 H 24.00033 V 16.550063 H 13.000179 Z M 16.800231,8.7499555 c 0.400006,-0.400006 0.400006,-1.0000139 0,-1.4000194 L 13.200182,3.7498865 c -0.400006,-0.4000055 -1.000014,-0.4000055 -1.40002,0 L 0,15.550049 v 5.000069 h 5.0000688 z">
 									<p> state.lang.note
 								<div .collection=(window.innerWidth > 475) @click=turnCollections()>
-									<svg.save_bookmark .filled=choosen_categories.length viewBox="0 0 20 20" alt=state.lang.bookmark>
+									<svg.save_bookmark .filled=chosen_categories.length viewBox="0 0 20 20" alt=state.lang.bookmark>
 										<title> state.lang.bookmark
 										<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
 									<p> state.lang.bookmark

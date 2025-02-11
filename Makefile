@@ -129,7 +129,7 @@ npm-update-all nua:
 enter-node en:
 	docker compose exec imba bash
 
-# TODO: Add commands for adding translations
+# TODO: Add commands for adding translations along with commentaries
 
 # Ignore issues when command does not exist
 %:

@@ -24,9 +24,9 @@ class User
 	
 	@autorun def saveBookmarksMap
 		if bookmarksMap
-			setValue('bookmarksMap', bookmarksMap)
+			setValue('userBookmarkMap', bookmarksMap)
 		else
-			deleteValue('bookmarksMap')
+			deleteValue('userBookmarkMap')
 	
 	constructor
 		getMe!
@@ -54,8 +54,18 @@ class User
 					bookmarksMap = {}
 					username = ''
 					name = ''
-
 			catch err
+				console.error(err)
+	
+	def saveUserBookmarkToMap translation\string, book\number, chapter\number, color\string
+		unless bookmarksMap[translation]
+			bookmarksMap[translation] = {}
+		unless bookmarksMap[translation][book]
+			bookmarksMap[translation][book] = {}
+		unless bookmarksMap[translation][book][chapter]
+			bookmarksMap[translation][book][chapter] = []
+		bookmarksMap[translation][book][chapter].push(color)
+
 
 const user = new User()
 

@@ -24,7 +24,7 @@ class Vault
 
 		checkDownloadedData()
 
-		# # Update obsole translations if such exist.
+		# # Update obsolete translations if such exist.
 		setTimeout(&, 2048) do
 			checkTranslationsUpdates()
 			checkSavedBookmarks()
@@ -86,8 +86,8 @@ class Vault
 			translations.map(
 				do |translation|
 					db.transaction('r', db.verses, do
-						const resd = await db.verses.get({translation: translation.short_name})
-						return resd.translation
+						const result = await db.verses.get({translation: translation.short_name})
+						return result.translation
 					).catch(do
 						return null
 					)
@@ -101,8 +101,8 @@ class Vault
 			dictionaries.map(
 				do |dictionary|
 					db.transaction('r', db.dictionaries, do
-						const resd = await db.dictionaries.get({dictionary: dictionary.abbr})
-						return resd.dictionary
+						const result = await db.dictionaries.get({dictionary: dictionary.abbr})
+						return result.dictionary
 					).catch(do
 						return null
 					)
@@ -246,7 +246,7 @@ class Vault
 			console.error(e)
 		)
 
-	def saveBookmarksToStorageUntillOnline bookmarkobj
+	def saveBookmarksToStorageUntilOnline bookmark
 		let bookmarks_to_save = []
 		let bookmarks = await db.transaction("r", db.bookmarks, do
 			return db.bookmarks.toArray()
@@ -254,16 +254,16 @@ class Vault
 			console.error(e)
 		)
 
-		for verse in bookmarkobj.verses
+		for verse in bookmark.verses
 			# If a bookmark already exist -- first remove it, then add a new version
 			if bookmarks.find(do |element| return element.verse == verse)
 				deleteBookmarks([verse])
 			bookmarks_to_save.push({
 				verse: verse,
-				date: bookmarkobj.date,
-				color: bookmarkobj.color,
-				collections: bookmarkobj.collections
-				note: bookmarkobj.note
+				date: bookmark.date,
+				color: bookmark.color,
+				collections: bookmark.collections
+				note: bookmark.note
 			})
 		db.transaction("rw", db.bookmarks, do
 			await db.bookmarks.bulkPut(bookmarks_to_save)
@@ -274,8 +274,8 @@ class Vault
 	def getChapterBookmarks pks\number[]
 		db.transaction("r", db.bookmarks, do
 			let offline_bookmarks = await Promise.all(
-				pks.map(do |versepk|
-					await db.bookmarks.get(versepk)
+				pks.map(do |versePK|
+					await db.bookmarks.get(versePK)
 				)
 			)
 			let bookmarks = []
@@ -302,9 +302,9 @@ class Vault
 			return []
 		)
 
-	def getCompareVerses compare_translations\string[], choosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter
+	def getCompareVerses compare_translations\string[], chosen_for_comparison, compare_parallel_of_book, compare_parallel_of_chapter
 		return Promise.all(compare_translations.map(do |translation|
-			const finded_verses = await Promise.all(choosen_for_comparison.map(do |verse|
+			const found_verses = await Promise.all(chosen_for_comparison.map(do |verse|
 				db.transaction("r", db.verses, do
 					const wait_for_verses = await db.verses.get({translation: translation, book: compare_parallel_of_book, chapter: compare_parallel_of_chapter, verse: verse})
 					return wait_for_verses ? wait_for_verses : {"translation": translation}
@@ -312,7 +312,7 @@ class Vault
 					console.error(e)
 					return {"translation": translation}
 				)))
-			return finded_verses
+			return found_verses
 		))
 
 	def search searchUrl\string

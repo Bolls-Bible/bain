@@ -18,7 +18,7 @@ class ReadingHistory
 		else
 			deleteValue('history')
 
-	@autorun(delay:24ms) def saveHistoryToServer
+	@autorun(delay:250ms) def saveHistoryToServer
 		if user.username && window.navigator.onLine
 			API.put('/history/', {
 				history: JSON.stringify(history),
@@ -33,7 +33,7 @@ class ReadingHistory
 				console.error(error)
 				notifications.push('error')
 
-	def saveToHistory translation\string, book\number, chapter\number, verse\number
+	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
 		syncHistory!
 		
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)

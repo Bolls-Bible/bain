@@ -1,10 +1,23 @@
-FROM node
+FROM node AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY . .
+
 RUN npm install
 
-COPY . ./
+RUN npm run build
 
-CMD ["npm", "start"]
+FROM node AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/dist .
+COPY --from=builder /app/package*.json ./
+
+# Now install only production dependencies
+RUN npm install --omit=dev
+
+EXPOSE 3000
+
+CMD ["npx", "pm2-runtime", "server.mjs"]
