@@ -6,11 +6,9 @@ charset-normalizer==3.4.1
 cryptography==44.0.0
 defusedxml==0.7.1
 Django==5.1.6
-django-redis==5.4.0
 docopt==0.6.2
 gunicorn==23.0.0
 idna==3.10
-mock==5.1.0
 oauthlib==3.2.2
 packaging==24.2
 psycopg2-binary==2.9.10
@@ -18,13 +16,11 @@ pycparser==2.22
 PyJWT==2.10.1
 python3-openid==3.2.0
 pytz==2025.1
-redis==5.2.1
 requests==2.32.3
 requests-oauthlib==2.0.0
 six==1.17.0
 social-auth-app-django==5.4.2
 social-auth-core==4.5.4
-sortedcontainers==2.4.0
 sqlparse==0.5.3
 urllib3==2.3.0
 yarg==0.1.10
