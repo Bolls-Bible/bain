@@ -17,15 +17,6 @@ services:
     networks:
       - internal
 
-  redis:
-    image: redis:alpine
-    restart: on-failure
-    container_name: oredis
-    security_opt:
-      - label:disable
-    networks:
-      - internal
-
   django:
     build:
       context: ./django/
@@ -54,7 +45,6 @@ services:
       - SQL_HOST=database
       - SQL_PORT=5432
       - DATABASE=postgres
-      - REDIS_URL=redis://redis:6379
       # May be omitted for dev
       # - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
       # - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
@@ -67,7 +57,6 @@ services:
       - oweb
     depends_on:
       - database
-      - redis
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
       interval: 1m30s
