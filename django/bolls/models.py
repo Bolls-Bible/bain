@@ -12,6 +12,12 @@ class Verses(models.Model):
     def natural_key(self):
         return (self.translation, self.book, self.chapter, self.verse, self.text)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['translation', 'book', 'chapter']),
+            models.Index(fields=['translation', 'book', 'chapter', 'verse']),
+        ]
+
 
 class Commentary(models.Model):
     translation = models.CharField(max_length=120)
@@ -19,6 +25,12 @@ class Commentary(models.Model):
     chapter = models.PositiveSmallIntegerField()
     verse = models.PositiveSmallIntegerField()
     text = models.TextField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['translation', 'book', 'chapter']),
+            models.Index(fields=['translation', 'book', 'chapter', 'verse']),
+        ]
 
 
 class Note(models.Model):

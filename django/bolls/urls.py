@@ -40,9 +40,9 @@ urlpatterns = [
     path("find/<slug:translation>/", views.search),
     path("v2/find/<slug:translation>", views.v2_search),
     path("get-books/<slug:translation>/", views.get_books),
-    path("get-text/<slug:translation>/<int:book>/<int:chapter>/", views.get_text),
+    path("get-text/<slug:translation>/<slug:book>/<int:chapter>/", views.get_text),
     path(
-        "get-chapter/<slug:translation>/<int:book>/<int:chapter>/",
+        "get-chapter/<slug:translation>/<slug:book>/<int:chapter>/",
         views.get_chapter_with_comments,
     ),
     path(

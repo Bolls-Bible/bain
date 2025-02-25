@@ -97,6 +97,16 @@
         "short_name": "CUNPS",
         "full_name": "新标点和合本 - Chinese Union New Punctuation (Simplified), 1988",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "PCB",
+        "full_name": "京委本聖經 - Peking Committee Bible, 1899",
+        "updated": 1740517302264
+      },
+      {
+        "short_name": "PCBS",
+        "full_name": "京委本圣经 - Peking Committee Bible, 1899",
+        "updated": 1740517302264
       }
     ]
   },
@@ -146,7 +156,7 @@
       {
         "short_name": "KJV",
         "full_name": "King James Version 1769 with Apocrypha and Strong's Numbers",
-        "updated": 1722769103732
+        "updated": 1740517302264
       },
       {
         "short_name": "NKJV",
