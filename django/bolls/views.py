@@ -17,17 +17,15 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
 
 from bolls.books_map import books_map
 from bolls.forms import SignUpForm
 
 from .models import Verses, Bookmarks, History, Note, Commentary, Dictionary
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from .utils.books import BOOKS, get_book_id
 
-QUARTER = 60 * 60 * 24 * 96
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 bolls_index = "bolls/index.html"
 incorrect_body = "The body of the request is incorrect"
@@ -93,27 +91,24 @@ def get_translation(_, translation):
 
 
 def get_chapter(translation, book, chapter):
-    all_objects = Verses.objects.filter(book=book, chapter=chapter, translation=translation).order_by("verse")
+    bookid = get_book_id(translation, book)
+    all_objects = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
     d = []
     for obj in all_objects:
         d.append({"pk": obj.pk, "verse": obj.verse, "text": obj.text})
     return d
 
 
-@cache_page(QUARTER)
 def get_text(_, translation, book, chapter):
     return cross_origin(JsonResponse(get_chapter(translation, book, chapter), safe=False))
 
 
 def get_chapter_with_commentaries(translation, book, chapter):
-    key = f"{translation}_{book}_{chapter}"
-    cached_data = cache.get(key)
-    if cached_data:
-        return cached_data
+    bookid = get_book_id(translation, book)
 
-    all_verses = Verses.objects.filter(book=book, chapter=chapter, translation=translation).order_by("verse")
+    all_verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
 
-    all_commentaries = Commentary.objects.filter(book=book, chapter=chapter, translation=translation).order_by("verse")
+    all_commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
 
     d = []
     for obj in all_verses:
@@ -127,7 +122,6 @@ def get_chapter_with_commentaries(translation, book, chapter):
         if len(comment) > 0:
             verse["comment"] = comment
         d.append(verse)
-    cache.set(key, d, QUARTER)
     return d
 
 
@@ -610,9 +604,9 @@ def get_verses(request):
         return cross_origin(HttpResponse("The request should be POSTed", status=400))
 
 
-@cache_page(QUARTER)
 def get_a_verse(_, translation, book, chapter, verse):
-    verses = Verses.objects.filter(book=book, chapter=chapter, translation=translation, verse=verse)
+    bookid = get_book_id(translation, book)
+    verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation, verse=verse)
 
     result_verse = {}
     if len(verses):
@@ -963,14 +957,11 @@ def get_dictionary(_, dictionary):
     return cross_origin(JsonResponse(d, safe=False))
 
 
-@cache_page(QUARTER)
 def get_books(_, translation):
     try:
-        with open(BASE_DIR + "/bolls/static/bolls/app/views/translations_books.json") as json_file:
-            data = json.load(json_file)
-            return cross_origin(JsonResponse(data[translation], safe=False))
+        return cross_origin(JsonResponse(BOOKS[translation], safe=False))
     except:
-        return cross_origin(HttpResponse("Wrong translation: " + translation, status=404))
+        return cross_origin(HttpResponse("There is no such translation: " + translation, status=404))
 
 
 def download_notes(request):

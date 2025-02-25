@@ -41,6 +41,7 @@ tag the-app
 		<downloads-page route='/downloads/'>
 		<donate route='/donate/'>
 
+		<bible-reader route='/:translation/:book/:chapter'>
 		<bible-reader route='*'>
 
 imba.mount <the-app>

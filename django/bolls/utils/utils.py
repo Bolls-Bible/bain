@@ -1,5 +1,4 @@
 
-
 # When translation is fully replaced -- this may be helpful
 # def fixBookmarks(request):
 #     # rename KJV to OKJC
@@ -20,16 +19,3 @@
 #                 print('AAAAAAAAA')
 
 #    return HttpResponse(length)
-
-
-
-# from markdownify import markdownify
-
-# # notes = Note.objects.all()
-# # for note in notes:
-# #     print(note.text)
-# #     note.text = markdownify(note.text)
-# #     note.save()
-
-# count = Note.objects.count()
-# print(count)

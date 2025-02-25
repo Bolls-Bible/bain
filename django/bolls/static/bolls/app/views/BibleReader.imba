@@ -3315,10 +3315,10 @@ tag bible-reader
 						<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 						<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 					<p[fs:12px pb:12px]>
-						"🍇 v2.7.0 🗓 "
-						<time dateTime='2025-02-06'> "6.2.2025"
+						"🍇 v2.7.1 🗓 "
+						<time dateTime='2025-02-25'> "25.2.2025"
 					<p[fs:12px]>
-						"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
+						"© 2019-{new Date().getFullYear()} Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
 
 			if big_modal_block_content.length
