@@ -159,6 +159,8 @@ def get_book_id(translation, book_slug):
     # if book_slug is already a number return it
     if is_number(book_slug):
         return int(book_slug)
+    
+    book_slug = book_slug.lower()
 
     if book_slug in triple_shortcuts:
         return triple_shortcuts[book_slug]
@@ -182,3 +184,4 @@ def get_book_id(translation, book_slug):
 # print(get_book_id("KJV", "jo"))
 # print(get_book_id("KJV", "gen"))
 # print(get_book_id("KJV", "Matthaw"))
+print(get_book_id("ESV", "Genesis"))
