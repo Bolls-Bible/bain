@@ -152,31 +152,39 @@ twin_shortcuts = {
 
 def is_number(n):
     return isinstance(n, (int, float, complex))
+
+
 # print(is_number(1), is_number("1"), is_number("a"))
 
 
 def get_book_id(translation, book_slug):
-    # if book_slug is already a number return it
-    if is_number(book_slug):
-        return int(book_slug)
-    
-    book_slug = book_slug.lower()
+    try:
+        # if book_slug is already a number return it
+        if is_number(book_slug):
+            return int(book_slug)
 
-    if book_slug in triple_shortcuts:
-        return triple_shortcuts[book_slug]
-    if book_slug in twin_shortcuts:
-        return twin_shortcuts[book_slug]
+        book_slug = book_slug.upper()
 
-    suggestions = []
-    for b in BOOKS[translation]:
-        if b["name"] == book_slug:
-            return b
-        score = score_search(book_slug, b["name"])
-        if score:
-            suggestions.append((b, score))
-    suggestions.sort(key=lambda x: x[1], reverse=True)
-    if len(suggestions) > 0:
-        return suggestions[0][0]["bookid"]
+        if book_slug in triple_shortcuts:
+            return triple_shortcuts[book_slug]
+        if book_slug in twin_shortcuts:
+            return twin_shortcuts[book_slug]
+
+        book_slug = book_slug.lower()
+
+        suggestions = []
+        for b in BOOKS[translation]:
+            if b["name"] == book_slug:
+                return b
+            score = score_search(book_slug, b["name"])
+            if score:
+                suggestions.append((b, score))
+        suggestions.sort(key=lambda x: x[1], reverse=True)
+        if len(suggestions) > 0:
+            return suggestions[0][0]["bookid"]
+    except Exception:
+        print("Error in get_book_id")
+
     return book_slug
 
 
@@ -184,4 +192,4 @@ def get_book_id(translation, book_slug):
 # print(get_book_id("KJV", "jo"))
 # print(get_book_id("KJV", "gen"))
 # print(get_book_id("KJV", "Matthaw"))
-print(get_book_id("ESV", "Genesis"))
+# print(get_book_id("ESV", "Genesis"))
