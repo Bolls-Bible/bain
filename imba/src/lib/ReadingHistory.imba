@@ -30,7 +30,7 @@ class ReadingHistory
 			try
 				await API.delete('/history/')
 			catch error
-				console.error(error)
+				console.warn(error)
 				notifications.push('error')
 
 	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
@@ -63,7 +63,7 @@ class ReadingHistory
 			settings.favoriteTranslations = JSON.parse(cloudData.favoriteTranslations) || []
 		# Merge local history and server copy
 		try
-			cloudHistory = JSON.parse(cloudData.history).concat(history)
+			const cloudHistory = JSON.parse(cloudData.history).concat(history)
 
 			# Remove duplicates
 			let unique_history = []
@@ -74,7 +74,7 @@ class ReadingHistory
 
 			history = unique_history
 		catch error
-			console.error('Error syncing history', error)
+			console.warn('Error syncing history', error)
 			notifications.push('error')
 
 		# Remove items exceeding limit

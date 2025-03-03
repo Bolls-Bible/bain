@@ -45164,5 +45164,801 @@
       "chronorder": 65,
       "chapters": 22
     }
+  ],
+  "TAMBL98": [
+    {
+      "bookid": 1,
+      "name": "ஆதியாகமம்",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "யாத்திராகமம்",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "லேவியராகமம்",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "எண்ணாகமம்",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "உபாகமம்",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "யோசுவாவின் புத்தகம்",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "நியாயாதிபதிகளின் புத்தகம்",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "ரூத்தின் சரித்திரம்",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "சாமுவேலின் முதலாம் புத்தகம்",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "சாமுவேலின் இரண்டாம் புத்தகம்",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "ராஜாக்களின் முதலாம் புத்தகம்",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "ராஜாக்களின் இரண்டாம் புத்தகம்",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "நாளாகமத்தின் முதலாம் புத்தகம்",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "நாளாகமத்தின் இரண்டாம் புத்தகம்",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "எஸ்றாவின் புத்தகம்",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "நெகேமியாவின் புத்தகம்",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "எஸ்தரின் சரித்திரம்",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "யோபுடைய சரித்திரம்",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "சங்கீத புத்தகம்",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "நீதிமொழிகள்",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "பிரசங்கி",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "சாலொமோனின் உன்னதப்பாட்டு",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "ஏசாயா தீர்க்கதரிசியின் புத்தகம்",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "எரேமியா தீர்க்கதரிசியின் புத்தகம்",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "எரேமியாவின் புலம்பல்",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "எசேக்கியேல் தீர்க்கதரிசியின் புத்தகம்",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "தானியேலின் புத்தகம்",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "ஓசியா",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "யோவேல்",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "ஆமோஸ்",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "ஒபதியா",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "யோனா",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "மீகா",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "நாகூம்",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "ஆபகூக்",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "செப்பனியா",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "ஆகாய்",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "சகரியா",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "மல்கியா",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "மத்தேயு எழுதிய சுவிசேஷம்",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "மாற்கு எழுதிய சுவிசேஷம்",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "லூக்கா எழுதிய சுவிசேஷம்",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "யோவான் எழுதிய சுவிசேஷம்",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "அப்போஸ்தலருடைய நடபடிகள்",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "ரோமாபுரியாருக்கு எழுதிய கடிதம்",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "கொரிந்தியருக்கு எழுதிய முதலாம்",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "கொரிந்தியருக்கு எழுதிய இரண்டாம் கடிதம்",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "கலாத்தியருக்கு எழுதிய கடிதம்",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "எபேசியருக்கு எழுதிய கடிதம்",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "பிலிப்பியருக்கு எழுதிய கடிதம்",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "கொலோசெயருக்கு எழுதிய கடிதம்",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "தெசலோனிக்கேயருக்கு எழுதிய முதலாம் கடிதம்",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "தெசலோனிக்கேயருக்கு எழுதிய இரண்டாம் கடிதம்",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "தீமோத்தேயுவுக்கு எழுதிய முதலாம் கடிதம்",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "தீமோத்தேயுவுக்கு எழுதிய இரண்டாம் கடிதம்",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "தீத்துவுக்கு எழுதிய கடிதம்",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "பிலேமோனுக்கு எழுதிய கடிதம்",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "எபிரேயருக்கு எழுதிய கடிதம்",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "யாக்கோபு எழுதிய கடிதம்",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "பேதுரு எழுதிய முதலாம் கடிதம்",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "பேதுரு எழுதிய இரண்டாம் கடிதம்",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "யோவான் எழுதிய முதலாம் கடிதம்",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "யோவான் எழுதிய இரண்டாம் கடிதம்",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "யோவான் எழுதிய மூன்றாம் கடிதம்",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "யூதா எழுதிய கடிதம்",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "யோவானுக்கு வெளிப்படுத்தின விசேஷம்",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "TAMOVR": [
+    {
+      "bookid": 1,
+      "name": "ஆதியாகமம்",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "யாத்திராகமம்",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "லேவியராகமம்",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "எண்ணாகமம்",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "உபாகமம்",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "யோசுவா",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "நியாயாதிபதிகள்",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "ரூத்",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 சாமுவேல்",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 சாமுவேல்",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 இராஜாக்கள்",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 இராஜாக்கள்",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 நாளாகமம்",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 நாளாகமம்",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "எஸ்றா",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "நெகேமியா",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "எஸ்தர்",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "யோபு",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "சங்கீதம்",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "நீதிமொழிகள்",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "பிரசங்கி",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "உன்னதப்பாட்டு",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "ஏசாயா",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "எரேமியா",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "புலம்பல்",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "எசேக்கியேல்",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "தானியேல்",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "ஓசியா",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "யோவேல்",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "ஆமோஸ்",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "ஒபதியா",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "யோனா",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "மீகா",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "நாகூம்",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "ஆபகூக்",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "செப்பனியா",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "ஆகாய்",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "சகரியா",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "மல்கியா",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "மத்தேயு",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "மாற்கு",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "லூக்கா",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "யோவான்",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "அப்போஸ்தலர்",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "ரோமர்",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 கொரிந்தியர்",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 கொரிந்தியர்",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "கலாத்தியர்",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "எபேசியர்",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "பிலிப்பியர்",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "கொலோசெயர்",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 தெசலோனிக்கேயர்",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 தெசலோனிக்கேயர்",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 தீமோத்தேயு",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 தீமோத்தேயு",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "தீத்து",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "பிலேமோன்",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "எபிரெயர்",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "யாக்கோபு",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 பேதுரு",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 பேதுரு",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 யோவான்",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 யோவான்",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 யோவான்",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "யூதா",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "வெளிப்படுத்தல்",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }

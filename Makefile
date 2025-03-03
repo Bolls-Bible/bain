@@ -64,6 +64,9 @@ build-no-cache:
 	docker compose build --no-cache
 
 restore-db:
+	# first, make sure we have all migrations run
+	@$(MAKE) migrate
+
 	# check if the file exists, otherwise download https://storage.googleapis.com/resurrecting-cat.appspot.com/essentials_backup.sql into the /sql/ folder
 	[ -f sql/restore.sql ] || wget https://storage.googleapis.com/resurrecting-cat.appspot.com/essentials_backup.sql -O sql/restore.sql
 

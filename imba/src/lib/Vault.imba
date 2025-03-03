@@ -239,7 +239,7 @@ class Vault
 			const res = await Promise.all(pks.map(do |pk|
 				db.bookmarks.where({verse: pk}).delete().then(do |deleteCount|
 					console.log( "Deleted ", deleteCount, " objects")
-					console.time("DELETE {pks}")
+					console.timeEnd("DELETE {pks}")
 				)
 			))
 		).catch(do |e|

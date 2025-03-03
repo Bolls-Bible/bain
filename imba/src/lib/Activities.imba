@@ -35,7 +35,7 @@ class Activities
 	bottomDrawerOffset = 0
 
 	@observable selectedVerses\number[] = []
-	selectedVersesPKs = []
+	@observable selectedVersesPKs = []
 	selectedParallel = undefined
 	selectedCategories = []
 

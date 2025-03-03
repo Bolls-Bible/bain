@@ -1,4 +1,4 @@
-import { getValue } from '../utils'
+import { getValue, setValue } from '../utils'
 
 import ALL_BOOKS from '../data/translations_books.json'
 import { isIOS } from '../constants'
@@ -11,7 +11,7 @@ import user from './User'
 import vault from './Vault'
 import notifications from './Notifications'
 
-import type { Verse } from './types'
+import type { Verse, Bookmark } from './types'
 
 class GenericReader
 	@observable translation\string
@@ -19,9 +19,9 @@ class GenericReader
 	@observable chapter\number
 	verses\Array<Verse> = []
 	loading\boolean = no
-	bookmarks = []
+	@observable bookmarks\Bookmark[] = []
 
-	me = ''
+	me = '' # constant to indicate the main reader versus the parallel reader
 
 	@computed get books
 		let orderBy = settings.chronorder ? 'chronorder' : 'bookid'
@@ -126,6 +126,11 @@ class GenericReader
 		bookmarks = offline_bookmarks.concat(server_bookmarks)
 		imba.commit!
 
+	@computed get selectionHasBookmark
+		for verse in activities.selectedVersesPKs
+			if bookmarks.find(do |element| return element.verse == verse)
+				return yes
+		return no
 
 	def getCollectionOfChosen verseNumber\number
 		let highlight = bookmarks.find(do |element| return element.verse == verseNumber)
@@ -312,6 +317,40 @@ class GenericReader
 		user.saveUserBookmarkToMap translation, book, chapter, activities.highlight_color
 		activities.cleanUp!
 
+	def requestDeleteBookmark pks\number[]
+		vault.deleteBookmarks(pks)
+		if window.navigator.onLine
+			try
+				await API.post("/delete-bookmarks/", { verses: pks })
+				notifications.push('deleted')
+			catch err
+				console.error err
+				deleteLater (pks)
+		else deleteLater (pks)
 
+	def deleteLater pks\number[]
+		let bookmarksToDelete = getValue('bookmarks-to-delete')
+		setValue('bookmarks-to-delete', bookmarksToDelete.concat(pks))
+
+	def deleteBookmark pks\number[]
+		if !user.username
+			window.location.pathname = "/signup/"
+			return
+
+		const deletedColors = new Set<string>()
+		for verse in activities.selectedVersesPKs
+			let bookmark = bookmarks.find(do |element| return element.verse == verse)
+			if bookmark
+				deletedColors.add(bookmark.color)
+
+		requestDeleteBookmark(pks)
+		for verse in activities.selectedVersesPKs
+			if bookmarks.find(do |bookmark| return bookmark.verse == verse)
+				bookmarks.splice(bookmarks.indexOf(bookmarks.find(do |bookmark| return bookmark.verse == verse)), 1)
+
+		if bookmarks.length !== 0
+			for color in deletedColors when !bookmarks.find(do |bookmark| return bookmark.color == color)
+				user.deleteBookmarkFromUserMap translation, book, chapter, color
+		activities.cleanUp!
 
 export default GenericReader

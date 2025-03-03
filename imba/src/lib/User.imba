@@ -3,12 +3,13 @@ import API from './Api'
 import { setValue, getValue, deleteValue } from '../utils'
 
 import readingHistory from './ReadingHistory'
+import activities from './Activities'
 
 class User
-	username = getValue('username')
+	@observable username = getValue('username')
 	is_password_usable = getValue('is_password_usable')
-	name = getValue('name')
-	bookmarksMap = getValue('bookmarksMap') || {}
+	@observable name = getValue('name')
+	@observable bookmarksMap = getValue('bookmarksMap') || {}
 
 	@autorun def saveUsername
 		if username
@@ -30,6 +31,8 @@ class User
 	
 	constructor
 		getMe!
+		# listen when user gets online
+		window.addEventListener('online', getMe.bind(this))
 
 	def logout
 		deleteValue 'username'
@@ -55,7 +58,7 @@ class User
 					username = ''
 					name = ''
 			catch err
-				console.error(err)
+				console.warn(err)
 	
 	def saveUserBookmarkToMap translation\string, book\number, chapter\number, color\string
 		unless bookmarksMap[translation]
@@ -65,6 +68,13 @@ class User
 		unless bookmarksMap[translation][book][chapter]
 			bookmarksMap[translation][book][chapter] = []
 		bookmarksMap[translation][book][chapter].push(color)
+
+	def deleteBookmarkFromUserMap translation\string, book\number, chapter\number, color\string
+		if bookmarksMap[translation][book][chapter].length >= 1
+			delete bookmarksMap[translation][book][chapter]
+		else
+			bookmarksMap[translation][book][chapter].splice(
+				bookmarksMap[translation][book][chapter].indexOf(color), 1)
 
 
 const user = new User()

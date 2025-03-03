@@ -7,6 +7,7 @@ import Split from 'lucide-static/icons/split.svg'
 import NotebookPen from 'lucide-static/icons/notebook-pen.svg'
 import Bookmark from 'lucide-static/icons/bookmark.svg'
 import Facebook from 'lucide-static/icons/facebook.svg'
+import Eraser from 'lucide-static/icons/eraser.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
@@ -93,6 +94,12 @@ tag verse-actions < section
 			reader.saveBookmark!
 		else
 			parallelReader.saveBookmark!
+	
+	def deleteBookmark
+		if activities.selectedParallel == 'main'
+			reader.deleteBookmark activities.selectedVersesPKs
+		else
+			parallelReader.deleteBookmark activities.selectedVersesPKs
 
 
 	<self [y:{#dy}px @off:100% transition-duration:{transitionDuration}] ease
@@ -118,6 +125,11 @@ tag verse-actions < section
 
 
 		<menu>
+			if reader.selectionHasBookmark or parallelReader.selectionHasBookmark
+				<li>
+					<button @click=deleteBookmark>
+						<svg src=Eraser aria-hidden=yes>
+						t.delete
 			<li>
 				<menu-popup bind=activities.show_sharing>
 					<button @click=(do activities.show_sharing = !activities.show_sharing)>

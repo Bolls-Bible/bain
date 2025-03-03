@@ -686,14 +686,14 @@ def save_bookmarks(request):
 
         except Verses.DoesNotExist:
             return HttpResponse(status=418)
-    return JsonResponse({"status_code": 200}, safe=False)
+    return HttpResponse(status=200)
 
 
 def delete_bookmarks(request):
     if request.user.is_authenticated:
         received_json_data = json.loads(request.body)
         remove_bookmarks(request.user, get_safe_array(received_json_data["verses"]))
-        return JsonResponse({"response": "200"}, safe=False)
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=401)
 
@@ -742,7 +742,7 @@ def history(request):
                 user.history_set.all().delete()
                 user.history_set.create(history=received_json_data["history"])
 
-            return JsonResponse({"response": "200"}, safe=False)
+            return HttpResponse(status=200)
 
         elif request.method == "DELETE":
             received_json_data = json.loads(request.body)
@@ -759,7 +759,7 @@ def history(request):
                 user.history_set.all().delete()
                 user.history_set.create(history=received_json_data["history"])
 
-            return JsonResponse({"response": "200"}, safe=False)
+            return HttpResponse(status=200)
 
         else:
             return JsonResponse(get_user_history(request.user), safe=False)

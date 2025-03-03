@@ -57,6 +57,15 @@ export type HighlightRectangular = {
 export type HistoryEntry = {
   book: number;
   chapter: number;
-  verse: number;
+  verse: number | string;
   translation: string;
+  date: number;
 };
+
+export type Bookmark = {
+  verse: number // actually pk of the verse
+  date: number // milliseconds since 1970
+  color: string
+  collection: string
+  note: string
+}

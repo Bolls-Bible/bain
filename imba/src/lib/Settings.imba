@@ -62,11 +62,14 @@ class SettingsState
 	
 	@autorun def saveFavoriteTranslations
 		setValue('favorite_translations', favoriteTranslations)
-		if window.navigator.onLine && user.username
-			API.put('/api/save-favorite-translations/', {
-				// TODO: remove unnecessary JSON.stringify
-				translations: JSON.stringify(favoriteTranslations),
-			})
+		try
+			if window.navigator.onLine && user.username
+				API.put('/api/save-favorite-translations/', {
+					// TODO: remove unnecessary JSON.stringify
+					translations: JSON.stringify(favoriteTranslations),
+				})
+		catch err
+			console.warn(err)
 
 const settings = new SettingsState()
 
