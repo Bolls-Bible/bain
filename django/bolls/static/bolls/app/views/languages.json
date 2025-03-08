@@ -498,6 +498,16 @@
     ]
   },
   {
+    "language": "Korean 한국어",
+    "translations": [
+      {
+        "short_name": "KRV",
+        "full_name": "개역한글",
+        "updated": 1741460720312
+      }
+    ]
+  },
+  {
     "language": "Latin / Italian",
     "translations": [
       {
