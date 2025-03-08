@@ -1,3 +1,4 @@
+import API from './Api'
 import localization from './Localization'
 import activities from './Activities'
 import dictionary from './Dictionary'
@@ -64,6 +65,9 @@ extend tag element
 	
 	get compare
 		return compare
+	
+	get api
+		return API
 	
 	### Utilities ###
 	def textDirection text\string

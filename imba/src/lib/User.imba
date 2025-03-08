@@ -3,32 +3,39 @@ import API from './Api'
 import { setValue, getValue, deleteValue } from '../utils'
 
 import readingHistory from './ReadingHistory'
-import activities from './Activities'
 
 class User
-	@observable username = getValue('username')
+	@observable username\string = getValue('username')
 	is_password_usable = getValue('is_password_usable')
-	@observable name = getValue('name')
-	@observable bookmarksMap = getValue('bookmarksMap') || {}
+	@observable name\string = getValue('name')
+	@observable bookmarksMap\Record<string, Record<number, Record<number, Array<string>>>> = getValue('bookmarksMap') || {}
+	@observable labels\string = []
+	@observable categories\string[] = getValue('categories') || []
 
 	@autorun def saveUsername
 		if username
 			setValue('username', username)
 		else
 			deleteValue('username')
-	
+
 	@autorun def saveName
 		if name
 			setValue('name', name)
 		else
 			deleteValue('name')
-	
+
 	@autorun def saveBookmarksMap
 		if bookmarksMap
 			setValue('userBookmarkMap', bookmarksMap)
 		else
 			deleteValue('userBookmarkMap')
-	
+
+	@autorun def saveCategories
+		if categories
+			setValue('categories', categories)
+		else
+			deleteValue('categories')
+
 	constructor
 		getMe!
 		# listen when user gets online
@@ -52,11 +59,14 @@ class User
 					name = userdata.name || ''
 					if userdata.bookmarksMap
 						bookmarksMap = userdata.bookmarksMap
+					if userdata.categories
+						categories = userdata.categories
 					await readingHistory.syncHistory!
 				else
 					bookmarksMap = {}
 					username = ''
 					name = ''
+					categories = []
 			catch err
 				console.warn(err)
 	

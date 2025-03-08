@@ -3369,7 +3369,7 @@ tag bible-reader
 								<svg.filter_search [stroke:$c stroke-width:2px] viewBox="0 0 561 561" @click=copyComparisonList>
 									<title> state.lang.copy
 									<path d=svg_paths.copy>
-								<svg.filter_search [stroke:$c stroke-width:2px] @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=state.lang.addcollection>
+								<svg.filter_search [stroke:$c stroke-width:2px] @click=(do show_translations_for_comparison = !show_translations_for_comparison) viewBox="0 0 20 20" alt=state.lang.addCollection>
 									<title> state.lang.compare
 									<line x1="0" y1="10" x2="20" y2="10">
 									<line x1="10" y1="0" x2="10" y2="20">
@@ -3484,7 +3484,7 @@ tag bible-reader
 							<article.search_hat>
 								<svg.close_search @click=clearSpace() viewBox="0 0 20 20">
 									<title> state.lang.close
-									<path[m: auto] d=svg_paths.close>
+									<path[m:auto] d=svg_paths.close>
 								<h1> state.lang.support
 								<a target="_blank" href="mailto:bpavlisinec@gmail.com">
 									<svg.filter_search width="16" height="16" viewBox="0 0 16 16">
@@ -3613,7 +3613,7 @@ tag bible-reader
 								if search.show_filters
 									<[z-index: 1 scale@off:0.75 y@off:-16px o@off:0 visibility@off:hidden] .filters ease>
 										<div[d:hflex bg:$bgc ai:center jc:space-between p:0 8px pos:sticky t:-8px zi:24]>
-											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> state.lang.addfilter
+											<p[ws:nowrap mr:8px fs:0.8em fw:bold]> state.lang.addFilter
 											<svg.close_search [mr:-16px @lt-sm:0 h:42px p:0px] @click=(search.show_filters = no) viewBox="0 0 20 20">
 												<title> state.lang.close
 												<path[m: auto] d=svg_paths.close>
@@ -3660,7 +3660,7 @@ tag bible-reader
 
 								if search_verses.length
 									<svg.filter_search [min-width:24px] ease .filter_search_hover=search.show_filters||search.filter @click=(do search.show_filters = !search.show_filters) viewBox="0 0 20 20">
-										<title> state.lang.addfilter
+										<title> state.lang.addFilter
 										<path d="M12 12l8-8V0H0v4l8 8v8l4-4v-4z">
 
 								if search.suggestions.books..length or search.suggestions.translations..length
@@ -3727,7 +3727,7 @@ tag bible-reader
 								else
 									<p.saveto> state.lang.saveto
 									<svg.svgAdd @click=addCollection viewBox="0 0 20 20" alt=state.lang.showAddCollection>
-										<title> state.lang.addcollection
+										<title> state.lang.addCollection
 										<line x1="0" y1="10" x2="20" y2="10">
 										<line x1="10" y1="0" x2="10" y2="20">
 
@@ -3743,7 +3743,7 @@ tag bible-reader
 											<p.collection .add_new_collection=(chosen_categories.find(do |element| return element == category)) @click=addNewCollection(category)> category
 									<div[min-width: 16px]>
 								else
-									<p[m: 8px auto].collection.add_new_collection @click=addCollection> state.lang.addcollection
+									<p[m: 8px auto].collection.add_new_collection @click=addCollection> state.lang.addCollection
 							if (store.newcollection && showAddCollection) || (chosen_categories.length && !showAddCollection)
 								<button.cancel.add_new_collection @click=addNewCollection(store.newcollection)> state.lang.save
 							else

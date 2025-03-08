@@ -154,11 +154,13 @@ class GenericReader
 		activities.selectedParallel = me
 		activities.highlight_color = activities.randomColor
 
-		if me == 'main' && activities.selectedVersesPKs.length == 0
+		if activities.selectedVersesPKs.length == 0
 			window.history.pushState(
 				{},
 				'',
-				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + id + '/')
+				me == 'main' ? (
+					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + id + '/'
+				) : window.location.pathname)
 
 		# Check if the user chosen a verse in the same parallel scope
 		if activities.selectedVersesPKs.includes(pk)
@@ -275,11 +277,7 @@ class GenericReader
 		# 	highlights.push(activities.highlight_color)
 		# 	window.localStorage.setItem("highlights", JSON.stringify(highlights))
 
-		let collections = ''
-		for category, key in activities.selectedCategories
-			collections += category.trim()
-			if key + 1 < activities.selectedCategories.length
-				collections += " | "
+		let collections = activities.selectedCategories.map(do(str) str.trim!).join(' | ')
 
 		let bookmarkToSave = {
 			verses: activities.selectedVersesPKs,

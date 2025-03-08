@@ -2,6 +2,7 @@ import GenericReader from '../lib/GenericReader'
 
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
+import Bookmark from 'lucide-static/icons/bookmark.svg'
 
 const cachedInnerHeight = window.innerHeight
 
@@ -161,16 +162,18 @@ tag chapter < section
 						<span innerHTML=verse.text
 								id="{versePrefix}{verse.verse}"
 								@click.wait(200ms)=me.selectVerse(verse.pk, verse.verse)
+								# make it focusable to get keydown working on it
+								tabIndex=0
+								@keydown.enter=me.saveBookmark
 								[background-image: {me.getHighlight(verse.pk)}]
 							>
 						if bookmark and not nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
-							<note-up style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
-								<svg viewBox="0 0 20 20" alt=t.note>
-									<title> t.note
-									<path d="M2 2c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v18l-8-4-8 4V2zm2 0v15l6-3 6 3V2H4z">
+							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
+								<svg src=Bookmark>
+									<title> bookmark.collection + ': ' + bookmark.note
 
 						if verse.comment and settings.verse_commentary
-							<note-up style=superStyle parallelMode=parallelReader.enabled bookmark=verse.comment containerWidth=layerWidth containerHeight=layerHeight(no)>
+							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=verse.comment containerWidth=layerWidth containerHeight=layerHeight(no)>
 								<span[c:$acc @hover:$acc-hover]> '†'
 
 						if settings.verse_break
@@ -246,6 +249,10 @@ tag chapter < section
 			svg
 				max-height: 100%
 				max-width: 100%
+
+		note-tooltip svg
+			c:$acc @hover:$acc-hover
+			size:0.68em
 
 		@keyframes fade-in
 			0%

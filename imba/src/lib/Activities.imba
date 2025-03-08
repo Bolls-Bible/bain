@@ -9,6 +9,7 @@ import reader from './Reader'
 import dictionary from './Dictionary'
 import search from './Search'
 import notifications from './Notifications'
+import user from './User'
 
 import type { CopyObject, Verse } from './types'
 
@@ -24,6 +25,8 @@ class Activities
 	show_sharing = no
 	show_comparison_options = no
 	show_dictionary_downloads = no
+	show_bookmarks = no
+	show_add_bookmark = no
 
 	IOSKeyboardHeight = 0
 	blockInScroll = null
@@ -35,7 +38,7 @@ class Activities
 	bottomDrawerOffset = 0
 
 	@observable selectedVerses\number[] = []
-	@observable selectedVersesPKs = []
+	@observable selectedVersesPKs\number[] = []
 	selectedParallel = undefined
 	selectedCategories = []
 
@@ -44,9 +47,11 @@ class Activities
 	highlight_color\string = ''
 
 	note = ''
+	newCategoryName = ''
 
 	@observable activeTranslation\string = ''
 
+	# Clean all the variables in order to free space around the text
 	def cleanUp { onPopState } = {}
 		# If user write a note then instead of clearing everything just hide the note panel.
 		if activeModal == "note"
@@ -65,13 +70,12 @@ class Activities
 		show_dictionaries = no
 		show_filters = no
 		show_sharing = no
+		show_bookmarks = no
+		show_comparison_options = no
 
 		booksDrawerOffset = -300
 		settingsDrawerOffset = -300
 
-		# Clean all the variables in order to free space around the text
-		show_filters = no
-		show_comparison_options = no
 		dictionary.tooltip = null
 		dictionary.loading = no
 		dictionary.definitions = []
@@ -79,7 +83,6 @@ class Activities
 		selectedVerses = []
 		selectedVersesPKs = []
 		selectedParallel = undefined
-		# showAddCollection = no
 		selectedCategories = []
 
 		search.currentQuery = ""
@@ -94,6 +97,7 @@ class Activities
 			pageSearch.on  = no
 			pageSearch.matches = []
 			pageSearch.rects = []
+
 		activeModal = ''
 		activeVerseAction = ''
 		selectedParallel = undefined
@@ -283,6 +287,31 @@ class Activities
 			verses: [copy.verse],
 			title: getSelectedVersesTitle(copy.translation, copy.book, copy.chapter, [copy.verse])
 		}
+
+	def toggleBookmarks
+		show_bookmarks = !show_bookmarks
+
+	def addNewCategory
+		if user.categories.includes(newCategoryName) || selectedCategories.includes(newCategoryName)
+			notifications.push('category_exists')
+			return
+		if newCategoryName
+			selectedCategories.push(newCategoryName)
+		newCategoryName = ""
+		show_add_bookmark = no
+	
+	def addCategoryToSelected category\string
+		if selectedCategories.includes(category)
+			selectedCategories = selectedCategories.filter(do |element| return element != category)
+		else
+			selectedCategories.push(category)
+	
+	def saveBookmark
+		if selectedParallel == 'main'
+			reader.saveBookmark!
+		else
+			parallelReader.saveBookmark!
+
 
 
 const activities = new Activities()

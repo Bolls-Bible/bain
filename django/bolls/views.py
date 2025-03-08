@@ -473,20 +473,6 @@ def get_bookmarks_with_notes(request, range_from, range_to):
     return JsonResponse(bookmarks, safe=False)
 
 
-def get_categories(request):
-    if request.user.is_authenticated:
-        user = request.user
-        all_objects = user.bookmarks_set.values("collection").annotate(dcount=Count("collection")).order_by("-date")
-        fresh_collections = [b for b in all_objects]
-        collections = []
-        for collections_dict in fresh_collections:
-            for collection in collections_dict["collection"].split(" | "):
-                if collection not in collections and len(collection):
-                    collections.append(collection)
-        return JsonResponse({"data": collections}, safe=False)
-    return JsonResponse({"data": []}, safe=False)
-
-
 # Backward compatibility with the old version of the API
 # For some weird reasons, before I required lists stringified separately in the body
 def get_safe_array(array):
@@ -800,12 +786,21 @@ def get_user_bookmarks_map(request):
 
 def get_me_if_am_logged_in(request):
     if request.user.is_authenticated:
+        all_bookmarks = request.user.bookmarks_set.values("collection").annotate(dcount=Count("collection")).order_by("-date")
+        fresh_categories = [b for b in all_bookmarks]
+        categories = []
+        for categories_dict in fresh_categories:
+            for collection in categories_dict["collection"].split(" | "):
+                if collection not in categories and len(collection):
+                    categories.append(collection)
+
         return JsonResponse(
             {
                 "username": request.user.username,
                 "name": request.user.first_name,
                 "is_password_usable": is_password_usable(request.user.password),
                 "bookmarksMap": get_user_bookmarks_map(request),
+                "categories": categories,
             },
             safe=False,
         )

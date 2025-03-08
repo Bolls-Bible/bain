@@ -12,7 +12,6 @@ urlpatterns = [
     path("profile/", views.index),
     path("downloads/", views.index),
     path("history/", views.history),
-    path("get-categories/", views.get_categories),
     path("save-bookmarks/", views.save_bookmarks),
     path("delete-bookmarks/", views.delete_bookmarks),
     path("edit-account/", views.edit_account),

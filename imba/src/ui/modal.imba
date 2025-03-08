@@ -11,6 +11,7 @@ import Copy from 'lucide-static/icons/copy.svg'
 import ListPlus from 'lucide-static/icons/list-plus.svg'
 import Send from 'lucide-static/icons/send.svg'
 import LoaderPinwheel from 'lucide-static/icons/loader-pinwheel.svg'
+import Check from 'lucide-static/icons/check.svg'
 
 import languages from '../data/languages.json'
 import { MOBILE_PLATFORM, translations, contributors } from '../constants'
@@ -144,7 +145,7 @@ tag modal < section
 
 	def render
 		<self
-			[pos:fixed inset:0 bg:rgba(0,0,0,0.75) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "show_note" ? 1200 : 3}]
+			[pos:fixed inset:0 bg:rgba(0,0,0,0.75) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
 			@click=activities.cleanUp ease>
 
 			<[
@@ -297,13 +298,13 @@ tag modal < section
 							<ul> for text in contributors
 								<li> <span innerHTML=text>
 
-					when "show_note"
+					when "notes"
 						<header>
-							<svg src=ICONS.X [c@hover:red4] @click=activities.cleanUp aria-label=t.close>
+							<button @click=activities.cleanUp title=t.close>
+								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
 							<h2> t.note, ', ', activities.selectedVersesTitle
-							<svg.save_bookmark [width: 26px] viewBox="0 0 12 16" @click=sendBookmarksToDjango title=t.create>
-								<title> t.create
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M12 5L4 13L0 9L1.5 7.5L4 10L10.5 3.5L12 5Z">
+							<button @click=activities.saveBookmark title=t.create>
+								<svg src=Check [c@hover:lime4] aria-hidden=true>
 						<article[o:0.8 fs:0.8em]>
 							# display here the choosen verses
 							let chosenVersesToIterate = activities.selectedParallel == reader.me ? reader.verses : parallelReader.verses
@@ -312,7 +313,7 @@ tag modal < section
 									if verse.pk in activities.selectedVersesPKs
 										<span innerHTML=verse.text id=verse.pk>
 										' '
-						<mark-down store=store lemon=t.write_something_awesone>
+						<mark-down>
 
 					when "history"
 						<header>
@@ -485,13 +486,13 @@ tag modal < section
 								<menu-popup bind=activities.show_filters>
 									<button
 										@click=(do activities.show_filters = !activities.show_filters)
-										title=t.addfilter [c:$acc-hover]=(activities.show_filters || search.filter) ease>
+										title=t.addFilter [c:$acc-hover]=(activities.show_filters || search.filter) ease>
 										<svg src=Filter aria-hidden=yes>
 
 									if activities.show_filters
 										<.popup-menu [t:0 y@off:-2rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
 											<header[d:hcs bg:$bgc p:0 .5rem pos:sticky t:-.5rem zi:24]>
-												<p[ws:nowrap mr:.5rem fs:0.8em fw:bold]> t.addfilter
+												<p[ws:nowrap mr:.5rem fs:0.8em fw:bold]> t.addFilter
 												<button[c@hover:red4] @click=(activities.show_filters = no) title=t.close>
 													<svg src=ICONS.X aria-hidden=yes>
 

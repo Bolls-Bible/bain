@@ -498,6 +498,16 @@
     ]
   },
   {
+    "language": "Korean 한국어",
+    "translations": [
+      {
+        "short_name": "KRV",
+        "full_name": "개역한글",
+        "updated": 1741460720312
+      }
+    ]
+  },
+  {
     "language": "Latin / Italian",
     "translations": [
       {
@@ -714,6 +724,16 @@
         "short_name": "SUV",
         "full_name": "Swahili Union Version, 1997",
         "updated": 1700953875512
+      }
+    ]
+  },
+  {
+    "language": "Swedish Svenska",
+    "translations": [
+      {
+        "short_name": "SFB2015",
+        "full_name": "Svenska Folkbibeln 2015",
+        "updated": 1741199880401
       }
     ]
   },

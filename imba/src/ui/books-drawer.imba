@@ -162,9 +162,9 @@ tag books-drawer < nav
 												pos:relative
 											i+1
 											if user.bookmarksMap[activeTranslation] and user.bookmarksMap[activeTranslation][book.bookid] and user.bookmarksMap[activeTranslation][book.bookid][i+1]
-												<div[pos:absolute d:flex jc:center g:2px r:0 l:0 maw:100% flw:wrap mah:32px of:hidden] aria-hidden=true>
+												<div[pos:absolute d:flex jc:center g:2px r:0 l:0 maw:100% flw:wrap mah:32px of:hidden p:.25rem] aria-hidden=true>
 													for color in user.bookmarksMap[activeTranslation][book.bookid][i+1]
-														<span [bgc:{color}]>
+														<span [bgc:{color} d:block s:0.375rem rd:50%]>
 
 							if book.bookid == 39
 								<pre[d:flex jc:center] aria-hidden=true>

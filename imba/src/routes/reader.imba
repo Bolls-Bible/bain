@@ -183,7 +183,7 @@ tag reader
 		if selectedText.length > 0
 			pageSearch.query = selectedText
 			search.query = selectedText
-		activities.cleanUp!
+		activities.cleanUp { onPopState: yes }
 
 
 	def render
@@ -207,7 +207,7 @@ tag reader
 					<chapter id="main-reader" me=reader [padding-inline:{readerPadding!}] />
 					if parallelReader.enabled
 						<chapter id="parallel-reader" me=parallelReader [padding-inline:{readerPadding(no)}] versePrefix="p" />
-				
+
 				<button.drawer-handle
 					[transform:translateX({settingsIconTransform}px)]
 					@click=activities.toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
@@ -218,89 +218,14 @@ tag reader
 					[r:{activities.settingsDrawerOffset}px bxs:{boxShadow(activities.settingsDrawerOffset)} transition-duration:{drawerTransiton}]
 					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
 
-			if dictionary.tooltip
-				<div
-					[pos:fixed l:{dictionary.tooltip.left}px r:{dictionary.tooltip.right}px t:{dictionary.tooltip.top}px zi:1 scale@off:0.75 o@off:0] ease>
-					css
-						bg:$acc-bgc rd:4px
-						origin:top center
-						bd:1px solid $acc-bgc-hover
-						
-						button
-							bgc:transparent @hover:$acc-bgc-hover
-							fs:inherit font:inherit c:inherit
-							cursor:pointer p: 8px
-
-					<button @click=dictionary.loadDefinitions(dictionary.tooltip.selected)> dictionary.tooltip.selected
-					if dictionary.tooltip.strong
-						'|'
-						<button @click=dictionary.loadDefinitions(dictionary.tooltip.strong)> dictionary.tooltip.strong
-
-			if settings.menuicons and not (activities.activeModal && window.innerWidth < 640)
-				<section [o@off:0 t@lg:0px b@lt-lg:{-activities.menuIconsTransform}px] ease>
-					css
-						pos:fixed right:0px left:0px
-						bgc@lt-lg:$bgc d:flex jc:space-between
-						w:100% height:auto @lg:0px zi:2 cursor:pointer
-						bdt@lt-lg:1px solid $acc-bgc
-						button
-							padding:3em @lt-lg:0
-							width:calc(100% / 3) @lg:auto
-							height:2.75rem @lg:auto
-							bgc:transparent
-							c:$acc @lt-lg:$c @hover:$acc-hover
-							d@lt-lg:hcc
-						svg
-							o@lt-lg:0.75 @hover:1
-
-					<button[transform: translateY({activities.menuIconsTransform}%) translateX({bibleIconTransform}px)] @click=activities.toggleBooksMenu title=t.change_book>
-						<svg src=BookOpenText aria-hidden=yes>
-					<button[transform: translateY({activities.menuIconsTransform}%) d@lg:none] @click=activities.showSearch title=t.search>
-						<svg src=Search aria-hidden=yes>
-					<button[transform: translateY({activities.menuIconsTransform}%) translateX({settingsIconTransform}px)] @click=activities.toggleSettingsMenu title=t.settings>
-						<svg src=SlidersHorizontal aria-hidden=yes>
-
-			if activities.activeModal
-				<modal />
-
-			if activities.activeVerseAction
-				<verse-actions />
-
-			if reader.loading || parallelReader.loading || dictionary.loading || search.loading || compare.loading
-				<loading>
-
-			if pageSearch.on
-				<section#page_search ease>
-					<[d:flex mr:1rem rd:.25rem] [ol:.25rem solid rose8/50]=(!pageSearch.matches.length && pageSearch.query.length)>
-						<input#pageSearch bind=pageSearch.query
-							@input=pageSearch.run @keydown.enter=pageSearch.pageSearchKeydownManager
-							[direction:{textDirection(pageSearch.query)}]
-							placeholder=t.find_in_chapter>
-						<button @click=pageSearch.prevOccurrence title=t.prev
-							[rd:0 bgc:$acc-bgc @hover:$acc-bgc-hover]>
-							<svg src=ChevronUp>
-						<button @click=pageSearch.nextOccurrence title=t.next
-							[border-top-right-radius:.25rem border-bottom-right-radius:.25rem bgc:$acc-bgc @hover:$acc-bgc-hover]>
-							<svg src=ChevronDown>
-
-					if pageSearch.matches.length
-						<p> pageSearch.current_occurrence + 1, ' / ', pageSearch.matches.length
-					elif pageSearch.query.length != 0 && window.innerWidth > 640
-						<p> t.phrase_not_found
-
-					<button[c@hover:red4 ml:auto] @click=activities.cleanUp title=t.close>
-						<svg src=ICONS.X aria-hidden=yes>
-
-
-
 			<global
 				@hotkey('mod+shift+f|mod+k').force.prevent.stop.cleanUpSelection=activities.showSearch
 				@hotkey('s|f|і|а').prevent.stop.cleanUpSelection=activities.showSearch
-				
+
 				@hotkey('mod+f').prevent.stop.cleanUpSelection=pageSearch.run
 				@hotkey('alt+r').prevent.stop=reader.randomVerse
 				@hotkey('mod+y').prevent.stop=(settings.fixdrawers = !settings.fixdrawers)
-				
+
 				@hotkey('mod+d').prevent.stop=dictionary.showDictionary
 				@hotkey('alt+s|alt+і').prevent.stop=dictionary.showStongNumberDefinition
 				@hotkey('escape').force.prevent.stop=activities.cleanUp
@@ -317,9 +242,83 @@ tag reader
 
 				@hotkey('mod+[').prevent.stop=theme.decreaseFontSize
 				@hotkey('mod+]').prevent.stop=theme.increaseFontSize
-				
+
 				@hotkey('mod+,').prevent.stop=activities.showHelp
+				@hotkey('alt+z').prevent.stop=router.go('profile')
 			>
+				if activities.activeModal
+					<modal />
+
+				if activities.activeVerseAction
+					<verse-actions />
+
+				if reader.loading || parallelReader.loading || dictionary.loading || search.loading || compare.loading
+					<loading>
+
+				if pageSearch.on
+					<section#page_search ease>
+						<[d:flex mr:1rem rd:.25rem] [ol:.25rem solid rose8/50]=(!pageSearch.matches.length && pageSearch.query.length)>
+							<input#pageSearch bind=pageSearch.query
+								@input=pageSearch.run @keydown.enter=pageSearch.pageSearchKeydownManager
+								[direction:{textDirection(pageSearch.query)}]
+								placeholder=t.find_in_chapter>
+							<button @click=pageSearch.prevOccurrence title=t.prev
+								[rd:0 bgc:$acc-bgc @hover:$acc-bgc-hover]>
+								<svg src=ChevronUp>
+							<button @click=pageSearch.nextOccurrence title=t.next
+								[border-top-right-radius:.25rem border-bottom-right-radius:.25rem bgc:$acc-bgc @hover:$acc-bgc-hover]>
+								<svg src=ChevronDown>
+
+						if pageSearch.matches.length
+							<p> pageSearch.current_occurrence + 1, ' / ', pageSearch.matches.length
+						elif pageSearch.query.length != 0 && window.innerWidth > 640
+							<p> t.phrase_not_found
+
+						<button[c@hover:red4 ml:auto] @click=activities.cleanUp title=t.close>
+							<svg src=ICONS.X aria-hidden=yes>
+
+				if dictionary.tooltip
+					<div
+						[pos:fixed l:{dictionary.tooltip.left}px r:{dictionary.tooltip.right}px t:{dictionary.tooltip.top}px zi:1 scale@off:0.75 o@off:0] ease>
+						css
+							bg:$acc-bgc rd:4px
+							origin:top center
+							bd:1px solid $acc-bgc-hover
+							
+							button
+								bgc:transparent @hover:$acc-bgc-hover
+								fs:inherit font:inherit c:inherit
+								cursor:pointer p: 8px
+
+						<button @click=dictionary.loadDefinitions(dictionary.tooltip.selected)> dictionary.tooltip.selected
+						if dictionary.tooltip.strong
+							'|'
+							<button @click=dictionary.loadDefinitions(dictionary.tooltip.strong)> dictionary.tooltip.strong
+
+				if settings.menuicons and not (activities.activeModal && window.innerWidth < 640)
+					<section [o@off:0 t@lg:0px b@lt-lg:{-activities.menuIconsTransform}px] ease>
+						css
+							pos:fixed right:0px left:0px
+							bgc@lt-lg:$bgc d:flex jc:space-between
+							w:100% height:auto @lg:0px zi:2 cursor:pointer
+							bdt@lt-lg:1px solid $acc-bgc
+							button
+								padding:3em @lt-lg:0
+								width:calc(100% / 3) @lg:auto
+								height:2.75rem @lg:auto
+								bgc:transparent
+								c:$acc @lt-lg:$c @hover:$acc-hover
+								d@lt-lg:hcc
+							svg
+								o@lt-lg:0.75 @hover:1
+
+						<button[transform: translateY({activities.menuIconsTransform}%) translateX({bibleIconTransform}px)] @click=activities.toggleBooksMenu title=t.change_book>
+							<svg src=BookOpenText aria-hidden=yes>
+						<button[transform: translateY({activities.menuIconsTransform}%) d@lg:none] @click=activities.showSearch title=t.search>
+							<svg src=Search aria-hidden=yes>
+						<button[transform: translateY({activities.menuIconsTransform}%) translateX({settingsIconTransform}px)] @click=activities.toggleSettingsMenu title=t.settings>
+							<svg src=SlidersHorizontal aria-hidden=yes>
+
 
 
 	css
