@@ -345,6 +345,7 @@ class Vault
 			return bookmarks
 		).catch (do |e|
 			console.error(e)
+			return []
 		)
 
 	def searchDefinitions search\{dictionary: string, query: string}

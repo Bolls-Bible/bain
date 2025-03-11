@@ -55,7 +55,7 @@ export type HighlightRectangular = {
 };
 
 export type HistoryEntry = {
-  bookid: number;
+  book: number;
   chapter: number;
   verse: number;
   translation: string;
@@ -68,4 +68,12 @@ export type Bookmark = {
   color: string
   collection: string
   note: string
+}
+
+export type ProfileBookmark = {
+  date: number
+  color: string
+  collection: string
+  note: string
+  verse: Verse
 }

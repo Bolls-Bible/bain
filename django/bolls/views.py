@@ -354,27 +354,19 @@ def sign_up(request):
 
 
 def delete_my_account(request):
-    message = ""
-    if request.user.is_authenticated:
-        try:
-            request.user.delete()
-            message = "account_deleted"
+    if request.method != "POST":
+        return HttpResponse(status=405)
 
-        except Exception as e:
-            return render(
-                request,
-                bolls_index,
-                {
-                    "message": e.message,
-                },
-            )
-    return render(
-        request,
-        bolls_index,
-        {
-            "message": message,
-        },
-    )
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+
+    try:
+        request.user.delete()
+        return redirect("/?message=account_deleted")
+
+    except Exception as e:
+        # redirect to / with a message at search params
+        return redirect("/?message=" + e.message)
 
 
 def edit_account(request):

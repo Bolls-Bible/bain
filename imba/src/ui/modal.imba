@@ -156,8 +156,8 @@ tag modal < section
 				max-width:64em @lt-sm:100%
 				w:82% @lt-sm:100%
 				bgc:$bgc bd:1px solid $acc-bgc-hover @lt-sm:none
-				bxs: 0 0 0 1px $acc-bgc, 0 1px 6px $acc-bgc, 0 3px 36px $acc-bgc, 0 9px 12.5rem -64px $acc-bgc @lt-sm:none
-				rd:16px @lt-sm:0
+				bxs: 0 0 0 1px $acc-bgc, 0 1px 6px $acc-bgc, 0 3px 36px $acc-bgc, 0 9px 12.5rem -4rem $acc-bgc @lt-sm:none
+				rd:1rem @lt-sm:0
 				p:1.5rem @lt-sm:0.75rem
 				scale@off:0.75] @click.stop>
 
@@ -562,7 +562,7 @@ tag modal < section
 				display: -webkit-box
 				-webkit-box-orient: vertical
 				fs:1em
-			
+
 			input
 				w:100% bg:transparent font:inherit c:inherit
 				p:0 0.5em fs:1.2em min-width:8rem

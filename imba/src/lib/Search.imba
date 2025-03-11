@@ -113,7 +113,7 @@ class Search
 		# Generate suggestions list
 		suggestions.books = []
 		for item in filtered_books
-			if reader.theChapterExistInThisTranslation!
+			if reader.theChapterExistInThisTranslation
 				suggestions.books.push item.book
 
 		suggestions.translations = suggestTranslations(trimmedQuery)

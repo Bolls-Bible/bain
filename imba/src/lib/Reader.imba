@@ -2,10 +2,10 @@ import { getValue, setValue } from '../utils'
 
 import API from './Api'
 import activities from './Activities'
-import { translations } from '../constants.imba'
+import { translations } from '../constants'
 import vault from './Vault'
 import settings from './Settings'
-import parallelReader from './ParallelReader.imba'
+import parallelReader from './ParallelReader'
 import readingHistory from './ReadingHistory'
 import notifications from './Notifications'
 
@@ -29,31 +29,13 @@ class Reader < GenericReader
 	@autorun def saveChapter
 		setValue('chapter', chapter)
 
-	def initReaderFromLocation
-		let link = window.location.pathname.split('/')
-		if 'international' in link
-			if link[2] && link[3] && link[4]
-				translation = translation || link[2]
-				book = parseInt(link[3])
-				chapter = parseInt(link[4])
-		else
-			if link[1] && link[2] && link[3]
-				translation = link[1]
-				book = parseInt(link[2])
-				chapter = parseInt(link[3])
-				console.log(link[4])
-
-	def constructor
-		super()
-		initReaderFromLocation!
-
-
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
 	def fetchVerses
-		unless theChapterExistInThisTranslation!
+		unless theChapterExistInThisTranslation
 			return
 		
+		console.log "so", self
 		const translationName = translations.find(do |element| element.short_name == translation)..full_name || translation
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationName + " Bolls Bible"
 		loading = yes
@@ -90,14 +72,17 @@ class Reader < GenericReader
 
 		# if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 
-		window.history.pushState({
-				translation: translation,
-				book: book,
-				chapter: chapter,
-			},
-			'',
-			window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
-		)
+		# if the pathname has one of 4 `/` in it then call the pushState
+		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
+		if pathnameSlices == 0 or pathnameSlices > 2
+			window.history.pushState({
+					translation: translation,
+					book: book,
+					chapter: chapter,
+				},
+				'',
+				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+			)
 
 	def randomVerse
 		try

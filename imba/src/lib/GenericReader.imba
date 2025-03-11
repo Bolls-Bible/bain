@@ -33,7 +33,7 @@ class GenericReader
 				return tr_book.name
 		return book
 	
-	def theChapterExistInThisTranslation
+	get theChapterExistInThisTranslation
 		const theBook = books.find(do |element| return element.bookid == book)
 		if theBook
 			if theBook.chapters >= chapter
@@ -313,6 +313,10 @@ class GenericReader
 				note: activities.note
 			})
 		user.saveUserBookmarkToMap translation, book, chapter, activities.highlight_color
+		# add to user.categories the new collections
+		for category in activities.selectedCategories
+			if !user.categories.includes(category)
+				user.categories.push(category)
 		activities.cleanUp!
 
 	def requestDeleteBookmark pks\number[]

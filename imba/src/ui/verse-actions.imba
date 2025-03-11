@@ -105,7 +105,7 @@ tag verse-actions < section
 		activities.show_add_bookmark = yes
 		imba.commit!.then do $newcategoryinput.focus()
 
-	<self [y:{#dy}px @off:100% transition-duration:{transitionDuration}] ease
+	<self [y:{#dy}px @off:100% o@off:0 transition-duration:{transitionDuration}] ease
 		@pointerdown=initiateSlideHandling @pointermove=slide @pointerup=finalizeSlideHandling @pointercancel=finalizeSlideHandling @pointerleave=finalizeSlideHandling
 		>
 		<svg.chevron src=ChevronDown @click=close>
@@ -199,7 +199,9 @@ tag verse-actions < section
 									<input type="text" placeholder=t.search bind=self.categoriesSearch />
 							css
 								ol
-									p: 0 .3rem
+									mah: 50vh
+									overflow-y: auto
+									p:0 .3rem
 									d:flex flw:wrap gap:.25rem
 									li
 										p:0
@@ -215,7 +217,7 @@ tag verse-actions < section
 									<li>
 										<button.selected @click=activities.addCategoryToSelected(category)>
 											category
-								for category in user.categories
+								for category in user.categories when category.toLowerCase().includes(categoriesSearch.toLowerCase())
 									<li>
 										<button
 											.selected=(activities.selectedCategories.includes(category))
@@ -238,7 +240,6 @@ tag verse-actions < section
 										button
 											size:2.5rem miw:2.5rem 
 											pos:absolute r:.5rem top:50% y:-50%
-
 
 									<input$newcategoryinput
 										type="text"

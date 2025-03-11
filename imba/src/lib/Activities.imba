@@ -299,6 +299,7 @@ class Activities
 			selectedCategories.push(newCategoryName)
 		newCategoryName = ""
 		show_add_bookmark = no
+		show_bookmarks = no
 	
 	def addCategoryToSelected category\string
 		if selectedCategories.includes(category)

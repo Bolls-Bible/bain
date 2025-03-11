@@ -263,3 +263,11 @@ tag chapter < section
 		html[data-transitions="true"]
 			h1, article
 				animation: fade-in 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+		
+		.reload
+			display: block
+			mt:.5rem
+			w: 100%
+			cursor: pointer
+			text-decoration: solid underline
+			y@hover:-2px

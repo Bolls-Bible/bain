@@ -22,7 +22,6 @@ tag reader
 		if event.target.hash
 			return
 		activities.cleanUp { onPopState: yes }
-		reader.initReaderFromLocation!
 
 	def onSelectionChange
 		if window.getSelection().toString().length > 0
@@ -54,6 +53,19 @@ tag reader
 		document.onmouseleave = null
 		window.onmouseout = null
 		window.strongDefinition = null
+
+	def routed params
+		const link_segments = window.location.pathname.split('/').filter(Boolean)
+		if params.translation && params.book && params.chapter
+			if 'international' in window.location.pathname
+				if link_segments.length == 5
+					reader.verse = parseInt(link_segments[-1])
+			else
+				reader.translation = params.translation
+				if link_segments.length == 4
+					reader.verse = parseInt(link_segments[-1])
+			reader.book = parseInt(params.book)
+			reader.chapter = parseInt(params.chapter)
 
 
 	def hidePanels event\MouseEvent
@@ -87,7 +99,7 @@ tag reader
 				touch.dx > 64 ? activities.settingsDrawerOffset = 0 : activities.settingsDrawerOffset = -300
 			else
 				touch.dx < -64 ? activities.settingsDrawerOffset = -300 : activities.settingsDrawerOffset = 0
-		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !activities.show_history && !activities.selectedVerses.length
+		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !activities.selectedVerses.length
 			if window.innerWidth > 600
 				if touch.dx < -32
 					parallelReader.enabled && touch.clientX > window.innerWidth / 2 ? parallelReader.prevChapter! : reader.prevChapter!
@@ -187,36 +199,27 @@ tag reader
 
 
 	def render
-		<self>
-			<[d:flex] @mousemove=mousemove>
-				<books-drawer
-					[l:{activities.booksDrawerOffset}px bxs:{boxShadow(activities.booksDrawerOffset)} transition-duration:{drawerTransiton}]
-					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+		<self[d:flex] @mousemove=mousemove>
+			<button.drawer-handle
+				[transform:translateX({bibleIconTransform}px)]
+				@click=activities.toggleBooksMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+				<svg src=ChevronRight aria-label=t.change_book
+					[transform:rotate({180*+!!bibleIconTransform}deg)]>
 
-				<button.drawer-handle
-					[transform:translateX({bibleIconTransform}px)]
-					@click=activities.toggleBooksMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
-					<svg src=ChevronRight aria-label=t.change_book
-						[transform:rotate({180*+!!bibleIconTransform}deg)]>
+			<main id="main"
+				@touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend
+				.parallel_text=parallelReader.enabled .hide-comments=!settings.verse_commentary .parallels=parallelReader.enabled
+				[pos:{parallelReader.enabled ? 'relative' : 'static'} ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight} ta:{theme.align} fl:1]
+				>
+				<chapter id="main-reader" me=reader [padding-inline:{readerPadding!}] />
+				if parallelReader.enabled
+					<chapter id="parallel-reader" me=parallelReader [padding-inline:{readerPadding(no)}] versePrefix="p" />
 
-				<main id="main"
-					@touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend
-					.parallel_text=parallelReader.enabled .hide-comments=!settings.verse_commentary .parallels=parallelReader.enabled
-					[pos:{parallelReader.enabled ? 'relative' : 'static'} ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight} ta:{theme.align} fl:1]
-					>
-					<chapter id="main-reader" me=reader [padding-inline:{readerPadding!}] />
-					if parallelReader.enabled
-						<chapter id="parallel-reader" me=parallelReader [padding-inline:{readerPadding(no)}] versePrefix="p" />
-
-				<button.drawer-handle
-					[transform:translateX({settingsIconTransform}px)]
-					@click=activities.toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
-					<svg src=ChevronLeft aria-label=t.change_book
-						[transform:rotate({180*+!!settingsIconTransform}deg)]>
-
-				<settings-drawer
-					[r:{activities.settingsDrawerOffset}px bxs:{boxShadow(activities.settingsDrawerOffset)} transition-duration:{drawerTransiton}]
-					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+			<button.drawer-handle
+				[transform:translateX({settingsIconTransform}px)]
+				@click=activities.toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+				<svg src=ChevronLeft aria-label=t.change_book
+					[transform:rotate({180*+!!settingsIconTransform}deg)]>
 
 			<global
 				@hotkey('mod+shift+f|mod+k').force.prevent.stop.cleanUpSelection=activities.showSearch
@@ -246,6 +249,14 @@ tag reader
 				@hotkey('mod+,').prevent.stop=activities.showHelp
 				@hotkey('alt+z').prevent.stop=router.go('profile')
 			>
+				<books-drawer
+					[l:{activities.booksDrawerOffset}px bxs:{boxShadow(activities.booksDrawerOffset)} transition-duration:{drawerTransiton}]
+					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+
+				<settings-drawer
+					[r:{activities.settingsDrawerOffset}px bxs:{boxShadow(activities.settingsDrawerOffset)} transition-duration:{drawerTransiton}]
+					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+
 				if activities.activeModal
 					<modal />
 
@@ -256,7 +267,36 @@ tag reader
 					<loading>
 
 				if pageSearch.on
-					<section#page_search ease>
+					<section ease>
+						css
+							pos:fixed b:0 y@off:100% l:0 r:0 zi:1100
+							d:flex ai:center
+							p:.5rem
+							bdt:1px solid $acc-bgc
+							bgc:$bgc
+
+							input
+								inline-size: auto
+								min-width: 4rem;
+								padding: .25rem
+								font-size: 1.25rem
+								background: $acc-bgc focus:$acc-bgc-hover
+								border: 1px solid $acc-bgc
+								color: inherit
+								-webkit-border-radius: .25rem
+								border-radius: .25rem
+								opacity: 0.7 @hover:1 @focus:1
+								border-top-right-radius:0
+								border-bottom-right-radius:0
+
+							button
+								opacity: 0.7 @hover:1
+								d:hcc
+								svg
+									height: 2rem
+									width: 2.25rem
+									min-width: 2rem
+
 						<[d:flex mr:1rem rd:.25rem] [ol:.25rem solid rose8/50]=(!pageSearch.matches.length && pageSearch.query.length)>
 							<input#pageSearch bind=pageSearch.query
 								@input=pageSearch.run @keydown.enter=pageSearch.pageSearchKeydownManager
@@ -367,34 +407,3 @@ tag reader
 			bgc:gray4/25
 			o:0 @hover:1
 			d:hcc cursor:pointer zi:2 c:$acc 
-
-		#page_search
-			pos:fixed b:0 y@off:100% l:0 r:0 zi:1100
-			d:flex ai:center
-			p:.5rem
-			bdt:1px solid $acc-bgc
-			bgc:$bgc
-
-			input
-				inline-size: auto
-				min-width: 4rem;
-				padding: .25rem
-				font-size: 1.25rem
-				background: $acc-bgc focus:$acc-bgc-hover
-				border: 1px solid $acc-bgc
-				color: inherit
-				-webkit-border-radius: .25rem
-				border-radius: .25rem
-				opacity: 0.7 @hover:1 @focus:1
-				border-top-right-radius:0
-				border-bottom-right-radius:0
-			
-			button
-				opacity: 0.7 @hover:1
-				d:hcc
-				svg
-					height: 2rem
-					width: 2.25rem
-					min-width: 2rem
-
-

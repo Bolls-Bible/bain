@@ -201,7 +201,7 @@ global css
 		of: hidden
 		bxs: 0 0 0 1px $acc-bgc-hover, 0 3px 6px $acc-bgc-hover, 0 9px 24px $acc-bgc-hover
 
-		button
+		button, a
 			background: transparent @hover:$acc-bgc-hover
 			c: $c
 			cursor: pointer
@@ -326,3 +326,31 @@ global css
 
 	.another_occurrences
 		bgc: $acc-bgc-hover
+
+	.markdown
+		display: block
+		background-color: $acc-bgc
+		max-height: 8rem
+		margin: .5rem 0
+		padding: .25rem .5rem
+		border-radius: .25rem
+		overflow: auto
+
+	note-body, .markdown
+		ul, ol
+			line-height: 1.6
+			padding: 1rem 0 1rem 2rem
+			li
+				list-style-type: disc
+
+		a
+			color: $acc @hover: $acc-hover
+			font-weight: 500
+			text-decoration: underline
+
+		img
+			max-width: 100%;
+			height: auto;
+
+		* 
+			transition@important: none;

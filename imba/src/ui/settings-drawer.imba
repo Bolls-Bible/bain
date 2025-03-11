@@ -21,7 +21,6 @@ import VenetianMask from 'lucide-static/icons/venetian-mask.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
-import readingHistory from '../lib/ReadingHistory'
 import { MOBILE_PLATFORM } from '../constants'
 
 tag settings-drawer < aside

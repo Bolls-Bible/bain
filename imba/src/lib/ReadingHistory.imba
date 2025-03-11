@@ -1,7 +1,6 @@
 import { getValue, setValue, deleteValue } from '../utils'
 
 import API from './Api'
-import activities from './Activities'
 import settings from './Settings'
 import compare from './Compare'
 import user from './User'
@@ -33,7 +32,7 @@ class ReadingHistory
 				console.warn(error)
 				notifications.push('error')
 
-	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
+	def saveToHistory translation\string, book\number, chapter\number, verse\number
 		syncHistory!
 		
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
@@ -75,7 +74,6 @@ class ReadingHistory
 			history = unique_history
 		catch error
 			console.warn('Error syncing history', error)
-			notifications.push('error')
 
 		# Remove items exceeding limit
 		if history.length > 256

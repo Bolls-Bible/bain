@@ -34,7 +34,7 @@ class ParallelReader < GenericReader
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
 	def fetchVerses
-		unless theChapterExistInThisTranslation!
+		unless theChapterExistInThisTranslation
 			return
 		
 		loading = yes

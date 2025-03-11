@@ -2,7 +2,7 @@ class API
 	baseUrl = ''
 	# baseUrl = 'https://bolls.life'
 
-	def getJson pathname\string
+	def getJson pathname\string|URL
 		const url = baseUrl + pathname
 		const response = await window.fetch(url)
 		return response.json()

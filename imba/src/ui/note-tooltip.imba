@@ -1,4 +1,5 @@
-import { remark } from './remark'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify';
 
 tag note-tooltip
 	prop text = ''
@@ -84,7 +85,7 @@ tag note-body
 	def mount
 		if typeof bookmark == 'object'
 			if bookmark.note
-				const note = await remark(bookmark.note)
+				const note = await marked.parse(DOMPurify.sanitize(bookmark.note))
 				if bookmark.collection
 					#inner_html = '<b>' + bookmark.collection + '</b><br>' + note
 				else
