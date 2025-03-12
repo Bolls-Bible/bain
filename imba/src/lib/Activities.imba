@@ -54,7 +54,7 @@ class Activities
 	# Clean all the variables in order to free space around the text
 	def cleanUp { onPopState } = {}
 		# If user write a note then instead of clearing everything just hide the note panel.
-		if activeModal == "note"
+		if activeModal == "notes"
 			activeModal = ''
 			return
 

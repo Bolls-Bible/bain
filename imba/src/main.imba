@@ -1,12 +1,13 @@
 import './lib'
 import './global.css'
 import './routes'
-import { Profile } from './routes/profile'
 
 tag app
 	count = 0
 	<self>
-		<Profile route='/profile/'>
+		<profile route='/profile/'>
+		<downloads route='/downloads/'>
+		<donate route='/donate/'>
 
 		<reader route='/international/:translation/:book/:chapter'>
 		<reader route='/:translation/:book/:chapter'>

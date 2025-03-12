@@ -8,7 +8,6 @@ import MinimizeHorizontal from '../icons/minimize-horizontal.svg'
 import MaximizeHorizontal from '../icons/maximize-horizontal.svg'
 import Download from 'lucide-static/icons/download.svg'
 import CloudDownload from 'lucide-static/icons/cloud-download.svg'
-import SquareArrowOutUpRight from 'lucide-static/icons/square-arrow-out-up-right.svg'
 import BadgeInfo from 'lucide-static/icons/badge-info.svg'
 import HeartHandshake from 'lucide-static/icons/heart-handshake.svg'
 import Dices from 'lucide-static/icons/dices.svg'
@@ -206,13 +205,12 @@ tag settings-drawer < aside
 					<button.settings-btn @click=activities.toggleDownloads>
 						<svg src=CloudDownload aria-hidden=true>
 						t.download_translations
-				<a.settings-btn href='/downloads/' target="_blank" @click=install>
+				<a.settings-btn href='/downloads/' target="_blank" @click=pwa.deferredPrompt.prompt>
 					<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
 					t.install_app
-				<a.settings-btn @click=dictionary.showDictionary  href='https://bohuslav.me/Dictionary/' target='_blank'>
+				<button.settings-btn @click=dictionary.showDictionary>
 					<span.font-icon aria-hidden=true> 'א'
 					t.dictionary
-					<svg[p:4px ml:auto] src=SquareArrowOutUpRight aria-label=(t.dictionary + 'link')>
 			<button.settings-btn @click=activities.showHelp>
 				<svg src=ICONS.CARROT aria-hidden=true>
 				t.help

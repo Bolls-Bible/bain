@@ -13,6 +13,7 @@ import theme from './Theme'
 import user from './User'
 import vault from './Vault'
 import compare from './Compare'
+import pwa from './PWA'
 
 
 import { translations, RTLTranslations, bookNameIndex } from '../constants'
@@ -68,6 +69,9 @@ extend tag element
 	
 	get api
 		return API
+	
+	get pwa
+		return pwa
 	
 	### Utilities ###
 	def textDirection text\string

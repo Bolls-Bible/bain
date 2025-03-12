@@ -44,7 +44,7 @@ let loading = no
 let importing = no
 let deleteMeErrorMessage = ''
 
-export tag Profile
+export tag profile
 	bookmarks = []
 	highlights = []
 	notes = []
@@ -345,10 +345,10 @@ export tag Profile
 
 	<self @scroll=scroll>
 		<header[z-index:100000 of:visible d:flex ws:nowrap]>
-			<a[pos:relative my:auto mr:1rem l:.5rem d:flex ai:center] route-to='/' title=t.back>
+			<a[pos:relative my:auto mr:1rem l:.5rem d:flex ai:center c@hover:$acc] route-to='/' title=t.back>
 				<svg src=ArrowLeft aria-hidden=yes>
 
-			<h1[margin: 1rem 0.25rem]> user.username
+			<h1[margin:1rem 0.25rem]> user.username
 
 			if window.navigator.onLine
 				<menu-popup[pos:relative ml:auto r:.5rem] bind=popups['account_actions']>
@@ -624,6 +624,9 @@ export tag Profile
 								t.edit_name_label
 								<input type="text" bind=store.name max=30 placeholder="John Doe">
 							<button> t.edit_account
+
+		else
+			<global @hotkey('escape')=(router.go('/'))>
 
 		if !window.navigator.onLine
 			<div[pos:fixed b:1rem l:1rem p:.5rem 1rem rd:.5rem ta:center border:1px solid $acc-bgc-hover zi:1000]>

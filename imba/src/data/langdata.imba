@@ -89,14 +89,7 @@ export const english = {
 	"fixdrawers": "Fix drawers"
 	"help": "Help",
 	"history": "History",
-	"ios_install": "To install the app on iOS follow the next steps",
-	"ios_install_steps": [
-		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
-		'Then press the share button at the middle bottom.',
-		'Scroll down and find the "Add to Home Screen" action.',
-		'Press "Add" to submit.',
-		'Enjoy!',
-	]
+	"ios_install": "Add to home screen",
 	"i_understand": "I understand the consequences, delete my account",
 	"increase_font_size": "Increase font size",
 	"increase_font_weight": "Increase font weight",
@@ -286,14 +279,7 @@ export const ukrainian = {
 	"fixdrawers": "Закріпити панелі"
 	"help": "Допомога",
 	"history": "Історія",
-	"ios_install": "Щоб встановити додаток на iOS слідуйте за наступними інструкціями",
-	"ios_install_steps": [
-		'Відкрийте Safari і перейдіть до <a href="https://bolls.life"> bolls.life.',
-		'Потім натисніть кнопку Поділитися посередині внизу Safari.',
-		'Гортайте донизу поки не знайдете "На Початковий Екран" кнопку. Натисніть її.',
-		'Натисніть "Додати".',
-		'Насолоджуйтесь!',
-	]
+	"ios_install": "Додати на головний екран",
 	"i_understand": "Я розумію наслідки, видаляю мій обліковий запис",
 	"increase_font_size": "Збільшити шрифт",
 	"increase_font_weight": "Збільшити товщину шрифту",
@@ -483,14 +469,7 @@ export const russian = {
 	"fixdrawers": "Закрепить панели"
 	"help": "Помощь",
 	"history": "История",
-	"ios_install": "Чтобы установить приложение на iOS следуйте этим инструкциям",
-	"ios_install_steps": [
-		'Откройте Safari и перейдите к <a href="https://bolls.life"> bolls.life.',
-		'Нажмите на иконку Поделится посередине в самом низу.',
-		'Прокрутите к низу пока не увидите кнопку "На экран «Домой»". Нажмите её',
-		'Потом нажмите "Добавить".',
-		'Наслаждайтесь!',
-	]
+	"ios_install": "Добавить на главный экран",
 	"i_understand": "Я понимаю последствия, удалите мой аккаунт",
 	"increase_font_size": "Увеличить шрифт",
 	"increase_font_weight": "Увеличить толщину шрифта",
@@ -680,14 +659,7 @@ export const portuguese = {
 	"fixdrawers": "Fixar menus laterais"
 	"help": "Ajuda",
 	"history": "Histórico",
-	"ios_install": "Para instalar o aplicativo no iOS, siga as próximas etapas",
-	"ios_install_steps": [
-		'Abra uma nova aba no Safari e digite: <a href="https://bolls.life">bolls.life</a>.',
-		'Em seguida, pressione o botão de compartilhamento na parte inferior do meio.',
-		'Role para baixo e encontre a ação “Adicionar à tela inicial”.',
-		'Pressione “Adicionar” para enviar.',
-		'Aproveite!',
-	]
+	"ios_install": "Adicionar à tela inicial",
 	"i_understand": "Entendo as consequências, excluir minha conta",
 	"increase_font_size": "Aumentar o tamanho da fonte",
 	"increase_font_weight": "Aumentar a espessura da fonte",
@@ -877,14 +849,7 @@ export const espanol = {
 	"fixdrawers": "Fijar paneles",
 	"help": "Ayuda",
 	"history": "Historial",
-	"ios_install": "Para instalar la aplicación en iOS siga los siguientes pasos",
-	"ios_install_steps": [
-		'Abre Safari y luego ve a <a href="https://bolls.life"> bolls.life.',
-		'Luego presiona el botón Compartir en el medio debajo.',
-		'Desplázate abajo y encuentra la acción "Añadir a la pantalla principal".',
-		'Presiona "Agregar" para enviar.',
-		'Disfruta!',
-	],
+	"ios_install": "Agregar a la pantalla de inicio",
 	"i_understand": "Yo entiendo las consecuencias, borra mi cuenta",
 	"increase_font_size": "Aumentar el tamaño de la fuente",
 	"increase_font_weight": "Aumentar el peso de la fuente",
@@ -1075,14 +1040,7 @@ export const german = {
 	"fixdrawers": "Schubladen reparieren"
 	"help": "Hilfen",
 	"history": "History",
-	"ios_install": "Befolgen Sie die nächsten Schritte, um die App unter iOS zu installieren",
-	"ios_install_steps": [
-		'Open Safari and go to <a href="https://bolls.life"> bolls.life.',
-		'Then press the share button at the middle bottom.',
-		'Scroll down and find the "Add to Home Screen" action.',
-		'Press "Add" to submit.',
-		'Enjoy!',
-	]
+	"ios_install": "Zum Startbildschirm hinzufügen",
 	"i_understand": "Ich verstehe die Konsequenzen. Bitte löschen Sie meinen Account.",
 	"increase_font_size": "Schriftgröße vergrößern",
 	"increase_font_weight": "Schriftstärke vergröbern",

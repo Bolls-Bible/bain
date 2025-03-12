@@ -30,7 +30,7 @@ tag verse-actions < section
 	categoriesSearch = ''
 
 	def initiateSlideHandling event
-		if ['INPUT', 'BUTTON'].includes event.target.tagName
+		if ['INPUT', 'BUTTON', 'OL'].includes event.target.tagName
 			return
 		event.preventDefault()
 		# we want to slide the verse actions up and down
