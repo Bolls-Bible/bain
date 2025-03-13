@@ -13,6 +13,8 @@ FROM node AS runner
 WORKDIR /app
 
 COPY --from=builder /app/dist .
+COPY --from=builder /app/public ./public/
+COPY --from=builder /app/src/data ./src/data/
 COPY --from=builder /app/package*.json ./
 
 # Now install only production dependencies

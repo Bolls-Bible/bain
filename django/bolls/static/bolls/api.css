@@ -45,7 +45,7 @@ html {
 
 ::-webkit-scrollbar-thumb {
   background: rgb(84, 84, 84);
-  border-radius: 4px;
+  border-radius: .25rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -67,7 +67,7 @@ ul, li {
 }
 
 ul {
-  padding-left: 8vw;
+  padding-left: 2em;
   padding-bottom: 1em;
 }
 
@@ -113,7 +113,7 @@ a:hover {
 
 h1, h2, h3, h4, h5 {
   font-family: serif, sans-serif;
-  margin: 4em 0 0.35em;
+  margin: 2em 0 0.35em;
 }
 
 button {
@@ -126,9 +126,23 @@ body {
   background: var(--background-color);
   color: var(--text-color);
   padding: 2vh 4vw;
-  text-indent: 4vw;
+  text-indent: 1em;
   -webkit-animation: text-came 800ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   animation: text-came 800ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+body > header,
+body > footer,
+body > p,
+body > div,
+body > h1,
+body > h2,
+body > h3,
+body > h4,
+body > ul,
+body > ol {
+  max-width: 64rem;
+  margin-inline: auto;
 }
 
 p {
@@ -137,20 +151,23 @@ p {
 
 code, pre {
   background-color: rgba(136, 136, 255, 0.133);
-  padding: 1px 8px;
-  border-radius: 4px;
+  padding: 1px .5rem;
+  border-radius: .25rem;
 }
 
 pre {
   overflow-x: auto;
-  margin: 16px;
-  padding: 8px;
+  margin: 1rem;
+  padding: .5rem 1rem;
   text-indent: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
 
 footer {
-  margin-top: 64px;
-  font-size: 16px;
+  margin-top: 4rem;
+  font-size: 1rem;
 }
 
 address {

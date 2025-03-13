@@ -24,6 +24,7 @@ services:
     container_name: WEB_CONTAINER_NAME
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static
+      - IMBA_VOLUME_NAME:/imba
     expose:
       - 8000
     environment:
@@ -60,6 +61,8 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     container_name: IMBA_SERVICE_NAME
+    volumes:
+      - IMBA_VOLUME_NAME:/app
     expose:
       - 3000
     ports:
@@ -78,8 +81,9 @@ services:
       - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
       - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
       - "traefik.webservice.frontend.entryPoints=http,https"
-    # volumes:
-    #   - STATIC_VOLUME_NAME:/home/bolls/web/static
+    volumes:
+      - STATIC_VOLUME_NAME:/home/bolls/web/static
+      - IMBA_VOLUME_NAME:/imba
     networks:
       - INTERNAL_NETWORK_NAME
     depends_on:
@@ -117,6 +121,7 @@ services:
 
 volumes:
   STATIC_VOLUME_NAME:
+  IMBA_VOLUME_NAME:
   DATABASE_VOLUME_SECRET:
     driver: local
 

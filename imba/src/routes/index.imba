@@ -1,4 +1,4 @@
-import './reader'
+import './donate'
 import './downloads'
 import './profile'
-import './donate'
+import './reader'

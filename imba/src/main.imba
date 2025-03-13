@@ -3,7 +3,6 @@ import './global.css'
 import './routes'
 
 tag app
-	count = 0
 	<self>
 		<profile route='/profile/'>
 		<downloads route='/downloads/'>
@@ -14,7 +13,6 @@ tag app
 		<reader route='/*'>
 
 		<notifications>
-
 
 
 imba.mount <app>

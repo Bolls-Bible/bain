@@ -44,7 +44,7 @@ let loading = no
 let importing = no
 let deleteMeErrorMessage = ''
 
-export tag profile
+tag profile
 	bookmarks = []
 	highlights = []
 	notes = []

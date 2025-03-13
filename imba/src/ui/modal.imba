@@ -170,7 +170,7 @@ tag modal < section
 							<a target="_blank" href="mailto:bpavlisinec@gmail.com" title=t.help>
 								<svg src=Send aria-hidden=yes>
 
-						<article.modal-body.rich-text>
+						<article.body.rich-text>
 							<h3> t.content
 							<ul>
 								for q in t.HB
@@ -222,7 +222,7 @@ tag modal < section
 													', ', translation.full_name
 
 
-						<article.modal-body id="compare" [scroll-behavior: auto]>
+						<article.body id="compare" [scroll-behavior: auto]>
 							<p[o:0.75]> t.add_translations_msg
 
 							<compare-list>
@@ -250,7 +250,7 @@ tag modal < section
 								<button @click=deleteAllDownloads title=(activities.show_dictionary_downloads ? t.remove_all_dictionaries : t.remove_all_translations)>
 									<svg src=ICONS.TRASH [c@hover:red4] aria-hidden=yes>
 
-						<ul.modal-body>
+						<ul.body>
 							if activities.show_dictionary_downloads
 								let no_dictionary_downloaded = yes
 								for dictionary in dictionary.dictionaries when window.navigator.onLine || state.downloaded_dictionaries.indexOf(dictionary.abbr) != -1
@@ -290,7 +290,7 @@ tag modal < section
 							<a target="_blank" href="mailto:bpavlisinec@gmail.com" title=t.help>
 								<svg src=Send aria-hidden=true>
 
-						<article.rich-text.modal-body>
+						<article.rich-text.body>
 							<h3> t.ycdtitnw
 							<ul> for text in t.SUPPORT
 								<li> <span innerHTML=text>
@@ -323,7 +323,7 @@ tag modal < section
 							<button @click=readingHistory.clear title=t.delete>
 								<svg src=ICONS.TRASH aria-hidden=true>
 						if readingHistory.history.length
-							<ul.modal-body>
+							<ul.body>
 								for history in readingHistory.history
 									<li>
 										css
@@ -391,7 +391,7 @@ tag modal < section
 								<span[ml:auto]> t.extended_search
 								<.checkbox [margin-inline:1.5rem .5rem]> <span>
 						if !dictionary.loading && dictionary.history.length
-							<ul#definitions.modal-body>
+							<ul#definitions.body>
 								for definition, index in dictionary.definitions when index < 64
 									const expanded = dictionary.expandedIndex == index
 									<li.definition .expanded=expanded>
@@ -412,7 +412,7 @@ tag modal < section
 											<div[p:16px 0px 64px @off:0 h:auto @off:0px overflow:hidden o@off:0] innerHTML=definition.definition ease>
 
 						if dictionary.definitions.length == 0 and !dictionary.loading && dictionary.history.length
-							<div.modal-body[ai:center p:4rem 0 lh:1.6]>
+							<div.body[ai:center p:4rem 0 lh:1.6]>
 								<p> t.nothing
 								<p[pt:16px]> t.dictionary_help
 
@@ -423,7 +423,7 @@ tag modal < section
 							<h2[fls:0]> t.setlocalfont
 							<input[bdb@invalid:1px solid $acc-bgc] bind=fontsQuery minLength=2 type='text' placeholder=(t.search) aria-label=t.search>
 
-						<ul.modal-body>
+						<ul.body>
 							for font of theme.localFonts when font.toLowerCase().includes(fontsQuery.toLowerCase())
 								<li
 									[d:flex jc:space-between flw:wrap padding-block:0.5rem bxs@hover:inset 0 0 0.5rem $acc-bgc-hover rd:0.25rem cursor:pointer]
@@ -508,7 +508,7 @@ tag modal < section
 
 						if search.currentQuery
 							<p[o:0.75]> search.currentQuery, ': ', search.exactMatchesCount, ' / ',  search.total, ' ', t.totalyresultsofsearch
-							<ul.modal-body id="search-results">
+							<ul.body id="search-results">
 								for verse, key in search.results
 									<li>
 										<text-as-html[fs:1.2rem cursor:pointer c@hover:$acc-hover] data=verse innerHTML=verse.text>
@@ -573,7 +573,7 @@ tag modal < section
 				min-inline-size: 1.5rem
 				min-block-size: 1.5rem
 
-		.modal-body
+		.body
 			overflow-y: auto
 			-webkit-overflow-scrolling: touch
 			scroll-behavior: smooth

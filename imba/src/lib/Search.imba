@@ -135,7 +135,7 @@ class Search
 		currentQuery = ''
 		loading = yes
 
-		const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page
+		const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page + '&limit=' + pageSize
 
 		results = []
 		total = 0

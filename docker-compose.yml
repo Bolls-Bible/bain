@@ -29,6 +29,7 @@ services:
       - label:disable
     volumes:
       - ./django:/code
+      - ./imba/:/imba
     expose:
       - 8000
     ports:
@@ -103,6 +104,7 @@ services:
       - label:disable
     volumes:
       - ./django/bolls/static/:/home/bolls/web/static/:delegated
+      - ./imba/:/imba/:delegated
       - ./nginx_dev/nginx.conf:/etc/nginx/conf.d/nginx.conf
     networks:
       - internal
