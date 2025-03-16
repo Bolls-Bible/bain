@@ -18,8 +18,6 @@ class Activities
 	show_themes = no
 	show_fonts = no
 	show_languages = no
-	show_parallel_verse_picker = no
-	show_verse_picker = no
 	show_dictionaries = no
 	show_filters = no
 	show_sharing = no
@@ -65,8 +63,6 @@ class Activities
 		show_themes = no
 		show_fonts = no
 		show_languages = no
-		show_parallel_verse_picker = no
-		show_verse_picker = no
 		show_dictionaries = no
 		show_filters = no
 		show_sharing = no
@@ -84,6 +80,9 @@ class Activities
 		selectedVersesPKs = []
 		selectedParallel = undefined
 		selectedCategories = []
+
+		reader.show_verse_picker = no
+		parallelReader.show_verse_picker = no
 
 		search.currentQuery = ""
 		if search.inputElement
@@ -106,11 +105,6 @@ class Activities
 	def delayedCleanUp
 		imba.commit!.then do
 			cleanUp!
-
-	def hideVersePicker
-		show_parallel_verse_picker = no
-		show_verse_picker = no
-	
 
 	def toggleBooksMenu parallel
 		if booksDrawerOffset

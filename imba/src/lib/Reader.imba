@@ -16,7 +16,6 @@ class Reader < GenericReader
 	@observable translation\string = getValue('translation')
 	@observable book\number = getValue('book') || 1
 	@observable chapter\number = getValue('chapter') || 1
-	verse\number|string = 0
 
 	me = 'main'
 
@@ -69,6 +68,8 @@ class Reader < GenericReader
 			else
 				findVerse(verse, undefined, yes)
 			verse = undefined
+		else
+			show_verse_picker = yes
 
 		# if verse > 0 then show_verse_picker = no else show_verse_picker = yes
 

@@ -20,6 +20,8 @@ class GenericReader
 	verses\Array<Verse> = []
 	loading\boolean = no
 	@observable bookmarks\Bookmark[] = []
+	show_verse_picker\boolean = no
+	verse\number = 0
 
 	me = '' # constant to indicate the main reader versus the parallel reader
 

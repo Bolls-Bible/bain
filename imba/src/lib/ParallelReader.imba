@@ -15,7 +15,6 @@ class ParallelReader < GenericReader
 	@observable book\number = getValue('parallel_book') || 1
 	@observable chapter\number = getValue('parallel_chapter') || 1
 	@observable enabled\boolean = getValue('parallel_display') || false
-	verse\number|string = 0
 
 	me = 'parallel'
 
@@ -68,7 +67,8 @@ class ParallelReader < GenericReader
 			else
 				findVerse(verse, undefined, yes)
 			verse = undefined
-		# if verse > 0 then show_verse_picker = no else show_verse_picker = yes
+		else
+			show_verse_picker = yes
 
 
 

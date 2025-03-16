@@ -3,6 +3,7 @@ import GenericReader from '../lib/GenericReader'
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
 import Bookmark from 'lucide-static/icons/bookmark.svg'
+import * as ICONS from 'imba-phosphor-icons'
 
 const cachedInnerHeight = window.innerHeight
 
@@ -197,6 +198,36 @@ tag chapter < section
 					t.unexisten_chapter
 					<br>
 					<a.reload @click=(do window.location.reload(yes))> t.reload
+
+			if me.show_verse_picker and settings.verse_picker then <global>
+				<section[origin:top left scale@off:0.96 y@off:-16px o@off:0] ease>
+					css
+						pos: fixed
+						t:3rem l:3rem
+						rd:.5rem
+						zi:100
+						bgc:$bgc
+						w:18.75rem mah:86%
+						p:.75rem
+						rd:1rem
+						ofy:auto
+						bxs: 0 0 0 1px $acc-bgc-hover, 0 3px 6px $acc-bgc-hover, 0 9px 24px $acc-bgc-hover
+
+						a
+							cursor:pointer
+							d:inline-block ta:center
+							c@hover:$acc-hover
+							h:3.375rem w:20%
+							fs:1.25rem pt:1rem
+							pos:relative
+
+					<[d:flex ai:center]>
+						<h2[margin:0 auto lh:1]> t.choose_verse
+						<button[c@hover:red4 size:2rem p:.25rem] @click=(me.show_verse_picker=no) title=t.close>
+							<svg src=ICONS.X aria-hidden=yes>
+					for verse in me.verses
+						<a href="#{versePrefix}{verse.verse}"> verse.verse
+
 
 	css
 		mah: 100vh

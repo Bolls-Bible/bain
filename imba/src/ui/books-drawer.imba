@@ -157,8 +157,8 @@ tag books-drawer < nav
 												cursor:pointer
 												d:inline-block ta:center
 												c@hover:$acc-hover
-												h:54px w:20%
-												fs:20px pt:16px
+												h:3.375rem w:20%
+												fs:1.25rem pt:1rem
 												pos:relative
 											i+1
 											if user.bookmarksMap[activeTranslation] and user.bookmarksMap[activeTranslation][book.bookid] and user.bookmarksMap[activeTranslation][book.bookid][i+1]
