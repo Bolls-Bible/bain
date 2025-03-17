@@ -3,7 +3,7 @@ importScripts("/sw/dexie.min.js");
 importScripts("/sw/scripts.js");
 
 const CACHE_NAME = "v2.6.7";
-const STATICS_CACHE = "statics-v1.0.0";
+const STATICS_CACHE = "statics-v1.0.1";
 const TEXTS_CACHE = "texts-v1.0.1";
 
 const urlsToCache = [

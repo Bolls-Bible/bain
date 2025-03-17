@@ -54,9 +54,9 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,SQL_ENGINE_SECRET,POSTGRES_DB_SECRET,IMBA_VOLUME_NAME,SQL_PORT_SECRET,DATABASE_SECRET,DATABASE_VOLUME_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_CONTAINER_NAME,STATIC_VOLUME_NAME,INTERNAL_NETWORK_NAME,WEB_SERVICE_NAME,WEB_CONTAINER_NAME,POSTGRES_CONTAINER_NAME,DB_SERVICE_NAME,IMBA_SERVICE_NAME,NGINX_SERVICE_NAME,NGINX_DOMAIN_NAME,PGDATA_SECRET,WEBSITE_ROUTER
           script: |
-            rm -fr dev_bain
-            git clone https://github.com/Bolls-Bible/bain dev_bain
-            cd dev_bain
+            rm -fr bain
+            git clone https://github.com/Bolls-Bible/bain
+            cd bain
             echo "Checking out ${{ steps.extract_branch.outputs.branch }}"
             git checkout ${{ steps.extract_branch.outputs.branch }}
             echo "Injecting secrets..." 
