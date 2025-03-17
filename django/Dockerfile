@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python as builder
+FROM python AS builder
 
 # set work directory
 WORKDIR /usr/src/bolls

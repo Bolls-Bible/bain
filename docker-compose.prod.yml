@@ -55,14 +55,23 @@ services:
       retries: 3
       start_period: 1m
 
+  IMBA_SERVICE_NAME-statics-initializer:
+    build:
+      context: ./imba/
+      dockerfile: Dockerfile
+    command: sh -c "cp -r /build/. /app/"
+    volumes:
+      - IMBA_VOLUME_NAME:/app
+    deploy:
+      restart_policy:
+        condition: none
+
   IMBA_SERVICE_NAME:
     build:
       context: ./imba/
       dockerfile: Dockerfile
     restart: on-failure
     container_name: IMBA_SERVICE_NAME
-    volumes:
-      - IMBA_VOLUME_NAME:/app
     expose:
       - 3000
     ports:
