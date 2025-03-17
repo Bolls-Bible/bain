@@ -78,7 +78,6 @@ tag reader
 
 
 	def slidestart touch
-		touch.preventDefault()
 		initialTouch = touch.changedTouches[0]
 		if initialTouch.clientX < 16 or initialTouch.clientX > window.innerWidth - 16
 			inTouchZone = yes
@@ -199,15 +198,14 @@ tag reader
 
 
 	def render
-		<self[d:flex] @mousemove=mousemove>
+		<self[d:flex] @mousemove=mousemove @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 			<button.drawer-handle
 				[transform:translateX({bibleIconTransform}px)]
-				@click=activities.toggleBooksMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+				@click=activities.toggleBooksMenu>
 				<svg src=ChevronRight aria-label=t.change_book
 					[transform:rotate({180*+!!bibleIconTransform}deg)]>
 
 			<main id="main"
-				@touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend
 				.parallel_text=parallelReader.enabled .hide-comments=!settings.verse_commentary .parallels=parallelReader.enabled
 				[pos:{parallelReader.enabled ? 'relative' : 'static'} ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight} ta:{theme.align} fl:1]
 				>
@@ -217,7 +215,7 @@ tag reader
 
 			<button.drawer-handle
 				[transform:translateX({settingsIconTransform}px)]
-				@click=activities.toggleSettingsMenu @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+				@click=activities.toggleSettingsMenu>
 				<svg src=ChevronLeft aria-label=t.change_book
 					[transform:rotate({180*+!!settingsIconTransform}deg)]>
 

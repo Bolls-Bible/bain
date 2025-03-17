@@ -225,7 +225,7 @@ tag modal < section
 						<article.body id="compare" [scroll-behavior: auto]>
 							<p[o:0.75]> t.add_translations_msg
 
-							<compare-list>
+							<orderable-list>
 
 							unless compare.translations.length
 								<button[m: 16px auto; d: flex].more_results @click=(do activities.show_comparison_options = !activities.show_comparison_options)> t.add_translation_btn

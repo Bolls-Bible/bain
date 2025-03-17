@@ -125,6 +125,9 @@ npm-update nu:
 npm-outdated no:
 	docker compose exec imba npm outdated $(filter-out $@,$(MAKECMDGOALS))
 
+npm-uninstall nd:
+	docker compose exec imba npm uninstall $(filter-out $@,$(MAKECMDGOALS))
+
 npm-update-all nua:
 	docker compose exec imba npx npm-check-updates -u
 	docker compose exec imba npm i

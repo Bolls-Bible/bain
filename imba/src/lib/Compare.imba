@@ -19,7 +19,7 @@ class Compare
 	chapterToCompare = 0
 	bookToCompare = 0
 	loading = no
-	list\(Verse[])[] = []
+	@observable list\(Verse[])[] = []
 
 	search = ''
 
@@ -51,7 +51,7 @@ class Compare
 		else
 			list = []
 			try
-				list = await API.post("/get-parallel-verses", {
+				list = await API.requestJson("/get-parallel-verses/", 'POST', {
 					translations: translations,
 					verses: versesToCompare,
 					book: bookToCompare,
@@ -79,18 +79,18 @@ class Compare
 		if translations.indexOf(translation.short_name) < 0
 			translations.unshift(translation.short_name)
 			try
-				const response = await API.post("/get-parallel-verses", {
+				const response = await API.requestJson("/get-parallel-verses/", 'POST', {
 					translations: [translation.short_name],
 					verses: versesToCompare,
 					book: bookToCompare,
 					chapter: chapterToCompare,
 				})
-				list = response.concat(list)
+				list = list.concat(response)
 			catch error
 				console.error error
 				if vault.downloaded_translations.indexOf(reader.translation) != -1
 					const response = await getCompareTranslationsFromDB!
-					list = response.concat(list)
+					list = list.concat(response)
 				else
 					notifications.push('error')
 			finally
