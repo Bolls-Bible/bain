@@ -3,7 +3,12 @@ import localization from './Localization'
 
 class Notifications
 	notifications\Notification[] = []
-	notificationsTimeout\number|null = null
+	notificationsTimeout\Timeout|null = null
+
+	def constructor
+		const searchParams = new URLSearchParams window.location.search
+		if searchParams.has 'message'
+			push searchParams.get 'message'
 
 	def push notification\string
 		if typeof notificationsTimeout === 'number'

@@ -73,6 +73,8 @@ services:
     restart: on-failure
     container_name: imba
     command: npm run dev
+    environment:
+      - API_URL=http://django:8000
     # required for SELinux
     security_opt:
       - label:disable

@@ -22,5 +22,4 @@ RUN npm install --omit=dev
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "cp -r /build/. /app/ && npx pm2-runtime server.mjs"]
 CMD ["npx", "pm2-runtime", "server.mjs"]

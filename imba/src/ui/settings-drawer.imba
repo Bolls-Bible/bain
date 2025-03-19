@@ -20,7 +20,6 @@ import VenetianMask from 'lucide-static/icons/venetian-mask.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
-import { MOBILE_PLATFORM } from '../constants'
 
 tag settings-drawer < aside
 	get currentLanguage
@@ -62,7 +61,7 @@ tag settings-drawer < aside
 			if !!user.username
 				<a.settings-btn route-to='/profile/'>
 					<svg src=VenetianMask aria-hidden=true>
-					user.username
+					user.name || user.username
 				<button.settings-btn @click.stop.prevent=user.logout>
 					<svg src=CandyOff aria-hidden=true>
 					t.logout
@@ -180,10 +179,9 @@ tag settings-drawer < aside
 			<button.option-box.checkbox-parent @click=(settings.chronorder =! settings.chronorder) .checkbox-turned=settings.chronorder>
 				t.chronological_order
 				<.checkbox> <span>
-			unless MOBILE_PLATFORM
-				<button.option-box.checkbox-parent @click=(settings.fixdrawers = !settings.fixdrawers) .checkbox-turned=settings.fixdrawers>
-					t.fixdrawers
-					<.checkbox> <span>
+			<button.option-box.checkbox-parent @click=(settings.fixdrawers = !settings.fixdrawers) .checkbox-turned=settings.fixdrawers>
+				t.fixdrawers
+				<.checkbox> <span>
 			<button.option-box.checkbox-parent @click=(settings.enable_dynamic_contrast = !settings.enable_dynamic_contrast) .checkbox-turned=settings.enable_dynamic_contrast>
 				t.dynamic_contrast
 				<.checkbox> <span>

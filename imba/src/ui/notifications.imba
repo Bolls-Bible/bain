@@ -1,8 +1,7 @@
 tag notifications
-	def render
-		<self>
-			for notification in notifications.notifications
-				<p.{notification.className} @click=notifications.hide(notification)> notification.message
+	<self>
+		for notification in notifications.notifications
+			<p.{notification.className} @click=notifications.hide(notification)> notification.message
 
 	css
 		position: fixed
@@ -16,8 +15,8 @@ tag notifications
 		color: $bgc
 		bgc: $acc-hover
 		animation: show-notification 500ms cubic-bezier(1, 0, 0, 1) both
-		p: 16px 32px
-		border-radius: 16px
+		p: 1rem 2rem
+		border-radius: 1rem
 		position:absolute
 		top: 0
 
@@ -29,16 +28,16 @@ tag notifications
 	css @keyframes
 		show-notification
 			0%
-				top: 32px
+				top: 2rem
 				transform: scale(1.6)
 
 			100%
-				top: -96px
+				top: -6rem
 				transform: none
 
 		hide-notification
 			0%
-				top: -96px
+				top: -6rem
 				transform: none
 				opacity: 1
 

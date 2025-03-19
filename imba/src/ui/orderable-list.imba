@@ -68,8 +68,6 @@ tag orderable-list
 		compare.translations = newOrder
 
 
-
-
 	def triggerAutoscroll event
 		# Trigger intersect only for the target
 		if event.target.id != #drugging_target

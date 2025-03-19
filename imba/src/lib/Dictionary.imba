@@ -13,12 +13,13 @@ import { getValue, setValue } from '../utils'
 
 import { MOBILE_PLATFORM } from '../constants'
 import { scoreSearch } from '../utils'
+import type { Definition } from './types.ts'
 
 class Dictionary
-	definitions = []
+	definitions\Definition[] = []
 	history = []
 	historyIndex = -1
-	expandedIndex = 0
+	expandedTopic = ''
 	showDownloads = no
 	tooltip = null
 	query = ''
@@ -198,7 +199,7 @@ class Dictionary
 			elif currentDictionary in vault.downloaded_dictionaries
 				await loadDefinitionsFromOffline()
 			loading = no
-			expandedIndex = 0
+			expandedTopic = definitions[0]..topic
 			# When definitions are loaded we have to parse inner MyBible links and replace them custom click events
 			parseDefinitionsLinks!
 			imba.commit!
@@ -243,18 +244,16 @@ class Dictionary
 			query = history[historyIndex]
 			loadDefinitions!
 
-	def expandDefinition index\number
-		const definitionsList = document.getElementById("definitions")
-		unless definitionsList
+	def expandDefinition topic\string
+		const definitionEl = document.getElementById(topic)
+		unless definitionEl
 			return
-		if expandedIndex == index
-			expandedIndex = -1
+		if expandedTopic == topic
+			expandedTopic = ''
 		else
-			expandedIndex = index
-			setTimeout(&, 300) do
-				for kid, i in definitionsList.children
-					if i + 1 == index
-						definitionsList.children[i+1].scrollIntoView()
+			expandedTopic = topic
+			setTimeout(&, 500) do
+				definitionEl.scrollIntoView()
 
 	def currentDictionaryName
 		for dictionary in dictionaries

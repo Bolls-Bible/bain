@@ -28,6 +28,16 @@ class Reader < GenericReader
 	@autorun def saveChapter
 		setValue('chapter', chapter)
 
+	def constructor
+		super()
+		if window.translation
+			unless 'international' in window.location.pathname
+				translation = window.translation
+				book = window.book
+				chapter = window.chapter
+				verse = window.verse
+			verses = window.verses
+
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
 	def fetchVerses

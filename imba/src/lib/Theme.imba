@@ -84,7 +84,7 @@ class Theme
 	def constructor
 		# Detect dark mode
 		try
-			if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+			if window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !getValue('theme')
 				accent = 'gold'
 				theme = 'dark'
 		catch error
@@ -114,7 +114,8 @@ class Theme
 		align = getValue('align') ?? ''
 		transitions = getValue('transitions') ?? yes
 		accent = getValue('accent') ?? 'blue'
-		theme = getValue('theme') ?? 'light'
+		#theme = getValue('theme') ?? 'light'
+		html.dataset.theme = #theme
 
 	def queryLocalFonts
 		unless window.queryLocalFonts

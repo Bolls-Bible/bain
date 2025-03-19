@@ -63,20 +63,20 @@ export type HistoryEntry = {
 };
 
 export type Bookmark = {
-  verse: number // actually pk of the verse
-  date: number // milliseconds since 1970
-  color: string
-  collection: string
-  note: string
-}
+  verse: number; // actually pk of the verse
+  date: number; // milliseconds since 1970
+  color: string;
+  collection: string;
+  note: string;
+};
 
 export type ProfileBookmark = {
-  date: number
-  color: string
-  collection: string
-  note: string
-  verse: Verse
-}
+  date: number;
+  color: string;
+  collection: string;
+  note: string;
+  verse: Verse;
+};
 
 export interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -86,3 +86,13 @@ export interface BeforeInstallPromptEvent extends Event {
   }>;
   prompt(): Promise<void>;
 }
+
+export type Definition = {
+  topic: string;
+  definition: string;
+  lexeme: string;
+  transliteration: string;
+  pronunciation: string;
+  weight: number;
+  short_definition: string
+};

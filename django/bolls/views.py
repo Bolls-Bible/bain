@@ -27,12 +27,7 @@ from .utils.books import BOOKS, get_book_id
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-bolls_index = "bolls/index.html"
 incorrect_body = "The body of the request is incorrect"
-
-
-def index(request):
-    return render(request, bolls_index)
 
 
 def cross_origin(response, headers={}):
@@ -275,75 +270,6 @@ def v2_search(request, translation):
         return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
 
 
-def clean_up_html(raw_html):
-    # remove strong numbers. They are not needed in the description
-    raw_html = re.sub(r"<S>(.*?)</S>", "", raw_html)
-    clean_regex = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
-    clean_text = re.sub(clean_regex, "", raw_html)
-    return clean_text
-
-
-def get_description(verses, verse, endverse):
-    if verse <= len(verses) and len(verses) > 0:
-        i = 0
-        description = verses[verse - 1]["text"]
-        if endverse > 0 and endverse - verse != 0:
-            for i in range(verse, endverse):
-                if i < len(verses):
-                    description += " " + verses[i]["text"]
-        return clean_up_html(description)
-    else:
-        return "Corrupted link!"
-
-
-def link_to_verse(request, translation, book, chapter, verse):
-    verses = get_chapter_with_commentaries(translation, book, chapter)
-    return render(
-        request,
-        bolls_index,
-        {
-            "translation": translation,
-            "book": book,
-            "chapter": chapter,
-            "verse": verse,
-            "verses": verses,
-            "description": get_description(verses, verse, 0),
-        },
-    )
-
-
-def link_to_verses(request, translation, book, chapter, verse, endverse):
-    verses = get_chapter_with_commentaries(translation, book, chapter)
-    return render(
-        request,
-        bolls_index,
-        {
-            "translation": translation,
-            "book": book,
-            "chapter": chapter,
-            "verse": verse,
-            "endverse": endverse,
-            "verses": verses,
-            "description": get_description(verses, verse, endverse),
-        },
-    )
-
-
-def link_to_chapter(request, translation, book, chapter):
-    verses = get_chapter_with_commentaries(translation, book, chapter)
-    return render(
-        request,
-        bolls_index,
-        {
-            "translation": translation,
-            "book": book,
-            "chapter": chapter,
-            "verses": verses,
-            "description": get_description(verses, 1, 3),
-        },
-    )
-
-
 def sign_up(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
@@ -376,43 +302,41 @@ def delete_my_account(request):
 
 
 def edit_account(request):
-    if request.method == "POST":
-        received_json_data = json.loads(request.body)
-        new_username = received_json_data["newusername"]
-        newname = newname = received_json_data.get("newname", "")
-        if User.objects.filter(username=new_username).exists():
-            if request.user.username != new_username:
-                return HttpResponse(status=409)
-        user = request.user
-        user.username = new_username
-        user.first_name = newname
-        user.save()
-        return HttpResponse(status=200)
-    else:
+    if request.method != "POST":
         return HttpResponse(status=405)
+    received_json_data = json.loads(request.body)
+    new_username = received_json_data["newusername"]
+    newname = newname = received_json_data.get("newname", "")
+    if User.objects.filter(username=new_username).exists():
+        if request.user.username != new_username:
+            return HttpResponse(status=409)
+    user = request.user
+    user.username = new_username
+    user.first_name = newname
+    user.save()
+    return HttpResponse(status=200)
 
 
 def get_bookmarks(request, translation, book, chapter):
-    if request.user.is_authenticated:
-        all_objects = Verses.objects.filter(translation=translation, book=book, chapter=chapter).order_by("verse")
-        bookmarks = []
-        for obj in all_objects:
-            for bookmark in obj.bookmarks_set.filter(user=request.user):
-                note = ""
-                if bookmark.note is not None:
-                    note = bookmark.note.text
-                bookmarks.append(
-                    {
-                        "verse": bookmark.verse.pk,
-                        "date": bookmark.date,
-                        "color": bookmark.color,
-                        "collection": bookmark.collection,
-                        "note": note,
-                    }
-                )
-        return JsonResponse(bookmarks, safe=False)
-    else:
+    if not request.user.is_authenticated:
         return JsonResponse([], safe=False)
+    all_objects = Verses.objects.filter(translation=translation, book=book, chapter=chapter).order_by("verse")
+    bookmarks = []
+    for obj in all_objects:
+        for bookmark in obj.bookmarks_set.filter(user=request.user):
+            note = ""
+            if bookmark.note is not None:
+                note = bookmark.note.text
+            bookmarks.append(
+                {
+                    "verse": bookmark.verse.pk,
+                    "date": bookmark.date,
+                    "color": bookmark.color,
+                    "collection": bookmark.collection,
+                    "note": note,
+                }
+            )
+    return JsonResponse(bookmarks, safe=False)
 
 
 def map_bookmarks(bookmarks_list):
@@ -541,57 +465,52 @@ def get_parallel_verses(request):
 
 @csrf_exempt
 def get_verses(request):
-    if request.method == "POST":
-        try:
-            received_json_data = json.loads(request.body)
-            if received_json_data:
-                response = []
-                query_set = []
-                for text in received_json_data:
-                    for verse in text["verses"]:
-                        query_set.append(
-                            'Q(translation="'
-                            + text["translation"]
-                            + '", book='
-                            + str(text["book"])
-                            + ", chapter="
-                            + str(text["chapter"])
-                            + ", verse="
-                            + str(verse)
-                            + ")"
-                        )
-
-                query = " | ".join(query_set)
-                queryset = Verses.objects.filter(eval(query))
-
-                for text in received_json_data:
-                    verses = []
-                    for verse in text["verses"]:
-                        for item in queryset:
-                            if (
-                                item.translation == text["translation"]
-                                and item.book == text["book"]
-                                and item.chapter == text["chapter"]
-                                and item.verse == verse
-                            ):
-                                verses.append(
-                                    {
-                                        "pk": item.pk,
-                                        "translation": item.translation,
-                                        "book": item.book,
-                                        "chapter": item.chapter,
-                                        "verse": item.verse,
-                                        "text": item.text,
-                                    }
-                                )
-                    response.append(verses)
-                return cross_origin(JsonResponse(response, safe=False))
-            else:
-                return cross_origin(HttpResponse(incorrect_body, status=400))
-        except:
-            return cross_origin(HttpResponse(incorrect_body + str(request.body), status=400))
-    else:
+    if request.method != "POST":
         return cross_origin(HttpResponse("The request should be POSTed", status=400))
+
+    try:
+        received_json_data = json.loads(request.body)
+        if not received_json_data:
+            return cross_origin(HttpResponse(incorrect_body, status=400))
+
+        response = []
+        query_set = []
+        for text in received_json_data:
+            for verse in text["verses"]:
+                query_set.append(
+                    'Q(translation="'
+                    + text["translation"]
+                    + '", book='
+                    + str(text["book"])
+                    + ", chapter="
+                    + str(text["chapter"])
+                    + ", verse="
+                    + str(verse)
+                    + ")"
+                )
+
+        query = " | ".join(query_set)
+        queryset = Verses.objects.filter(eval(query))
+
+        for text in received_json_data:
+            verses = []
+            for verse in text["verses"]:
+                for item in queryset:
+                    if item.translation == text["translation"] and item.book == text["book"] and item.chapter == text["chapter"] and item.verse == verse:
+                        verses.append(
+                            {
+                                "pk": item.pk,
+                                "translation": item.translation,
+                                "book": item.book,
+                                "chapter": item.chapter,
+                                "verse": item.verse,
+                                "text": item.text,
+                            }
+                        )
+            response.append(verses)
+        return cross_origin(JsonResponse(response, safe=False))
+    except:
+        return cross_origin(HttpResponse(incorrect_body + str(request.body), status=400))
 
 
 def get_a_verse(_, translation, book, chapter, verse):
@@ -696,21 +615,20 @@ def remove_bookmarks(user, verses):
 
 def get_user_history(user):
     default_response_obj = {"history": "[]", "purge_date": 0, "compare_translations": "[]", "favorite_translations": "[]"}
-    if user.is_authenticated:
-        try:
-            obj = user.history_set.get(user=user)
-            return {
-                "history": obj.history,
-                "purge_date": obj.purge_date,
-                "compare_translations": obj.compare_translations,
-                "favorite_translations": obj.favorite_translations,
-            }
-        except History.MultipleObjectsReturned:
-            user.history_set.filter(user=user).delete()
-            return default_response_obj
-        except History.DoesNotExist:
-            return default_response_obj
-    else:
+    if not user.is_authenticated:
+        return default_response_obj
+    try:
+        obj = user.history_set.get(user=user)
+        return {
+            "history": obj.history,
+            "purge_date": obj.purge_date,
+            "compare_translations": obj.compare_translations,
+            "favorite_translations": obj.favorite_translations,
+        }
+    except History.MultipleObjectsReturned:
+        user.history_set.filter(user=user).delete()
+        return default_response_obj
+    except History.DoesNotExist:
         return default_response_obj
 
 
@@ -845,8 +763,7 @@ def strip_vowels(raw_string):
         res = res.replace("ך", "כ")
         res = res.replace("ף", "פ")
 
-    res = res.replace("‎", "")
-    return res
+    return res.replace("‎", "")
 
 
 # Parse Bible links
@@ -964,117 +881,106 @@ def get_books(_, translation):
 
 
 def download_notes(request):
-    if request.user.is_authenticated:
-        bookmarks = Bookmarks.objects.filter(user=request.user)
-        response = HttpResponse(content_type="text/json")
-        response["Content-Disposition"] = 'attachment; filename="notes.json"'
-        data = []
-        for bookmark in bookmarks:
-            data.append(
-                {
-                    "verse": bookmark.verse.pk,
-                    "date": bookmark.date,
-                    "color": bookmark.color,
-                    "collection": bookmark.collection,
-                    "note": bookmark.note.text if bookmark.note else "",
-                }
-            )
-        response.write(json.dumps(data))
-        return response
-    else:
+    if not request.user.is_authenticated:
         return HttpResponse(status=401)
+
+    bookmarks = Bookmarks.objects.filter(user=request.user)
+    response = HttpResponse(content_type="text/json")
+    response["Content-Disposition"] = 'attachment; filename="notes.json"'
+    data = []
+    for bookmark in bookmarks:
+        data.append(
+            {
+                "verse": bookmark.verse.pk,
+                "date": bookmark.date,
+                "color": bookmark.color,
+                "collection": bookmark.collection,
+                "note": bookmark.note.text if bookmark.note else "",
+            }
+        )
+    response.write(json.dumps(data))
+    return response
 
 
 def import_notes(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        received_json_data = json.loads(request.body)
-        existing_bookmarks = request.user.bookmarks_set.all()
-
-        for item in received_json_data["data"]:
-            existing_bookmark_set = existing_bookmarks.filter(verse=item["verse"])
-            if len(existing_bookmark_set) > 0:
-                if received_json_data["merge_replace"] == "true":
-                    existing_bookmark = existing_bookmark_set[0]
-                    if existing_bookmark.note is not None:
-                        if len(item["note"]):
-                            existing_bookmark.note.text = item["note"]
-                            existing_bookmark.note.save()
-                        else:
-                            existing_bookmark.note.delete()
-                            existing_bookmark.note = None
-                    else:
-                        if len(item["note"]):
-                            note = Note.objects.create(text=item["note"])
-                            existing_bookmark.note = note
-
-                    existing_bookmark.color = item["color"]
-                    existing_bookmark.date = item["date"]
-                    existing_bookmark.collections = item["collection"]
-                    existing_bookmark.save()
-            else:
-                note = None
-                if len(item["note"]):
-                    note = Note.objects.create(text=item["note"])
-                request.user.bookmarks_set.create(
-                    verse=Verses.objects.get(id=item["verse"]),
-                    date=item["date"],
-                    color=item["color"],
-                    collection=item["collection"],
-                    note=note,
-                )
-        return HttpResponse(status=200)
-    else:
+    if request.method != "POST" or not request.user.is_authenticated:
         return HttpResponse(status=405)
 
+    received_json_data = json.loads(request.body)
+    existing_bookmarks = request.user.bookmarks_set.all()
 
-def sw(_):
-    # return HttpResponse(status=404) # for dev only
-    # get the file for the service worker
-    sw_file = open(os.path.join(BASE_DIR, "bolls/static/service-worker.js"), "r")
-    sw_content = sw_file.read()
-    sw_file.close()
-    # and sent it to the client
-    return HttpResponse(sw_content, content_type="application/javascript")
+    for item in received_json_data["data"]:
+        existing_bookmark_set = existing_bookmarks.filter(verse=item["verse"])
+        if len(existing_bookmark_set) > 0:
+            if received_json_data["merge_replace"] == "true":
+                existing_bookmark = existing_bookmark_set[0]
+                if existing_bookmark.note is not None:
+                    if len(item["note"]):
+                        existing_bookmark.note.text = item["note"]
+                        existing_bookmark.note.save()
+                    else:
+                        existing_bookmark.note.delete()
+                        existing_bookmark.note = None
+                else:
+                    if len(item["note"]):
+                        note = Note.objects.create(text=item["note"])
+                        existing_bookmark.note = note
+
+                existing_bookmark.color = item["color"]
+                existing_bookmark.date = item["date"]
+                existing_bookmark.collections = item["collection"]
+                existing_bookmark.save()
+        else:
+            note = None
+            if len(item["note"]):
+                note = Note.objects.create(text=item["note"])
+            request.user.bookmarks_set.create(
+                verse=Verses.objects.get(id=item["verse"]),
+                date=item["date"],
+                color=item["color"],
+                collection=item["collection"],
+                note=note,
+            )
+    return HttpResponse(status=200)
 
 
 def save_compare_translations(request):
-    if request.method == "PUT" and request.user.is_authenticated:
-        received_json_data = json.loads(request.body)
-        user = request.user
-        try:
-            history = user.history_set.get(user=user)
-            history.compare_translations = received_json_data["translations"]
-            history.save()
-
-        except History.DoesNotExist:
-            user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
-
-        except History.MultipleObjectsReturned:
-            user.history_set.all().delete()
-            user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
-        return HttpResponse(status=200)
-    else:
+    if request.method != "PUT" or not request.user.is_authenticated:
         return HttpResponse(status=405)
+
+    received_json_data = json.loads(request.body)
+    user = request.user
+    try:
+        history = user.history_set.get(user=user)
+        history.compare_translations = received_json_data["translations"]
+        history.save()
+
+    except History.DoesNotExist:
+        user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
+
+    except History.MultipleObjectsReturned:
+        user.history_set.all().delete()
+        user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
+    return HttpResponse(status=200)
 
 
 def save_favorite_translations(request):
-    if request.method == "PUT" and request.user.is_authenticated:
-        received_json_data = json.loads(request.body)
-        user = request.user
-        try:
-            history = user.history_set.get(user=user)
-            history.favorite_translations = received_json_data["translations"]
-            history.save()
-
-        except History.DoesNotExist:
-            user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
-
-        except History.MultipleObjectsReturned:
-            user.history_set.all().delete()
-            user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
-        return HttpResponse(status=200)
-    else:
+    if request.method != "PUT" or not request.user.is_authenticated:
         return HttpResponse(status=405)
+    received_json_data = json.loads(request.body)
+    user = request.user
+    try:
+        history = user.history_set.get(user=user)
+        history.favorite_translations = received_json_data["translations"]
+        history.save()
+
+    except History.DoesNotExist:
+        user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
+
+    except History.MultipleObjectsReturned:
+        user.history_set.all().delete()
+        user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])
+    return HttpResponse(status=200)
 
 
 def get_verse_counts(_, translation):

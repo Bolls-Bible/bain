@@ -391,11 +391,11 @@ tag modal < section
 								<span[ml:auto]> t.extended_search
 								<.checkbox [margin-inline:1.5rem .5rem]> <span>
 						if !dictionary.loading && dictionary.history.length
-							<ul#definitions.body>
+							<ul.body>
 								for definition, index in dictionary.definitions when index < 64
-									const expanded = dictionary.expandedIndex == index
-									<li.definition .expanded=expanded>
-										<header @click=dictionary.expandDefinition(index)>
+									const expanded = dictionary.expandedTopic == definition.topic
+									<li.definition id=definition.topic .expanded=expanded>
+										<header @click=dictionary.expandDefinition(definition.topic)>
 											<p>
 												<b> definition.lexeme
 												<span> ' · '
