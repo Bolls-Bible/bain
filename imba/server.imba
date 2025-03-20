@@ -3,7 +3,6 @@ import express  from 'express'
 import type {Request, Response} from 'express'
 const app = express!
 const port = process.env.PORT or 3000
-const print = console.log
 
 app.use(express.static('dist/public',maxAge:'1m'))
 
@@ -51,28 +50,31 @@ def preloadChapter req\Request<{
 	chapter:string;
 	verseRange:string;
 	}>, res\Response<any, Record<string, any>, number>
-	let {translation, book, chapter, verseRange } = req.params
-	let verses = await getChapterVerses translation, Number(book), Number(chapter)
+	try
+		let {translation, book, chapter, verseRange } = req.params
+		let verses = await getChapterVerses translation, Number(book), Number(chapter)
 
-	let [verse, endVerse] = verseRange..split('-') ?? []
+		let [verse, endVerse] = verseRange..split('-') ?? []
 
-	let description = get_description verses, Number(verse), Number(endVerse ?? 0)
-	console.log(description)
-	let result = setDescription index.body, description
+		let description = get_description verses, Number(verse), Number(endVerse ?? 0)
+		console.log(description)
+		let result = setDescription index.body, description
 
-	result = result.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/{translation}/{book}/{chapter}/"/>`)
-	result = result.replace('<!-- canonical -->', `<link rel="canonical" href="https://bolls.life/{translation}/{book}/{chapter}/"/>`)
+		result = result.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/{translation}/{book}/{chapter}/"/>`)
+		result = result.replace('<!-- canonical -->', `<link rel="canonical" href="https://bolls.life/{translation}/{book}/{chapter}/"/>`)
 
-	result = result.replace('<!-- script -->', `<script>
-	  	window.translation = "{ translation }";
-	  	window.book = { book };
-	  	window.chapter = { chapter };
-	  	window.verse = { verse };
-		window.endVerse = { endVerse };
-		window.verses = { JSON.stringify(verses) };
-	</script>`)
+		result = result.replace('<!-- script -->', `<script>
+			window.translation = "{ translation }";
+			window.book = { book };
+			window.chapter = { chapter };
+			window.verse = { verse };
+			window.endVerse = { endVerse };
+			window.verses = { JSON.stringify(verses) };
+		</script>`)
 
-	res.send result
+		res.send result
+	catch error
+		res.send index.body
 
 app.get '/:translation/:book/:chapter', preloadChapter
 app.get '/international/:translation/:book/:chapter', preloadChapter
@@ -82,8 +84,6 @@ app.get '/international/:translation/:book/:chapter/:verseRange', preloadChapter
 
 
 app.get '*' do(req, res)
-	print req.url, typeof index.body
-
 	let result = index.body.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/"/>`)
 		.replace('<!-- canonical -->', `<link rel="canonical" href="https://bolls.life/"/>`)
 		.replace('<!-- description -->', `<meta name="description" content="{"A web app for reading the Bible with full emphasis on the God's Word only. Sola scriptura"}"/>`)

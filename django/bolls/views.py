@@ -11,6 +11,7 @@ from django.contrib.postgres.search import (
     TrigramWordSimilarity,
 )
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth.hashers import is_password_usable
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
@@ -220,7 +221,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     for obj in results_of_search:
         exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
 
-    for obj in results_of_search[(page * limit - limit):(page * limit)]:
+    for obj in results_of_search[(page * limit - limit) : (page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -285,10 +286,8 @@ def sign_up(request):
     return render(request, "registration/signup.html", {"form": form})
 
 
+@require_POST
 def delete_my_account(request):
-    if request.method != "POST":
-        return HttpResponse(status=405)
-
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
 
@@ -301,18 +300,17 @@ def delete_my_account(request):
         return redirect("/?message=" + e.message)
 
 
+@require_POST
 def edit_account(request):
-    if request.method != "POST":
-        return HttpResponse(status=405)
     received_json_data = json.loads(request.body)
-    new_username = received_json_data["newusername"]
-    newname = newname = received_json_data.get("newname", "")
-    if User.objects.filter(username=new_username).exists():
-        if request.user.username != new_username:
+    new_username = received_json_data.get("newusername", "")
+    new_name = received_json_data.get("newname", "")
+    if request.user.username != new_username:
+        if User.objects.filter(username=new_username).exists():
             return HttpResponse(status=409)
     user = request.user
     user.username = new_username
-    user.first_name = newname
+    user.first_name = new_name
     user.save()
     return HttpResponse(status=200)
 
@@ -320,14 +318,12 @@ def edit_account(request):
 def get_bookmarks(request, translation, book, chapter):
     if not request.user.is_authenticated:
         return JsonResponse([], safe=False)
-    all_objects = Verses.objects.filter(translation=translation, book=book, chapter=chapter).order_by("verse")
-    bookmarks = []
-    for obj in all_objects:
-        for bookmark in obj.bookmarks_set.filter(user=request.user):
-            note = ""
-            if bookmark.note is not None:
-                note = bookmark.note.text
-            bookmarks.append(
+    for bookmark in request.user.bookmarks_set.filter(verse__translation=translation, verse__book=book, verse__chapter=chapter):
+        note = ""
+        if bookmark.note is not None:
+            note = bookmark.note.text
+        return JsonResponse(
+            [
                 {
                     "verse": bookmark.verse.pk,
                     "date": bookmark.date,
@@ -335,8 +331,10 @@ def get_bookmarks(request, translation, book, chapter):
                     "collection": bookmark.collection,
                     "note": note,
                 }
-            )
-    return JsonResponse(bookmarks, safe=False)
+            ],
+            safe=False,
+        )
+    return JsonResponse([], safe=False)
 
 
 def map_bookmarks(bookmarks_list):
@@ -406,14 +404,13 @@ def get_safe_array(array):
     return array
 
 
+@require_http_methods(["POST", "OPTIONS"])
 @csrf_exempt
 def get_parallel_verses(request):
     # Handle preflight requests
     if request.method == "OPTIONS":
         return cross_origin(HttpResponse(status=204))
 
-    if request.method != "POST":
-        return cross_origin(HttpResponse("The request should be POSTed", status=400))
     try:
         received_json_data = json.loads(request.body)
         if (
@@ -463,11 +460,9 @@ def get_parallel_verses(request):
         return cross_origin(HttpResponse("Body json is incorrect", status=400))
 
 
+@require_http_methods(["POST", "OPTIONS"])
 @csrf_exempt
 def get_verses(request):
-    if request.method != "POST":
-        return cross_origin(HttpResponse("The request should be POSTed", status=400))
-
     try:
         received_json_data = json.loads(request.body)
         if not received_json_data:
@@ -541,11 +536,10 @@ def get_a_verse(_, translation, book, chapter, verse):
     return cross_origin(JsonResponse(result_verse, safe=False))
 
 
+@require_POST
 def save_bookmarks(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
-    if request.method != "POST":
-        return HttpResponse(status=405)
 
     received_json_data = json.loads(request.body)
     user = request.user
@@ -632,6 +626,7 @@ def get_user_history(user):
         return default_response_obj
 
 
+@require_http_methods(["POST", "DELETE", "PUT", "GET"])
 def history(request):
     if request.user.is_authenticated:
         user = request.user
@@ -902,8 +897,9 @@ def download_notes(request):
     return response
 
 
+@require_POST
 def import_notes(request):
-    if request.method != "POST" or not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return HttpResponse(status=405)
 
     received_json_data = json.loads(request.body)
@@ -944,8 +940,9 @@ def import_notes(request):
     return HttpResponse(status=200)
 
 
+@require_http_methods(["PUT"])
 def save_compare_translations(request):
-    if request.method != "PUT" or not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return HttpResponse(status=405)
 
     received_json_data = json.loads(request.body)
@@ -964,8 +961,9 @@ def save_compare_translations(request):
     return HttpResponse(status=200)
 
 
+@require_http_methods(["PUT"])
 def save_favorite_translations(request):
-    if request.method != "PUT" or not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return HttpResponse(status=405)
     received_json_data = json.loads(request.body)
     user = request.user
