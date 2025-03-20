@@ -173,7 +173,6 @@ tag mark-down
 				closeBrackets(),
 				indentOnInput(),
 				bracketMatching(),
-				syntaxHighlighting(defaultHighlightStyle),
 				markdown({
 					base: markdownLanguage,
 					addKeymap: true,
@@ -182,6 +181,7 @@ tag mark-down
 				placeholder(t.write_something_awesone + ' 🍋')
 				bollsTheme,
 				syntaxHighlighting(customSyntaxHighlighting),
+				syntaxHighlighting(defaultHighlightStyle),
 				EditorView.lineWrapping,
 				EditorView.updateListener.of(do(update)
 					if update.changes

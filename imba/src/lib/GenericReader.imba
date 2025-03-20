@@ -272,13 +272,6 @@ class GenericReader
 		if activities.note == '<br>'
 			activities.note = ''
 
-		# TODO: not sure we really need this
-		# if activities.highlight_color.length >= 16
-		# 	if highlights.find(do |element| return element == activities.highlight_color)
-		# 		highlights.splice(highlights.indexOf(highlights.find(do |element| return element == activities.highlight_color)), 1)
-		# 	highlights.push(activities.highlight_color)
-		# 	window.localStorage.setItem("highlights", JSON.stringify(highlights))
-
 		let collections = activities.selectedCategories.map(do(str) str.trim!).join(' | ')
 
 		let bookmarkToSave = {
@@ -289,7 +282,6 @@ class GenericReader
 			note: activities.note
 		}
 
-		// TODO offline bookmarks will have collections formatter from now on!!!
 		def saveOffline
 			if vault.available
 				vault.saveBookmarksToStorageUntilOnline(bookmarkToSave)

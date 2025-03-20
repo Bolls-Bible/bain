@@ -47,7 +47,7 @@ class Vault
 				verses: [offline_bookmarks[0].verse]
 				date: offline_bookmarks[0].date
 				color: offline_bookmarks[0].color
-				collections: offline_bookmarks[0].collections.join(' | ')
+				collections: offline_bookmarks[0].collections
 				note: offline_bookmarks[0].note
 			}]
 
@@ -59,7 +59,7 @@ class Vault
 						verses: [offline_bookmark.verse]
 						date: offline_bookmark.date
 						color: offline_bookmark.color
-						collections: offline_bookmark.collections.join(' | ')
+						collections: offline_bookmark.collections
 						note: offline_bookmark.note
 					})
 
@@ -281,7 +281,6 @@ class Vault
 			let bookmarks = []
 			for bookmark in offline_bookmarks
 				if bookmark
-					bookmark.collection = bookmark.collections.join(' | ')
 					bookmarks.push bookmark
 			return bookmarks || []
 		).catch (do |e|

@@ -306,6 +306,7 @@ class Activities
 			reader.saveBookmark!
 		else
 			parallelReader.saveBookmark!
+		cleanUp!
 
 
 

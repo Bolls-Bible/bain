@@ -414,8 +414,7 @@ tag profile
 						for collection in bookmark.collection.split(' | ')
 							<span.pill @click=getSearchedBookmarks(collection)> collection
 				if bookmark.note
-					# todo use imba to animate height
-					<div.markdown [max-height:auto]=(i == expand_note) innerHTML=bookmark.note dir="auto" @click=expandNote(i)>
+					<div.markdown [max-height:256rem]=(i == expand_note) innerHTML=bookmark.note dir="auto" @click=expandNote(i)>
 				<p[d:flex ai:center]>
 					<span[fw:500] dir="auto"> bookmark.title, ' ', bookmark.translation
 					<time[ml:auto o:.8] dateTime=bookmark.date> bookmark.date.toLocaleString()
