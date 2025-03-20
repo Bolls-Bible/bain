@@ -30,7 +30,7 @@ class PWA
 		try
 			isStandalone = window.matchMedia('(display-mode: standalone)').matches
 		catch error
-			console.log('The browser doesn\'t support matchMedia API', error)
+			console.warn('The browser doesn\'t support matchMedia API', error)
 		if (document.referrer.startsWith('android-app://'))
 			hideInstallPromotion = yes
 		elif (window.navigator.standalone || window.isStandalone || isStandalone)

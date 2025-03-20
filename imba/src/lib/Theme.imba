@@ -126,7 +126,6 @@ class Theme
 			# Loop through the available fonts and add them to the localFonts set
 			for fontData of availableFonts
 				localFonts.add(fontData.family)
-			console.log localFonts
 		catch error
 			console.warn error
 
@@ -260,7 +259,7 @@ class Theme
 
 	set transitions newValue\boolean
 		setValue "transitions", newValue
-		html.dataset.transitions = JSON.stringify(newValue)
+		setTimeout(&, 0) do html.dataset.transitions = JSON.stringify(newValue)
 		#transitions = newValue
 
 	get transitions

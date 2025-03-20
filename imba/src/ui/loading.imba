@@ -16,7 +16,6 @@ tag loading
 
 	def scale delay\number
 		delay *= speed
-		# console.log genesis, delay, period
 		return Math.cos(((Date.now() - genesis - delay) / period + 0.25) * 2 * Math.PI) + 4
 
 	def translateX delay\number

@@ -262,7 +262,6 @@ class Activities
 		delayedCleanUp!
 
 	def copyWithLink copy\CopyObject
-		console.log copy
 		copyTextToClipboard
 			'«' + copy.text + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copyObject.verses) + '/'
 

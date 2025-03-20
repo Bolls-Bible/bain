@@ -305,7 +305,6 @@ tag profile
 			catch e
 				log e
 				window.alert('Bad file!')
-			# log contents
 		reader.readAsText(file)
 
 
@@ -437,7 +436,6 @@ tag profile
 		if !list_for_display.length && !loading
 			<p[ta:center]> '(ಠ╭╮ಠ)  ¯\\_(ツ)_/¯  ノ( ゜-゜ノ)'
 
-		console.log(account_action)
 		if account_action
 			<global @hotkey('escape')=(account_action=0)> <section
 				[pos:fixed inset:0 bg:rgba(0,0,0,0.75) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:99]

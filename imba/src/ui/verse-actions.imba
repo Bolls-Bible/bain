@@ -30,27 +30,31 @@ tag verse-actions < section
 	categoriesSearch = ''
 
 	def initiateSlideHandling event
-		if ['INPUT', 'BUTTON', 'OL'].includes event.target.tagName
+		const touch = event.changedTouches[0]
+		if ['INPUT', 'BUTTON', 'OL'].includes touch.target.tagName
 			return
 		event.preventDefault()
 		# we want to slide the verse actions up and down
-		#isSliding = event.clientY
+		#isSliding = touch.clientY
+		console.log('initiateSlideHandling', touch)
 		#dy = DEFAULT_Y
 	
 	def finalizeSlideHandling event
+		const touch = event.changedTouches[0]
 		unless #isSliding
 			return
 		event.preventDefault()
-		#dy = Math.max(event.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
+		#dy = Math.max(touch.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
 		if #dy > DEFAULT_Y * 2
 			close!
 		#isSliding = null
 		#dy = DEFAULT_Y
 
 	def slide event
+		const touch = event.changedTouches[0]
 		unless #isSliding
 			return
-		#dy = Math.max(event.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
+		#dy = Math.max(touch.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
 	
 	def close
 		# should await for the transition-duration property update to achieve smoothness
@@ -106,7 +110,10 @@ tag verse-actions < section
 		imba.commit!.then do $newcategoryinput.focus()
 
 	<self [y:{#dy}px @off:100% o@off:0 transition-duration:{transitionDuration}] ease
-		@pointerdown=initiateSlideHandling @pointermove=slide @pointerup=finalizeSlideHandling @pointercancel=finalizeSlideHandling @pointerleave=finalizeSlideHandling
+			@touchstart=initiateSlideHandling
+			@touchmove=slide
+			@touchend=finalizeSlideHandling
+			@touchcancel=finalizeSlideHandling
 		>
 		<svg.chevron src=ChevronDown @click=close>
 		<header>
@@ -139,7 +146,7 @@ tag verse-actions < section
 						<svg src=Share aria-hidden=yes>
 						t.share
 						if activities.show_sharing
-							<.popup-menu [l:0 @lt-sm:0.5rem top:unset b:calc(100% + 4px) y@off:2rem o@off:0 w:14rem] ease>
+							<.popup-menu [l:0 @lt-sm:0.5rem top:unset b:calc(100% + .25rem) y@off:2rem o@off:0 w:14rem] ease>
 								<button @click=shareViaWhatsApp>
 									<svg src=ICONS.WHATSAPP_LOGO aria-hidden=yes>
 									"What's App"
@@ -331,10 +338,10 @@ tag verse-actions < section
 			button
 				display:hcl g:.25rem
 				c:$c @hover:$acc
-				bgc: $acc-bgc @hover:$acc-bgc-hover
+				bgc:$acc-bgc @hover:$acc-bgc-hover
 				bgc:transparent
-				padding: 0.5rem 0.75rem
-				cursor: pointer
+				padding:0.5rem 0.75rem
+				cursor:pointer
 				rd:0.25rem
 
 				svg

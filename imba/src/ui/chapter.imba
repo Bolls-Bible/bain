@@ -54,7 +54,6 @@ tag chapter < section
 
 		for kid in article.children
 			if kid.id
-				# console.log(kid.offsetTop, activities.blockInScroll.scrollTop, kid)
 				let new_distance = Math.abs(kid.offsetTop - activities.blockInScroll.scrollTop - myBoundingRect.top)
 				if new_distance < top_verse.distance
 					top_verse.distance = new_distance

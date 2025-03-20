@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-transitions="false">
   <head>
     <meta charset="utf-8" />
     <title>Bolls Bible</title>
@@ -35,7 +35,6 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          console.log("Window loaded");
           navigator.serviceWorker.register("/service.worker.js").then(
             function (registration) {
               console.log(

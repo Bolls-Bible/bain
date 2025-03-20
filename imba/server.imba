@@ -57,7 +57,6 @@ def preloadChapter req\Request<{
 		let [verse, endVerse] = verseRange..split('-') ?? []
 
 		let description = get_description verses, Number(verse), Number(endVerse ?? 0)
-		console.log(description)
 		let result = setDescription index.body, description
 
 		result = result.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/{translation}/{book}/{chapter}/"/>`)

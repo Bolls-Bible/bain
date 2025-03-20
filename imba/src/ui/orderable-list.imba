@@ -28,7 +28,6 @@ tag orderable-list
 		let target = document.getElementById(#drugging_target)
 		let index = compare.list.indexOf(compare.list.find(do(el) return el[0].translation == #drugging_target))
 
-		# log target
 		if target.nextSibling
 			if #dy + scrolled_distance > #swapped_offset + (target.nextSibling.clientHeight / 2)
 				if index < compare.list.length - 1

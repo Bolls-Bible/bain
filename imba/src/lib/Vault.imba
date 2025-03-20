@@ -37,7 +37,6 @@ class Vault
 				return
 
 			offline_bookmarks = await db.bookmarks.toArray()
-			console.log offline_bookmarks
 
 			unless offline_bookmarks.length
 				console.log 'Nothing to save'
@@ -147,7 +146,7 @@ class Vault
 			else
 				handleDownloadingError(translation)
 		catch e
-			console.log e
+			console.warn e
 			handleDownloadingError(translation)
 
 	def handleDownloadingError translation

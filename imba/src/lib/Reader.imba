@@ -44,7 +44,6 @@ class Reader < GenericReader
 		unless theChapterExistInThisTranslation
 			return
 		
-		console.log "so", self
 		const translationName = translations.find(do |element| element.short_name == translation)..full_name || translation
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationName + " Bolls Bible"
 		loading = yes

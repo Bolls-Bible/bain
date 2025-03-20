@@ -39,7 +39,6 @@ export function scoreSearch(text, query) {
     } else {
       consecutiveBonus = 2;
     }
-    // console.log(char, index, p, score, consecutiveBonus, searchText.slice(p - 1, p + 1));
     //  ... and skip the position within `text` forward.
     p = index + 1;
   }

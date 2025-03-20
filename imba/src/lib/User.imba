@@ -52,7 +52,6 @@ class User
 		if window.navigator.onLine
 			try
 				let userdata = await API.getJson("/user-logged/")
-				console.log('userdata', userdata)
 				if userdata.username
 					is_password_usable = userdata.is_password_usable
 					username = userdata.username

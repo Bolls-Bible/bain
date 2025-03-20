@@ -144,12 +144,10 @@ class Search
 			results = res["results"]
 			exactMatchesCount = res["exact_matches"]
 			total = res["total"]
-			console.log 'Search results:', results
 		catch error
 			console.error error
 			if vault.downloaded_translations.indexOf(reader.translation) != -1
 				let result = await vault.search(reader.translation + '/' + query.toLowerCase() + '?book=' + filter + '&page=' + page)
-				console.log 'Search results:', result
 				results = result.data
 				total = result.total
 				exactMatchesCount = result.exact_matches

@@ -163,7 +163,6 @@ class PageSearch
 
 		# Gather all rects to one array
 		rects = matches.flatMap(do(match) match.rects)
-		console.log(rects)
 
 		# After all scroll to results
 		if current_occurrence > matches.length - 1

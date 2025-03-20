@@ -262,7 +262,6 @@ async function getRandomVerse(url) {
             .limit(1)
             .toArray()
             .then((data) => {
-              console.log(data);
               return new Response(JSON.stringify(data[0]), {
                 status: 200,
                 statusText: "Random verse",
