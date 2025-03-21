@@ -2,7 +2,7 @@ import Copy from 'lucide-static/icons/copy.svg'
 import SquareSplitHorizontal from 'lucide-static/icons/square-split-horizontal.svg'
 import * as ICONS from 'imba-phosphor-icons'
 
-const AUTOSCROLL_INCREMENT = 10
+const AUTOSCROLL_INCREMENT = 24
 
 tag orderable-list
 	#swapped_offset = 0
@@ -40,20 +40,14 @@ tag orderable-list
 					compare.list[index - 1] = compare.list.splice(index, 1, compare.list[index - 1])[0]
 					#swapped_offset -= target.clientHeight + (target.previousSibling.clientHeight - target.clientHeight)
 
+	def touchStart event, id\string
+		#drugging_target = id
+		#starting_scroll_y = parentNode.scrollTop
 
-	def handleTouch touch, id\string
+
+	def handleTouch touch
 		#dy = touch.y - touch.events[0].y
-
-		# if no drugging_target then this is initial touch
-		unless #drugging_target
-			#drugging_target = id
-			#starting_scroll_y = parentNode.scrollTop
-		else
-			reorder!
-
-		if touch.phase == 'ended'
-			touchend(touch)
-
+		reorder!
 
 	def touchend
 		#drugging_target = ''
@@ -98,13 +92,10 @@ tag orderable-list
 	def stopIntersect
 		#scroll_direction = 0
 
-	def draggedOffset item
-		if item == #drugging_target
+	def draggedOffset id\string
+		if id == #drugging_target
 			return #dy - #swapped_offset + scrolled_distance
 		return 0
-
-	def druggable id
-		return id == #drugging_target
 
 
 
@@ -121,7 +112,16 @@ tag orderable-list
 							<text-as-html data=verse innerHTML="{verse.text} ">
 
 						<menu>
-							<svg[mr:auto cursor:move] src=ICONS.DOTS_SIX width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes  @touch=handleTouch(e, tr[0].translation)>
+							<svg[mr:auto cursor:move touch-action:none fls:0] src=ICONS.DOTS_SIX
+								width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes
+								@touchstart=touchStart(e, tr[0].translation)
+								@touch=handleTouch
+								@touchend=touchend
+								@touchcancel=touchend
+
+								@pointerdown=touchStart(e, tr[0].translation)
+								@pointercancel=touchend
+							>
 
 							tr[0].translation
 
@@ -140,13 +140,24 @@ tag orderable-list
 						.in-drag=(tr[0].translation == #drugging_target)
 						[transform:translateY({draggedOffset(tr[0].translation)}px) p:1rem 0px mb:0 display:flex align-items:center]>
 						<menu>
-							<svg[mr:auto cursor:move] src=ICONS.DOTS_SIX width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes  @touch=handleTouch(e, tr[0].translation)>
+							<svg[mr:auto cursor:move touch-action:none fls:0] src=ICONS.DOTS_SIX
+								width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes
+								@touchstart=touchStart(e, tr[0].translation)
+								@touch=handleTouch
+								@touchend=touchend
+								@touchcancel=touchend
+
+								@pointerdown=touchStart(e, tr[0].translation)
+								@pointercancel=touchend
+							>
 
 							t.the_verse_is_not_available, ' ', tr[0].translation
 
 							<button @click.prevent=compare.toggleTranslation({short_name: tr[0].translation}) title=t.delete>
 								<svg src=ICONS.X aria-hidden=yes>
-
+		<global
+			@pointerup=touchend
+		>
 
 	css
 		li

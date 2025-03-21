@@ -36,7 +36,6 @@ tag verse-actions < section
 		event.preventDefault()
 		# we want to slide the verse actions up and down
 		#isSliding = touch.clientY
-		console.log('initiateSlideHandling', touch)
 		#dy = DEFAULT_Y
 	
 	def finalizeSlideHandling event

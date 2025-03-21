@@ -85,12 +85,12 @@ class Compare
 					book: bookToCompare,
 					chapter: chapterToCompare,
 				})
-				list = list.concat(response)
+				list = response.concat(list)
 			catch error
 				console.error error
 				if vault.downloaded_translations.indexOf(reader.translation) != -1
 					const response = await getCompareTranslationsFromDB!
-					list = list.concat(response)
+					list = response.concat(list)
 				else
 					notifications.push('error')
 			finally

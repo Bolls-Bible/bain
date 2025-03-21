@@ -48,205 +48,204 @@ tag settings-drawer < aside
 				)
 			# & reload
 			window.history.go()
-	
-	def render
-		<self>
-			<p[fs:1.5rem h:2rem d:flex jc:space-between ai:center p:0.5rem]>
-				t.settings
-				<.current-accent .enlarge-current-accent=activities.show_accents>
-					<.visible-accent @click=(do activities.show_accents = !activities.show_accents)>
-					<.accents .show-accents=activities.show_accents>
-						for accent in theme.accents when accent.name != theme.accent
-							<.accent @click=(do theme.accent = accent.name; activities.show_accents = no) [background-color: {theme.light == 'dark' ? accent.light : accent.dark}]>
-			if !!user.username
-				<a.settings-btn route-to='/profile/'>
-					<svg src=VenetianMask aria-hidden=true>
-					user.name || user.username
-				<button.settings-btn @click.stop.prevent=user.logout>
-					<svg src=CandyOff aria-hidden=true>
-					t.logout
-			else
-				<a.settings-btn @click.stop.prevent=(window.location.pathname = "/accounts/login/") href="/accounts/login/">
-					<svg src=Lollipop aria-hidden=true>
-					t.login
-				<a.settings-btn  @click.stop.prevent=(window.location.pathname = "/signup/") href="/signup/">
-					<svg src=Candy aria-hidden=true>
-					t.signin
-			<button.settings-btn @click=activities.showSearch>
-				<svg src=Search aria-hidden=true>
-				t.bible_search
-			<button.settings-btn>
-				<svg src=TextSearch aria-hidden=true>
-				t.find_in_chapter
-			<button.settings-btn @click=activities.showHistory>
-				<svg src=Croissant aria-hidden=true>
-				t.history
-			<menu-popup bind=activities.show_themes>
-				<button.settings-btn [pos:relative] @click=(do activities.show_themes = !activities.show_themes)>
-					<svg src=SunMoon aria-hidden=true>
-					t.theme
-					if activities.show_themes
-						<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
-							<button[fw:900 bgc:black c:white bdr:2rem solid white]
-								@click=(theme.theme = 'black')> 'Black'
-							<button[fw:900 bgc:#00061A c:#B29595 bdr:2rem solid #B29595]
-								@click=(theme.theme = 'dark')> t.nighttheme
-							<button[fw:900 bgc:#f1f1f1 c:black bdr:2rem solid black]
-								@click=(theme.theme = 'gray')> 'Gray'
-							<button[fw:900 bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:2rem solid rgb(46, 39, 36)]
-								@click=(theme.theme = 'sepia')> 'Sepia'
-							<button[fw:900 bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:2rem solid rgb(4, 6, 12)]
-								@click=(theme.theme = 'light')> t.lighttheme
-							<button[fw:900 bgc:white c:black bdr:2rem solid black]
-								@click=(theme.theme = 'white')> 'White'
 
+	<self>
+		<p[fs:1.5rem h:2rem d:flex jc:space-between ai:center p:0.5rem]>
+			t.settings
+			<.current-accent .enlarge-current-accent=activities.show_accents>
+				<.visible-accent @click=(do activities.show_accents = !activities.show_accents)>
+				<.accents .show-accents=activities.show_accents>
+					for accent in theme.accents when accent.name != theme.accent
+						<.accent @click=(do theme.accent = accent.name; activities.show_accents = no) [background-color: {theme.light == 'dark' ? accent.light : accent.dark}]>
+		if !!user.username
+			<a.settings-btn route-to='/profile/'>
+				<svg src=VenetianMask aria-hidden=true>
+				user.name || user.username
+			<button.settings-btn @click.stop.prevent=user.logout>
+				<svg src=CandyOff aria-hidden=true>
+				t.logout
+		else
+			<a.settings-btn @click.stop.prevent=(window.location.pathname = "/accounts/login/") href="/accounts/login/">
+				<svg src=Lollipop aria-hidden=true>
+				t.login
+			<a.settings-btn  @click.stop.prevent=(window.location.pathname = "/signup/") href="/signup/">
+				<svg src=Candy aria-hidden=true>
+				t.signin
+		<button.settings-btn @click=activities.showSearch>
+			<svg src=Search aria-hidden=true>
+			t.bible_search
+		<button.settings-btn>
+			<svg src=TextSearch aria-hidden=true>
+			t.find_in_chapter
+		<button.settings-btn @click=activities.showHistory>
+			<svg src=Croissant aria-hidden=true>
+			t.history
+		<menu-popup bind=activities.show_themes>
+			<button.settings-btn [pos:relative] @click=(do activities.show_themes = !activities.show_themes)>
+				<svg src=SunMoon aria-hidden=true>
+				t.theme
+				if activities.show_themes
+					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+						<button[fw:900 bgc:black c:white bdr:2rem solid white]
+							@click=(theme.theme = 'black')> 'Black'
+						<button[fw:900 bgc:#00061A c:#B29595 bdr:2rem solid #B29595]
+							@click=(theme.theme = 'dark')> t.nighttheme
+						<button[fw:900 bgc:#f1f1f1 c:black bdr:2rem solid black]
+							@click=(theme.theme = 'gray')> 'Gray'
+						<button[fw:900 bgc:rgb(235, 219, 183) c:rgb(46, 39, 36) bdr:2rem solid rgb(46, 39, 36)]
+							@click=(theme.theme = 'sepia')> 'Sepia'
+						<button[fw:900 bgc:rgb(255, 238, 238) c:rgb(4, 6, 12) bdr:2rem solid rgb(4, 6, 12)]
+							@click=(theme.theme = 'light')> t.lighttheme
+						<button[fw:900 bgc:white c:black bdr:2rem solid black]
+							@click=(theme.theme = 'white')> 'White'
+
+		<.btnbox>
+			<button[p:0.75rem fs:1.25rem].cbtn @click=theme.decreaseFontSize title=t.decrease_font_size> "B-"
+			<button[p:8px fs:1.5rem].cbtn @click=theme.increaseFontSize title=t.increase_font_size> "B+"
+		<.btnbox>
+			<button.cbtn [p:8px fs:1.5rem fw:100] @click=theme.changeFontWeight(-100) title=t.decrease_font_weight> "B"
+			<button.cbtn [p:8px fs:1.5rem fw:900] @click=theme.changeFontWeight(100) title=t.increase_font_weight> "B"
+		<.btnbox>
+			<svg.cbtn @click=theme.changeLineHeight(no) viewBox="0 0 38 14" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" [p:1rem 0]>
+				<title> t.decrease_line_height
+				<rect x="0" y="0" width="28" height="1">
+				<rect x="0" y="6" width="38" height="1">
+				<rect x="0" y="12" width="18" height="1">
+			<svg.cbtn @click=theme.changeLineHeight(yes) viewBox="0 0 38 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" [p:0.5rem 0]>
+				<title> t.increase_line_height
+				<rect x="0" y="0" width="28" height="1">
+				<rect x="0" y="11" width="38" height="1">
+				<rect x="0" y="22" width="18" height="1">
+		if window.chrome
 			<.btnbox>
-				<button[p:0.75rem fs:1.25rem].cbtn @click=theme.decreaseFontSize title=t.decrease_font_size> "B-"
-				<button[p:8px fs:1.5rem].cbtn @click=theme.increaseFontSize title=t.increase_font_size> "B+"
+				<svg.cbtn src=AlignLeft @click=theme.changeAlign(yes) stroke-width="1" aria-label=t.auto_align>
+				<svg.cbtn src=AlignJustify @click=theme.changeAlign(no) stroke-width="1" aria-label=t.align_justified>
+		if window.innerWidth > 639
 			<.btnbox>
-				<button.cbtn [p:8px fs:1.5rem fw:100] @click=theme.changeFontWeight(-100) title=t.decrease_font_weight> "B"
-				<button.cbtn [p:8px fs:1.5rem fw:900] @click=theme.changeFontWeight(100) title=t.increase_font_weight> "B"
-			<.btnbox>
-				<svg.cbtn @click=theme.changeLineHeight(no) viewBox="0 0 38 14" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" [p:1rem 0]>
-					<title> t.decrease_line_height
-					<rect x="0" y="0" width="28" height="1">
-					<rect x="0" y="6" width="38" height="1">
-					<rect x="0" y="12" width="18" height="1">
-				<svg.cbtn @click=theme.changeLineHeight(yes) viewBox="0 0 38 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" [p:0.5rem 0]>
-					<title> t.increase_line_height
-					<rect x="0" y="0" width="28" height="1">
-					<rect x="0" y="11" width="38" height="1">
-					<rect x="0" y="22" width="18" height="1">
-			if window.chrome
-				<.btnbox>
-					<svg.cbtn src=AlignLeft @click=theme.changeAlign(yes) stroke-width="1" aria-label=t.auto_align>
-					<svg.cbtn src=AlignJustify @click=theme.changeAlign(no) stroke-width="1" aria-label=t.align_justified>
-			if window.innerWidth > 639
-				<.btnbox>
-					<svg.cbtn @click=theme.changeMaxWidth(no) src=MinimizeHorizontal stroke-width="1" aria-label=t.decrease_max_width>
-					<svg.cbtn @click=theme.changeMaxWidth(yes) src=MaximizeHorizontal stroke-width="1" aria-label=t.increase_max_width>
+				<svg.cbtn @click=theme.changeMaxWidth(no) src=MinimizeHorizontal stroke-width="1" aria-label=t.decrease_max_width>
+				<svg.cbtn @click=theme.changeMaxWidth(yes) src=MaximizeHorizontal stroke-width="1" aria-label=t.increase_max_width>
 
-			<menu-popup bind=activities.show_fonts>
-				<.settings-btn [pos:relative] role="button" @click=(do
-					activities.show_fonts = !activities.show_fonts
-					theme.queryLocalFonts!
-				)>
-					<span.font-icon aria-hidden=true> "B"
-					theme.fontName
-					if activities.show_fonts
-						<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
-							for font in theme.fonts
-								<button[ff: {font.code}] .active-butt=font.name==theme.fontName @click=theme.setFontFamily(font)> font.name
-							if theme.localFonts.size
-								<button @click=activities.showFonts> '+ More'
-			<menu-popup bind=activities.show_languages>
-				<button.settings-btn [pos:relative] @click=(do activities.show_languages = !activities.show_languages)>
-					<svg src=Languages aria-hidden=true>
-					currentLanguage
-					if activities.show_languages
-						<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
-							<button .active-butt=('ukr'==language) @click=(language = 'ukr')> "Українська"
-							<button .active-butt=('eng'==language) @click=(language = 'eng')> "English"
-							<button .active-butt=('de'==language) @click=(language = 'de')> "Deutsch"
-							<button .active-butt=('pt'==language) @click=(language = 'pt')> "Portuguese"
-							<button .active-butt=('es'==language) @click=(language = 'es')> "Español"
-							<button .active-butt=('ru'==language) @click=(language = 'ru')> "русский"
+		<menu-popup bind=activities.show_fonts>
+			<.settings-btn [pos:relative] role="button" @click=(do
+				activities.show_fonts = !activities.show_fonts
+				theme.queryLocalFonts!
+			)>
+				<span.font-icon aria-hidden=true> "B"
+				theme.fontName
+				if activities.show_fonts
+					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+						for font in theme.fonts
+							<button[ff: {font.code}] .active-butt=font.name==theme.fontName @click=theme.setFontFamily(font)> font.name
+						if theme.localFonts.size
+							<button @click=activities.showFonts> '+ More'
+		<menu-popup bind=activities.show_languages>
+			<button.settings-btn [pos:relative] @click=(do activities.show_languages = !activities.show_languages)>
+				<svg src=Languages aria-hidden=true>
+				currentLanguage
+				if activities.show_languages
+					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+						<button .active-butt=('ukr'==language) @click=(language = 'ukr')> "Українська"
+						<button .active-butt=('eng'==language) @click=(language = 'eng')> "English"
+						<button .active-butt=('de'==language) @click=(language = 'de')> "Deutsch"
+						<button .active-butt=('pt'==language) @click=(language = 'pt')> "Portuguese"
+						<button .active-butt=('es'==language) @click=(language = 'es')> "Español"
+						<button .active-butt=('ru'==language) @click=(language = 'ru')> "русский"
 
-			<button.option-box.checkbox-parent @click=(parallelReader.enabled = !parallelReader.enabled) .checkbox-turned=parallelReader.enabled>
-				t.parallel
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.parallel_sync = !settings.parallel_sync) .checkbox-turned=settings.parallel_sync>
-				t.parallel_sync
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.verse_picker = !settings.verse_picker) .checkbox-turned=settings.verse_picker>
-				t.verse_picker
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.verse_break = !settings.verse_break) .checkbox-turned=settings.verse_break>
-				t.verse_break
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.verse_number = !settings.verse_number) .checkbox-turned=settings.verse_number>
-				t.verse_number
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.verse_commentary = !settings.verse_commentary) .checkbox-turned=settings.verse_commentary>
-				t.verse_commentary
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.lock_books_menu = !settings.lock_books_menu) .checkbox-turned=settings.lock_books_menu>
-				t.lock_books_menu
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(theme.transitions = !theme.transitions) .checkbox-turned=theme.transitions>
-				t.transitions
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.chronorder =! settings.chronorder) .checkbox-turned=settings.chronorder>
-				t.chronological_order
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.fixdrawers = !settings.fixdrawers) .checkbox-turned=settings.fixdrawers>
-				t.fixdrawers
-				<.checkbox> <span>
-			<button.option-box.checkbox-parent @click=(settings.enable_dynamic_contrast = !settings.enable_dynamic_contrast) .checkbox-turned=settings.enable_dynamic_contrast>
-				t.dynamic_contrast
-				<.checkbox> <span>
-			if settings.enable_dynamic_contrast
-				<.contrast-slider>
-					<p[d:flex]>
-						t.contrast
-						<span[ml:auto]> settings.contrast
-					<input id="contrast" type="range" min=20 max=200 step=5 bind=settings.contrast>
-					<datalist id="contrast">
-						<option value="20" label="20">
-						<option value="60" label="60">
-						<option value="105" label="105">
-						<option value="150" label="150">
-						<option value="200" label="200">
+		<button.option-box.checkbox-parent @click=(parallelReader.enabled = !parallelReader.enabled) .checkbox-turned=parallelReader.enabled>
+			t.parallel
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.parallel_sync = !settings.parallel_sync) .checkbox-turned=settings.parallel_sync>
+			t.parallel_sync
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.verse_picker = !settings.verse_picker) .checkbox-turned=settings.verse_picker>
+			t.verse_picker
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.verse_break = !settings.verse_break) .checkbox-turned=settings.verse_break>
+			t.verse_break
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.verse_number = !settings.verse_number) .checkbox-turned=settings.verse_number>
+			t.verse_number
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.verse_commentary = !settings.verse_commentary) .checkbox-turned=settings.verse_commentary>
+			t.verse_commentary
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.lock_books_menu = !settings.lock_books_menu) .checkbox-turned=settings.lock_books_menu>
+			t.lock_books_menu
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(theme.transitions = !theme.transitions) .checkbox-turned=theme.transitions>
+			t.transitions
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.chronorder =! settings.chronorder) .checkbox-turned=settings.chronorder>
+			t.chronological_order
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.fixdrawers = !settings.fixdrawers) .checkbox-turned=settings.fixdrawers>
+			t.fixdrawers
+			<.checkbox> <span>
+		<button.option-box.checkbox-parent @click=(settings.enable_dynamic_contrast = !settings.enable_dynamic_contrast) .checkbox-turned=settings.enable_dynamic_contrast>
+			t.dynamic_contrast
+			<.checkbox> <span>
+		if settings.enable_dynamic_contrast
+			<.contrast-slider>
+				<p[d:flex]>
+					t.contrast
+					<span[ml:auto]> settings.contrast
+				<input id="contrast" type="range" min=20 max=200 step=5 bind=settings.contrast>
+				<datalist id="contrast">
+					<option value="20" label="20">
+					<option value="60" label="60">
+					<option value="105" label="105">
+					<option value="150" label="150">
+					<option value="200" label="200">
 
-			if window.navigator.onLine
-				if vault.available
-					<button.settings-btn @click=activities.toggleDownloads>
-						<svg src=CloudDownload aria-hidden=true>
-						t.download_translations
-				<a.settings-btn href='/downloads/' target="_blank" @click=pwa.deferredPrompt.prompt>
-					<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
-					t.install_app
-				<button.settings-btn @click=dictionary.showDictionary>
-					<span.font-icon aria-hidden=true> 'א'
-					t.dictionary
-			<button.settings-btn @click=activities.showHelp>
-				<svg src=ICONS.CARROT aria-hidden=true>
-				t.help
-			<button.settings-btn @click=activities.showSupport>
-				<svg src=HeartHandshake aria-hidden=true>
-				t.support
-			<button.settings-btn @click=reader.randomVerse>
-				<svg src=Dices aria-hidden=true>
-				t.random
+		if window.navigator.onLine
+			if vault.available
+				<button.settings-btn @click=activities.toggleDownloads>
+					<svg src=CloudDownload aria-hidden=true>
+					t.download_translations
+			<a.settings-btn href='/downloads/' target="_blank" @click=pwa.deferredPrompt.prompt>
+				<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
+				t.install_app
+			<button.settings-btn @click=dictionary.showDictionary>
+				<span.font-icon aria-hidden=true> 'א'
+				t.dictionary
+		<button.settings-btn @click=activities.showHelp>
+			<svg src=ICONS.CARROT aria-hidden=true>
+			t.help
+		<button.settings-btn @click=activities.showSupport>
+			<svg src=HeartHandshake aria-hidden=true>
+			t.support
+		<button.settings-btn @click=reader.randomVerse>
+			<svg src=Dices aria-hidden=true>
+			t.random
 
-			unless !"state.pswv"
-				<a.settings-btn route-to="/donate/">
-					<svg src=ICONS.TIP_JAR aria-hidden=true>
-					t.donate
+		unless !"state.pswv"
+			<a.settings-btn route-to="/donate/">
+				<svg src=ICONS.TIP_JAR aria-hidden=true>
+				t.donate
 
-			<button.settings-btn @click=purcheCache>
-				<svg src=ICONS.BROOM aria-hidden=true>
-				t.purge_cache
+		<button.settings-btn @click=purcheCache>
+			<svg src=ICONS.BROOM aria-hidden=true>
+			t.purge_cache
 
-			<footer>
-				<p.footer_links>
-					<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Official Telegram"
-					<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
-					<a target="_blank" href="/api"> "API "
-					<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
-					<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
-					<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
-					<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
-					<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
-					<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
-				<p[fs:0.75rem pb:0.75rem]>
-					"🍇 v3.0.0 alpha 🗓 "
-					<time dateTime='2025-3-17'> "17.3.2025"
-				<p[fs:0.75rem]>
-					"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
+		<footer>
+			<p.footer_links>
+				<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Official Telegram"
+				<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
+				<a target="_blank" href="/api"> "API "
+				<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
+				<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
+				<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
+				<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
+				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
+				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
+			<p[fs:0.75rem pb:0.75rem]>
+				"🍇 v3.0.0 alpha 🗓 "
+				<time dateTime='2025-3-17'> "17.3.2025"
+			<p[fs:0.75rem]>
+				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
-			unless activities.settingsDrawerOffset
-				<global @click.outside=activities.toggleSettingsMenu>
+		unless activities.settingsDrawerOffset
+			<global @click.outside=activities.toggleSettingsMenu>
 
 	css
 		.current-accent
