@@ -42,8 +42,8 @@ tag reader
 		window.onresize = imba.commit
 
 		window.strongDefinition = do(topic)
-			dictionary.query = topic
-			dictionary.loadDefinitions!
+			self.dictionary.query = topic
+			self.dictionary.loadDefinitions!
  
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))

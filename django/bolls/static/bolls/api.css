@@ -34,11 +34,6 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 ::-webkit-scrollbar-track {
   background: rgba(56, 56, 61, 0);
 }

@@ -50,11 +50,9 @@ tag chapter < section
 		unless article..children..length
 			return
 		
-		const myBoundingRect = getBoundingClientRect()
-
 		for kid in article.children
 			if kid.id
-				let new_distance = Math.abs(kid.offsetTop - activities.blockInScroll.scrollTop - myBoundingRect.top)
+				let new_distance = Math.abs(kid.offsetTop - activities.blockInScroll.scrollTop)
 				if new_distance < top_verse.distance
 					top_verse.distance = new_distance
 					top_verse.id = kid.id
@@ -181,10 +179,10 @@ tag chapter < section
 							unless settings.verse_number
 								<span.ws> '	'
 				
-				<[d:hcs p:24px .5rem 96px overflow:hidden]>
-					<a.arrow [s:4rem] @click.prevent=me.prevChapter title=t.prev href=me.prevChapterLink>
+				<[d:hcs p:1.5rem .5rem 6rem overflow:hidden]>
+					<a.arrow [s:4rem] @click.prevent.stop=me.prevChapter title=t.prev href=me.prevChapterLink>
 						getChevron(no)
-					<a.arrow [s:4rem] @click.prevent=me.nextChapter title=t.next href=me.nextChapterLink>
+					<a.arrow [s:4rem] @click.prevent.stop=me.nextChapter title=t.next href=me.nextChapterLink>
 						getChevron(yes)
 
 			elif !window.navigator.onLine && vault.downloaded_translations.indexOf(me.translation) == -1
@@ -199,7 +197,7 @@ tag chapter < section
 					<a.reload @click=(do window.location.reload(yes))> t.reload
 
 			if me.show_verse_picker and settings.verse_picker then <global>
-				<section[origin:top left scale@off:0.96 y@off:-16px o@off:0] ease>
+				<section[origin:top left scale@off:0.96 y@off:-1rem o@off:0] ease>
 					css
 						pos: fixed
 						t:3rem l:3rem
@@ -258,8 +256,8 @@ tag chapter < section
 			transition-property: fill, color, background, transform, border-radius
 
 		span
-			background-size: 100% calc(0.2em + 4px)
-			padding-bottom: 4px
+			background-size: 100% calc(0.2em + .25rem)
+			padding-bottom: .25rem
 
 		.verse
 			fs: 0.68em
@@ -284,16 +282,6 @@ tag chapter < section
 			c:$acc @hover:$acc-hover
 			size:0.68em
 
-		@keyframes fade-in
-			0%
-				opacity: 0
-			100%
-				opacity: 1
-		
-		html[data-transitions="true"]
-			h1, article
-				animation: fade-in 500ms cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
-		
 		.reload
 			display: block
 			mt:.5rem

@@ -31,7 +31,7 @@ tag verse-actions < section
 
 	def initiateSlideHandling event
 		const touch = event.changedTouches[0]
-		if ['INPUT', 'BUTTON', 'OL'].includes touch.target.tagName
+		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes touch.target.tagName
 			return
 		event.preventDefault()
 		# we want to slide the verse actions up and down
@@ -129,7 +129,7 @@ tag verse-actions < section
 				<input type="color" id="highlight" name="highlight" bind=activities.highlight_color />
 
 			for color in colors
-				<li.color-option [background:{color}] title=color
+				<li.color-option [background:{color}] title=color role="button" aria-label=color
 					@click=activities.changeHighlightColor(color)>
 
 

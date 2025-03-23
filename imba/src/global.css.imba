@@ -138,15 +138,12 @@ global css
 		color: $bgc
 		background-color: $acc-hover
 
-	::-webkit-scrollbar
-		width: 0.75rem;
-
 	::-webkit-scrollbar-track
 		background: transparent
 
 	::-webkit-scrollbar-thumb
 		background: $acc-bgc-hover
-		border-radius: 4px;
+		border-radius: .25rem;
 
 	::-webkit-scrollbar-thumb:hover
 		background: $acc-bgc
@@ -155,7 +152,7 @@ global css
 		outline: none
 
 	.focusable
-		border-radius: 8px
+		border-radius: .5rem
 		ol@focus: 1px solid $acc-hover @focus-within: 1px solid $acc-hover
 		olo@focus: -1px @focus-within: -1px
 
@@ -194,10 +191,10 @@ global css
 		bgc: $bgc
 		pos: absolute
 		right: 0
-		top: calc(100% + 4px)
-		rd: 8px
+		top: calc(100% + .25rem)
+		rd: .5rem
 		zi: 10000000
-		br: 8px
+		br: .5rem
 		of: hidden
 		bxs: 0 0 0 1px $acc-bgc-hover, 0 3px 6px $acc-bgc-hover, 0 9px 24px $acc-bgc-hover
 
@@ -298,7 +295,7 @@ global css
 			cursor: pointer
 
 		ol, ul
-			padding-left: 32px
+			padding-left: 2rem
 			margin: 1em 0
 
 		li > ol

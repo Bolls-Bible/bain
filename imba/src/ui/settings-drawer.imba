@@ -101,10 +101,10 @@ tag settings-drawer < aside
 
 		<.btnbox>
 			<button[p:0.75rem fs:1.25rem].cbtn @click=theme.decreaseFontSize title=t.decrease_font_size> "B-"
-			<button[p:8px fs:1.5rem].cbtn @click=theme.increaseFontSize title=t.increase_font_size> "B+"
+			<button[p:.5rem fs:1.5rem].cbtn @click=theme.increaseFontSize title=t.increase_font_size> "B+"
 		<.btnbox>
-			<button.cbtn [p:8px fs:1.5rem fw:100] @click=theme.changeFontWeight(-100) title=t.decrease_font_weight> "B"
-			<button.cbtn [p:8px fs:1.5rem fw:900] @click=theme.changeFontWeight(100) title=t.increase_font_weight> "B"
+			<button.cbtn [p:.5rem fs:1.5rem fw:100] @click=theme.changeFontWeight(-100) title=t.decrease_font_weight> "B"
+			<button.cbtn [p:.5rem fs:1.5rem fw:900] @click=theme.changeFontWeight(100) title=t.increase_font_weight> "B"
 		<.btnbox>
 			<svg.cbtn @click=theme.changeLineHeight(no) viewBox="0 0 38 14" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" [p:1rem 0]>
 				<title> t.decrease_line_height
@@ -299,7 +299,7 @@ tag settings-drawer < aside
 			display: inline-block
 			text-align: center
 			bgc: transparent @hover:$acc-bgc-hover
-			border-radius: 8px
+			border-radius: .5rem
 
 		.btnbox
 			cursor: pointer
@@ -310,8 +310,8 @@ tag settings-drawer < aside
 			w:100% h:2.875rem m:1rem 0
 			bg:transparent @hover:$acc-bgc-hover
 			color: $c @hover:$acc-hover
-			d:flex ai:center font:inherit p:0 8px
-			border-radius: 8px
+			d:flex ai:center font:inherit p:0 .5rem
+			border-radius: .5rem
 			lh:1
 
 		.settings-btn svg
@@ -340,7 +340,7 @@ tag settings-drawer < aside
 				display: flex
 				justify-content: space-between
 				width: 100%
-				margin-top: 7px
+				margin-top: .5rem
 				padding: 0 0.3125rem
 				o:0.72
 				fs:0.75rem

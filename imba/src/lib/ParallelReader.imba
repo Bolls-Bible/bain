@@ -28,6 +28,9 @@ class ParallelReader < GenericReader
 		setValue('parallel_chapter', chapter)
 
 	@autorun def saveEnabled
+		if enabled
+			book = reader..book
+			chapter = reader..chapter
 		setValue('parallel_display', enabled)
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
