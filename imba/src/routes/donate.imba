@@ -28,36 +28,36 @@ tag donate
 
 		<main[py:2rem]>
 			<a target="_blank" rel="noreferrer" href="https://send.monobank.ua/jar/6LydRJ3zbt">
-				<h3[d:flex g:.5rem ai:center fill:$c @hover:$acc-color-hover]>
+				<h2[d:flex g:.5rem ai:center fill:$c @hover:$acc-color-hover]>
 					"🐈 Monobank (International)"
 					<svg src=SquareArrowOutUpRight aria-hidden=yes>
 
-			<h3[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover]>
+			<h2[d:flex g:8px ai:center fill:$c @hover:$acc-color-hover]>
 				<span> "PayPal "
 				<b @click=copyMe> "bpavlisinec@gmail.com"
 
-			<h3>
+			<h2>
 				<span> "SOL "
 				<b @click=copyMe> "7dzCPPBde4FrnTHL4XcJc8v7gFjTjsupZJLpYpJuVHnq"
 
-			<h3>
+			<h2>
 				<span> "XRP "
 				<b @click=copyMe> "rHDmcgtUmh7Jcc7RmL8PMPowLfNWXokw1y"
 
-			<h3>
+			<h2>
 				<span> "ETH "
 				<b @click=copyMe> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
 
-			<h3>
+			<h2>
 				<span> "USDT in ETH network "
 				<b @click=copyMe> "0xaC59aB2d41028Bc6C4EDD58bA75E5c711771a62d"
 
-			<h3>
+			<h2>
 				<span> "BTC "
 				<b @click=copyMe> "bc1qdjq8k942vhh5frra3pp30qc28aqsknmswe48z8"
 
 
-			<h2 @click=toggleTransferOption(1)>
+			<h2.accordeon @click=toggleTransferOption(1)>
 				"SWIFT TRANSFER"
 				<svg src=ChevronDown aria-hidden=yes [transform: rotate({transfer_option == 1 ? 180 : 0}deg)]>
 
@@ -77,7 +77,7 @@ tag donate
 					<p> "Address"
 					<b @click=copyMe> "90400, Ukraine, reg. Zakarpatska, district Khustskyi, c. Khust, st. Vatutina, build 17"
 
-			<h2 @click=toggleTransferOption(2)>
+			<h2.accordeon @click=toggleTransferOption(2)>
 				"SEPA TRANSFER (In Europe)"
 				<svg src=ChevronDown aria-hidden=yes [transform: rotate({transfer_option == 1 ? 180 : 0}deg)]>
 
@@ -98,17 +98,17 @@ tag donate
 		p:1rem
 
 	css
-		h3
+		h2
 			c:$c @hover:$acc-color-hover
 			cursor:copy
 			py:.75rem
+			fs:1.2em
 
 			span
 				o:0.75
 
-		h2
+		.accordeon
 			ta:left
-			fs:1.2em
 			m:1em 0 0
 			d:flex
 			jc:space-between

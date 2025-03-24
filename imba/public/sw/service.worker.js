@@ -2,8 +2,8 @@ importScripts("/sw/jszip.min.js");
 importScripts("/sw/dexie.min.js");
 importScripts("/sw/scripts.js");
 
-const CACHE_NAME = "v2.7.4";
-const STATICS_CACHE = "statics-v1.0.4";
+const CACHE_NAME = "v3.0.0";
+const STATICS_CACHE = "statics-v1.0.5";
 const TEXTS_CACHE = "texts-v1.0.4";
 
 const urlsToCache = [
@@ -51,11 +51,15 @@ self.addEventListener("fetch", (event) => {
             resp ||
             fetch(event.request).then((response) => {
               var responseClone = response.clone();
+              // if this is chrome-extension then return the response
+              if (url.includes("chrome-extension")) {
+                return response;
+              }
               const texts_cache_eligible =
-                event.request.url.includes("get-chapter/") ||
-                event.request.url.includes("get-text/") ||
-                event.request.url.includes("search/") ||
-                event.request.url.includes("dictionary-definition/");
+                url.includes("get-chapter/") ||
+                url.includes("get-text/") ||
+                url.includes("search/") ||
+                url.includes("dictionary-definition/");
               const statics_cache_eligible =
                 event.request.destination == "font" ||
                 event.request.destination == "script" ||
@@ -63,7 +67,7 @@ self.addEventListener("fetch", (event) => {
                 event.request.destination == "manifest" ||
                 event.request.destination == "image";
               if (texts_cache_eligible || statics_cache_eligible) {
-                console.log("Populating cache with ", event.request.url);
+                console.log("Populating cache with ", url);
                 if (texts_cache_eligible) {
                   caches.open(TEXTS_CACHE).then((cache) => {
                     cache.put(event.request, responseClone);

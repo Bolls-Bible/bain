@@ -33,7 +33,7 @@ def get_description verses, verse\number, endVerse\number
 					description += " " + verses[i]["text"]
 		return clean_up_html(description)
 	else
-		return ''
+		return "Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."
 
 def getChapterVerses translation\string, book\number, chapter\number
 	const response = await fetch "{process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/"
@@ -43,6 +43,12 @@ def setDescription html\string, description\string
 	return html.replace('<!-- description -->', `<meta name="description" content="{description}"/>`)
 		.replace('<!-- og-description -->', `<meta property="og:description" content="{description}"/>`)
 
+const defaultIndex = index.body.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/"/>`)
+		.replace('<!-- canonical -->', `<link rel="canonical" href="https://bolls.life/"/>`)
+		.replace('<!-- description -->', `<meta name="description" content="{"A web app for reading the Bible with full emphasis on the God's Word only. Sola scriptura"}"/>`)
+		.replace('<!-- og-description -->', `<meta property="og:description" content="{"Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."}"/>`)
+		.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/"/>`)
+		.replace('<!-- script -->', "")
 
 def preloadChapter req\Request<{
 	translation:string;
@@ -56,7 +62,8 @@ def preloadChapter req\Request<{
 
 		let [verse, endVerse] = verseRange..split('-') ?? []
 
-		let description = get_description verses, Number(verse), Number(endVerse ?? 0)
+		let description = get_description verses, Number(verse ?? 1), Number(endVerse ?? verse ? 0 : 3)
+		console.log(description)
 		let result = setDescription index.body, description
 
 		result = result.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/{translation}/{book}/{chapter}/"/>`)
@@ -73,7 +80,7 @@ def preloadChapter req\Request<{
 
 		res.send result
 	catch error
-		res.send index.body
+		res.send defaultIndex
 
 app.get '/:translation/:book/:chapter', preloadChapter
 app.get '/international/:translation/:book/:chapter', preloadChapter
@@ -83,13 +90,6 @@ app.get '/international/:translation/:book/:chapter/:verseRange', preloadChapter
 
 
 app.get '*' do(req, res)
-	let result = index.body.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/"/>`)
-		.replace('<!-- canonical -->', `<link rel="canonical" href="https://bolls.life/"/>`)
-		.replace('<!-- description -->', `<meta name="description" content="{"A web app for reading the Bible with full emphasis on the God's Word only. Sola scriptura"}"/>`)
-		.replace('<!-- og-description -->', `<meta property="og:description" content="{"Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."}"/>`)
-		.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/"/>`)
-		.replace('<!-- script -->', "")
-
-	res.send result
+	res.send defaultIndex
 
 imba.serve app.listen(port)
