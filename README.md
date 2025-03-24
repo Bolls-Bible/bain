@@ -11,7 +11,7 @@ Go to [docs/LOCAL_DEV_WITH_DOCKER_COMPOSER.md](docs/LOCAL_DEV_WITH_DOCKER_COMPOS
 
 ## Contact me
 
-[bpavlisinec@gmail.com](mailto:bpavlisinec@gmail.com)
-(Official Telegram Channel)[https://t.me/bbbible]
-(Official Telegram Chat)[https://t.me/bollsbible]
-(My Telegram)[https://t.me/Boguslavv]
+* [bpavlisinec@gmail.com](mailto:bpavlisinec@gmail.com)
+* [Official Telegram Channel](https://t.me/bbbible)
+* [Official Telegram Chat](https://t.me/bollsbible)
+* [My Telegram](https://t.me/Boguslavv)
