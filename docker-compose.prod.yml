@@ -74,10 +74,6 @@ services:
     container_name: IMBA_SERVICE_NAME
     environment:
       - API_URL=https://NGINX_DOMAIN_NAME
-    expose:
-      - 3000
-    ports:
-      - 3000:3000
     networks:
       - INTERNAL_NETWORK_NAME
 
