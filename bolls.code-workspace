@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "Django",
+      "path": "django"
+    },
+    {
+      "name": "Imba",
+      "path": "imba"
+    },
+    {
+      "name": "Docker root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "git.ignoreLimitWarning": true,
+    "svg.preview.background": "custom",
+    "cSpell.words": [
+      "autorun",
+      "chronorder",
+      "createsuperuser",
+      "endverse",
+      "imba",
+      "lucide",
+      "mkcert",
+      "nowrap",
+      "psql",
+      "rgba",
+      "unaccent"
+    ]
+  }
+}

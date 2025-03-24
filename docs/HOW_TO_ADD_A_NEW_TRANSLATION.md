@@ -1,0 +1,1 @@
+../sql/HOW_TO_ADD_A_NEW_TRANSLATION.md

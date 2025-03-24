@@ -1,52 +1,64 @@
+# For development purposes only!!!
 services:
-  DB_SERVICE_NAME:
+  database:
     image: postgres:alpine
-    restart: always
-    container_name: DB_SERVICE_NAME
+    restart: on-failure
+    container_name: database
     environment:
-      - POSTGRES_USER=POSTGRES_USER_SECRET
-      - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
-      - POSTGRES_DB=POSTGRES_DB_SECRET
-      - PGDATA=PGDATA_SECRET
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=postgres_db
+      - PGDATA=/var/lib/postgresql/data/pgdata/bolls_dev
+    security_opt:
+      - label:disable
     labels:
       - "traefik.enable=false"
     networks:
-      - INTERNAL_NETWORK_NAME
-    volumes:
-      - DATABASE_VOLUME_SECRET:/var/lib/postgresql/data
+      - internal
 
-  WEB_SERVICE_NAME:
+  django:
     build:
       context: ./django/
-      dockerfile: Dockerfile
-    restart: always
-    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
-    container_name: WEB_CONTAINER_NAME
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    command: python manage.py runserver 0:8000
+    # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
+    container_name: django
+    # required for SELinux
+    security_opt:
+      - label:disable
     volumes:
-      - STATIC_VOLUME_NAME:/home/bolls/web/static
+      - ./django:/code
+      - ./imba/:/imba
     expose:
       - 8000
+    ports:
+      - 8000:8000
     environment:
-      - DEBUG=DEBUG_SECRET
-      - SECRET_KEY=SECRET_KEY_SECRET
-      - DJANGO_ALLOWED_HOSTS=DJANGO_ALLOWED_HOSTS_SECRET
-      - SQL_ENGINE=SQL_ENGINE_SECRET
-      - SQL_DATABASE=POSTGRES_DB_SECRET
-      - SQL_USER=POSTGRES_USER_SECRET
-      - SQL_PASSWORD=POSTGRES_PASSWORD_SECRET
-      - SQL_HOST=DB_SERVICE_NAME
-      - SQL_PORT=SQL_PORT_SECRET
-      - DATABASE=DATABASE_SECRET
-      - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
-      - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
-      - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
-      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
-      - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
-      - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
+      - DEBUG=1
+      # - SECRET_KEY=SECRET_KEY_SECRET # use default one
+      - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1 localhost
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=postgres_db
+      - SQL_USER=postgres_user
+      - SQL_PASSWORD=postgres_password
+      - SQL_HOST=database
+      - SQL_PORT=5432
+      - DATABASE=postgres
+      # May be omitted for dev
+      # - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
+      # - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
+      # - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
+      # - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
+      # - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
+      # - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
+    env_file:
+      - .env.dev
     networks:
-      - INTERNAL_NETWORK_NAME
+      - internal
+      - web
     depends_on:
-      - DB_SERVICE_NAME
+      - database
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
       interval: 5m
@@ -54,63 +66,88 @@ services:
       retries: 3
       start_period: 1m
 
+  imba:
+    build:
+      context: ./imba/
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    container_name: imba
+    command: npm run dev
+    environment:
+      - API_URL=http://django:8000
+    # required for SELinux
+    security_opt:
+      - label:disable
+    volumes:
+      - ./imba:/app
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    networks:
+      - internal
+      - web
 
-  NGINX_SERVICE_NAME:
-    build: ./nginx
-    restart: always
-    container_name: NGINX_CONTAINER_NAME
+  nginx:
+    build: ./nginx_dev
+    restart: on-failure
+    container_name: nginx
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.WEBSITE_ROUTER.tls=true"
-      - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
-      - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
-      - "traefik.webservice.frontend.entryPoints=http,https"
+      - "traefik.http.routers.nginx-router.tls=true"
+      - "traefik.http.routers.nginx-router.rule=Host(`bolls.local`)"
+      # - "traefik.http.routers.nginx-router.service=whoami1_service"
+      - "traefik.http.services.nginx-router.loadbalancer.server.port=80"
+      # - "traefik.http.routers.nginx-router.tls.certresolver=myresolver"
+      # - "traefik.webservice.frontend.entryPoints=http"
+
+    # required for SELinux
+    security_opt:
+      - label:disable
     volumes:
-      - STATIC_VOLUME_NAME:/home/bolls/web/static
+      - ./django/bolls/static/:/home/bolls/web/static/:delegated
+      - ./imba/:/imba/:delegated
+      - ./nginx_dev/nginx.conf:/etc/nginx/conf.d/nginx.conf
     networks:
-      - INTERNAL_NETWORK_NAME
+      - internal
     depends_on:
-      - WEB_SERVICE_NAME
-
-
+      - django
 
   traefik:
     image: traefik:latest
-    restart: always
+    restart: on-failure
     container_name: traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      # SSL settings, for production only
+      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      # - "--entrypoints.websecure.address=:443"
+      # - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.myresolver.acme.email=bpavlisinec@gmail.com"
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     networks:
       - web
       - internal
-      - internal_dev
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
+    # required for SELinux
+    security_opt:
+      - label:disable
     volumes:
       - "/var/letsencrypt:/letsencrypt"
       - /var/run/docker.sock:/var/run/docker.sock
-
-volumes:
-  STATIC_VOLUME_NAME:
-  DATABASE_VOLUME_SECRET:
-    driver: local
+      - ./traefik/config/static.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/config/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./traefik/certs:/etc/certs:ro
 
 networks:
   internal:
-    external: false
-  internal_dev:
     external: false
   web:
     external: true

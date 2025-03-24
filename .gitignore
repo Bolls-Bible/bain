@@ -2,3 +2,9 @@ inject-secrets.sh
 test/
 letsencrypt/
 django/commentaries/commentaries.csv
+.env.dev
+traefik/certs/local-cert.pem
+traefik/certs/local-key.pem
+sql/restore.sql
+.mypy_cache/
+__pycache__/

@@ -1,13 +1,10 @@
 import json
-import os
 
 from .score_search import score_search
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 BOOKS = []
-with open(BASE_DIR + "/../bolls/static/bolls/app/views/translations_books.json") as json_file:
+with open("/imba/src/data/translations_books.json") as json_file:
     BOOKS = json.load(json_file)
 
 

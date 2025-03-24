@@ -85,15 +85,3 @@ class BollsTestCase(TestCase):
             content_type="application/json",
         )
         self.assertIn(b"and the light in the darkness did shine, and the darkness did not perceive it.", request.content)
-
-    # these files should be in place
-    # https://bolls.life/static/bolls/app/views/languages.json
-    # https://bolls.life/static/bolls/app/views/translations_books.json
-    # https://bolls.life/static/translations/YLT.zip
-    def test_static(self):
-        languages = finders.find("bolls/app/views/languages.json")
-        self.assertIsNotNone(languages)
-        books = finders.find("bolls/app/views/translations_books.json")
-        self.assertIsNotNone(books)
-        translation_zip = finders.find("translations/YLT.zip")
-        self.assertIsNotNone(translation_zip)

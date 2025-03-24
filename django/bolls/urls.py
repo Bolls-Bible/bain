@@ -4,15 +4,9 @@ from django.conf.urls import handler404, handler500, include
 
 urlpatterns = [
     path("", include("social_django.urls", namespace="social")),
-    path("", views.index, name="index"),
-    path("service-worker.js", views.sw, name="sw"),
     path("signup/", views.sign_up, name="signup"),
     path("api/", views.api),
-    path("donate/", views.index),
-    path("profile/", views.index),
-    path("downloads/", views.index),
     path("history/", views.history),
-    path("get-categories/", views.get_categories),
     path("save-bookmarks/", views.save_bookmarks),
     path("delete-bookmarks/", views.delete_bookmarks),
     path("edit-account/", views.edit_account),
@@ -61,21 +55,6 @@ urlpatterns = [
     path("get-dictionary/<slug:dictionary>/", views.get_dictionary),
     # AAA
     path("<slug:translation>/<str:piece>/", views.search),
-    path("<slug:translation>/<int:book>/<int:chapter>/", views.link_to_chapter),
-    path("<slug:translation>/<int:book>/<int:chapter>/<int:verse>/", views.link_to_verse),
-    path(
-        "<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
-        views.link_to_verses,
-    ),
-    path(
-        "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>/",
-        views.link_to_verse,
-    ),
-    path(
-        "international/<slug:translation>/<int:book>/<int:chapter>/<int:verse>-<int:endverse>/",
-        views.link_to_verses,
-    ),
-    # path('/fixBookmarks/', views.fixBookmarks)
 ]
 
 handler404 = views.handler404

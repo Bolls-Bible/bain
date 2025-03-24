@@ -33,6 +33,8 @@ if DEBUG:
 else:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(" ")
 CSRF_TRUSTED_ORIGINS = ["https://bolls.life", "https://dev.bolls.life"]
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS.append("https://bolls.local")
 
 # Application definition
 INSTALLED_APPS = [
@@ -162,11 +164,12 @@ SOCIAL_AUTH_GITHUB_KEY = os.environ.get("SOCIAL_AUTH_GITHUB_KEY", "")
 SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("SOCIAL_AUTH_GITHUB_SECRET", "")
 
 
-SESSION_COOKIE_AGE = 63072000  # 2 year
+SESSION_COOKIE_AGE = 63072000  # 2 years
+# SESSION_COOKIE_HTTPONLY = True
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = DEBUG
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
