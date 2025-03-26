@@ -148,10 +148,13 @@ twin_shortcuts = {
 
 
 def is_number(n):
-    return isinstance(n, (int, float, complex))
-
-
-# print(is_number(1), is_number("1"), is_number("a"))
+    if isinstance(n, (int, float, complex)):
+        return True
+    try:
+        int(n)
+        return True
+    except ValueError:
+        return False
 
 
 def get_book_id(translation, book_slug):

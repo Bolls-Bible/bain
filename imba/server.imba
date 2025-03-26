@@ -35,7 +35,7 @@ def get_description verses, verse\number, endVerse\number
 	else
 		return "Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."
 
-def getChapterVerses translation\string, book\number, chapter\number
+def getChapterVerses translation\string, book\number|string, chapter\number
 	const response = await fetch "{process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/"
 	return response.json()
 
@@ -58,12 +58,11 @@ def preloadChapter req\Request<{
 	}>, res\Response<any, Record<string, any>, number>
 	try
 		let {translation, book, chapter, verseRange } = req.params
-		let verses = await getChapterVerses translation, Number(book), Number(chapter)
+		let verses = await getChapterVerses translation, book, Number(chapter)
 
 		let [verse, endVerse] = verseRange..split('-') ?? []
 
 		let description = get_description verses, Number(verse ?? 1), Number(endVerse ?? verse ? 0 : 3)
-		console.log(description)
 		let result = setDescription index.body, description
 
 		result = result.replace('<!-- og-url -->', `<meta property="og:url" content="https://bolls.life/{translation}/{book}/{chapter}/"/>`)

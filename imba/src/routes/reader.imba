@@ -48,11 +48,6 @@ tag reader
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
-		window.onblur = null
-		document.body.onmouseleave = null
-		document.onmouseleave = null
-		window.onmouseout = null
-		window.strongDefinition = null
 
 	def routed params
 		const link_segments = window.location.pathname.split('/').filter(Boolean)

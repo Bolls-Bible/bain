@@ -49,7 +49,7 @@ services:
     depends_on:
       - DB_SERVICE_NAME
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/get-chapter/YLT/1/1/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/get-text/YLT/1/1/"]
       interval: 5m
       timeout: 3s
       retries: 3

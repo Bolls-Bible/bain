@@ -107,7 +107,10 @@ migrations:
 	docker compose exec django python manage.py makemigrations
 
 migrate:
-	docker compose exec django python manage.py migrate
+	docker compose exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+
+showmigrations:
+	docker compose exec django python manage.py showmigrations
 
 shell:
 	docker compose exec django python manage.py shell
