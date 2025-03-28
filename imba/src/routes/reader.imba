@@ -54,11 +54,11 @@ tag reader
 		if params.translation && params.book && params.chapter
 			if 'international' in window.location.pathname
 				if link_segments.length == 5
-					reader.verse = parseInt(link_segments[-1])
+					reader.verse = link_segments[-1]
 			else
 				reader.translation = params.translation
 				if link_segments.length == 4
-					reader.verse = parseInt(link_segments[-1])
+					reader.verse = link_segments[-1]
 			reader.book = parseInt(params.book)
 			reader.chapter = parseInt(params.chapter)
 

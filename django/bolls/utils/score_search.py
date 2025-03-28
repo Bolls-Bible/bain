@@ -25,7 +25,7 @@ def score_search(text: str, query: str) -> int:
 
         p = index + 1
 
-    if query in search_text and abs(len(search_text) - len(query)) < 2:
+    if query in search_text:
         score += 2
 
     if score >= len(query):

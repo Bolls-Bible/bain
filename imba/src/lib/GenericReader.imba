@@ -21,7 +21,7 @@ class GenericReader
 	loading\boolean = no
 	@observable bookmarks\Bookmark[] = []
 	show_verse_picker\boolean = no
-	verse\number = 0
+	verse\number|string = 0
 
 	me = '' # constant to indicate the main reader versus the parallel reader
 

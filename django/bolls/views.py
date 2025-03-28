@@ -41,6 +41,7 @@ def cross_origin(response, headers={}):
     response["Cross-Origin-Resource-Policy"] = "cross-origin"
     response["Content-Security-Policy"] = "cross-origin"
     response["referrer-policy"] = "unsafe-url"
+    response["x-frame-options"] = "*"
     # add custom headers
     for key, value in headers.items():
         response[key] = value
@@ -992,7 +993,8 @@ def get_verse_counts(_, translation):
                 verses_coun_map[verse.book][verse.chapter] = 0
             verses_coun_map[verse.book][verse.chapter] += 1
         return cross_origin(JsonResponse(verses_coun_map, safe=False))
-    except:
+    except Exception as error:
+        print(error)
         return HttpResponse(status=400, content="Translation is not found")
 
 
@@ -1015,3 +1017,43 @@ def get_random_verse(_, translation):
     except Exception as error:
         print(error)
         return HttpResponse(status=400, content="Translation is not found")
+
+
+def tag_tool_reference(request, translation, book, chapter, verses):
+    try:
+        callback = request.GET.get("callback", "ReferenceTagging.updateTooltip")
+        internal_book = get_book_id(translation, book)
+        verse = ""
+        endVerse = ""
+        if '-' in verses:
+            [verse, endVerse] = verses.split("-")
+        else:
+            verse = verses
+        if endVerse == "":
+            endVerse = verse
+        texts = Verses.objects.filter(
+            translation=translation,
+            book=internal_book,
+            chapter=chapter,
+            verse__gte=int(verse),
+            verse__lte=int(endVerse),
+        )
+
+        if len(texts) == 0:
+            return cross_origin(HttpResponse(status=404, content="The verse is not found"))
+
+        tooltip = {
+            "reference_display": f"{book} {chapter}",
+            "reference": f"/{translation}/{book}/{chapter}/{verses}",
+            "text": " ".join([v.text for v in texts]),
+        }
+
+        return cross_origin(
+            HttpResponse(
+                f"{callback}({json.dumps(tooltip)});",
+                content_type="text/javascript",
+            )
+        )
+    except Exception as error:
+        print(error)
+        return cross_origin(HttpResponse(status=400, content="Something went wrong"))

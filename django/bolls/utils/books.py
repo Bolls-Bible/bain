@@ -174,9 +174,9 @@ def get_book_id(translation, book_slug):
 
         suggestions = []
         for b in BOOKS[translation]:
-            if b["name"] == book_slug:
-                return b
-            score = score_search(book_slug, b["name"])
+            if b["name"].lower() == book_slug:
+                return b["bookid"]
+            score = score_search(b["name"], book_slug)
             if score:
                 suggestions.append((b, score))
         suggestions.sort(key=lambda x: x[1], reverse=True)
@@ -193,3 +193,4 @@ def get_book_id(translation, book_slug):
 # print(get_book_id("KJV", "gen"))
 # print(get_book_id("KJV", "Matthaw"))
 # print(get_book_id("ESV", "Genesis"))
+# print(get_book_id("ESV", "Acts"))

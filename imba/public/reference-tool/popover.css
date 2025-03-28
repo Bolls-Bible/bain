@@ -1,0 +1,48 @@
+a.bibleref {
+  position: relative;
+}
+.bg_popup {
+  position: absolute;
+  z-index: 9999999;
+  font-family: sans-serif;
+  font-style: normal;
+  margin: 0;
+  padding: 10px;
+  width: 362px;
+  max-width: 96vw;
+  border-radius: 0.5rem;
+  direction: ltr;
+  text-align: left;
+  line-height: normal;
+  text-decoration: none;
+  text-transform: none;
+  white-space: normal;
+  word-spacing: 0;
+  max-height: 42vh;
+  overflow: auto;
+  cursor: text;
+  touch-action: none;
+  background-color: hsl(0, 100%, 97%);
+  box-shadow: 0 0 0 1px hsl(256, 100%, 96%), 0 3px 6px hsl(256, 100%, 96%),
+    0 9px 24px hsl(256, 100%, 96%);
+  color:  rgb(4, 6, 12);
+}
+.bg_popup-dark {
+  background-color: #00061a;
+  box-shadow: 0 0 0 1px #383a6d, 0 3px 6px #383a6d, 0 9px 24px #383a6d;
+  color: #b29595;
+}
+.bg_popup p {
+  margin: 3px 0;
+}
+.bg_popup sup {
+  vertical-align: text-top;
+  line-height: normal;
+}
+.bg_popup a {
+  text-decoration: none;
+  font-weight: bold;
+}
+.bg_popup-spinner {
+  min-height: 150px;
+}
