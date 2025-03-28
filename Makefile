@@ -115,6 +115,9 @@ showmigrations:
 shell:
 	docker compose exec django python manage.py shell
 
+django-logs dl:
+	docker compose logs -f django
+
 # Node/Imba commands
 npm-install ni:
 	docker compose exec imba npm install $(filter-out $@,$(MAKECMDGOALS))
@@ -134,6 +137,9 @@ npm-uninstall nd:
 npm-update-all nua:
 	docker compose exec imba npx npm-check-updates -u
 	docker compose exec imba npm i
+
+imba-logs il:
+	docker compose logs -f imba
 
 enter-node en:
 	docker compose exec imba bash

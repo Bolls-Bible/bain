@@ -16,6 +16,7 @@ urlpatterns = [
     path("import-notes/", views.import_notes),
     path("save-compare-translations/", views.save_compare_translations),
     path("api/save-favorite-translations/", views.save_favorite_translations),
+    path("api/tag-tool-reference/<slug:translation>/<str:book>/<int:chapter>/<slug:verses>/", views.tag_tool_reference),
     path("get-translation/<slug:translation>/", views.get_translation),
     path("get-paralel-verses/", views.get_parallel_verses),  # typo, DEPRECATED
     path("get-parallel-verses/", views.get_parallel_verses),

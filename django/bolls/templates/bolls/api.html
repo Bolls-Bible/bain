@@ -50,6 +50,7 @@
     <li><a href="#Fetch a verse">Fetch a verse</a></li>
     <li><a href="#Fetch any verses">Fetch any verses</a></li>
     <li><a href="#Random verse">Random verse</a></li>
+    <li><a href="#Reference Tagging Tool">ReferenceReference Tagging Tool</a></li>
     <li>
       <a href="#dictionary">Dictionary definition for Hebrew and Greek words</a>
     </li>
@@ -545,6 +546,38 @@ https://bolls.life/dictionary-definition/&lt;slug:dict&gt;/&lt;str:query&gt;/</p
     <li>The <code>verse</code> field is a number of the verse in its chapter.</li>
     <li>The <code>text</code> field contains html text of the verse.</li>
   </ul>
+
+  <h2 id="Reference Tagging Tool">Reference Tagging Tool</h2>
+  <p class="last-update">New since 28 March 2025.</p>
+  <p>
+    This API allows you to automatically tag references in your text. All you need to do is to
+    include js script + css, then call the function like this:
+  </p>
+  <pre>
+&lt;head&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;https://bolls.life/reference-tool/tool.js&quot;&gt;&lt;/script&gt;
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://bolls.life/reference-tool/popover.css&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;text&quot;&gt;
+    &lt;p&gt;Some text with references to the Bible: John 3:16&lt;/p&gt;
+    &lt;p&gt;Another text with references to the Bible: Genesis 1:1&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+    ReferenceTagging.init()
+    // set defaults. Full list of public options look at the source code.
+    ReferenceTagging.translation = "KJV"
+    ReferenceTagging.theme = 'dark' // or 'light' which is default
+    ReferenceTagging.linkVerses()
+  &lt;/script&gt;
+&lt;/body&gt;
+    </pre>
+  <p>
+    <a target="_blank" href="/reference-tool/test.html">You may find an example here.</a>
+  </p>
+  <p>
+    Reverse engineered from <a href="https://www.biblegateway.com/share/#reftag">Bible Gateway tool</a> 🥰.
+  </p>
 
   <h3 id="Notes">Notes</h3>
   <ul>
