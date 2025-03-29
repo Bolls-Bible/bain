@@ -151,7 +151,7 @@ tag settings-drawer < aside
 						<button .active-butt=('es'==language) @click=(language = 'es')> "Español"
 						<button .active-butt=('ru'==language) @click=(language = 'ru')> "русский"
 
-		<button.option-box.checkbox-parent @click=(parallelReader.enabled = !parallelReader.enabled) .checkbox-turned=parallelReader.enabled>
+		<button.option-box.checkbox-parent @click=(parallelReader.enable = !parallelReader.enabled) .checkbox-turned=parallelReader.enabled>
 			t.parallel
 			<.checkbox> <span>
 		<button.option-box.checkbox-parent @click=(settings.parallel_sync = !settings.parallel_sync) .checkbox-turned=settings.parallel_sync>
@@ -239,8 +239,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.0.2 🗓 "
-				<time dateTime='2025-3-28'> "28.3.2025"
+				"🍇 v3.0.3 🗓 "
+				<time dateTime='2025-3-29'> "29.3.2025"
 			<p[fs:0.75rem]>
 				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

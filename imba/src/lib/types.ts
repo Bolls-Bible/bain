@@ -57,7 +57,7 @@ export type HighlightRectangular = {
 export type HistoryEntry = {
   book: number;
   chapter: number;
-  verse: number;
+  verse: number | string;
   translation: string;
   date: number;
 };

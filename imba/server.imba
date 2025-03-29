@@ -16,9 +16,13 @@ app.get '/sw/:path' do(req, res)
 app.get '/site.webmanifest' do(req, res)
 	res.sendFile `{__dirname}/public/site.webmanifest`
 
-app.get '/service.worker.js' do(req, res)
+def serviceWorker req, res
 	res.sendFile `{__dirname}/public/sw/service.worker.js`
 
+# Sadly I foolishly renamed it a few times 🤦‍♂️
+app.get '/service.worker.js', serviceWorker
+app.get '/service-worker.js', serviceWorker
+app.get '/sw.js', serviceWorker
 
 def clean_up_html raw_html\string
 	// first remove all strong tags like this "<S>(.*?)</S>"

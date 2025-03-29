@@ -13,7 +13,7 @@ tag chapter < section
 	prop me\(GenericReader)
 	prop headerFontSize = 2 # rem
 	prop versePrefix = ''
-	minHeaderFont = 1.2 # rem
+	minHeaderFont = 0 # rem
 
 	get main
 		return document.getElementById "main"
@@ -63,6 +63,9 @@ tag chapter < section
 			reader.findVerse verseToSctollTo
 
 	def changeHeadersSizeOnScroll e\Event
+		if e.target != self
+			return
+
 		let testsize = 2 - ((e.target.scrollTop * 8) / window.innerHeight)
 		if testsize * theme.fontSize < 12
 			headerFontSize = 16 / theme.fontSize
@@ -125,6 +128,7 @@ tag chapter < section
 
 		<self .parallel=parallelReader.enabled
 			@scroll=changeHeadersSizeOnScroll @mousemove=mousemove
+			@touchmove=changeHeadersSizeOnScroll
 			dir=translationTextDirection(me.translation)>
 			<>
 				for rect in pageSearch.rects when isMyRect(rect.matchID) and activities.activeModal == ''

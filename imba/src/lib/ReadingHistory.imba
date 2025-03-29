@@ -32,8 +32,8 @@ class ReadingHistory
 				console.warn(error)
 				notifications.push('error')
 
-	def saveToHistory translation\string, book\number, chapter\number, verse\number
-		syncHistory!
+	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
+		await syncHistory!
 		
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
 		if already_recorded

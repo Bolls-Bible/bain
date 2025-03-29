@@ -30,7 +30,7 @@ tag modal < section
 		reader.translation = translation
 
 	def openTranslationInParallel translation\string
-		parallelReader.enabled = yes
+		parallelReader.enable = yes
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == parallelReader.book)
 			parallelReader.book = ALL_BOOKS[translation][0].bookid
 			parallelReader.chapter = 1
@@ -43,7 +43,7 @@ tag modal < section
 			reader.chapter = verse.chapter
 			reader.verse = verse.verse
 		else
-			parallelReader.enabled = yes
+			parallelReader.enable = yes
 			parallelReader.book = verse.book
 			parallelReader.chapter = verse.chapter
 			parallelReader.verse = verse.verse

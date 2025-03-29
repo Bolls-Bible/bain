@@ -37,6 +37,7 @@ class Reader < GenericReader
 				chapter = window.chapter
 				verse = window.verse
 			verses = window.verses
+			loading = no
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
@@ -47,6 +48,7 @@ class Reader < GenericReader
 		const translationName = translations.find(do |element| element.short_name == translation)..full_name || translation
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationName + " Bolls Bible"
 		loading = yes
+		imba.commit!
 
 		try
 			verses = []

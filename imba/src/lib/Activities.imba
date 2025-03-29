@@ -102,9 +102,6 @@ class Activities
 		selectedParallel = undefined
 		imba.commit!
 	
-	def delayedCleanUp
-		imba.commit!.then do
-			cleanUp!
 
 	def toggleBooksMenu parallel
 		if booksDrawerOffset
@@ -259,7 +256,7 @@ class Activities
 	def copyWithoutLink 
 		copyTextToClipboard
 			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation
-		delayedCleanUp!
+		cleanUp!
 
 	def copyWithLink copy\CopyObject
 		copyTextToClipboard
@@ -268,7 +265,7 @@ class Activities
 	def copyWithInternationalLink
 		copyTextToClipboard
 			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
-		delayedCleanUp!
+		cleanUp!
 
 
 	def copyToClipboardFromSearch copy\Verse
@@ -305,7 +302,6 @@ class Activities
 			reader.saveBookmark!
 		else
 			parallelReader.saveBookmark!
-		cleanUp!
 
 
 

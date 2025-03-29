@@ -18,7 +18,7 @@ class GenericReader
 	@observable book\number
 	@observable chapter\number
 	verses\Array<Verse> = []
-	loading\boolean = no
+	loading\boolean = yes
 	@observable bookmarks\Bookmark[] = []
 	show_verse_picker\boolean = no
 	verse\number|string = 0
