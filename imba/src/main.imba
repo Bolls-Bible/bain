@@ -4,6 +4,7 @@ import './routes'
 
 tag app
 	<self>
+		<client-login route='/client-app-login/*'>
 		<profile route='/profile/'>
 		<downloads route='/downloads/'>
 		<donate route='/donate/'>

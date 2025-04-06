@@ -147,7 +147,6 @@ export def isNumber(n)
 
 
 export def getBookId(translation\string, book_slug\string)
-	console.log("getBookId", translation, book_slug)
 	try
 		# if book_slug is already a number return it
 		if isNumber(book_slug)
@@ -173,6 +172,6 @@ export def getBookId(translation\string, book_slug\string)
 		if suggestions.length > 0
 			return suggestions[0][0]["bookid"]
 	catch error
-		console.log("Error in getBookId", error)
+		console.log("Error in getBookId", translation, book_slug, error)
 
 	return book_slug

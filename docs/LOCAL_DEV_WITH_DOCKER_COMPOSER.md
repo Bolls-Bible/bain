@@ -19,6 +19,13 @@ Now add `bolls.local` to your hosts file (on linux it's /etc/hosts) and generate
 make mkcert-install
 ```
 
+If you're on Windows, install mkcert using chocolatey or scoop and run the following command to generate the certificates:
+
+```powershell
+mkcert -install
+mkcert -cert-file "C:\path-to-the-project\bain\traefik\certs\local-cert.pem" -key-file "C:\path-to-the-project\bain\traefik\certs\local-key.pem" "bolls.local"
+```
+
 Then create .env.dev (may be empty) and run the application with
 
 ```bash

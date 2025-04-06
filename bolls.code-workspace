@@ -1,16 +1,16 @@
 {
   "folders": [
     {
+      "name": "Docker root",
+      "path": "."
+    },
+    {
       "name": "Django",
       "path": "django"
     },
     {
       "name": "Imba",
       "path": "imba"
-    },
-    {
-      "name": "Docker root",
-      "path": "."
     }
   ],
   "settings": {

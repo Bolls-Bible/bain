@@ -46,6 +46,7 @@ class User
 		deleteValue 'name'
 		deleteValue 'bookmarksMap'
 		await API.fetch("/accounts/logout/", "POST")
+		API.deleteAllCookies()
 		window.location.replace("/")
 
 	def getMe

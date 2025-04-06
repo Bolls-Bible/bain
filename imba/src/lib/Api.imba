@@ -48,6 +48,12 @@ class API
 					break
 		return cookieValue
 
+	def deleteAllCookies
+		for cookie of document.cookie.split(";")
+			const eqPos = cookie.indexOf("=")
+			const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+			document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"
+
 const api = new API()
 
 export default api
