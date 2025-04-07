@@ -163,7 +163,7 @@ tag verse-actions < section
 									t.copy_international
 								<button @click=(do()
 										activities.copyWithLink(activities.copyObject)
-										activities.delayedCleanUp!
+										activities.cleanUp!
 									)>
 										<svg src=Link aria-hidden=yes>
 										t.copy_with_link

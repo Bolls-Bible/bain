@@ -25,7 +25,7 @@ app.get '/service-worker.js', serviceWorker
 app.get '/sw.js', serviceWorker
 
 def clean_up_html raw_html\string
-	// first remove all strong tags like this "<S>(.*?)</S>"
+	// first remove all strong tags
 	raw_html = raw_html.replace(/<S>(.*?)<\/S>/g, '')
 	// then remove all other tags
 	return raw_html.replace(/<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/g, '')

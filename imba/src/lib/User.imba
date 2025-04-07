@@ -46,6 +46,7 @@ class User
 		deleteValue 'name'
 		deleteValue 'bookmarksMap'
 		await API.fetch("/accounts/logout/", "POST")
+		API.deleteAllCookies()
 		window.location.replace("/")
 
 	def getMe
@@ -60,7 +61,6 @@ class User
 						bookmarksMap = userdata.bookmarksMap
 					if userdata.categories
 						categories = userdata.categories
-					await readingHistory.syncHistory!
 				else
 					bookmarksMap = {}
 					username = ''

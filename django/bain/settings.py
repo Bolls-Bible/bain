@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "300lf8rl25%wq$cs$2^k$r-u16@58b7m%ljds
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=1))
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # Something like: localhost 127.0.0.1 [::1] dev.bolls.life
 if DEBUG:
@@ -165,11 +165,11 @@ SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("SOCIAL_AUTH_GITHUB_SECRET", "")
 
 
 SESSION_COOKIE_AGE = 63072000  # 2 years
-# SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = False
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = DEBUG
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",

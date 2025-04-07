@@ -67,8 +67,8 @@ restore-db:
 	# first, make sure we have all migrations run
 	@$(MAKE) migrate
 
-	# check if the file exists, otherwise download https://storage.googleapis.com/resurrecting-cat.appspot.com/essentials_backup.sql into the /sql/ folder
-	[ -f sql/restore.sql ] || wget https://storage.googleapis.com/resurrecting-cat.appspot.com/essentials_backup.sql -O sql/restore.sql
+	# check if the file exists, otherwise download https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql into the /sql/ folder
+	[ -f sql/restore.sql ] || wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O sql/restore.sql
 
 	# copy the file to the db container
 	docker cp sql/restore.sql database:/restore.sql

@@ -14,7 +14,7 @@ import user from './User'
 import vault from './Vault'
 import compare from './Compare'
 import pwa from './PWA'
-
+import './ClientAppLogin'
 
 import { translations, RTLTranslations, bookNameIndex } from '../constants'
 
