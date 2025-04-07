@@ -61,7 +61,6 @@ class User
 						bookmarksMap = userdata.bookmarksMap
 					if userdata.categories
 						categories = userdata.categories
-					await readingHistory.syncHistory!
 				else
 					bookmarksMap = {}
 					username = ''
