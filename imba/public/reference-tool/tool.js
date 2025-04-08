@@ -293,7 +293,7 @@ class ReferenceTagging {
       new_nodes = ReferenceTagging.searchNode(node, 0);
       return new_nodes;
     }
-    if (node?.tagName.match(/^(?:a|h\d|img|pre|input|option)$/i)) {
+    if (node.tagName?.match(/^(?:a|h\d|img|pre|input|option)$/i)) {
       return null;
     }
     const children = node.childNodes;
