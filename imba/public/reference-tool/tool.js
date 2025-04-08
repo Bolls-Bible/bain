@@ -312,7 +312,7 @@ class ReferenceTagging {
       "[\\u0020\\u00a0\\u1680\\u2000-\\u200a\\u2028-\\u202f\\u205f\\u3000]";
     //finds book and chapter for each verse that been separated by &,and,etc...
     const book_chap = `((?:(${book_string}${apoc_string})(?:.)?${unicode_space}*?)?(?:(\\d*):)?(\\d+(?:(?:ff|f|\\w)|(?:\\s?(?:-|–|—)\\s?\\d+)?)))([^a-z0-9]*)`;
-    const regex_string = `(?:${book_string}${apoc_string})(?:.)?${unicode_space}*?\\d+:\\d+(?:ff|f|\\w)?(?:\\s?(?:(?:(?:-|–|—)\\s?(?:(?:${book_string}${apoc_string})(?:.)?\\s)?)|(?:(?:,|&amp;|&|and|cf\\.|cf)))\\s?(?:(?:(?:vv.|vs.|vss.|v.) ?)?\\d+\\w?)(?::\\d+\\w?)?)*`;
+    const regex_string = `(?:${book_string}${apoc_string})(?:.)?${unicode_space}*?\\d+:\\d+(?:ff|f|\\w)?(?:\\s?(?:(?:(?:-|–|—)\\s?(?:(?:${book_string}${apoc_string})(?:.)?\\s)?)|(?:(?:,|;|&amp;|&|and|cf\\.|cf)))\\s?(?:(?:(?:vv.|vs.|vss.|v.) ?)?\\d+\\w?)(?::\\d+\\w?)?)*`;
     const regex = new RegExp(regex_string, "i");
     const verse_match = node.nodeValue.match(regex);
     if (verse_match == null) {
