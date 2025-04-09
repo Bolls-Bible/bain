@@ -61,10 +61,10 @@ services:
       - database
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/get-text/YLT/1/1/"]
-      interval: 5m
+      interval: 30s
       timeout: 3s
-      retries: 3
-      start_period: 1m
+      retries: 2
+      start_period: 10s
 
   imba:
     build:
