@@ -20,7 +20,7 @@ for (i; i < form.children.length; i++) {
 if (navigator.userAgent.includes("bolls")) {
   document.querySelectorAll(".with").forEach((el) => {
     el.target = "_blank";
-    el.href = el.href.replace("login", "client-app-login");
+    el.href = el.href.replace("login", "login/redirect");
   });
   console.log(document.querySelectorAll(".with"));
 }

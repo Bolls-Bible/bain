@@ -729,6 +729,10 @@ def api(request):
     return render(request, "bolls/api.html")
 
 
+def login_redirect(request, extra):
+    return render(request, "bolls/login_redirect.html")
+
+
 def handler404(request, *args, **argv):
     response = render("404.html", {}, context_instance=RequestContext(request))
     response.status_code = 404
@@ -1043,7 +1047,7 @@ def tag_tool_reference(request, translation, book, chapter, verses):
             return cross_origin(HttpResponse(status=404, content="The verse is not found"))
 
         tooltip = {
-            "reference_display": f"{book} {chapter}",
+            "reference_display": f"{book} {chapter}:{verse}" + (f"-{endVerse}" if endVerse != verse else ""),
             "reference": f"/{translation}/{book}/{chapter}/{verses}",
             "text": " ".join([v.text for v in texts]),
         }
