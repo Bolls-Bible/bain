@@ -118,12 +118,12 @@ class ReferenceTagging {
       ReferenceTagging.addListener(
         tooltip,
         "mouseover",
-        ReferenceTagging.tooltipMouseover.bind(ReferenceTagging)
+        ReferenceTagging.tooltipMouseover
       );
       ReferenceTagging.addListener(
         tooltip,
         "mouseout",
-        ReferenceTagging.tooltipMouseout.bind(ReferenceTagging)
+        ReferenceTagging.tooltipMouseout
       );
     }
 
@@ -395,7 +395,7 @@ class ReferenceTagging {
       }
     }
 
-    tooltip.innerHTML = `<div class="bg_popup-content"><p>${tooltip_content.text} <b>(${ReferenceTagging.translation})</b></p></div>`;
+    tooltip.innerHTML = `<div class="bg_popup-content"><header>${reference_display} <b>(${ReferenceTagging.translation})</b></header><p>${tooltip_content.text}</p></div>`;
     ReferenceTagging.addCloseButton(tooltip);
   }
 
