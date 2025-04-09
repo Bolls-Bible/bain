@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <link rel="stylesheet" type="text/css" href="/static/bolls/api.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/static/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/static/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/static/favicon-16x16.png"
+    />
+    <meta property="og:site_name" content="Bolls Bible" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <meta name="description" content="API for fetching Bible text." />
+    <meta property="og:title" content="API for fetching Bible text." />
+    <meta
+      property="og:description"
+      content="Bolls Bible APIs. Get the Bible text without limits."
+    />
+    <meta property="og:image" content="/static/bolls.png" />
+    <meta name="theme-color" content="#04060c" />
+    <meta name="twitter:card" content="app" />
+    <meta name="twitter:site" content="@bolls-twitter-handle" />
+    <meta name="twitter:title" content="Bolls Bible" />
+    <meta name="twitter:image:src" content="/static/bolls.png" />
+    <meta name="twitter:image:alt" content="Bolls logo" />
+    <meta name="twitter:app:name:googleplay" content="Bolls" />
+    <meta name="twitter:app:id:googleplay" content="life.bolls.bolls" />
+  </head>
+
+  <body>
+    Redirecting...
+    <script>
+      // Let the frontend know to open the client app once the login is successful
+      window.localStorage.setItem("client-app-login", "true");
+      window.location.replace(
+        window.location.href.replace("login/redirect", "login")
+      );
+    </script>
+  </body>
+</html>
