@@ -1,7 +1,9 @@
 on:
   push:
-    tags:
-      - v**
+    branches:
+      - master
+    # tags:
+    #   - v**
 
 jobs:
   deploy:
@@ -106,5 +108,5 @@ jobs:
 
             echo "Running tests..."
             docker compose -f docker-compose.prod.yml exec -T $WEB_CONTAINER_NAME python manage.py test --keepdb
-            docker system prune -a -f
+            # docker system prune -a -f
             echo "Done."
