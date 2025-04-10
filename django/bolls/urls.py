@@ -7,7 +7,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.sign_up, name="signup"),
     path("api/", views.api),
-    path("login/redirect/<path:extra>/", views.login_redirect),
     path("history/", views.history),
     path("save-bookmarks/", views.save_bookmarks),
     path("delete-bookmarks/", views.delete_bookmarks),

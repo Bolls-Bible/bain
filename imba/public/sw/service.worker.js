@@ -50,11 +50,20 @@ self.addEventListener("fetch", (event) => {
           return (
             resp ||
             fetch(event.request).then((response) => {
-              var responseClone = response.clone();
+              // if the response is not ok, do not cache it
+              if (!response || response.status < 200 || response.status >= 300) {
+                return response;
+              }
+              // if the response is a zip file, do not cache it
+              if (response.headers.get("Content-Type") == "application/zip") {
+                return response;
+              }
+
               // if this is chrome-extension then return the response
               if (url.includes("chrome-extension")) {
                 return response;
               }
+              var responseClone = response.clone();
               const texts_cache_eligible =
                 url.includes("get-chapter/") ||
                 url.includes("get-text/") ||

@@ -49,7 +49,7 @@ def cross_origin(response, headers={}):
 
 
 def index(request):
-    return redirect("/")
+    return HttpResponse("Hello, world. You're at the bolls index.")
 
 
 def get_translation(_, translation):
@@ -731,11 +731,6 @@ def get_me_if_am_logged_in(request):
 
 def api(request):
     return render(request, "bolls/api.html")
-
-
-def login_redirect(request, extra):
-    request.session.cycle_key()
-    return render(request, "bolls/login_redirect.html")
 
 
 def handler404(request, *args, **argv):

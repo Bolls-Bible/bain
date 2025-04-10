@@ -16,11 +16,50 @@ for (i; i < form.children.length; i++) {
   }
 }
 
+const oauthLinks = document.querySelectorAll(".with");
 // If we're on electron or android client -- redirect the links to external login page
 if (navigator.userAgent.includes("bolls")) {
   document.querySelectorAll(".with").forEach((el) => {
     el.target = "_blank";
-    el.href = el.href.replace("login", "login/redirect");
+    el.href = el.href.replace("login", "accounts/login?redirect=/login");
   });
-  console.log(document.querySelectorAll(".with"));
 }
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function checkOAuthRedirects() {
+  const params = new URLSearchParams(window.location.search);
+  const redirectUrl = params.get("redirect");
+  if (redirectUrl) {
+    // If redirectURL is present, then we must check if the user already logged in
+    // and if so, we need to redirect to the client app
+    const sessionId = getCookie("sessionid");
+    if (sessionId) {
+      // If the session id is present, then we need to redirect to the client app
+      window.localStorage.removeItem("client-app-login");
+      window.location.replace(
+        `bolls://client-app-login?sessionid=${btoa(sessionId)}`
+      );
+      return;
+    }
+
+    // Let the frontend know to open the client app once the login is successful
+    window.localStorage.setItem("client-app-login", "true");
+    window.location.pathname = redirectUrl;
+  }
+}
+
+checkOAuthRedirects();
