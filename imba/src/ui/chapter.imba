@@ -132,7 +132,7 @@ tag chapter < section
 			dir=translationTextDirection(me.translation)>
 			<>
 				for rect in pageSearch.rects when isMyRect(rect.matchID) and activities.activeModal == ''
-					<.{rect.class} id=rect.matchID [pos:absolute top:{rect.top}px left:{rect.left}px width:{rect.width}px height:{rect.height}px]>
+					<.{rect.class} id=rect.matchID [pos:absolute zi:-1 top:{rect.top}px left:{rect.left}px width:{rect.width}px height:{rect.height}px]>
 
 			if me.verses.length
 				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
@@ -153,7 +153,7 @@ tag chapter < section
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
 						let bookmark = me.getBookmark(verse.pk, 'bookmarks')
-						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:{1.2 * headerFontSize}em;"
+						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1em;"
 
 						if settings.verse_number
 							unless settings.verse_break

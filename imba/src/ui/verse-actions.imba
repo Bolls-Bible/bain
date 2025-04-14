@@ -31,7 +31,7 @@ tag verse-actions < section
 
 	def initiateSlideHandling event
 		const touch = event.changedTouches[0]
-		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes touch.target.tagName
+		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes touch.target.tagName.toUpperCase!
 			return
 		event.preventDefault()
 		# we want to slide the verse actions up and down

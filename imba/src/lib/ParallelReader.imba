@@ -20,21 +20,24 @@ class ParallelReader < GenericReader
 
 	@autorun def saveTranslation
 		setValue('parallel_translation', translation)
-	
+
 	@autorun def saveBook
 		setValue('parallel_book', book)
-	
+
 	@autorun def saveChapter
 		setValue('parallel_chapter', chapter)
 
 	@autorun def saveEnabled
 		setValue('parallel_display', enabled)
-	
+
 	set enable value\boolean
 		if value
 			book = reader..book
 			chapter = reader..chapter
 		enabled = value
+
+	get myRenderer
+		document.getElementById('parallel-reader')
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
@@ -76,6 +79,8 @@ class ParallelReader < GenericReader
 			verse = undefined
 		else
 			show_verse_picker = yes
+			if myRenderer
+				myRenderer.scrollTop = 0
 
 
 

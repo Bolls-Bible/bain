@@ -19,6 +19,7 @@ class ReadingHistory
 
 	@autorun(delay:500ms) def saveHistoryToServer
 		if user.username && window.navigator.onLine
+			await syncHistory!
 			API.put('/history/', {
 				history: JSON.stringify(history),
 			})
@@ -55,6 +56,7 @@ class ReadingHistory
 	def syncHistory
 		if !user.username || !window.navigator.onLine
 			return
+
 		let cloudData = await API.getJson('/history/')
 		if cloudData.compare_translations..length
 			compare.translations = JSON.parse(cloudData.compare_translations) || []

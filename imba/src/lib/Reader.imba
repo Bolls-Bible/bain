@@ -39,6 +39,9 @@ class Reader < GenericReader
 			verses = window.verses
 			loading = no
 
+	get myRenderer
+		document.getElementById('main-reader')
+
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun(delay:2ms)
 	def fetchVerses
@@ -81,8 +84,8 @@ class Reader < GenericReader
 			verse = undefined
 		else
 			show_verse_picker = yes
-
-		# if verse > 0 then show_verse_picker = no else show_verse_picker = yes
+			if myRenderer
+				myRenderer.scrollTop = 0
 
 		# if the pathname has one of 4 `/` in it then call the pushState
 		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length

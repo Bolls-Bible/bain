@@ -168,7 +168,7 @@ global css
 	.ws, nav, button, aside, .platform-item, img, .mark-grid, #page-search, .collectionshat
 		user-select: none
 
-	html, body
+	html
 		m:0 p:0
 		font-family: sans, sans-serif, "Apple Color Emoji", "Droid Sans Fallback", "Noto Color Emoji", "Segoe UI Emoji"
 		bgc: $bgc
@@ -176,6 +176,9 @@ global css
 		mih: 100vh
 		mih: -webkit-fill-available
 		height: -webkit-fill-available
+	
+	body
+		m:0 p:0
 
 	mark
 		c: inherit
