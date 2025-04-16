@@ -50,7 +50,7 @@ function checkOAuthRedirects() {
     if (sessionId) {
       // If the session id is present, then we need to redirect to the client app
       window.localStorage.removeItem("client-app-login");
-      window.open(`bolls://client-app-login?sessionid=${btoa(sessionId)}`);
+      window.open(`bolls://bolls.life/login?sessionid=${btoa(sessionId)}`, '_blank');
       window.location.pathname = "/";
       return;
     }

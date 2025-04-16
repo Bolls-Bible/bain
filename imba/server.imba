@@ -7,14 +7,7 @@ const app = express!
 const port = process.env.PORT or 3000
 
 
-app.use(express.static('dist/public',maxAge:'1m'))
-
-app.get '/sw/:path' do(req, res)
-	# because these are js files, they aren't served by express.static automatically
-	res.sendFile `{__dirname}/public/sw/{req.params.path}`
-
-app.get '/site.webmanifest' do(req, res)
-	res.sendFile `{__dirname}/public/site.webmanifest`
+app.use(express.static('dist/public', maxAge:'1m'))
 
 def serviceWorker req, res
 	res.sendFile `{__dirname}/public/sw/service.worker.js`
