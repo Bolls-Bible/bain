@@ -6,7 +6,7 @@ import ChevronDown from 'lucide-static/icons/chevron-down.svg'
 import CaseSensitive from 'lucide-static/icons/case-sensitive.svg'
 import WholeWord from 'lucide-static/icons/whole-word.svg'
 import SquareSplitHorizontal from 'lucide-static/icons/square-split-horizontal.svg'
-import Filter from 'lucide-static/icons/filter.svg'
+import Filter from 'lucide-static/icons/list-filter.svg'
 import Copy from 'lucide-static/icons/copy.svg'
 import ListPlus from 'lucide-static/icons/list-plus.svg'
 import Send from 'lucide-static/icons/send.svg'
@@ -222,13 +222,13 @@ tag modal < section
 													', ', translation.full_name
 
 
-						<article.body id="compare" [scroll-behavior: auto]>
+						<article.body id="compare" [scroll-behavior:auto]>
 							<p[o:0.75]> t.add_translations_msg
 
 							<orderable-list>
 
 							unless compare.translations.length
-								<button[m: 16px auto; d: flex].more_results @click=(do activities.show_comparison_options = !activities.show_comparison_options)> t.add_translation_btn
+								<button[m:1rem auto d:flex].more_results @click=(do activities.show_comparison_options = !activities.show_comparison_options)> t.add_translation_btn
 
 					when 'downloads'
 						<header>

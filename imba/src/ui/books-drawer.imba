@@ -100,7 +100,7 @@ tag books-drawer < nav
 			reader.book = bookid
 			reader.chapter = chapter
 
-	<self>
+	<self [left@important: 0]=settings.lock_books_menu>
 		<header>
 			if parallelReader.enabled
 				<[d:flex mih:2.25rem]>
@@ -124,7 +124,7 @@ tag books-drawer < nav
 					<[d:flex flw:wrap ai:center p:0.5rem]>
 						<svg src=Heart [size:1em stroke:$c fill:currentColor]>
 						for favorite in settings.favoriteTranslations
-							<span.li [w:auto p:0 8px] @click=changeTranslation(favorite)> favorite
+							<span.li [w:auto p:0 .5rem] @click=changeTranslation(favorite)> favorite
 				for language in languages
 					<section key=language.language>
 						<p.li .active=(language.language == activeLanguage) @click=toggleLanguageTranslations(language.language)>
@@ -172,8 +172,8 @@ tag books-drawer < nav
 							<pre[d:flex jc:center] aria-hidden=true>
 								"-ˋˏ ༻⟡༺ ˎˊ-"
 
-		if !activities.booksDrawerOffset and settings.fixdrawers
-			<global @click.outside=activities.toggleBooksMenu>
+		unless activities.booksDrawerOffset
+			<global @click.outside.capture.stop.prevent=activities.toggleBooksMenu>
 
 	css
 		.btn
@@ -196,7 +196,7 @@ tag books-drawer < nav
 			d:hcs
 			color:inherit
 			background:inherit
-			padding:0.5rem
+			padding:0.75rem
 			height:auto
 			cursor:pointer
 			width:100%

@@ -94,7 +94,7 @@ app.get '/:translation/:book/:chapter/:verseRange', preloadChapter
 app.get '/international/:translation/:book/:chapter/:verseRange', preloadChapter
 
 
-app.get '*' do(req, res)
+app.get '/{*splat}' do(req, res)
 	res.send defaultIndex
 
 imba.serve app.listen(port)

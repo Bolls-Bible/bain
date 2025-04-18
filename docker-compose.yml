@@ -72,7 +72,9 @@ services:
       dockerfile: Dockerfile.dev
     restart: on-failure
     container_name: imba
-    command: sh -c "npm i && npm run dev"
+    # command: npm i
+    command: npm run dev
+    # command: sh -c "npm i && npm run dev"
     environment:
       - API_URL=http://django:8000
     # required for SELinux

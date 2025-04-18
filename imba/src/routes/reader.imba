@@ -380,10 +380,6 @@ tag reader
 			padding-block: 1rem 2rem
 			overflow-y: auto
 			-webkit-overflow-scrolling: touch
-		
-		.hide-comments
-			sup
-				display: none
 
 		.parallels
 			d:flex
@@ -393,10 +389,14 @@ tag reader
 			section
 				max-height@lt-sm: 50vh
 				-webkit-overflow-scrolling: touch
-		
+
 		.drawer-handle
 			w:2vw w:min(1.5rem, max(1rem, 2vw))
 			h:100vh
 			bgc:gray4/25
 			o:0 @hover:1
 			d:hcc cursor:pointer zi:2 c:$acc 
+
+global css .hide-comments
+	sup
+		display: none

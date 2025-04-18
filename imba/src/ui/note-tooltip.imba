@@ -44,8 +44,8 @@ tag note-tooltip
 			#left_offset = 'auto'
 			#right_offset = 'auto'
 
-		let reader = document.getElementById('reader')
-		if window.innerHeight - (self.offsetTop - reader.scrollTop) < 256
+		let reader = self.parentElement.parentElement
+		if window.innerHeight - (self.offsetTop - reader.scrollTop) < 256 && reader
 			let style = window.getComputedStyle(self, null).getPropertyValue('line-height')
 			let line_height = parseFloat(style)
 			reader.scrollTo(reader.scrollLeft, reader.scrollTop + line_height + (288 - (window.innerHeight - (self.offsetTop - reader.scrollTop))))

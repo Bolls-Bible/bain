@@ -98,6 +98,16 @@ tag orderable-list
 		return 0
 
 
+	def copyToClipboardFromParallel tr
+		activities.copyWithLink({
+			translation: tr[0].translation,
+			book: tr[0].book,
+			chapter: tr[0].chapter,
+			verses: tr.map(do|t| return t.verse),
+			text: tr.map(do|t| return t.text),
+			title: activities.getSelectedVersesTitle(tr[0].translation, tr[0].book, tr[0].chapter, tr.map(do|t| return t.verse)),
+		})
+
 
 	<self>
 		<ul @mouseup=stopIntersect>
