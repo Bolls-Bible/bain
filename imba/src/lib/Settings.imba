@@ -11,7 +11,6 @@ class SettingsState
 	@observable parallel_sync\boolean = getValue('parallel_synch') ?? yes
 	@observable lock_books_menu\boolean = getValue('lock_books_menu') ?? no
 	@observable extended_dictionary_search\boolean = getValue('extended_dictionary_search') ?? no
-	@observable enable_dynamic_contrast\boolean = getValue('enable_dynamic_contrast') ?? no
 	@observable fixdrawers\boolean = getValue('fixdrawers') ?? no
 	@observable menuicons\boolean = getValue('menuicons') ?? yes
 	@observable contrast\number = getValue('contrast') ?? 105
@@ -39,9 +38,6 @@ class SettingsState
 	@autorun def saveExtendedDictionarySearch
 		setValue('extended_dictionary_search', extended_dictionary_search)
 	
-	@autorun def saveEnableDynamicContrast
-		setValue('enable_dynamic_contrast', enable_dynamic_contrast)
-	
 	@autorun def saveFixDrawers
 		setValue('fixdrawers', fixdrawers)
 	
@@ -50,12 +46,6 @@ class SettingsState
 
 	@autorun def saveContrast
 		setValue('contrast', contrast)
-	
-	@autorun def applyContrast
-		if enable_dynamic_contrast
-			document.body.style.filter = 'contrast(' + contrast + '%)'
-		else
-			document.body.style.filter = ''
 	
 	@autorun def saveChronorder
 		setValue('chronorder', chronorder)

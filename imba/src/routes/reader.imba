@@ -1,6 +1,7 @@
 import '../ui'
 
 import { MOBILE_PLATFORM } from '../constants'
+import { getValue, deleteValue } from '../utils'
 
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
@@ -44,6 +45,17 @@ tag reader
 		window.strongDefinition = do(topic)
 			self.dictionary.query = topic
 			self.dictionary.loadDefinitions!
+		
+		# TODO test this
+		if getValue('enable_dynamic_contrast')
+			// Tell the user we don't support this feature anymore and offer them to create a custom theme instead which has better control
+			const message = "Dynamic contrast is not supported anymore. You can create a custom theme instead which has better control over the colors."
+			const confirm = await window.confirm(message)
+			if confirm
+				# activities.showCustomTheme!
+				log("abhabsdh")
+			deleteValue('enable_dynamic_contrast')
+
  
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))

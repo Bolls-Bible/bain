@@ -42,7 +42,6 @@ export const english = {
 	"bible_search": "Search in Bible",
 	"cancel": "Cancel",
 	"cannot_be_undone": "This action cannot be undone. This will permanently delete your account and bookmarks.",
-	"canvastitle": "Pick a color to highlight choosen verses",
 	"category_exists": "This category already exists",
 	"collections": "Collections"
 	"change_book": "Bible",
@@ -57,7 +56,6 @@ export const english = {
 	"copied": "Copied",
 	"copy": "Copy",
 	"copy_international": "Copy international link",
-	"create": "Save",
 	"decrease_font_size": "Decrease font size",
 	"decrease_font_weight": "Decrease font weight",
 	"decrease_line_height": "Decrease line height",
@@ -185,7 +183,13 @@ export const english = {
 	"welcome": "Welcome to Bolls :)",
 	"welcome_msg": "This web app is for reading the Bible. The books / translations are in the left panel, other settings in the right one.\nEnjoy",
 	"write_something_awesone": "Write something awesome",
-	"ycdtitnw": "You can support this app in the next way:"
+	"ycdtitnw": "You can support this app in the next way:",
+	"hueSlider": 'Hue slider',
+	"alphaSlider": 'Opacity slider',
+	"colorPickerInstruction": 'Saturation and brightness selector. Use up, down, left and right arrow keys to select.',
+	"backgroundLight": "Background light",
+	"foregroundLight": "Foreground light",
+	"createTheme": "Create theme",
 }
 
 export const ukrainian = {
@@ -232,7 +236,6 @@ export const ukrainian = {
 	"bible_search": "Шукати в Біблії",
 	"cancel": "Відмінити",
 	"cannot_be_undone": "Цю дію не можна скасувати. Це назавжди видалить ваш обліковий запис і закладки.",
-	"canvastitle": "Натицькайте колір",
 	"category_exists": "Ця категорія вже існує",
 	"collections": "Коллекції"
 	"change_book": "Біблія",
@@ -247,7 +250,6 @@ export const ukrainian = {
 	"copied": "Скопійовано",
 	"copy": "Копіювати",
 	"copy_international": "Копіювати міжнародне посилання",
-	"create": "Зберегти",
 	"decrease_font_size": "Зменшити шрифт",
 	"decrease_font_weight": "Зменшити товщину шрифту",
 	"decrease_line_height": "Зменшити висоту рядка",
@@ -375,7 +377,13 @@ export const ukrainian = {
 	"welcome": "Ласкаво просимо в Bolls :)",
 	"welcome_msg": "Цей додаток призначений для читання Біблії. Навігація по книгам / перекладам знаходиться на панелі ліворуч, інші налаштування - праворуч.\nНасолоджуйтесь",
 	"write_something_awesone": "Напишіть щось дивовижне",
-	"ycdtitnw": "Ви можете підтримати даний додаток наступним чином:"
+	"ycdtitnw": "Ви можете підтримати даний додаток наступним чином:",
+	"hueSlider": "Колірний слайдер",
+	"alphaSlider": "Слайдер непрозорості",
+	"colorPickerInstruction": "Селектор насиченості та яскравості. Використовуйте клавіші зі стрілками вгору, вниз, вліво та вправо для вибору.",
+	"backgroundLight": "Світло фону",
+	"foregroundLight": "Світло переднього плану",
+	"createTheme": "Створити тему",
 }
 
 export const russian = {
@@ -422,7 +430,6 @@ export const russian = {
 	"bible_search": "Искать в Библии",
 	"cancel": "Отменить",
 	"cannot_be_undone": "Это действие не может быть отменено. Оно навсегда удалит ваш аккаунт и закладки.",
-	"canvastitle": "Выберите цвет",
 	"category_exists": "Эта категория уже существует",
 	"collections": "Коллекции"
 	"change_book": "Библия",
@@ -437,7 +444,6 @@ export const russian = {
 	"copied": "Скопировано",
 	"copy": "Копировать",
 	"copy_international": "Копировать международную ссылку",
-	"create": "Сохранить",
 	"decrease_font_size": "Уменьшить шрифт",
 	"decrease_font_weight": "Уменьшить толщину шрифта",
 	"decrease_line_height": "Уменьшить высоту строки",
@@ -565,7 +571,13 @@ export const russian = {
 	"welcome": "Добро пожаловать в Bolls :)",
 	"welcome_msg": "Это веб-приложение для чтения Библии. Навигация по книгам / переводам находится на левой панели, остальные настройки - на правой.\nНаслаждайтесь",
 	"write_something_awesone": "Напишите что-нибудь классное",
-	"ycdtitnw": "Вы можете поддержать данное приложение так:"
+	"ycdtitnw": "Вы можете поддержать данное приложение так:",
+	"hueSlider": "Цветовой слайдер",
+	"alphaSlider": "Слайдер прозрачности",
+	"colorPickerInstruction": "Селектор насыщенности и яркости. Используйте клавиши со стрелками вверх, вниз, влево и вправо для выбора.",
+	"backgroundLight": "Свет фона",
+	"foregroundLight": "Свет переднего плана",
+	"createTheme": "Создать тему",
 }
 
 export const portuguese = {
@@ -612,7 +624,6 @@ export const portuguese = {
 	"bible_search": "Pesquisar na Bíblia",
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Essa ação não pode ser desfeita. Isso excluirá permanentemente sua conta e favoritos.",
-	"canvastitle": "Escolha uma cor para destacar os versos escolhidos.",
 	"category_exists": "Essa categoria já existe",
 	"collections": "Coleções"
 	"change_book": "Bíblia",
@@ -627,7 +638,6 @@ export const portuguese = {
 	"copied": "Сopiado",
 	"copy": "Copiar",
 	"copy_international": "Copie o link internacional",
-	"create": "Salvar",
 	"decrease_font_size": "Diminuir o tamanho da fonte",
 	"decrease_font_weight": "Diminuir a espessura da fonte",
 	"decrease_line_height": "Diminuir a altura da linha",
@@ -755,7 +765,13 @@ export const portuguese = {
 	"welcome": "Bem-vindo ao Bolls :)",
 	"welcome_msg": "Este aplicativo da web é para leitura da Bíblia, a navegação de livros/traduções está no painel esquerdo e as outras configurações no painel direito.\nAprecie!",
 	"write_something_awesone": "Escreva algo incrível",
-	"ycdtitnw": "Você pode apoiar este aplicativo da próxima maneira:"
+	"ycdtitnw": "Você pode apoiar este aplicativo da próxima maneira:",
+	"hueSlider": "Deslizante de matiz",
+	"alphaSlider": "Deslizante de opacidade",
+	"colorPickerInstruction": "Seletor de saturação e brilho. Use as teclas de seta para cima, para baixo, para a esquerda e para a direita para selecionar.",
+	"backgroundLight": "Luz de fundo",
+	"foregroundLight": "Luz de primeiro plano",
+	"createTheme": "Criar tema",
 }
 
 export const espanol = {
@@ -802,7 +818,6 @@ export const espanol = {
 	"bible_search": "Buscar en la Biblia",
 	"cancel": "Cancelar",
 	"cannot_be_undone": "Esta acción no puede deshacerse. Esto borrará permanentemente tu cuenta y señaladores.",
-	"canvastitle": "Escoje un color para resaltar los versículos seleccionados",
 	"category_exists": "La categoría ya existe",
 	"collections": "Colecciones",
 	"change_book": "Biblia",
@@ -817,7 +832,6 @@ export const espanol = {
 	"copied": "Сopiado",
 	"copy": "Copiar",
 	"copy_international": "Copy international link",
-	"create": "Crear",
 	"decrease_font_size": "Disminuir el tamaño de la fuente",
 	"decrease_font_weight": "Disminuir el peso de la fuente",
 	"decrease_line_height": "Disminuir la altura de la línea",
@@ -945,7 +959,13 @@ export const espanol = {
 	"welcome": "Bienvenido a Bolls :)",
 	"welcome_msg": "Esta aplicación web es para leer la Biblia, la navegación de libros /traducciones está en el panel izquierdo, las otras configuraciones en el panel de la derecha.\nQue lo disfrutes",
 	"write_something_awesone": "Escribe algo asombroso",
-	"ycdtitnw": "Puedes apoyar a esta aplicación de la siguiente manera:"
+	"ycdtitnw": "Puedes apoyar a esta aplicación de la siguiente manera:",
+	"hueSlider": "Deslizador de matiz",
+	"alphaSlider": "Deslizador de opacidad",
+	"colorPickerInstruction": "Selector de saturación y brillo. Usa las teclas de flecha arriba, abajo, izquierda y derecha para seleccionar.",
+	"backgroundLight": "Luz de fondo",
+	"foregroundLight": "Luz de primer plano",
+	"createTheme": "Crear tema",
 }
 
 export const german = {
@@ -992,7 +1012,6 @@ export const german = {
 	"bible_search": "Suche in der Bibel",
 	"cancel": "Aufheben",
 	"cannot_be_undone": "Diese Aktion löscht Ihr Konto, Ihre Informationen und Lesezeichen dauerhaft. Warnung! Diese Aktion kann nicht rückgängig gemacht werden..",
-	"canvastitle": "Wählen Sie eine Farbe, Verse hervorheben",
 	"category_exists": "Die Kategorie existiert bereits",
 	"collections": "Sammlungen"
 	"change_book": "Die Bibel",
@@ -1007,7 +1026,6 @@ export const german = {
 	"copied": "Kopiert",
 	"copy": "Abschrift",
 	"copy_international": "Copy international link",
-	"create": "Erstellen",
 	"decrease_font_size": "Schriftgröße verringern",
 	"decrease_font_weight": "Schriftstärke verringern",
 	"decrease_line_height": "Linienhöhe verringern",
@@ -1136,5 +1154,11 @@ export const german = {
 	"welcome": "Willkommen bei Bolls :)",
 	"welcome_msg": "Diese App ist zum Lesen der Bibel.. Bücher und Übersetzungen befinden sich auf der linken Seite. Die Einstellungen befinden sich auf der rechten Seite.\nDanke schön!",
 	"write_something_awesone": "Schreibe etwas Tolles!",
-	"ycdtitnw": "Sie können diese App auf folgende Arten unterstützen::"
+	"ycdtitnw": "Sie können diese App auf folgende Arten unterstützen::",
+	"hueSlider": "Farbtonregler",
+	"alphaSlider": "Alpha-Regler",
+	"colorPickerInstruction": "Sättigungs- und Helligkeitswähler. Verwenden Sie die Pfeiltasten nach oben, unten, links und rechts, um auszuwählen.",
+	"backgroundLight": "Hintergrundlicht",
+	"foregroundLight": "Vordergrundlicht",
+	"createTheme": "Erstelle ein Thema",
 }

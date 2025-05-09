@@ -17,6 +17,7 @@ import CandyCane from 'lucide-static/icons/candy-cane.svg'
 import Candy from 'lucide-static/icons/candy.svg'
 import CandyOff from 'lucide-static/icons/candy-off.svg'
 import VenetianMask from 'lucide-static/icons/venetian-mask.svg'
+import Pipette from 'lucide-static/icons/pipette.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
@@ -74,7 +75,7 @@ tag settings-drawer < aside
 		<button.settings-btn @click=activities.showSearch>
 			<svg src=Search aria-hidden=true>
 			t.bible_search
-		<button.settings-btn>
+		<button.settings-btn @click=pageSearch.run>
 			<svg src=TextSearch aria-hidden=true>
 			t.find_in_chapter
 		<button.settings-btn @click=activities.showHistory>
@@ -98,6 +99,10 @@ tag settings-drawer < aside
 							@click=(theme.theme = 'light')> t.lighttheme
 						<button[fw:900 bgc:white c:black bdr:2rem solid black]
 							@click=(theme.theme = 'white')> 'White'
+						<button[d:hcs]
+							@click=activities.openCustomTheme>
+								t.createTheme
+								<svg src=Pipette [miw:1rem size:1rem mr:0] aria-hidden=true>
 
 		<.btnbox>
 			<button[p:0.75rem fs:1.25rem].cbtn @click=theme.decreaseFontSize title=t.decrease_font_size> "B-"
@@ -181,21 +186,6 @@ tag settings-drawer < aside
 		<button.option-box.checkbox-parent @click=(settings.fixdrawers = !settings.fixdrawers) .checkbox-turned=settings.fixdrawers>
 			t.fixdrawers
 			<.checkbox> <span>
-		<button.option-box.checkbox-parent @click=(settings.enable_dynamic_contrast = !settings.enable_dynamic_contrast) .checkbox-turned=settings.enable_dynamic_contrast>
-			t.dynamic_contrast
-			<.checkbox> <span>
-		if settings.enable_dynamic_contrast
-			<.contrast-slider>
-				<p[d:flex]>
-					t.contrast
-					<span[ml:auto]> settings.contrast
-				<input id="contrast" type="range" min=20 max=200 step=5 bind=settings.contrast>
-				<datalist id="contrast">
-					<option value="20" label="20">
-					<option value="60" label="60">
-					<option value="105" label="105">
-					<option value="150" label="150">
-					<option value="200" label="200">
 
 		if window.navigator.onLine
 			if vault.available
@@ -323,35 +313,6 @@ tag settings-drawer < aside
 			ff:serif fs:1.6875rem
 			ta:center w:2rem
 			mr:0.75rem
-
-		.contrast-slider
-			input
-				w:100%
-				accent-color: $acc
-				-webkit-appearance: none
-				appearance: none
-				bgc: $acc-bgc @hover: $acc-bgc-hover
-				outline: none
-				mt:0.5rem
-				rd:0.23rem
-				h:1rem
-
-			datalist
-				display: flex
-				justify-content: space-between
-				width: 100%
-				margin-top: .5rem
-				padding: 0 0.3125rem
-				o:0.72
-				fs:0.75rem
-
-			input[type="range"]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb
-				-webkit-appearance: none
-				height: 1.25rem
-				width: 1.25rem
-				border-radius: 23%
-				background: $acc
-				cursor: ew-resize
 
 		footer
 			padding-bottom: .5rem

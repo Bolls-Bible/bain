@@ -235,7 +235,10 @@ class GenericReader
 		setTimeout(&,250) do
 			const verseNumberElement = document.getElementById(id)
 			if verseNumberElement
-				verseNumberElement.scrollIntoView({behavior: theme.scrollBehavior, block: 'start'})
+				verseNumberElement.offsetParent.scrollTo({
+					behavior: theme.scrollBehavior,
+					top: verseNumberElement.offsetTop - theme.fontSize
+				})
 				if highlight then highlightLinkedVerses(id, endverse)
 			else
 				findVerse(id, endverse, highlight)
@@ -348,5 +351,16 @@ class GenericReader
 			for color in deletedColors when !bookmarks.find(do |bookmark| return bookmark.color == color)
 				user.deleteBookmarkFromUserMap translation, book, chapter, color
 		activities.cleanUp!
+
+	def nextVerseHasTheSameBookmark verse_index
+		let current_bookmark = getBookmark(verses[verse_index].pk)
+		if current_bookmark
+			const next_verse = verses[verse_index + 1]
+			if next_verse
+				let next_bookmark = getBookmark(next_verse.pk)
+				if next_bookmark
+					if next_bookmark.collection == current_bookmark.collection and next_bookmark.note == current_bookmark.note
+						return yes
+		return no
 
 export default GenericReader

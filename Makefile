@@ -7,6 +7,10 @@ GREEN := "\033[32m"
 CYAN := "\033[36m"
 YELLOW := "\033[33m"
 
+# Use podman or docker for container management
+# DOCKER := docker
+DOCKER := podman
+
 help:
 	@echo -e ${BOLD}Usage:${RESET}
 	@echo "  make [target]"
@@ -47,7 +51,7 @@ help:
 
 # Run once only
 create-network:
-	docker network create web
+	$(DOCKER) network create web
 
 mkcert-install:
 	./mkcert/mkcert-install.sh
@@ -58,10 +62,10 @@ certs-generate:
 
 
 build:
-	docker compose build
+	$(DOCKER) compose build
 
 build-no-cache:
-	docker compose build --no-cache
+	$(DOCKER) compose build --no-cache
 
 restore-db:
 	# first, make sure we have all migrations run
@@ -71,28 +75,31 @@ restore-db:
 	[ -f sql/restore.sql ] || wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O sql/restore.sql
 
 	# copy the file to the db container
-	docker cp sql/restore.sql database:/restore.sql
+	$(DOCKER) cp sql/restore.sql database:/restore.sql
 
 	# restore the database
-	docker compose exec database psql -U postgres_user -d postgres_db -f ./restore.sql
+	$(DOCKER) compose exec database psql -U postgres_user -d postgres_db -f ./restore.sql
 
 	# restore sequences and indexes
-	docker cp sql/restore-indexes-sequences.sql database:/restore-indexes-sequences.sql
-	docker compose exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
+	$(DOCKER) cp sql/restore-indexes-sequences.sql database:/restore-indexes-sequences.sql
+	$(DOCKER) compose exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
 
 	# add UNACCENT rules
-	docker cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-	docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
-	docker exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+	$(DOCKER) cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
+	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
 	# create extension pg_trgm;
-	docker exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
+	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
 
 up:
-	docker compose up
+	$(DOCKER) compose up
+
+stop:
+	$(DOCKER) compose stop
 
 down:
-	docker compose down --remove-orphans
+	$(DOCKER) compose down --remove-orphans
 
 restart:
 	@$(MAKE) down
@@ -101,48 +108,48 @@ restart:
 
 # Django commands
 createsuperuser:
-	docker compose exec django python manage.py createsuperuser
+	$(DOCKER) compose exec django python manage.py createsuperuser
 
 migrations:
-	docker compose exec django python manage.py makemigrations
+	$(DOCKER) compose exec django python manage.py makemigrations
 
 migrate:
-	docker compose exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
 
 showmigrations:
-	docker compose exec django python manage.py showmigrations
+	$(DOCKER) compose exec django python manage.py showmigrations
 
 shell:
-	docker compose exec django python manage.py shell
+	$(DOCKER) compose exec django python manage.py shell
 
 django-logs dl:
-	docker compose logs -f django
+	$(DOCKER) compose logs -f django
 
 # Node/Imba commands
 npm-install ni:
-	docker compose exec imba npm install $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec imba npm install $(filter-out $@,$(MAKECMDGOALS))
 
 npm-run nr:
-	docker compose exec imba npm run $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec imba npm run $(filter-out $@,$(MAKECMDGOALS))
 
 npm-update nu:
-	docker compose exec imba npm update $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec imba npm update $(filter-out $@,$(MAKECMDGOALS))
 
 npm-outdated no:
-	docker compose exec imba npm outdated $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec imba npm outdated $(filter-out $@,$(MAKECMDGOALS))
 
 npm-uninstall nd:
-	docker compose exec imba npm uninstall $(filter-out $@,$(MAKECMDGOALS))
+	$(DOCKER) compose exec imba npm uninstall $(filter-out $@,$(MAKECMDGOALS))
 
 npm-update-all nua:
-	docker compose exec imba npx npm-check-updates -u
-	docker compose exec imba npm i
+	$(DOCKER) compose exec imba npx npm-check-updates -u
+	$(DOCKER) compose exec imba npm i
 
 imba-logs il:
-	docker compose logs -f imba
+	$(DOCKER) compose logs -f imba
 
 enter-node en:
-	docker compose exec imba bash
+	$(DOCKER) compose exec imba bash
 
 # TODO: Add commands for adding translations along with commentaries
 

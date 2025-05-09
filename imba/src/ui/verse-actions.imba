@@ -125,8 +125,8 @@ tag verse-actions < section
 				<svg src=Dices width="2rem" height="2rem" role="button" aria-label=t.random
 				@click=(activities.highlight_color = activities.randomColor)>
 
-			<li.color-wrapper.color-option>
-				<input type="color" id="highlight" name="highlight" bind=activities.highlight_color />
+			<li.color-option[of: hidden size: 2em]>
+				<color-picker[w:100%] color=activities.highlight_color @change=activities.setHighlightColor>
 
 			for color in colors
 				<li.color-option [background:{color}] title=color role="button" aria-label=color
@@ -317,17 +317,6 @@ tag verse-actions < section
 			border: 1px solid $acc-bgc-hover @hover: 1px solid $bgc
 			transition: transform 0.2s
 			scale@hover: 1.2
-
-		input[type='color']
-			padding: 0
-			size: 150%
-			margin: -25%
-			o:0
-
-		.color-wrapper
-			overflow: hidden
-			size: 2em
-			bg: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%), linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)
 
 		menu
 			d:hcc

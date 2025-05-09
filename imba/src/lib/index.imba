@@ -14,6 +14,7 @@ import user from './User'
 import vault from './Vault'
 import compare from './Compare'
 import pwa from './PWA'
+import customTheme from './CustomTheme'
 import './ClientAppLogin'
 
 import { translations, RTLTranslations, bookNameIndex } from '../constants'
@@ -27,6 +28,9 @@ extend tag element
 
 	get theme
 		return theme
+	
+	get customTheme
+		return customTheme
 
 	get settings
 		return settings

@@ -12,6 +12,7 @@ import ListPlus from 'lucide-static/icons/list-plus.svg'
 import Send from 'lucide-static/icons/send.svg'
 import LoaderPinwheel from 'lucide-static/icons/loader-pinwheel.svg'
 import Check from 'lucide-static/icons/check.svg'
+import Bookmark from 'lucide-static/icons/bookmark.svg'
 
 import languages from '../data/languages.json'
 import { MOBILE_PLATFORM, translations, contributors } from '../constants'
@@ -145,7 +146,7 @@ tag modal < section
 
 	def render
 		<self
-			[pos:fixed inset:0 bg:rgba(0,0,0,0.75) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
+			[pos:fixed inset:0 bg:rgba(0,0,0,0.5) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
 			@click=activities.cleanUp ease>
 
 			<[
@@ -159,7 +160,7 @@ tag modal < section
 				bxs: 0 0 0 1px $acc-bgc, 0 1px 6px $acc-bgc, 0 3px 36px $acc-bgc, 0 9px 12.5rem -4rem $acc-bgc @lt-sm:none
 				rd:1rem @lt-sm:0
 				p:1.5rem @lt-sm:0.75rem
-				scale@off:0.75] @click.stop>
+				scale@off:0.95] @click.stop>
 
 				switch activities.activeModal
 					when 'help'
@@ -195,7 +196,7 @@ tag modal < section
 							<h2> activities.selectedVersesTitle
 							<button @click=copyComparisonList title=t.copy>
 								<svg src=Copy aria-hidden=yes>
-							
+
 							<menu-popup bind=activities.show_comparison_options>
 								<button @click=(do activities.show_comparison_options = !activities.show_comparison_options) title=t.compare>
 									<svg src=ListPlus aria-hidden=yes>
@@ -303,7 +304,7 @@ tag modal < section
 							<button @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
 							<h2> t.note, ', ', activities.selectedVersesTitle
-							<button @click=activities.saveBookmark title=t.create>
+							<button @click=activities.saveBookmark title=t.save>
 								<svg src=Check [c@hover:lime4] aria-hidden=true>
 						<article[o:0.8 fs:0.8em]>
 							# display here the choosen verses
@@ -430,6 +431,103 @@ tag modal < section
 									role="button" @click=(do theme.fontFamily = font;theme.fontName = font)>
 									<strong> font
 									<span[font-family: {font}]> "The quick brown fox jumps over the lazy dog."
+
+					when 'theme'
+						<header>
+							<button @click=activities.cleanUp title=t.close>
+								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
+							<h2> t.theme
+							<button @click=theme.applyCustomTheme title=t.save>
+								<svg src=Check  aria-hidden=true>
+
+						<article.body>
+							css
+								.range
+									mb: 1rem
+
+								label
+									display: block
+									lh: 1.5
+									font-size: 0.85em
+									font-weight: 500
+
+								input
+									w:100%
+									accent-color: $acc
+									-webkit-appearance: none
+									appearance: none
+									bgc: $acc-bgc @hover: $acc-bgc-hover
+									outline: none
+									mt:0.5rem
+									rd:0.23rem
+									h:.5rem
+
+								input[type="range"]::-webkit-slider-thumb, input[type=range]::-moz-range-thumb
+									-webkit-appearance: none
+									height: 1.25rem
+									width: 1.25rem
+									border-radius: 23%
+									background: $acc
+									cursor: ew-resize
+
+							<p.range>
+								<label htmlFor="bgl"> t.backgroundLight
+								<input id="bgl" type="range" min=0 max=1 step=.00125 bind=customTheme.darkness>
+							<p.range>
+								<label htmlFor="fgl"> t.foregroundLight
+								<input id="fgl" type="range" min=0 max=1 step=.00125 bind=customTheme.lightness>
+							<p[d:hcl g:1rem]>
+								<color-picker color=customTheme.color @change=customTheme.setColor>
+								t.contrast
+								<span[c:{customTheme.contrastRateColor}]>
+									customTheme.contrast
+
+
+							<div [mt:.5rem]>
+								css
+									pos:{parallelReader.enabled ? 'relative' : 'static'}
+									ff:{theme.fontFamily}
+									fs:{theme.fontSize}px
+									lh:{theme.lineHeight}
+									fw:{theme.fontWeight}
+									ta:{theme.align}
+									fl:1 p:1.5rem rd:0.5rem
+									bgc:{customTheme.background}
+									c:{customTheme.foreground}
+
+									--acc:{customTheme.acc}
+									--acc-hover:{customTheme.accHover}
+									--acc-bgc:{customTheme.accBgc}
+									--acc-bgc-hover:{customTheme.accBgcHover}
+
+
+								for verse, verse_index in reader.verses
+									let bookmark = reader.getBookmark(verse.pk, 'bookmarks')
+									let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;"
+
+									if settings.verse_number
+										unless settings.verse_break
+											<span> ' '
+										<a[fs:0.68em c:$acc @hover:$acc-hover bgc@hover:$acc-bgc-hover vertical-align:super ws:pre rd:0.25rem] dir="ltr" style=superStyle> '\u2007\u2007\u2007' + verse.verse + "\u2007"
+									else
+										<span> ' '
+									<span innerHTML=verse.text
+											tabIndex=0
+											[background-image: {reader.getHighlight(verse.pk)}]
+										>
+									if bookmark and not reader.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
+										<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=self.clientWidth containerHeight=self.clientHeight>
+											<svg src=Bookmark>
+												<title> bookmark.collection + ': ' + bookmark.note
+
+									if verse.comment and settings.verse_commentary
+										<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=verse.comment containerWidth=self.clientWidth containerHeight=self.clientHeight>
+											<span[c:$acc @hover:$acc-hover]> '†'
+
+									if settings.verse_break
+										<br>
+										unless settings.verse_number
+											<span.ws> '	'
 
 					else	# MAIN SEARCH
 						<header#search-header [pos:relative]>

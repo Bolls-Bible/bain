@@ -1,3 +1,5 @@
+import Color from "colorjs.io"
+
 import readingHistory from './ReadingHistory'
 import { MOBILE_PLATFORM } from '../constants'
 
@@ -10,6 +12,8 @@ import dictionary from './Dictionary'
 import search from './Search'
 import notifications from './Notifications'
 import user from './User'
+import theme from './Theme'
+import customTheme from './CustomTheme'
 
 import type { CopyObject, Verse } from './types'
 
@@ -51,6 +55,12 @@ class Activities
 
 	# Clean all the variables in order to free space around the text
 	def cleanUp { onPopState } = {}
+		if activeModal == 'theme'
+			if theme.theme != 'custom'
+				customTheme.cleanUpCustomTheme!
+			if #hadTransitionsEnabled
+				document.documentElement.dataset.transitions = 'true'
+
 		# If user write a note then instead of clearing everything just hide the note panel.
 		if activeModal == "notes"
 			activeModal = ''
@@ -157,6 +167,12 @@ class Activities
 		setTimeout(&, 300) do
 			search.inputElement\(as HTMLInputElement).select!
 
+	def openCustomTheme
+		cleanUp!
+		openModal 'theme'
+		#hadTransitionsEnabled = theme.transitions
+		document.documentElement.dataset.transitions = 'false'
+
 	def toggleDownloads
 		cleanUp!
 		openModal 'downloads'
@@ -182,16 +198,22 @@ class Activities
 			getSelectedVersesTitle(parallelReader.translation, parallelReader.book, parallelReader.chapter, selectedVerses) + ' ' + parallelReader.translation
 
 	get randomColor
-		return 'rgb(' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ')'
+		const randomL = Math.random() * 0.6 + 0.2 # Range [0.2, 0.8]
+		const randomC = Math.random() * 0.25 + 0.05 # Range [0.05, 0.3]
+		const randomH = Math.random() * 360 # Range [0, 360)
+		const randomColor = new Color('oklch', [randomL, randomC, randomH])
+		return randomColor.to('hsl').toString()
 
 	def changeHighlightColor color\string
 		# get tag with title = color
 		let colorBulb = document.querySelector('li.color-option[title="' + color + '"]')
-		const computedStyle = window.getComputedStyle(colorBulb);
+		const computedStyle = window.getComputedStyle(colorBulb)
 		const backgroundColor = computedStyle.getPropertyValue('background-color');
 
 		highlight_color = backgroundColor
-
+	
+	def setHighlightColor event
+		highlight_color = event.detail
 
 	def cleanUpCopyTexts texts\string[]
 		return texts.join(' ').trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
@@ -302,7 +324,6 @@ class Activities
 			reader.saveBookmark!
 		else
 			parallelReader.saveBookmark!
-
 
 
 const activities = new Activities()
