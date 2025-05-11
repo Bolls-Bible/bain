@@ -15,7 +15,7 @@ class SettingsState
 	@observable menuicons\boolean = getValue('menuicons') ?? yes
 	@observable contrast\number = getValue('contrast') ?? 105
 	@observable chronorder\boolean = getValue('chronorder') ?? no
-	@observable favoriteTranslations\string[] = getValue('favorite_translations') ?? []
+	@observable favoriteTranslations\string[]
 
 	@autorun def saveVerseNumber
 		setValue('verse_number', verse_number)

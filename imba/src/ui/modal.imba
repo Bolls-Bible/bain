@@ -202,7 +202,7 @@ tag modal < section
 									<svg src=ListPlus aria-hidden=yes>
 								if activities.show_comparison_options
 									<.popup-menu [t:0 y@off:-2rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
-										<header[d:hflex bg:$bgc pos:sticky t:0 padding-inline-end:0.5rem]>
+										<header[d:flex bg:$bgc pos:sticky t:0 padding-inline-end:0.5rem]>
 											<input bind=compare.search placeholder=t.search>
 											<button[p:0] title=t.close @click=(activities.show_comparison_options = no)>
 												<svg src=ICONS.X [c@hover:red4] aria-hidden=yes>
@@ -350,7 +350,7 @@ tag modal < section
 											' '
 											history.translation
 										<button
-											@click=openInParallel({translation:history.translation, book:history.bookid, chapter: history.chapter,verse: history.verse}) title=t.open_in_parallel>
+											@click=openInParallel({translation:history.translation, book:history.book, chapter: history.chapter, verse: history.verse}) title=t.open_in_parallel>
 											<svg src=SquareSplitHorizontal aria-hidden=yes>
 						else
 							<p[pt:1rem]> t.empty_history
@@ -602,7 +602,6 @@ tag modal < section
 
 											for book in reader.books
 												<button[w:100% p:0.5rem] .selected=(search.filter==book.bookid) [o:.5]=(!search.resultBooks.includes(book.bookid)) dir="auto" @click=search.addFilter(book.bookid)> book.name
-
 
 						if search.currentQuery
 							<p[o:0.75]> search.currentQuery, ': ', search.exactMatchesCount, ' / ',  search.total, ' ', t.totalyresultsofsearch

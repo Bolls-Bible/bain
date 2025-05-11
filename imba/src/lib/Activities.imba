@@ -29,6 +29,7 @@ class Activities
 	show_dictionary_downloads = no
 	show_bookmarks = no
 	show_add_bookmark = no
+	show_color_picker = no
 
 	IOSKeyboardHeight = 0
 	blockInScroll = null
@@ -68,7 +69,7 @@ class Activities
 
 		if (activeModal and not onPopState) or selectedVerses.length > 0
 			window.history.back()
-		
+
 		show_accents = no
 		show_themes = no
 		show_fonts = no
@@ -78,6 +79,7 @@ class Activities
 		show_sharing = no
 		show_bookmarks = no
 		show_comparison_options = no
+		show_color_picker = no
 
 		booksDrawerOffset = -300
 		settingsDrawerOffset = -300
@@ -111,7 +113,7 @@ class Activities
 		activeVerseAction = ''
 		selectedParallel = undefined
 		imba.commit!
-	
+
 
 	def toggleBooksMenu parallel
 		if booksDrawerOffset
@@ -142,24 +144,24 @@ class Activities
 		if activeModal !== modal_name
 			activeModal = modal_name
 			window.history.pushState({}, modal_name)
-	
+
 	def showHelp
 		cleanUp!
 		openModal 'help'
-	
+
 	def showSupport
 		cleanUp!
 		openModal 'support'
-	
+
 	def showFonts
 		cleanUp!
 		openModal 'font'
-	
+
 	def showHistory
 		cleanUp!
 		readingHistory.syncHistory!
 		openModal 'history'
-	
+
 	def showSearch
 		cleanUp!
 		openModal 'search'
@@ -190,7 +192,7 @@ class Activities
 					row += id
 				else row += ',' + id
 		return row
-	
+
 	@computed get selectedVersesTitle
 		if selectedParallel == 'main'
 			return getSelectedVersesTitle(reader.translation, reader.book, reader.chapter, selectedVerses) + ' ' + reader.translation
@@ -211,9 +213,10 @@ class Activities
 		const backgroundColor = computedStyle.getPropertyValue('background-color');
 
 		highlight_color = backgroundColor
-	
+
 	def setHighlightColor event
-		highlight_color = event.detail
+		if event.detail
+			highlight_color = event.detail
 
 	def cleanUpCopyTexts texts\string[]
 		return texts.join(' ').trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
@@ -312,13 +315,13 @@ class Activities
 		newCategoryName = ""
 		show_add_bookmark = no
 		show_bookmarks = no
-	
+
 	def addCategoryToSelected category\string
 		if selectedCategories.includes(category)
 			selectedCategories = selectedCategories.filter(do |element| return element != category)
 		else
 			selectedCategories.push(category)
-	
+
 	def saveBookmark
 		if selectedParallel == 'main'
 			reader.saveBookmark!

@@ -22,7 +22,7 @@ tag number-cell
 		#timeout = setTimeout(&,250) do
 			#holding = setInterval(&, 50) do
 				self[direction]!
-	
+
 	def proxyChange e
 		const newValue = Number(e.target.value)
 		if newValue isa 'number' and newValue != value
@@ -43,7 +43,7 @@ tag number-cell
 			fs:1em lh:1rem ta:center
 			bd: none
 			bxs:none rd:.5rem
-		
+
 		button
 			w:2.75rem
 			lh:1.5rem
@@ -54,13 +54,11 @@ tag number-cell
 tag color-picker
 	prop color
 	oldColor = ''
-	showMe = false
 	format = 'auto'
-	offset = { y: 0, x: 0 }
 	colorAreaDims = { x: 0, y: 0, width: 256, height: 128 }
 	currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0 }
 	currentFormat = 'hex'
-	
+
 	get markerX
 		return colorAreaDims.width * currentColor.s / 100
 
@@ -68,21 +66,14 @@ tag color-picker
 		return colorAreaDims.height - (colorAreaDims.height * currentColor.v / 100)
 
 	def openPicker e
-		if showMe
+		if activities.show_color_picker
 			# close the picker
-			showMe = false
+			activities.show_color_picker = false
 			return
 
-		showMe = true
+		activities.show_color_picker = true
 		oldColor = color
 		currentFormat = getColorFormatFromStr(color)
-		offset = self.getBoundingClientRect()
-		if offset.y > window.innerHeight / 2
-			offset.y = offset.y - 350
-		else
-			offset.y = offset.y + self.offsetHeight + 8
-
-
 		setColorFromStr(color)
 
 	# Guess the color format from a string.
@@ -331,8 +322,8 @@ tag color-picker
 		# revert may be an event
 		if revert isa "boolean" and revert
 			emit('change', oldColor)
-		showMe = false
-	
+		activities.show_color_picker = false
+
 	def updateRGB values
 		for own key, value of values
 			if 0 <= value <= 255
@@ -346,7 +337,7 @@ tag color-picker
 		const hsv = this.RGBtoHSV(rgb)
 
 		updateColor(rgb, hsv)
-	
+
 	def updateHSL hsl
 		for own key, value of hsl
 			if key == 'h'
@@ -365,50 +356,73 @@ tag color-picker
 
 		updateColor(rgb, hsv)
 
+	def setHue event
+		const hsv = {
+			h: Number.parseInt(event.target.value) * 1,
+			s: currentColor.s,
+			v: currentColor.v,
+		}
+		const rgb = this.HSVtoRGB(hsv)
+
+		updateColor(rgb, hsv)
+
 	get currentColorRGB
 		return this.RGBToStr(currentColor)
-	
+
 	get currentColorHSL
 		return this.HSLToStr(this.HSVtoHSL(currentColor))
-	
+
 	get currentColorHex
 		return this.RGBToHex(currentColor)
-	
+
 	get currentColorWithoutOpacity
 		return this.RGBToStr({ r: currentColor.r, g: currentColor.g, b: currentColor.b })
 
 	get displayBackground
-		if !showMe
+		if !activities.show_color_picker
 			return color
 		# return linear gradient that paints one half the old color and the other half the new color
 		return `linear-gradient(to right, {oldColor} 50%, {color} 50%)`
-	
+
 	get pipetteColor
-		const color = new Color(color).to('oklab')
-		if color.l < .5
-			color.l = 1
+		const c = new Color(color).to('oklab')
+		if c.l < .5
+			c.l = 1
 		else
-			color.l = 0
-		return color.to('hsl').toString()
+			c.l = 0
+		return c.to('hsl').toString()
+
+	get offset
+		if !activities.show_color_picker
+			return { l: "unset", r: "unset", t:"unset", b: "unset" }
+		const rect = self.getBoundingClientRect()
+		return {
+			l: rect.left > window.innerWidth / 2 ? "unset" : "0px",
+			r: rect.left > window.innerWidth / 2 ? "0px" : "unset",
+			t: rect.top > window.innerHeight / 2 ? "unset" : "calc(100% + .5rem)",
+			b: rect.top > window.innerHeight / 2 ? "calc(100% + .5rem)" : "unset",
+		}
 
 	css
+		pos: relative
 		d:hcr
 		h:2rem w:4rem
 		p: 0 .5rem
 		rd: .5rem
 
-	<self[bg:{displayBackground} bgi:{displayBackground}] @click=openPicker role="button" title=t.save>
+	<self[bg:{displayBackground} bgi:{displayBackground}] @click=openPicker role="button" tabIndex="0" title=t.pick_a_color>
 		<svg src=Pipette width="1rem" height="1rem" [c:{pipetteColor}] aria-hidden=true>
 
-		if showMe then <global
-			@click.outside=closePicker(true)
-			@hotkey('esc').force.stop=closePicker(true)
-			@hotkey('enter')=closePicker>
+		if activities.show_color_picker
+			<global
+				@click.outside=closePicker(true)
+				@hotkey('esc').force.stop=closePicker(true)
+				@hotkey('enter')=closePicker>
 
-			<$picker[t:{offset.y}px l:{offset.x}px color:hsl({currentColor.h}, 100%, 50%)] @click.stop>
+			<$picker[t:{offset.t} b:{offset.b} l:{offset.l} r:{offset.r} color:hsl({currentColor.h}, 100%, 50%)] @click.stop>
 				<div$colorArea role="application" aria-label=t.colorPickerInstruction
 					@click=moveMarker
-					@touch.prevent.fit($colorArea)=moveMarker
+					@touch.prevent.stop.fit($colorArea)=moveMarker
 					@contextMenu="return false;">
 
 				<div$colorMarker
@@ -418,7 +432,7 @@ tag color-picker
 					tabIndex="0">
 
 				<div.clr-hue>
-					<input$hueSlider name="clr-hue-slider" type="range" min="0" max="360" step="1" aria-label=t.hueSlider value=currentColor.h @input=(do() setColorAtPosition(markerX, markerY))>
+					<input$hueSlider name="clr-hue-slider" type="range" min="0" max="360" step="1" aria-label=t.hueSlider value=currentColor.h @input=setHue>
 					<div$hueMarker [l: {currentColor.h / 360 * 100}%]>
 
 				<div.dial>
@@ -474,13 +488,13 @@ tag color-picker
 
 				<[d:flex p:.5rem]>
 					<button.action [ml:auto] type="button" @click=closePicker(true)> t.cancel
-					<button.action type="button" @click=closePicker> t.save
+					<button.action type="button" @click=closePicker> "OK"
 
 
 	css
 		$picker
 			bgc: $bgc
-			pos:fixed zi:1101
+			pos: absolute zi:1101
 			right: 0
 			top: calc(100% + .25rem)
 			w:256px

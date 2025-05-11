@@ -31,8 +31,9 @@ tag verse-actions < section
 
 	def initiateSlideHandling event
 		const touch = event.changedTouches[0]
-		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes touch.target.tagName.toUpperCase!
+		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes(touch.target.tagName.toUpperCase!) or touch.target.classList.contains('$colorArea')
 			return
+
 		event.preventDefault()
 		# we want to slide the verse actions up and down
 		#isSliding = touch.clientY
@@ -125,7 +126,7 @@ tag verse-actions < section
 				<svg src=Dices width="2rem" height="2rem" role="button" aria-label=t.random
 				@click=(activities.highlight_color = activities.randomColor)>
 
-			<li.color-option[of: hidden size: 2em]>
+			<li.color-option[scale:unset]>
 				<color-picker[w:100%] color=activities.highlight_color @change=activities.setHighlightColor>
 
 			for color in colors
@@ -298,24 +299,18 @@ tag verse-actions < section
 				cursor:pointer
 
 		ul
-			overflow-x: auto
-			-webkit-overflow-scrolling: touch
 			white-space: nowrap
 			padding-block: 1rem .5rem
 			padding-inline: 0.5rem
 			max-width: 100%
-
-			li@last
-				margin-inline-end:1rem
+			d:hcc
+			g:.325rem
 
 		.color-option
-			display: inline-block
 			size:2rem
-			m:0 0.25rem
 			border-radius: 23%
 			cursor: pointer
 			border: 1px solid $acc-bgc-hover @hover: 1px solid $bgc
-			transition: transform 0.2s
 			scale@hover: 1.2
 
 		menu

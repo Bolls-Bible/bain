@@ -190,6 +190,7 @@ export const english = {
 	"backgroundLight": "Background light",
 	"foregroundLight": "Foreground light",
 	"createTheme": "Create theme",
+	"pick_a_color": "Pick a color",
 }
 
 export const ukrainian = {
@@ -384,6 +385,7 @@ export const ukrainian = {
 	"backgroundLight": "Світло фону",
 	"foregroundLight": "Світло переднього плану",
 	"createTheme": "Створити тему",
+	"pick_a_color": "Виберіть колір",
 }
 
 export const russian = {
@@ -578,6 +580,7 @@ export const russian = {
 	"backgroundLight": "Свет фона",
 	"foregroundLight": "Свет переднего плана",
 	"createTheme": "Создать тему",
+	"pick_a_color": "Выберите цвет",
 }
 
 export const portuguese = {
@@ -772,7 +775,7 @@ export const portuguese = {
 	"backgroundLight": "Luz de fundo",
 	"foregroundLight": "Luz de primeiro plano",
 	"createTheme": "Criar tema",
-}
+	"pick_a_color": "Escolha uma cor",}
 
 export const espanol = {
 	"HB": [
@@ -966,6 +969,7 @@ export const espanol = {
 	"backgroundLight": "Luz de fondo",
 	"foregroundLight": "Luz de primer plano",
 	"createTheme": "Crear tema",
+	"pick_a_color": "Elige un color",
 }
 
 export const german = {
@@ -1161,4 +1165,5 @@ export const german = {
 	"backgroundLight": "Hintergrundlicht",
 	"foregroundLight": "Vordergrundlicht",
 	"createTheme": "Erstelle ein Thema",
+	"pick_a_color": "Wählen Sie eine Farbe",
 }

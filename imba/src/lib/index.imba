@@ -106,5 +106,7 @@ extend tag element
 		else
 			if place.book then parallelReader.book = place.book
 			if place.chapter then parallelReader.chapter = place.chapter
-		if place.translation !== reader.translation then parallelReader.translation = place.translation
+
+		if place.translation !== reader.translation
+			parallelReader.translation = place.translation
 

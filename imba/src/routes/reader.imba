@@ -45,18 +45,18 @@ tag reader
 		window.strongDefinition = do(topic)
 			self.dictionary.query = topic
 			self.dictionary.loadDefinitions!
-		
-		# TODO test this
-		if getValue('enable_dynamic_contrast')
-			// Tell the user we don't support this feature anymore and offer them to create a custom theme instead which has better control
-			const message = "Dynamic contrast is not supported anymore. You can create a custom theme instead which has better control over the colors."
-			const confirm = await window.confirm(message)
-			if confirm
-				# activities.showCustomTheme!
-				log("abhabsdh")
-			deleteValue('enable_dynamic_contrast')
 
- 
+		# TODO clean up this at some point
+		if getValue('enable_dynamic_contrast')
+			setTimeout(&, 2000) do
+				// Tell the user we don't support this feature anymore and offer them to create a custom theme instead which has better control
+				const message = "Dynamic contrast is not supported anymore. You can create a custom theme instead, that has better control over the contrast."
+				const confirm = await window.confirm(message)
+				if confirm
+					activities.openCustomTheme!
+				deleteValue('enable_dynamic_contrast')
+
+
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
@@ -203,6 +203,12 @@ tag reader
 			search.query = selectedText
 		activities.cleanUp { onPopState: yes }
 
+	def openProfile
+		log user,user.username
+		if user.username
+			router.go('profile')
+		else
+			window.location.href = '/accounts/login'
 
 	def render
 		<self[d:flex] @mousemove=mousemove @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
@@ -252,7 +258,7 @@ tag reader
 				@hotkey('mod+]').prevent.stop=theme.increaseFontSize
 
 				@hotkey('mod+,').prevent.stop=activities.showHelp
-				@hotkey('alt+z').prevent.stop=router.go('profile')
+				@hotkey('alt+z').prevent.stop=openProfile
 			>
 				<books-drawer
 					[l:{activities.booksDrawerOffset}px bxs:{boxShadow(activities.booksDrawerOffset)} transition-duration:{drawerTransiton}]

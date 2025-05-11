@@ -8,7 +8,7 @@ class CustomTheme
 
 	@computed get color
 		return #color.to("hsl").toString()
-	
+
 	@observable darkness = getValue('ct-darkness') || .001525
 	@observable lightness = getValue('ct-lightness') || .56625
 
@@ -18,7 +18,7 @@ class CustomTheme
 		const clone = #color.to('oklab')
 		clone.l = lightness
 		return clone.to("hsl").toString()
-	
+
 	@computed get background
 		# calculate background color based 	on #color and darkness
 		const clone = #color.to('oklab')
@@ -34,7 +34,7 @@ class CustomTheme
 		else
 			clone.l = darkness + .04
 		return clone.to("hsl").toString()
-	
+
 	@computed get accBgcHover
 		# should be a bit brighter than the background
 		const clone = #color.to('oklab')
@@ -56,7 +56,7 @@ class CustomTheme
 		else
 			clone.l += .08
 		return clone.to("hsl").toString()
-	
+
 	@computed get contrast
 		const fgClone = #color.to('oklab')
 		fgClone.l = lightness
@@ -81,10 +81,12 @@ class CustomTheme
 		return "#ff0000"
 
 	def setColor newColor
+		unless newColor.detail
+			return
 		console.log("%cNEW COLOR", "color: {newColor.detail}; font-weight: bolder")
 		#color = new Color(newColor.detail)
 		imba.commit!
-	
+
 	def applyCustomTheme
 		const colors = {
 			"--bgc": background,
@@ -102,7 +104,7 @@ class CustomTheme
 		setValue("ct-darkness", darkness)
 		setValue("ct-lightness", lightness)
 		
-	
+
 	def cleanUpCustomTheme
 		document.documentElement.style = ""
 
