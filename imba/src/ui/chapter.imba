@@ -111,17 +111,6 @@ tag chapter < section
 			return !matchId.match(/[a-zA-Z]/)
 		return matchId.startsWith(versePrefix)
 
-	def nextVerseHasTheSameBookmark verse_index
-		let current_bookmark = me.getBookmark(me.verses[verse_index].pk)
-		if current_bookmark
-			const next_verse = me.verses[verse_index + 1]
-			if next_verse
-				let next_bookmark = me.getBookmark(next_verse.pk)
-				if next_bookmark
-					if next_bookmark.collection == current_bookmark.collection and next_bookmark.note == current_bookmark.note
-						return yes
-		return no
-
 	def render
 		if isApple
 			activities.IOSKeyboardHeight = Math.abs(cachedInnerHeight - window.innerHeight)
@@ -153,12 +142,12 @@ tag chapter < section
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
 						let bookmark = me.getBookmark(verse.pk, 'bookmarks')
-						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1em;"
+						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1rem;"
 
 						if settings.verse_number
 							unless settings.verse_break
 								<span> ' '
-							<a.verse dir="ltr" style=superStyle id="{versePrefix}{verse.verse}" href="#{versePrefix}{verse.verse}"> '\u2007\u2007\u2007' + verse.verse + "\u2007"
+							<a.verse dir="ltr" style=superStyle href="#{versePrefix}{verse.verse}"> '\u2007\u2007\u2007' + verse.verse + "\u2007"
 						else
 							<span> ' '
 						<span innerHTML=verse.text
@@ -167,9 +156,9 @@ tag chapter < section
 								# make it focusable to get keydown working on it
 								tabIndex=0
 								@keydown.enter=me.saveBookmark
-								[background-image: {me.getHighlight(verse.pk)}]
+								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1rem]
 							>
-						if bookmark and not nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
+						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
 								<svg src=Bookmark>
 									<title> bookmark.collection + ': ' + bookmark.note
@@ -270,7 +259,7 @@ tag chapter < section
 			vertical-align: super
 			white-space: pre
 			border-radius: 0.25rem
-		
+
 		.arrow
 			c:inherit
 			bgc@hover:$acc-bgc-hover

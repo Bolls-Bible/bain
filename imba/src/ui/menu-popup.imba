@@ -15,7 +15,6 @@ tag menu-popup
 					return
 				# if it is bigger than the screen, scroll to the top
 				const fitsIntoScreen = popOverBodyHeight < window.innerHeight
-				log popOverBodyHeight, window.innerHeight, fitsIntoScreen
 				if fitsIntoScreen
 					scrollIntoView({ behavior: theme.scrollBehavior, block:"center" })
 				else

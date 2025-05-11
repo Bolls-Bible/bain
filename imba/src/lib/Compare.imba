@@ -2,6 +2,7 @@ import vault from './Vault';
 import notifications from './Notifications';
 import activities from './Activities';
 import API from './Api';
+import user from './User';
 import reader from './Reader';
 import parallelReader from './ParallelReader';
 
@@ -10,10 +11,7 @@ import { setValue, getValue } from '../utils/index.imba'
 import type { Verse, Translation } from './types'
 
 class Compare
-	@observable translations\string[] = getValue('compare_translations') ?? [
-		reader.translation,
-		parallelReader.translation,
-	]
+	@observable translations\string[]
 
 	versesToCompare = []
 	chapterToCompare = 0
@@ -25,6 +23,10 @@ class Compare
 
 	@autorun def saveTranslations
 		setValue('compare_translations', translations)
+		if window.navigator.onLine && user.username
+			API.put('/save-compare-translations/', {
+				translations: JSON.stringify(translations),
+			})
 
 	def getCompareTranslationsFromDB
 		const result = await vault.getCompareVerses(translations, versesToCompare, bookToCompare, chapterToCompare)

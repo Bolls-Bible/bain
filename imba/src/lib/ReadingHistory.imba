@@ -5,6 +5,8 @@ import settings from './Settings'
 import compare from './Compare'
 import user from './User'
 import notifications from './Notifications'
+import reader from './Reader';
+import parallelReader from './ParallelReader';
 
 import type { HistoryEntry } from './types'
 
@@ -55,13 +57,26 @@ class ReadingHistory
 
 	def syncHistory
 		if !user.username || !window.navigator.onLine
+			compare.translations = getValue('compare_translations') ?? [
+				reader.translation,
+				parallelReader.translation,
+			]
+			settings.favoriteTranslations = getValue('favorite_translations') ?? []
 			return
 
 		let cloudData = await API.getJson('/history/')
 		if cloudData.compare_translations..length
 			compare.translations = JSON.parse(cloudData.compare_translations) || []
+		else
+			compare.translations = getValue('compare_translations') ?? [
+				reader.translation,
+				parallelReader.translation,
+			]
 		if cloudData.favoriteTranslations
 			settings.favoriteTranslations = JSON.parse(cloudData.favoriteTranslations) || []
+		else
+			settings.favoriteTranslations = getValue('favorite_translations') ?? []
+
 		# Merge local history and server copy
 		try
 			const cloudHistory = JSON.parse(cloudData.history).concat(history)

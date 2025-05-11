@@ -14,7 +14,8 @@ export type colorTheme =
   | "black"
   | "gray"
   | "sepia"
-  | "white";
+  | "white"
+  | "custom";
 
 export type Accents = "blue" | "green" | "purple" | "gold" | "red";
 export type Accent = {

@@ -113,12 +113,12 @@ global css
 
 	html[data-transitions="true"] *
 		transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955)
-		transition-delay: 0
+		transition-delay: 0s
 		transition-duration: 450ms
 		transition-property: color, background, width, height, transform, opacity, max-height, max-width, top, left, bottom, right, visibility, fill, stroke, margin, padding, font-size, border-color, box-shadow, border-radius
 
 	html[data-transitions="false"] *
-		transition!: none
+		transition@important: none
 
 
 	* 
@@ -197,7 +197,7 @@ global css
 		top: calc(100% + .25rem)
 		rd: .5rem
 		zi: 10000000
-		br: .5rem
+		rd: .5rem
 		of: hidden
 		bxs: 0 0 0 1px $acc-bgc-hover, 0 3px 6px $acc-bgc-hover, 0 9px 24px $acc-bgc-hover
 

@@ -1,6 +1,7 @@
 import { getValue, setValue } from '../utils' 
 
 import activities from './Activities'
+import customTheme from './CustomTheme'
 
 import type { colorTheme, Accents, Accent } from './types'
 
@@ -116,6 +117,8 @@ class Theme
 		accent = getValue('accent') ?? 'blue'
 		#theme = getValue('theme') ?? 'light'
 		html.dataset.theme = #theme
+		if #theme == "custom"
+			customTheme.applyCustomTheme!
 
 	def queryLocalFonts
 		unless window.queryLocalFonts
@@ -142,6 +145,8 @@ class Theme
 		html.dataset.transitions = 'false'
 
 		html.dataset.theme = newTheme
+		if newTheme != "custom"
+			customTheme.cleanUpCustomTheme!
 
 		if transitions
 			imba.commit!.then do window.requestAnimationFrame do
@@ -264,12 +269,20 @@ class Theme
 
 	get transitions
 		return #transitions
-	
+
 	get scrollBehavior
 		if transitions
 			return 'smooth'
 		return 'auto'
-	
+
+	def applyCustomTheme
+		if Math.abs(customTheme.contrast) < 15
+			return
+		customTheme.applyCustomTheme!
+		theme = 'custom'
+		activities.cleanUp!
+
+
 const theme = new Theme()
 
 export default theme

@@ -184,7 +184,7 @@ tag orderable-list
 			button
 				bgc:transparent c:inherit @hover:$acc-hover
 				min-width:1.625rem w:2rem h:100% cursor:pointer
-		
+
 		.in-drag
 			opacity:0.75 c:$acc
 			zi:2
