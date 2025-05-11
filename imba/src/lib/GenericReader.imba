@@ -260,11 +260,11 @@ class GenericReader
 					if id <= verses.length
 						const range = document.createRange()
 						const node = document.getElementById(String(id))
-						range.selectNodeContents(node.nextSibling || node)
+						range.selectNodeContents(node)
 						selection.addRange(range)
 			else
 				const range = document.createRange()
-				range.selectNodeContents(verseNode.nextSibling || verseNode)
+				range.selectNodeContents(verseNode)
 				selection.addRange(range)
 
 	def saveBookmark

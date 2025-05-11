@@ -204,7 +204,6 @@ tag reader
 		activities.cleanUp { onPopState: yes }
 
 	def openProfile
-		log user,user.username
 		if user.username
 			router.go('profile')
 		else
