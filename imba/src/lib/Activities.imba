@@ -1,3 +1,5 @@
+import Color from "colorjs.io"
+
 import readingHistory from './ReadingHistory'
 import { MOBILE_PLATFORM } from '../constants'
 
@@ -10,6 +12,8 @@ import dictionary from './Dictionary'
 import search from './Search'
 import notifications from './Notifications'
 import user from './User'
+import theme from './Theme'
+import customTheme from './CustomTheme'
 
 import type { CopyObject, Verse } from './types'
 
@@ -25,6 +29,7 @@ class Activities
 	show_dictionary_downloads = no
 	show_bookmarks = no
 	show_add_bookmark = no
+	show_color_picker = no
 
 	IOSKeyboardHeight = 0
 	blockInScroll = null
@@ -51,6 +56,12 @@ class Activities
 
 	# Clean all the variables in order to free space around the text
 	def cleanUp { onPopState } = {}
+		if activeModal == 'theme'
+			if theme.theme != 'custom'
+				customTheme.cleanUpCustomTheme!
+			if #hadTransitionsEnabled
+				document.documentElement.dataset.transitions = 'true'
+
 		# If user write a note then instead of clearing everything just hide the note panel.
 		if activeModal == "notes"
 			activeModal = ''
@@ -58,7 +69,7 @@ class Activities
 
 		if (activeModal and not onPopState) or selectedVerses.length > 0
 			window.history.back()
-		
+
 		show_accents = no
 		show_themes = no
 		show_fonts = no
@@ -68,6 +79,7 @@ class Activities
 		show_sharing = no
 		show_bookmarks = no
 		show_comparison_options = no
+		show_color_picker = no
 
 		booksDrawerOffset = -300
 		settingsDrawerOffset = -300
@@ -101,7 +113,7 @@ class Activities
 		activeVerseAction = ''
 		selectedParallel = undefined
 		imba.commit!
-	
+
 
 	def toggleBooksMenu parallel
 		if booksDrawerOffset
@@ -132,30 +144,36 @@ class Activities
 		if activeModal !== modal_name
 			activeModal = modal_name
 			window.history.pushState({}, modal_name)
-	
+
 	def showHelp
 		cleanUp!
 		openModal 'help'
-	
+
 	def showSupport
 		cleanUp!
 		openModal 'support'
-	
+
 	def showFonts
 		cleanUp!
 		openModal 'font'
-	
+
 	def showHistory
 		cleanUp!
 		readingHistory.syncHistory!
 		openModal 'history'
-	
+
 	def showSearch
 		cleanUp!
 		openModal 'search'
 		search.generateSuggestions!
 		setTimeout(&, 300) do
 			search.inputElement\(as HTMLInputElement).select!
+
+	def openCustomTheme
+		cleanUp!
+		openModal 'theme'
+		#hadTransitionsEnabled = theme.transitions
+		document.documentElement.dataset.transitions = 'false'
 
 	def toggleDownloads
 		cleanUp!
@@ -174,7 +192,7 @@ class Activities
 					row += id
 				else row += ',' + id
 		return row
-	
+
 	@computed get selectedVersesTitle
 		if selectedParallel == 'main'
 			return getSelectedVersesTitle(reader.translation, reader.book, reader.chapter, selectedVerses) + ' ' + reader.translation
@@ -182,16 +200,23 @@ class Activities
 			getSelectedVersesTitle(parallelReader.translation, parallelReader.book, parallelReader.chapter, selectedVerses) + ' ' + parallelReader.translation
 
 	get randomColor
-		return 'rgb(' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ',' + Math.round(Math.random()*255) + ')'
+		const randomL = Math.random() * 0.6 + 0.2 # Range [0.2, 0.8]
+		const randomC = Math.random() * 0.25 + 0.05 # Range [0.05, 0.3]
+		const randomH = Math.random() * 360 # Range [0, 360)
+		const randomColor = new Color('oklch', [randomL, randomC, randomH])
+		return randomColor.to('hsl').toString()
 
 	def changeHighlightColor color\string
 		# get tag with title = color
 		let colorBulb = document.querySelector('li.color-option[title="' + color + '"]')
-		const computedStyle = window.getComputedStyle(colorBulb);
+		const computedStyle = window.getComputedStyle(colorBulb)
 		const backgroundColor = computedStyle.getPropertyValue('background-color');
 
 		highlight_color = backgroundColor
 
+	def setHighlightColor event
+		if event.detail
+			highlight_color = event.detail
 
 	def cleanUpCopyTexts texts\string[]
 		return texts.join(' ').trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
@@ -290,19 +315,18 @@ class Activities
 		newCategoryName = ""
 		show_add_bookmark = no
 		show_bookmarks = no
-	
+
 	def addCategoryToSelected category\string
 		if selectedCategories.includes(category)
 			selectedCategories = selectedCategories.filter(do |element| return element != category)
 		else
 			selectedCategories.push(category)
-	
+
 	def saveBookmark
 		if selectedParallel == 'main'
 			reader.saveBookmark!
 		else
 			parallelReader.saveBookmark!
-
 
 
 const activities = new Activities()

@@ -952,6 +952,9 @@ def save_compare_translations(request):
 
     received_json_data = json.loads(request.body)
     user = request.user
+    if "translations" not in received_json_data:
+        return HttpResponse(status=400)
+
     try:
         history = user.history_set.get(user=user)
         history.compare_translations = received_json_data["translations"]
@@ -972,6 +975,9 @@ def save_favorite_translations(request):
         return HttpResponse(status=405)
     received_json_data = json.loads(request.body)
     user = request.user
+    if "translations" not in received_json_data:
+        return HttpResponse(status=400)
+
     try:
         history = user.history_set.get(user=user)
         history.favorite_translations = received_json_data["translations"]

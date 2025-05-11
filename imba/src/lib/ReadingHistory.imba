@@ -34,6 +34,10 @@ class ReadingHistory
 				notifications.push('error')
 
 	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
+		unless #omitInit
+			#omitInit = yes
+			return
+
 		await syncHistory!
 		
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
@@ -60,8 +64,10 @@ class ReadingHistory
 		let cloudData = await API.getJson('/history/')
 		if cloudData.compare_translations..length
 			compare.translations = JSON.parse(cloudData.compare_translations) || []
-		if cloudData.favoriteTranslations
-			settings.favoriteTranslations = JSON.parse(cloudData.favoriteTranslations) || []
+
+		if cloudData.favorite_translations
+			settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || []
+
 		# Merge local history and server copy
 		try
 			const cloudHistory = JSON.parse(cloudData.history).concat(history)

@@ -19,6 +19,7 @@
     "@codemirror/view": "^6.36.5",
     "@lezer/highlight": "^1.2.1",
     "@types/serviceworker": "^0.0.130",
+    "colorjs.io": "^0.5.2",
     "dompurify": "^3.2.5",
     "express": "^5.1.0",
     "imba": "^2.0.0-alpha.245",

@@ -73,8 +73,8 @@ services:
     restart: on-failure
     container_name: imba
     # command: npm i
-    command: npm run dev
-    # command: sh -c "npm i && npm run dev"
+    # command: npm run dev
+    command: sh -c "npm i && npm run dev"
     environment:
       - API_URL=http://django:8000
     # required for SELinux
@@ -143,7 +143,8 @@ services:
       - label:disable
     volumes:
       - "/var/letsencrypt:/letsencrypt"
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock # For use with Docker
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock # For use with Podman
       - ./traefik/config/static.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/config/dynamic.yml:/etc/traefik/dynamic.yml:ro
       - ./traefik/certs:/etc/certs:ro
