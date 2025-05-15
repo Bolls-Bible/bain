@@ -51,6 +51,9 @@ jobs:
           script: |
             rm -fr bain
             git clone https://github.com/Bolls-Bible/bain
+            # checkout the tag
+            cd bain
+            git checkout ${{ github.ref }}
             echo "Injecting secrets..."
             cd bain
             sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" docker-compose.prod.yml
