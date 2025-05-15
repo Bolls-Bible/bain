@@ -51,15 +51,11 @@ class SettingsState
 		setValue('chronorder', chronorder)
 	
 	@autorun def saveFavoriteTranslations
+		setValue('favorite_translations', favoriteTranslations)
 		unless #omitInit
 			#omitInit = yes
-			return
+			return favoriteTranslations
 
-		if favoriteTranslations == "undefined"
-			favoriteTranslations = []
-			return
-
-		setValue('favorite_translations', favoriteTranslations)
 		try
 			if window.navigator.onLine && user.username
 				API.put('/api/save-favorite-translations/', {

@@ -25,11 +25,11 @@ class Compare
 	search = ''
 
 	@autorun def saveTranslations
-		if translations == "undefined"
-			translations = []
+		setValue('compare_translations', translations)
+		unless #omitInit
+			#omitInit = yes
 			return
 
-		setValue('compare_translations', translations)
 		if window.navigator.onLine && user.username
 			API.put('/save-compare-translations/', {
 				translations: JSON.stringify(translations),
@@ -49,7 +49,7 @@ class Compare
 		else
 			chapterToCompare = reader.chapter
 			bookToCompare = reader.book
-		if translations.indexOf(reader.translation) == -1
+		unless translations.includes(reader.translation)
 			translations.unshift(reader.translation)
 		activities.cleanUp!
 		activities.openModal 'compare'

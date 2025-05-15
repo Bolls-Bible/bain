@@ -50,6 +50,9 @@ tag orderable-list
 		reorder!
 
 	def touchend
+		unless #drugging_target
+			return
+
 		#drugging_target = ''
 		#swapped_offset = 0
 		#scroll_direction = 0
