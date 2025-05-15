@@ -307,7 +307,7 @@ tag modal < section
 							<button @click=activities.saveBookmark title=t.save>
 								<svg src=Check [c@hover:lime4] aria-hidden=true>
 						<article[o:0.8 fs:0.8em]>
-							# display here the choosen verses
+							# display here the chosen verses
 							let chosenVersesToIterate = activities.selectedParallel == reader.me ? reader.verses : parallelReader.verses
 							for verse in chosenVersesToIterate
 								<>
@@ -410,7 +410,7 @@ tag modal < section
 											<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=expanded>
 
 										if expanded
-											<div[p:16px 0px 64px @off:0 h:auto @off:0px overflow:hidden o@off:0] innerHTML=definition.definition ease>
+											<div[p:16px 0px 32px @off:0 h:auto @off:0px overflow:hidden o@off:0] innerHTML=definition.definition ease>
 
 						if dictionary.definitions.length == 0 and !dictionary.loading && dictionary.history.length
 							<div.body[ai:center p:4rem 0 lh:1.6]>

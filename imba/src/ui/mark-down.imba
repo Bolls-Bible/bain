@@ -150,6 +150,9 @@ const bollsTheme = EditorView.theme({
 		backgroundColor: "var(--acc-bgc-hover)"
 		outline: "1px solid var(--acc-bgc)"
 	}
+	".cm-line": {
+		padding: '0'
+	}
 }, {dark:true})
 
 

@@ -26,7 +26,6 @@ global css
 	html[data-theme="dark"]
 		--bgc: #00061A
 		--c: #B29595
-		# --c: #C19A9A
 		--acc-bgc: #252749
 		--acc-bgc-hover: #383a6d
 
@@ -47,7 +46,7 @@ global css
 
 	html[data-theme="sepia"]
 		--bgc: rgb(235, 219, 183)
-		--c: rgb(46, 39, 36)
+		--c: hsl(18, 12.20%, 32%)
 		--acc-bgc: rgb(226, 204, 152)
 		--acc-bgc-hover: rgb(230, 211, 167)
 
@@ -303,6 +302,15 @@ global css
 
 		li > ol
 			margin: 0
+
+		hr
+			margin: .25rem 0
+			border: none
+			border-top: 1px solid $acc-bgc
+
+		> div > p
+			margin: .5rem 0
+			line-height: 1.6
 
 	.stdbtn
 		c:inherit

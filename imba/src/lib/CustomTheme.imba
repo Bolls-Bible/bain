@@ -9,8 +9,8 @@ class CustomTheme
 	@computed get color
 		return #color.to("hsl").toString()
 
-	@observable darkness = getValue('ct-darkness') || .001525
-	@observable lightness = getValue('ct-lightness') || .56625
+	@observable darkness = getValue('ct-darkness') || .06
+	@observable lightness = getValue('ct-lightness') || .5325
 
 	# all the rest should be calculated from the above
 	@computed get foreground

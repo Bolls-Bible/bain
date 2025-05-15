@@ -55,6 +55,10 @@ class SettingsState
 			#omitInit = yes
 			return
 
+		if favoriteTranslations == "undefined"
+			favoriteTranslations = []
+			return
+
 		setValue('favorite_translations', favoriteTranslations)
 		try
 			if window.navigator.onLine && user.username

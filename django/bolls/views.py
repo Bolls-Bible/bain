@@ -91,43 +91,44 @@ def get_translation(_, translation):
     return cross_origin(JsonResponse(verses, safe=False))
 
 
-def get_chapter(translation, book, chapter):
-    bookid = get_book_id(translation, book)
-    all_objects = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
-    d = []
-    for obj in all_objects:
-        d.append({"pk": obj.pk, "verse": obj.verse, "text": obj.text})
-    return d
-
-
 def get_text(_, translation, book, chapter):
-    return cross_origin(JsonResponse(get_chapter(translation, book, chapter), safe=False))
-
-
-def get_chapter_with_commentaries(translation, book, chapter):
-    bookid = get_book_id(translation, book)
-
-    all_verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
-
-    all_commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
-
-    d = []
-    for obj in all_verses:
-        verse = {"pk": obj.pk, "verse": obj.verse, "text": obj.text}
-        comment = ""
-        for item in all_commentaries:
-            if item.verse == obj.verse:
-                if len(comment) > 0:
-                    comment += "<br>"
-                comment += item.text
-        if len(comment) > 0:
-            verse["comment"] = comment
-        d.append(verse)
-    return d
+    try:
+        bookid = get_book_id(translation, book)
+        all_objects = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
+        d = []
+        for obj in all_objects:
+            d.append({"pk": obj.pk, "verse": obj.verse, "text": obj.text})
+        return cross_origin(JsonResponse(d, safe=False))
+    except Exception as e:
+        print(e)
+        return cross_origin(HttpResponse("The verses were not found", status=404))
 
 
 def get_chapter_with_comments(_, translation, book, chapter):
-    return cross_origin(JsonResponse(get_chapter_with_commentaries(translation, book, chapter), safe=False))
+    try:
+        bookid = get_book_id(translation, book)
+
+        all_verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
+
+        all_commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
+
+        d = []
+        for obj in all_verses:
+            verse = {"pk": obj.pk, "verse": obj.verse, "text": obj.text}
+            comment = ""
+            for item in all_commentaries:
+                if item.verse == obj.verse:
+                    if len(comment) > 0:
+                        comment += "<br>"
+                    comment += item.text
+            if len(comment) > 0:
+                verse["comment"] = comment
+            d.append(verse)
+        return cross_origin(JsonResponse(d, safe=False))
+
+    except Exception as e:
+        print(e)
+        return cross_origin(HttpResponse("The verses were not found", status=404))
 
 
 def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
@@ -514,31 +515,35 @@ def get_verses(request):
 
 
 def get_a_verse(_, translation, book, chapter, verse):
-    bookid = get_book_id(translation, book)
-    verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation, verse=verse)
+    try:
+        bookid = get_book_id(translation, book)
+        verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation, verse=verse)
 
-    result_verse = {}
-    if len(verses):
-        result_verse = {
-            "pk": verses[0].pk,
-            "verse": verses[0].verse,
-            "text": verses[0].text,
-        }
-    else:
+        result_verse = {}
+        if len(verses):
+            result_verse = {
+                "pk": verses[0].pk,
+                "verse": verses[0].verse,
+                "text": verses[0].text,
+            }
+        else:
+            return cross_origin(HttpResponse("The verse is not found", status=404))
+
+        commentaries = Commentary.objects.filter(book=book, chapter=chapter, translation=translation, verse=verse)
+
+        comment = ""
+        for item in commentaries:
+            if item.verse == result_verse["verse"]:
+                if len(comment) > 0:
+                    comment += "<br>"
+                comment += item.text
+        if len(comment) > 0:
+            result_verse["comment"] = comment
+
+        return cross_origin(JsonResponse(result_verse, safe=False))
+    except Exception as e:
+        print(e)
         return cross_origin(HttpResponse("The verse is not found", status=404))
-
-    commentaries = Commentary.objects.filter(book=book, chapter=chapter, translation=translation, verse=verse)
-
-    comment = ""
-    for item in commentaries:
-        if item.verse == result_verse["verse"]:
-            if len(comment) > 0:
-                comment += "<br>"
-            comment += item.text
-    if len(comment) > 0:
-        result_verse["comment"] = comment
-
-    return cross_origin(JsonResponse(result_verse, safe=False))
 
 
 @require_POST
@@ -666,6 +671,10 @@ def history(request):
             except History.MultipleObjectsReturned:
                 user.history_set.all().delete()
                 user.history_set.create(history=received_json_data["history"])
+
+            except Exception as e:
+                print(e)
+                return HttpResponse(status=400)
 
             return HttpResponse(status=200)
 
@@ -1035,7 +1044,7 @@ def tag_tool_reference(request, translation, book, chapter, verses):
         internal_book = get_book_id(translation, book)
         verse = ""
         endVerse = ""
-        if '-' in verses:
+        if "-" in verses:
             [verse, endVerse] = verses.split("-")
         else:
             verse = verses

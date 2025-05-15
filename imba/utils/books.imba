@@ -147,31 +147,28 @@ export def isNumber(n)
 
 
 export def getBookId(translation\string, book_slug\string)
-	try
-		# if book_slug is already a number return it
-		if isNumber(book_slug)
-			return book_slug
+	# if book_slug is already a number return it
+	if isNumber(book_slug)
+		return book_slug
 
-		book_slug = book_slug.toUpperCase()
+	book_slug = book_slug.toUpperCase()
 
-		if book_slug in triple_shortcuts
-			return triple_shortcuts[book_slug]
-		if book_slug in twin_shortcuts
-			return twin_shortcuts[book_slug]
+	if book_slug in triple_shortcuts
+		return triple_shortcuts[book_slug]
+	if book_slug in twin_shortcuts
+		return twin_shortcuts[book_slug]
 
-		book_slug = book_slug.toLowerCase()
+	book_slug = book_slug.toLowerCase()
 
-		const suggestions = []
-		for b in BOOKS[translation]
-			if b["name"] == book_slug
-				return b
-			let score = scoreSearch(b["name"], book_slug)
-			if score
-				suggestions.push([b, score])
-		suggestions.sort(do(a, b) b[1] - a[1])
-		if suggestions.length > 0
-			return suggestions[0][0]["bookid"]
-	catch error
-		console.log("Error in getBookId", translation, book_slug, error)
+	const suggestions = []
+	for b in BOOKS[translation]
+		if b["name"] == book_slug
+			return b
+		let score = scoreSearch(b["name"], book_slug)
+		if score
+			suggestions.push([b, score])
+	suggestions.sort(do(a, b) b[1] - a[1])
+	if suggestions.length > 0
+		return suggestions[0][0]["bookid"]
 
-	return book_slug
+	throw new Error("Book not found: " + book_slug)

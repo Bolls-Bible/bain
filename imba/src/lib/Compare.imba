@@ -25,6 +25,10 @@ class Compare
 	search = ''
 
 	@autorun def saveTranslations
+		if translations == "undefined"
+			translations = []
+			return
+
 		setValue('compare_translations', translations)
 		if window.navigator.onLine && user.username
 			API.put('/save-compare-translations/', {
