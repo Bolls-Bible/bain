@@ -29,46 +29,31 @@ tag verse-actions < section
 	#dy = DEFAULT_Y
 	categoriesSearch = ''
 
-	def initiateSlideHandling event
-		const touch = event.changedTouches[0]
-		if ['INPUT', 'BUTTON', 'OL', 'LI', 'SVG', 'PATH', 'RECT', 'LINE'].includes(touch.target.tagName.toUpperCase!) or touch.target.classList.contains('$colorArea')
-			return
-
-		event.preventDefault()
-		# we want to slide the verse actions up and down
-		#isSliding = touch.clientY
-		#dy = DEFAULT_Y
-	
-	def finalizeSlideHandling event
-		const touch = event.changedTouches[0]
-		unless #isSliding
-			return
-		event.preventDefault()
-		#dy = Math.max(touch.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
-		if #dy > DEFAULT_Y * 2
-			close!
-		#isSliding = null
-		#dy = DEFAULT_Y
-
-	def slide event
-		const touch = event.changedTouches[0]
-		unless #isSliding
-			return
-		#dy = Math.max(touch.clientY - #isSliding, -DEFAULT_Y) + DEFAULT_Y
-	
 	def close
 		# should await for the transition-duration property update to achieve smoothness
 		#dy = DEFAULT_Y
 		imba.commit!.then do
 			activities.cleanUp!
-	
+
+	def touchHandler event
+		#dy = Math.max(event.y - event.y0, -DEFAULT_Y) + DEFAULT_Y
+		#isSliding = null
+
+		if event.phase == "ended"
+			if #dy > DEFAULT_Y * 2
+				event.preventDefault()
+				close!
+			#isSliding = null
+			#dy = DEFAULT_Y
+		
+
 	get transitionDuration
 		return #dy == DEFAULT_Y ? '0.5s' : '0s'
-	
+
 
 	def byteCount s\string
 		window.encodeURI(s).split(/%..|./).length - 1
-	
+
 
 	get canShareViaTelegram
 		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/')}&text={window.encodeURIComponent('«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation)}") < 4096
@@ -110,10 +95,7 @@ tag verse-actions < section
 		imba.commit!.then do $newcategoryinput.focus()
 
 	<self [y:{#dy}px @off:100% o@off:0 transition-duration:{transitionDuration}] ease
-			@touchstart=initiateSlideHandling
-			@touchmove=slide
-			@touchend=finalizeSlideHandling
-			@touchcancel=finalizeSlideHandling
+			@touch.fit(self)=touchHandler
 		>
 		<svg.chevron src=ChevronDown @click=close>
 		<header>
@@ -279,7 +261,7 @@ tag verse-actions < section
 			scale-x: 2
 			scale-y: 0.5
 			stroke: $acc-bgc-hover
-		
+
 		button
 			fs:0.875rem
 

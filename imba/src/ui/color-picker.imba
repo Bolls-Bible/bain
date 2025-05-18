@@ -1,5 +1,9 @@
-import Pipette from 'lucide-static/icons/pipette.svg'
 import Color from "colorjs.io"
+
+import Pipette from 'lucide-static/icons/pipette.svg'
+import ChevronUp from 'lucide-static/icons/chevron-up.svg'
+import ChevronDown from 'lucide-static/icons/chevron-down.svg'
+
 
 const ctx = document.createElement('canvas').getContext('2d');
 
@@ -29,9 +33,11 @@ tag number-cell
 			change(newValue)
 
 	<self @pointerup=cancel @pointercancel=cancel @pointerleave=cancel>
-		<button @pointerdown=hold('up')> "⏶"
+		<button @pointerdown=hold('up') aria-label='up'> 
+			<svg src=ChevronUp width=1rem height=1rem aria-hidden=true>
 		<input name=name type="text" value=Math.round(value) @change=proxyChange>
-		<button @pointerdown=hold('down')> "⏷"
+		<button @pointerdown=hold('down') aria-label='down'> 
+			<svg src=ChevronDown width=1rem height=1rem aria-hidden=true>
 
 	css
 		d:vcc
@@ -46,7 +52,7 @@ tag number-cell
 
 		button
 			w:2.75rem
-			lh:1.5rem
+			lh:1rem
 			fs:1.25rem
 			us:none
 
