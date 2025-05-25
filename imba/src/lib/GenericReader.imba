@@ -182,9 +182,9 @@ class GenericReader
 		# scroll to it, to see the full verse
 		let verseElement
 		if me == 'main'
-			verseElement = document.getElementById(String(id)).nextSibling
+			verseElement = document.getElementById(String(id))
 		else
-			verseElement = document.getElementById("p{id}").nextSibling
+			verseElement = document.getElementById("p{id}")
 
 		const boundingRect = verseElement.getBoundingClientRect()
 		if boundingRect.bottom + activities.bottomDrawerOffset > window.innerHeight - 124 # 124 is the relative height of the bottom drawer
@@ -209,12 +209,9 @@ class GenericReader
 
 
 	def showDeleteBookmark
-		let show_delete_bookmark = no
 		for verseNumber in activities.selectedVerses
 			let vrs = bookmarks.find(do |element| return element.verse == verseNumber)
-			#  || parallel_bookmarks.find(do |element| return element.verse == verse)
 			if vrs
-				show_delete_bookmark = yes
 				return 1
 
 	@computed get selectedVersesTitle

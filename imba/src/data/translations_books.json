@@ -47046,5 +47046,403 @@
       "chronorder": 64,
       "chapters": 1
     }
+  ],
+  "HFA": [
+    {
+      "bookid": 1,
+      "name": "Das erste Buch Mose",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Das zweite Buch Mose",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Das dritte Buch Mose",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Das vierte Buch Mose",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Das fünfte Buch Mose",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Das Buch Josua",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Das Buch über die Richter",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Das Buch Ruth",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "Das erste Buch Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "Das zweite Buch Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "Das erste Buch über die Könige",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "Das zweite Buch über die Könige",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "Das erste Buch der Chronik",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "Das zweite Buch der Chronik",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Das Buch Esra",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Das Buch Nehemia",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Das Buch Esther",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Das Buch Hiob",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Die Psalmen",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Die Sammlung der Sprüche",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Der Prediger Salomo",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Das Lied von der Liebe",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Der Prophet Jesaja",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Der Prophet Jeremia",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Die Klagelieder von Jeremia",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Der Prophet Hesekiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Der Prophet Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Der Prophet Hosea",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Der Prophet Joel",
+      "chronorder": 20,
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "name": "Der Prophet Amos",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Der Prophet Obadja",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Der Prophet Jona",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Der Prophet Micha",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Der Prophet Nahum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Der Prophet Habakuk",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Der Prophet Zefanja",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Der Prophet Haggai",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Der Prophet Sacharja",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Der Prophet Maleachi",
+      "chronorder": 39,
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "name": "Matthäus berichtet von Jesus",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Markus berichtet von Jesus",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Lukas berichtet von Jesus",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Johannes berichtet von Jesus",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Die Taten der Apostel",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Der Brief von Paulus an die Christen in Rom",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "Der erste Brief von Paulus an die Christen in Korinth",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "Der zweite Brief von Paulus an die Christen in Korinth",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Der Brief von Paulus an die Christen in Galatien",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Der Brief von Paulus an die Christen in Ephesus",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Der Brief von Paulus an die Christen in Philippi",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Der Brief von Paulus an die Christen in Kolossä",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "Der erste Brief von Paulus an die Christen in Thessalonich",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "Der zweite Brief von Paulus an die Christen in Thessalonich",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "Der erste Brief von Paulus an Timotheus",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "Der zweite Brief von Paulus an Timotheus",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Der Brief von Paulus an Titus",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Der Brief von Paulus an Philemon",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Der Brief an die Hebräer",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Der Brief von Jakobus",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "Der erste Brief von Petrus",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "Der zweite Brief von Petrus",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "Der erste Brief von Johannes",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "Der zweite Brief von Johannes",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "Der dritte Brief von Johannes",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Der Brief von Judas",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Die Offenbarung an Johannes",
+      "chronorder": 65,
+      "chapters": 22
+    }
   ]
 }

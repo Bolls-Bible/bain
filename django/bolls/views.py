@@ -324,23 +324,30 @@ def edit_account(request):
 def get_bookmarks(request, translation, book, chapter):
     if not request.user.is_authenticated:
         return JsonResponse([], safe=False)
-    for bookmark in request.user.bookmarks_set.filter(verse__translation=translation, verse__book=book, verse__chapter=chapter):
+    user_bookmarks = request.user.bookmarks_set.filter(verse__translation=translation, verse__book=book, verse__chapter=chapter)
+
+    if len(user_bookmarks) == 0:
+        return JsonResponse([], safe=False)
+
+    d = []
+    for bookmark in user_bookmarks:
         note = ""
         if bookmark.note is not None:
             note = bookmark.note.text
-        return JsonResponse(
-            [
-                {
-                    "verse": bookmark.verse.pk,
-                    "date": bookmark.date,
-                    "color": bookmark.color,
-                    "collection": bookmark.collection,
-                    "note": note,
-                }
-            ],
-            safe=False,
+        d.append(
+            {
+                "verse": bookmark.verse.pk,
+                "date": bookmark.date,
+                "color": bookmark.color,
+                "collection": bookmark.collection,
+                "note": note,
+            }
         )
-    return JsonResponse([], safe=False)
+
+    return JsonResponse(
+        d,
+        safe=False,
+    )
 
 
 def map_bookmarks(bookmarks_list):

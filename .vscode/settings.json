@@ -4,11 +4,14 @@
         "chronorder",
         "csrftoken",
         "dexie",
+        "elif",
         "endverse",
         "imba",
         "lucide",
+        "mousemove",
         "nowrap",
         "rgba",
-        "serviceworker"
+        "serviceworker",
+        "touchmove"
     ]
 }

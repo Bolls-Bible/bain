@@ -11,7 +11,6 @@ tag text-as-html
 			reader.book = data.book
 			reader.chapter = data.chapter
 			reader.verse = data.verse
-			emit "gotoverse", data
 
 	def render
 		<self [d:inline dir:auto] dir=translationTextDirection(data.translation) @click=goToVerse>

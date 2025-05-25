@@ -22,7 +22,7 @@ tag chapter < section
 		if parallelReader.enabled
 			return self.clientHeight
 		return main.clientHeight
-	
+
 	get layerWidth
 		if parallelReader.enabled
 			return self.clientWidth
@@ -41,36 +41,36 @@ tag chapter < section
 			activities.scrollLockTimeout = null
 
 		let top_verse = {
-			distance: 999999 # intentionally high number
+			distance: -999999 # intentionally high number
 			id: ''
 		}
-		
+
 		const article = activities.blockInScroll.querySelector('article')
 
 		unless article..children..length
 			return
-		
+
 		for kid in article.children
 			if kid.id
-				let new_distance = Math.abs(kid.offsetTop - activities.blockInScroll.scrollTop)
-				if new_distance < top_verse.distance
+				let new_distance = activities.blockInScroll.scrollTop - kid.offsetTop
+				if new_distance < 0 && new_distance > top_verse.distance
 					top_verse.distance = new_distance
 					top_verse.id = kid.id
 
 		# TODO: implement along parallel reader
 		if top_verse.id
-			let verseToSctollTo = versePrefix ? top_verse.id.match(/\d+/)[0] : "p{top_verse.id}"
-			reader.findVerse verseToSctollTo
+			let verseToScrollTo = versePrefix ? top_verse.id.match(/\d+/)[0] : "p{top_verse.id}"
+			reader.findVerse verseToScrollTo
 
 	def changeHeadersSizeOnScroll e\Event
 		if e.target != self
 			return
 
-		let testsize = 2 - ((e.target.scrollTop * 8) / window.innerHeight)
-		if testsize * theme.fontSize < 12
+		let testSize = 2 - ((e.target.scrollTop * 8) / window.innerHeight)
+		if testSize * theme.fontSize < 12
 			headerFontSize = 16 / theme.fontSize
 		elif e.target.scrollTop > 0
-			headerFontSize = testsize
+			headerFontSize = testSize
 		else
 			headerFontSize = 2
 
@@ -142,7 +142,7 @@ tag chapter < section
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
 						let bookmark = me.getBookmark(verse.pk, 'bookmarks')
-						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1rem;"
+						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1.4rem;"
 
 						if settings.verse_number
 							unless settings.verse_break
@@ -153,10 +153,10 @@ tag chapter < section
 						<span innerHTML=verse.text
 								id="{versePrefix}{verse.verse}"
 								@click.wait(200ms)=me.selectVerse(verse.pk, verse.verse)
-								# make it focusable to get keydown working on it
+								# make it focus-able to get keydown working on it
 								tabIndex=0
 								@keydown.enter=me.saveBookmark
-								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1rem]
+								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1.4rem]
 							>
 						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
