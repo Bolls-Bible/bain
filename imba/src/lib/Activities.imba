@@ -285,7 +285,7 @@ class Activities
 
 	def copyWithLink copy\CopyObject
 		copyTextToClipboard
-			'«' + copy.text + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copyObject.verses) + '/'
+			'«' + copy.text + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copy.verses) + '/'
 
 	def copyWithInternationalLink
 		copyTextToClipboard
