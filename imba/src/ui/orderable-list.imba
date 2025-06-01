@@ -107,7 +107,7 @@ tag orderable-list
 			book: tr[0].book,
 			chapter: tr[0].chapter,
 			verses: tr.map(do|t| return t.verse),
-			text: tr.map(do|t| return t.text),
+			text: tr.map(do|t| return t.text).join(' '),
 			title: activities.getSelectedVersesTitle(tr[0].translation, tr[0].book, tr[0].chapter, tr.map(do|t| return t.verse)),
 		})
 

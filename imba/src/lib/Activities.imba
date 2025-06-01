@@ -217,9 +217,13 @@ class Activities
 	def setHighlightColor event
 		if event.detail
 			highlight_color = event.detail
+	
+	def cleanUpCopyText text\string
+		# Remove all HTML tags and <s> tags
+		return text.trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
 
 	def cleanUpCopyTexts texts\string[]
-		return texts.join(' ').trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
+		return cleanUpCopyText(texts.join(' '))
 
 	get copyObject\CopyObject
 		const selectedReader = selectedParallel == reader.me ? reader : parallelReader
@@ -271,7 +275,7 @@ class Activities
 		notifications.push('copied')
 
 	def copyToClipboard 
-		let text = '«' + copyObject.text + '»\n\n' + copyObject.title
+		let text = '«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title
 		copyTextToClipboard(text)
 
 	# returns a string with the range of verses in format 1-3 or 1
@@ -280,16 +284,16 @@ class Activities
 
 	def copyWithoutLink 
 		copyTextToClipboard
-			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation
+			'«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title + ' ' + copyObject.translation
 		cleanUp!
 
 	def copyWithLink copy\CopyObject
 		copyTextToClipboard
-			'«' + copy.text + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copy.verses) + '/'
+			'«' + cleanUpCopyText(copy.text) + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copy.verses) + '/'
 
 	def copyWithInternationalLink
 		copyTextToClipboard
-			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
+			'«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
 		cleanUp!
 
 

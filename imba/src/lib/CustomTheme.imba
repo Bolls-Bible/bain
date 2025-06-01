@@ -12,6 +12,8 @@ class CustomTheme
 	@observable darkness = getValue('ct-darkness') || .06
 	@observable lightness = getValue('ct-lightness') || .5325
 
+	didUseCT = getValue('ct-used') || no
+
 	# all the rest should be calculated from the above
 	@computed get foreground
 		# calculate foreground color based on #color and lightness
@@ -103,7 +105,8 @@ class CustomTheme
 		setValue("ct-color", color)
 		setValue("ct-darkness", darkness)
 		setValue("ct-lightness", lightness)
-		
+		setValue("ct-used", yes)
+		didUseCT = yes
 
 	def cleanUpCustomTheme
 		document.documentElement.style = ""
