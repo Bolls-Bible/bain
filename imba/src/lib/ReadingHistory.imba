@@ -19,7 +19,6 @@ class ReadingHistory
 
 	@autorun(delay:500ms) def saveHistoryToServer
 		if user.username && window.navigator.onLine
-			await syncHistory!
 			API.put('/history/', {
 				history: JSON.stringify(history),
 			})
@@ -39,7 +38,7 @@ class ReadingHistory
 			return
 
 		await syncHistory!
-		
+
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)

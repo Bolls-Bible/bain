@@ -24,7 +24,7 @@ from bolls.forms import SignUpForm
 
 from .models import Verses, Bookmarks, History, Note, Commentary, Dictionary
 
-from .utils.books import BOOKS, get_book_id
+from .utils.books import BOOKS, get_book_id, is_number
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -140,13 +140,13 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
         }
 
         if book:
-            if isinstance(book, str):
+            if is_number(book):
+                linear_search_params["book"] = book
+            else:
                 if book == "ot":
                     linear_search_params["book__lt"] = 40
                 else:
-                    linear_search_params["book__gt"] = 40
-            else:
-                linear_search_params["book"] = book
+                    linear_search_params["book__gte"] = 40
 
         if match_case:
             linear_search_params["text__contains"] = piece
@@ -162,13 +162,13 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
             else:
                 query_set.append('Q(translation="' + translation + '", text__icontains=' + json.dumps(word) + ")")
         if book:
-            if isinstance(book, str):
+            if is_number(book):
+                query_set.append('Q(book="' + book + '")')
+            else:
                 if book == "ot":
                     query_set.append("Q(book__lt=40)")
                 else:
-                    query_set.append("Q(book__gt=40)")
-            else:
-                query_set.append('Q(book="' + book + '")')
+                    query_set.append("Q(book__gte=40)")
 
         query = " & ".join(query_set)
 
@@ -182,13 +182,13 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
                 "translation": translation,
             }
             if book:
-                if isinstance(book, str):
+                if is_number(book):
+                    search_params["book"] = book
+                else:
                     if book == "ot":
                         search_params["book__lt"] = 40
                     else:
-                        search_params["book__gt"] = 40
-                else:
-                    search_params["book"] = book
+                        search_params["book__gte"] = 40
 
             results_of_rank = Verses.objects.annotate(rank=SearchRank(vector, query)).filter(**search_params, rank__gt=(0.05)).order_by("-rank")
 

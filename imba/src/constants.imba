@@ -10,6 +10,11 @@ export const RTLTranslations\stringp[] = languages.flatMap(do(language)
 			return accumulator
 )
 
+export const translationNames = languages.reduce(&, {}) do(accumulator, language)
+	for translation in language.translations
+		accumulator[translation.short_name] = translation.full_name
+	return accumulator
+
 let agent = window.navigator.userAgent;
 let isWebkit = (agent.indexOf("AppleWebKit") > 0);
 let isIPad = (agent.indexOf("iPad") > 0);

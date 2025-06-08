@@ -2,8 +2,6 @@ import API from './Api'
 
 import { setValue, getValue, deleteValue } from '../utils'
 
-import readingHistory from './ReadingHistory'
-
 class User
 	@observable username\string = getValue('username')
 	is_password_usable = getValue('is_password_usable')

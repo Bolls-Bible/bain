@@ -2,6 +2,8 @@ import Copy from 'lucide-static/icons/copy.svg'
 import SquareSplitHorizontal from 'lucide-static/icons/square-split-horizontal.svg'
 import * as ICONS from 'imba-phosphor-icons'
 
+import { translationNames } from '../constants' 
+
 const AUTOSCROLL_INCREMENT = 24
 
 tag orderable-list
@@ -136,7 +138,8 @@ tag orderable-list
 								@pointercancel=touchend
 							>
 
-							tr[0].translation
+							<span title=translationNames[tr[0].translation]>
+								tr[0].translation
 
 							<button @click.prevent=copyToClipboardFromParallel(tr) title=t.copy>
 								<svg src=Copy aria-hidden=yes>

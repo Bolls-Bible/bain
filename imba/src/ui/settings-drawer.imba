@@ -101,7 +101,7 @@ tag settings-drawer < aside
 							@click=(theme.theme = 'white')> 'White'
 						if customTheme.didUseCT
 							<button[fw:900 bgc:{customTheme.background} c:{customTheme.foreground} bdr:2rem solid {customTheme.foreground}]
-								@click=customTheme.applyCustomTheme> t.theme
+								@click=theme.applyCustomTheme> t.theme
 						<button[d:hcs]
 							@click=activities.openCustomTheme>
 								t.createTheme
@@ -232,8 +232,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.1.7 🗓 "
-				<time dateTime='2025-6-1'> "1.6.2025"
+				"🍇 v3.1.8 🗓 "
+				<time dateTime='2025-6-8'> "8.6.2025"
 			<p[fs:0.75rem]>
 				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 
