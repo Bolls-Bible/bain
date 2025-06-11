@@ -307,6 +307,11 @@
         "short_name": "CEB",
         "full_name": "Common English Bible, 2011",
         "updated": 1723748851755
+      },
+      {
+        "short_name": "AUV",
+        "full_name": "An Understandable Version, 1995",
+        "updated": 1749650980278
       }
     ]
   },
