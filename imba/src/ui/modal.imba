@@ -193,7 +193,7 @@ tag modal < section
 						<header [pos:relative]>
 							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X aria-hidden=yes>
-							<h2> activities.selectedVersesTitle
+							<h2> activities.compareVersesTitle(compare.versesToCompare)
 							<button @click=copyComparisonList title=t.copy>
 								<svg src=Copy aria-hidden=yes>
 
@@ -224,7 +224,7 @@ tag modal < section
 
 
 						<article.body id="compare" [scroll-behavior:auto]>
-							<p[o:0.75]> t.add_translations_msg
+							<p[o:0.75 mb:.5rem]> t.add_translations_msg
 
 							<orderable-list>
 

@@ -361,4 +361,8 @@ global css
 			height: auto;
 
 		* 
-			transition@important: none;
+			transition@important: none
+
+	.hide-comments
+		sup
+			display: none
