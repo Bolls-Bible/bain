@@ -193,7 +193,7 @@ tag modal < section
 						<header [pos:relative]>
 							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X aria-hidden=yes>
-							<h2> activities.selectedVersesTitle
+							<h2> activities.compareVersesTitle(compare.versesToCompare)
 							<button @click=copyComparisonList title=t.copy>
 								<svg src=Copy aria-hidden=yes>
 

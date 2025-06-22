@@ -199,6 +199,12 @@ class Activities
 		return
 			getSelectedVersesTitle(parallelReader.translation, parallelReader.book, parallelReader.chapter, selectedVerses) + ' ' + parallelReader.translation
 
+	def compareVersesTitle versesToCompare
+		if selectedParallel == 'main'
+			return getSelectedVersesTitle(reader.translation, reader.book, reader.chapter, versesToCompare) + ' ' + reader.translation
+		return
+			getSelectedVersesTitle(parallelReader.translation, parallelReader.book, parallelReader.chapter, versesToCompare) + ' ' + parallelReader.translation
+
 	get randomColor
 		const randomL = Math.random() * 0.6 + 0.2 # Range [0.2, 0.8]
 		const randomC = Math.random() * 0.25 + 0.05 # Range [0.05, 0.3]

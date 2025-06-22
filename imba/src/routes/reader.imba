@@ -413,7 +413,3 @@ tag reader
 			bgc:gray4/25
 			o:0 @hover:1
 			d:hcc cursor:pointer zi:2 c:$acc 
-
-global css .hide-comments
-	sup
-		display: none

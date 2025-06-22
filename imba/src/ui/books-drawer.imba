@@ -124,7 +124,7 @@ tag books-drawer < nav
 					<[d:flex flw:wrap ai:center p:0.5rem]>
 						<svg src=Heart [size:1em stroke:$c fill:currentColor]>
 						for favorite in settings.favoriteTranslations
-							<span.li [w:auto p:0 .5rem] @click=changeTranslation(favorite)> favorite
+							<span.li [w:auto p:0 .5rem @lt-sm:.5rem] @click=changeTranslation(favorite)> favorite
 				for language in languages
 					<section key=language.language>
 						<p.li .active=(language.language == activeLanguage) @click=toggleLanguageTranslations(language.language)>
