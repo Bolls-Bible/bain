@@ -2,10 +2,10 @@ import index from './index.html'
 import express  from 'express'
 import type {Request, Response} from 'express'
 import { isNumber, getBookId } from './utils/books'
+import { translationNames } from './src/dataindex'
 
 const app = express!
 const port = process.env.PORT or 3000
-
 
 app.use(express.static('dist/public', maxAge:'1m'))
 
@@ -58,6 +58,9 @@ def preloadChapter req\Request<{
 	}>, res\Response<any, Record<string, any>, number>
 	try
 		let {translation, book, chapter, verseRange } = req.params
+		if !translationNames[translation]
+			return res.redirect(301, '/')
+
 		const isBookANumber = isNumber(book)
 		book = getBookId(translation, book)
 

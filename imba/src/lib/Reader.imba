@@ -2,7 +2,7 @@ import { getValue, setValue } from '../utils'
 
 import API from './Api'
 import activities from './Activities'
-import { translations } from '../constants'
+import { translationNames } from '../constants'
 import vault from './Vault'
 import settings from './Settings'
 import parallelReader from './ParallelReader'
@@ -20,7 +20,8 @@ class Reader < GenericReader
 	me = 'main'
 
 	@autorun def saveTranslation
-		setValue('translation', translation)
+		if translationNames[translation]
+			setValue('translation', translation)
 
 	@autorun def saveBook
 		setValue('book', book)
@@ -48,8 +49,7 @@ class Reader < GenericReader
 		unless theChapterExistInThisTranslation
 			return
 		
-		const translationName = translations.find(do |element| element.short_name == translation)..full_name || translation
-		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationName + " Bolls Bible"
+		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationNames[translation] + " Bolls Bible"
 		loading = yes
 		imba.commit!
 

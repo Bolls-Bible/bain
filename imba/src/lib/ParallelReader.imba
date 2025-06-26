@@ -8,6 +8,7 @@ import vault from './Vault'
 import settings from './Settings'
 import reader from './Reader'
 import notifications from './Notifications'
+import { translationNames } from '../constants'
 
 
 class ParallelReader < GenericReader
@@ -19,7 +20,8 @@ class ParallelReader < GenericReader
 	me = 'parallel'
 
 	@autorun def saveTranslation
-		setValue('parallel_translation', translation)
+		if translationNames[translation]
+			setValue('parallel_translation', translation)
 
 	@autorun def saveBook
 		setValue('parallel_book', book)
