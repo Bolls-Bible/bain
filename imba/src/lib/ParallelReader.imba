@@ -64,9 +64,8 @@ class ParallelReader < GenericReader
 			loading = no
 			activities.cleanUp!
 
-		if enabled
-			readingHistory.saveToHistory(translation, book, chapter, verse)
 		if settings.parallel_sync && enabled
+			readingHistory.saveToHistory(translation, book, chapter, verse)
 			reader.book = book
 			reader.chapter = chapter
 

@@ -13,9 +13,9 @@ import GenericReader from './GenericReader'
 
 
 class Reader < GenericReader
-	@observable translation\string = getValue('translation')
-	@observable book\number = getValue('book') || 1
-	@observable chapter\number = getValue('chapter') || 1
+	@observable translation\string
+	@observable book\number
+	@observable chapter\number
 
 	me = 'main'
 
@@ -39,6 +39,10 @@ class Reader < GenericReader
 				verse = window.verse
 			verses = window.verses
 			loading = no
+		else
+			translation = getValue('translation')
+			book = getValue('book') || 1
+			chapter = getValue('chapter') || 1
 
 	get myRenderer
 		document.getElementById('main-reader')
@@ -52,6 +56,10 @@ class Reader < GenericReader
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationNames[translation] + " Bolls Bible"
 		loading = yes
 		imba.commit!
+
+		if settings.parallel_sync && parallelReader.enabled
+			parallelReader.book = book
+			parallelReader.chapter = chapter
 
 		try
 			verses = []
@@ -69,10 +77,6 @@ class Reader < GenericReader
 			activities.cleanUp!
 
 		readingHistory.saveToHistory(translation, book, chapter, verse)
-		if settings.parallel_sync && parallelReader.enabled
-			parallelReader.book = book
-			parallelReader.chapter = chapter
-
 		getBookmarks!
 
 		if verse

@@ -156,13 +156,12 @@ class GenericReader
 		activities.selectedParallel = me
 		activities.highlight_color = activities.randomColor
 
-		if activities.selectedVersesPKs.length == 0
+		if activities.selectedVersesPKs.length == 0 && me == 'main'
 			window.history.pushState(
 				{},
 				'',
-				me == 'main' ? (
-					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + id + '/'
-				) : window.location.pathname)
+				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + id + '/'
+			)
 
 		# Check if the user chosen a verse in the same parallel scope
 		if activities.selectedVersesPKs.includes(pk)
