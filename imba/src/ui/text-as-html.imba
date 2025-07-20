@@ -13,5 +13,5 @@ tag text-as-html
 			reader.verse = data.verse
 
 	def render
-		<self [d:inline dir:auto] dir=translationTextDirection(data.translation) @click=goToVerse .hide-comments=!settings.verse_commentary>
+		<self [d:inline dir:auto ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight}] dir=translationTextDirection(data.translation) @click=goToVerse .hide-comments=!settings.verse_commentary>
 			<slot>

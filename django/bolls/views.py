@@ -225,7 +225,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     # count number of all exact matches
     exact_matches = 0
     for obj in results_of_search:
-        exact_matches += len(re.findall(piece, obj.text, re.IGNORECASE))
+        exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
     for obj in results_of_search[(page * limit - limit) : (page * limit)]:
         d.append(
