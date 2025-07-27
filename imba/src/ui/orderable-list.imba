@@ -183,7 +183,7 @@ tag orderable-list
 
 		menu
 			d:flex ai:center
-			g:0.25rem w:100%
+			g:0.5rem w:100%
 			mb:0 pb:1rem
 			o:0.75
 

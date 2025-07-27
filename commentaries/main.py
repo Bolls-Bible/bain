@@ -3,7 +3,7 @@ import re
 from books_map import books_map, books_short_names
 
 
-translation = "HFA"
+translation = "ERV"
 
 
 def parseLinks(text):
@@ -78,7 +78,7 @@ def main():
 
     del df["chapter_number_to"]
     del df["verse_number_to"]
-    del df["is_preceding"]
+    # del df["is_preceding"]
 
     df["text"] = df.apply(lambda row: parseLinks(f'{row["marker"]} {row["text"]}'), axis=1)
     df.rename(columns={"book_number": "book", "chapter_number_from": "chapter", "verse_number_from": "verse"}, inplace=True)

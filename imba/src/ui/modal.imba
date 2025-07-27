@@ -191,11 +191,7 @@ tag modal < section
 
 					when 'compare'
 						<header [pos:relative]>
-							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
-								<svg src=ICONS.X aria-hidden=yes>
-							<h2> activities.compareVersesTitle(compare.versesToCompare)
-							<button @click=copyComparisonList title=t.copy>
-								<svg src=Copy aria-hidden=yes>
+							<h2 [ml:unset]> activities.compareVersesTitle(compare.versesToCompare)
 
 							<menu-popup bind=activities.show_comparison_options>
 								<button @click=(do activities.show_comparison_options = !activities.show_comparison_options) title=t.compare>
@@ -222,6 +218,11 @@ tag modal < section
 													<strong> translation.short_name
 													', ', translation.full_name
 
+							<button @click=copyComparisonList title=t.copy_all>
+								<svg src=Copy aria-hidden=yes>
+
+							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
+								<svg src=ICONS.X aria-hidden=yes>
 
 						<article.body id="compare" [scroll-behavior:auto]>
 							<p[o:0.75 mb:.5rem]> t.add_translations_msg
@@ -543,7 +544,7 @@ tag modal < section
 								<ul.suggestions>
 									for book in search.suggestions.books
 										<li>
-											<text-as-html.li.focusable tabIndex="0" data={
+											<p.li.focusable tabIndex="0" data={
 													translation: search.suggestions.translation,
 													book: book.bookid,
 													chapter: search.suggestions.chapter,
@@ -644,11 +645,11 @@ tag modal < section
 	css
 		header
 			d:hcc
-			g:0.25rem
+			g:0.5rem
 
 			button, a
 				bgc:transparent c:inherit @hover:$acc-hover
-				min-width:1.625rem w:1.5rem cursor:pointer
+				min-width:2rem w:2rem cursor:pointer
 				d:flex fls:0
 
 			h2

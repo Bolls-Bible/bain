@@ -14,6 +14,7 @@ import notifications from './Notifications'
 import user from './User'
 import theme from './Theme'
 import customTheme from './CustomTheme'
+import settings from './Settings'
 
 import type { CopyObject, Verse } from './types'
 
@@ -222,8 +223,13 @@ class Activities
 			highlight_color = event.detail
 	
 	def cleanUpCopyText text\string
+		let res = text.trim()
+		if !settings.verse_commentary
+			# remove <sup> tags with their content
+			res = res.replace(/<sup>.*?<\/sup>/gi, '')
+			console.log('cleanUpCopyText', res, text)
 		# Remove all HTML tags and <s> tags
-		return text.trim().replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
+		return res.replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
 
 	def cleanUpCopyTexts texts\string[]
 		return cleanUpCopyText(texts.join(' '))
@@ -278,7 +284,7 @@ class Activities
 		notifications.push('copied')
 
 	def copyToClipboard 
-		let text = '«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title
+		let text = '«' + copyObject.text + '»\n\n' + copyObject.title
 		copyTextToClipboard(text)
 
 	# returns a string with the range of verses in format 1-3 or 1
@@ -287,7 +293,7 @@ class Activities
 
 	def copyWithoutLink 
 		copyTextToClipboard
-			'«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title + ' ' + copyObject.translation
+			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation
 		cleanUp!
 
 	def copyWithLink copy\CopyObject
@@ -296,7 +302,7 @@ class Activities
 
 	def copyWithInternationalLink
 		copyTextToClipboard
-			'«' + cleanUpCopyText(copyObject.text) + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
+			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
 		cleanUp!
 
 

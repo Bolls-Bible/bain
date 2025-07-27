@@ -53,6 +53,11 @@
         "updated": 1735480286432
       },
       {
+        "short_name": "TUB",
+        "full_name": "Біблія. Новий переклад УБТ Рафаїла Турконяка (1997-2007) 76 книг",
+        "updated": 1753649119979
+      },
+      {
         "short_name": "CSL",
         "full_name": "Библия Церковнославянская, 1900",
         "updated": 1626349711821
@@ -312,6 +317,36 @@
         "short_name": "AUV",
         "full_name": "An Understandable Version, 1995",
         "updated": 1749650980278
+      },
+      {
+        "short_name": "GNTD",
+        "full_name": "Good News Translation (US Version), 2001",
+        "updated": 1753649119979
+      },
+      {
+        "short_name": "ERV",
+        "full_name": "Easy-to-Read Version, 2006",
+        "updated": 1753649119979
+      },
+      {
+        "short_name": "ASV",
+        "full_name": "American Standard Version 1901 (with Strong's numbers)",
+        "updated": 1753649119979
+      },
+      {
+        "short_name": "GNT",
+        "full_name": "Good News Bible, 1976",
+        "updated": 1753649119979
+      },
+      {
+        "short_name": "ISV",
+        "full_name": "International Standard Version, 2011",
+        "updated": 1753649119979
+      },
+      {
+        "short_name": "NLV",
+        "full_name": "New Life Version, 1969",
+        "updated": 1753649119979
       }
     ]
   },
