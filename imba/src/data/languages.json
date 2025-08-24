@@ -10,7 +10,7 @@
       {
         "short_name": "UKRK",
         "full_name": "Біблія. Пантелеймон Александрович Куліш, Іван Семенович Нечуй-Левицький, Іван Павлович Пулюй, 1903",
-        "updated": 1746965050114
+        "updated": 1756037367272
       },
       {
         "short_name": "HOM",
@@ -443,7 +443,7 @@
       {
         "short_name": "WLCa",
         "full_name": "Westminster Leningrad Codex (with vowels, accents and Strong's numbers)",
-        "updated": 1751200667981,
+        "updated": 1756037367272,
         "dir": "rtl"
       },
       {
@@ -654,6 +654,11 @@
         "short_name": "ACF11",
         "full_name": "Almeida Corrigida Fiel, 2011",
         "updated": 1738783423272
+      },
+      {
+        "short_name": "MENS",
+        "full_name": "Bíblia A Mensagem",
+        "updated": 1756037367272
       }
     ]
   },

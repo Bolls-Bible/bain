@@ -13,6 +13,8 @@ import Send from 'lucide-static/icons/send.svg'
 import LoaderPinwheel from 'lucide-static/icons/loader-pinwheel.svg'
 import Check from 'lucide-static/icons/check.svg'
 import Bookmark from 'lucide-static/icons/bookmark.svg'
+import { format } from 'date-fns'
+import Color from "colorjs.io"
 
 import languages from '../data/languages.json'
 import { MOBILE_PLATFORM, translations, contributors } from '../constants'
@@ -144,9 +146,16 @@ tag modal < section
 		activities.openModal 'downloads'
 		activities.show_dictionary_downloads = yes
 
+	get backdropColor
+		# get --bgc css variable value from dom
+		const bgc = window.getComputedStyle(document.documentElement).getPropertyValue('--bgc')
+		const color = new Color(bgc)
+		color.alpha = 0.5
+		return color.to("hsl").toString()
+
 	def render
 		<self
-			[pos:fixed inset:0 bg:rgba(0,0,0,0.5) h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
+			[pos:fixed inset:0 bg:{backdropColor} h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
 			@click=activities.cleanUp ease>
 
 			<[
@@ -336,22 +345,24 @@ tag modal < section
 												c@hover:$acc-hover
 												ta:start
 
-										<button[fl:1] @click=(do()
+										<button[fl:1 d:vbs g:.25rem] @click=(do()
 											reader.translation = history.translation
 											reader.book = history.book
 											reader.chapter = history.chapter
 											reader.verse = history.verse
 										) dir="auto">
-											getBookName(history.translation, history.book)
-											' '
-											history.chapter
-											if history.verse
-												':'
-												history.verse
-											' '
-											history.translation
+											<span>
+												getBookName(history.translation, history.book)
+												' '
+												history.chapter
+												if history.verse
+													':'
+													history.verse
+												' '
+												history.translation
+											<span[fs:.75rem o:.8]> format(new Date(history.date), 'PPpp')
 										<button
-											@click=openInParallel({translation:history.translation, book:history.book, chapter: history.chapter, verse: history.verse}) title=t.open_in_parallel>
+											@click=openInParallel({translation:history.translation, book:history.book, chapter: history.chapter, verse: Number(history.verse)}) title=t.open_in_parallel>
 											<svg src=SquareSplitHorizontal aria-hidden=yes>
 						else
 							<p[pt:1rem]> t.empty_history
@@ -374,7 +385,7 @@ tag modal < section
 							<button @click=openDictionaryDownloads title=t.download>
 								<svg src=CloudDownload aria-hidden=yes>
 
-						<menu-popup bind=activities.show_dictionaries [pos:relative ]>
+						<menu-popup bind=activities.show_dictionaries [pos:relative]>
 							<[transform@important:none padding-block:.5rem c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]
 								@click=(do activities.show_dictionaries = !activities.show_dictionaries)>
 								dictionary.currentDictionary
@@ -438,7 +449,7 @@ tag modal < section
 							<button @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
 							<h2> t.theme
-							<button @click=theme.applyCustomTheme title=t.save>
+							<button @click=theme.applyCustomTheme title=t.save disabled=(Math.abs(customTheme.contrast) < 15)>
 								<svg src=Check  aria-hidden=true>
 
 						<article.body>
@@ -482,7 +493,6 @@ tag modal < section
 								t.contrast
 								<span[c:{customTheme.contrastRateColor}]>
 									customTheme.contrast
-
 
 							<div [mt:.5rem]>
 								css
@@ -651,6 +661,7 @@ tag modal < section
 				bgc:transparent c:inherit @hover:$acc-hover
 				min-width:2rem w:2rem cursor:pointer
 				d:flex fls:0
+				o@disabled:0.5
 
 			h2
 				text-align: center

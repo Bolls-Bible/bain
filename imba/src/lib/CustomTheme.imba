@@ -41,22 +41,26 @@ class CustomTheme
 		# should be a bit brighter than the background
 		const clone = #color.to('oklab')
 		if darkness > .5
-			clone.l = darkness - .08
+			clone.l = darkness * .9
 		else
-			clone.l = darkness + .08
+			clone.l = darkness * 1.1
 		return clone.to("hsl").toString()
 
 	# Highlight color
 	@computed get acc
-		return #color.to("hsl").toString()
+		const clone = #color.to('oklab')
+		# if the accent has too low contrast with bg -- update the lightness
+		if getContrast(#color, new Color(background)) < 15
+			clone.l *= clone.l < .5 ? 1.25 : 0.75
+		return clone.to("hsl").toString()
 
 	@computed get accHover
 		# should be a bit darker or brighter than the accent color depending on the lightness
-		const clone = #color.to('oklab')
+		const clone = new Color(acc).to('oklab')
 		if clone.l > .5
-			clone.l -= .08
+			clone.l *= 0.8
 		else
-			clone.l += .08
+			clone.l *= 1.2
 		return clone.to("hsl").toString()
 
 	@computed get contrast
@@ -64,6 +68,11 @@ class CustomTheme
 		fgClone.l = lightness
 		const bgClone = #color.to('oklab')
 		bgClone.l = darkness
+		return Math.round(bgClone.contrast(fgClone, "APCA"))
+	
+	def getContrast fg, bg
+		const fgClone = fg.to('oklab')
+		const bgClone = bg.to('oklab')
 		return Math.round(bgClone.contrast(fgClone, "APCA"))
 
 	@computed get contrastRateColor

@@ -57,7 +57,7 @@ tag settings-drawer < aside
 				<.visible-accent @click=(do activities.show_accents = !activities.show_accents)>
 				<.accents .show-accents=activities.show_accents>
 					for accent in theme.accents when accent.name != theme.accent
-						<.accent @click=(do theme.accent = accent.name; activities.show_accents = no) [background-color: {theme.light == 'dark' ? accent.light : accent.dark}]>
+						<.accent @click=(do theme.accent = accent.name; activities.show_accents = no) [background-color: {theme.isDark ? accent.light : accent.dark}]>
 		if !!user.username
 			<a.settings-btn route-to='/profile/'>
 				<svg src=VenetianMask aria-hidden=true>
@@ -232,8 +232,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.1.15 🗓 "
-				<time dateTime='2025-7-27'> "27.7.2025"
+				"🍇 v3.1.16 🗓 "
+				<time dateTime='2025-8-24'> "24.8.2025"
 			<p[fs:0.75rem]>
 				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
 

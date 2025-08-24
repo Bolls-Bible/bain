@@ -138,7 +138,12 @@ class Theme
 	@computed get light
 		if this.theme == 'dark' or this.theme == 'black'
 			return lights.dark
+		if this.theme == 'custom' and customTheme.darkness < .5
+			return lights.dark
 		return lights.light
+
+	@computed get isDark
+		return this.theme == 'dark' or this.theme == 'black'
 
 	set theme newTheme\colorTheme
 		setValue "theme", newTheme
