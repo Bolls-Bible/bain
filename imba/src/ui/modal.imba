@@ -152,6 +152,19 @@ tag modal < section
 		const color = new Color(bgc)
 		color.alpha = 0.5
 		return color.to("hsl").toString()
+	
+	def openSuggestedBook bookId\string
+		reader.book=bookId
+		reader.chapter=search.suggestions.chapter
+		reader.verse=search.suggestions.verse
+	
+	def openSuggestedBookInParallel bookId\string
+		openInParallel({
+			translation:search.suggestions.translation,
+			book: bookId,
+			chapter: search.suggestions.chapter,
+			verse: search.suggestions.verse
+		})
 
 	def render
 		<self
@@ -345,7 +358,7 @@ tag modal < section
 												c@hover:$acc-hover
 												ta:start
 
-										<button[fl:1 d:vbs g:.25rem] @click=(do()
+										<button[fl:1 d:vbs g:.25rem] @click=(do
 											reader.translation = history.translation
 											reader.book = history.book
 											reader.chapter = history.chapter
@@ -362,8 +375,13 @@ tag modal < section
 												history.translation
 											<span[fs:.75rem o:.8]> format(new Date(history.date), 'PPpp')
 										<button
-											@click=openInParallel({translation:history.translation, book:history.book, chapter: history.chapter, verse: Number(history.verse)}) title=t.open_in_parallel>
-											<svg src=SquareSplitHorizontal aria-hidden=yes>
+											@click=openInParallel({
+												translation:history.translation,
+												book:history.book,
+												chapter: history.chapter,
+												verse: Number(history.verse)
+											}) title=t.open_in_parallel>
+												<svg src=SquareSplitHorizontal aria-hidden=yes>
 						else
 							<p[pt:1rem]> t.empty_history
 						
@@ -554,20 +572,13 @@ tag modal < section
 								<ul.suggestions>
 									for book in search.suggestions.books
 										<li>
-											<p.li.focusable tabIndex="0" data={
-													translation: search.suggestions.translation,
-													book: book.bookid,
-													chapter: search.suggestions.chapter,
-													verse: search.suggestions.verse
-												} @keydown.enter=(do
-													reader.book=book.bookid
-													reader.chapter=search.suggestions.chapter
-													reader.verse=search.suggestions.verse
-												)>
-													search.getSuggestionText(book)
+											<p.li.focusable tabIndex="0"
+												@keydown.enter=openSuggestedBook(book.bookid)
+												@click=openSuggestedBook(book.bookid)
+												> search.getSuggestionText(book)
 											<button.focusable [ml:4px]
-												@click=openInParallel({translation:search.suggestions.translation, book: book.bookid, chapter: search.suggestions.chapter,verse: search.suggestions.verse})
-												@keydown.enter=openInParallel({translation:search.suggestions.translation, book: book.bookid, chapter: search.suggestions.chapter,verse: search.suggestions.verse}) title=t.open_in_parallel>
+												@click=openSuggestedBookInParallel(book.bookid)
+												@keydown.enter=openSuggestedBookInParallel(book.bookid) title=t.open_in_parallel>
 												<svg src=SquareSplitHorizontal aria-hidden=yes>
 
 									for translation in search.suggestions.translations

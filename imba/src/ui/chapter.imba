@@ -147,9 +147,13 @@ tag chapter < section
 						if settings.verse_number
 							unless settings.verse_break
 								<span> ' '
-							<a.verse dir="ltr" style=superStyle href="#{versePrefix}{verse.verse}"> '\u2007\u2007\u2007' + verse.verse + "\u2007"
+							<span.verse dir="ltr" style=superStyle @click=(me.findVerse("{versePrefix}{verse.verse}"))>
+								if settings.verse_break then '\u2007' else'\u2007\u2007\u2007'
+								verse.verse
+								"\u2007"
 						else
-							<span> ' '
+							unless settings.verse_break
+								<span> ' '
 						<span innerHTML=verse.text
 								id="{versePrefix}{verse.verse}"
 								@click.wait(200ms)=me.selectVerse(verse.pk, verse.verse)

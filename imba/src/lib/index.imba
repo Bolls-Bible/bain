@@ -100,7 +100,8 @@ extend tag element
 		return bookNameIndex.get("{translation}:{bookid}") || bookid
 
 	def openInParallel place\{translation:string, book:number, chapter:number, verse:number}
-		if settings.parallel_sync && parallelReader.enabled
+		parallelReader.enabled = true
+		if settings.parallel_sync
 			if place.book then reader.book = place.book
 			if place.chapter then reader.chapter = place.chapter
 		else

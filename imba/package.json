@@ -8,6 +8,7 @@
     "prod": "npx pm2 start server.mjs"
   },
   "dependencies": {
+    "@sentry/browser": "^10.10.0",
     "pm2": "^6.0.8"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@ import './fonts/fontstylesheet.css'
 
 global css
 	html[data-theme="light"]
+		color-scheme: light
 		--bgc: hsl(0, 100%, 97%)
 		--c: rgb(4, 6, 12)
 		--acc-bgc: hsl(256, 100%, 92%)
@@ -24,6 +25,7 @@ global css
 
 
 	html[data-theme="dark"]
+		color-scheme: dark
 		--bgc: #00061A
 		--c: #B29595
 		--acc-bgc: #252749
