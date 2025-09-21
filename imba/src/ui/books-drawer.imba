@@ -14,22 +14,25 @@ tag books-drawer < nav
 	@observable get activeTranslation
 		if activities.activeTranslation && parallelReader.enabled
 			return activities.activeTranslation
-		return reader.translation
-	
+		return reader.translation || 'YLT'
+
 	@computed get books
+		unless activeTranslation in ALL_BOOKS
+			console.log "Active Translation {activeTranslation} not found in ALL_BOOKS, defaulting to YLT"
+			return ALL_BOOKS['YLT']
 		let orderBy = settings.chronorder ? 'chronorder' : 'bookid'
 		return ALL_BOOKS[activeTranslation].sort(do(a, b) return a[orderBy] - b[orderBy])
-	
+
 	@computed get activeLanguage
 		return languages.find(do(lang)
 			return lang.translations.find(do|translation| translation.short_name == activeTranslation)
 		).language
-	
+
 	@computed get activeBook
 		if activeTranslation == parallelReader.translation
 			return parallelReader.book
 		return reader.book
-	
+
 	@computed get activeChapter
 		if activeTranslation == parallelReader.translation
 			return parallelReader.chapter

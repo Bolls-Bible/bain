@@ -2,7 +2,6 @@ import type { BeforeInstallPromptEvent } from './types.ts'
 
 class PWA
 	hideInstallPromotion = no
-	showInstallButton = no
 	deferredPrompt\BeforeInstallPromptEvent
 	pswv = no # Play Store Web View
 	isWin10Plus = no
@@ -14,7 +13,6 @@ class PWA
 		window.addEventListener('beforeinstallprompt', do(e\BeforeInstallPromptEvent)
 			e.preventDefault()
 			deferredPrompt = e
-			showInstallButton = yes
 			imba.commit!
 		)
 
@@ -45,6 +43,10 @@ class PWA
 							isWin10Plus = yes)
 		catch
 			isWin10Plus = no
+
+	def install
+		if deferredPrompt
+			deferredPrompt.prompt()
 
 const pwa = new PWA()
 

@@ -123,7 +123,7 @@ tag chapter < section
 				for rect in pageSearch.rects when isMyRect(rect.matchID) and activities.activeModal == ''
 					<.{rect.class} id=rect.matchID [pos:absolute zi:-1 top:{rect.top}px left:{rect.left}px width:{rect.width}px height:{rect.height}px]>
 
-			if me.verses.length
+			if me.verses..length
 				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
 					#main_header_arrow_size = "min(64px, max({minHeaderFont}em, {headerFontSize}em))"
 					<h1

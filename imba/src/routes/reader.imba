@@ -85,15 +85,21 @@ tag reader
 
 
 	def slidestart touch
+		unless touch.changedTouches.length
+			return
 		initialTouch = touch.changedTouches[0]
 		if initialTouch.clientX < 16 or initialTouch.clientX > window.innerWidth - 16
 			inTouchZone = yes
 
 	def slideend touch
+		unless initialTouch
+			return
 		touch = touch.changedTouches[0]
 
 		touch.dy = initialTouch.clientY - touch.clientY
 		touch.dx = initialTouch.clientX - touch.clientX
+
+		console.log "dx: {touch.dx}, dy: {touch.dy}, { Math.abs(touch.dy / touch.dx)}"
 
 		if activities.booksDrawerOffset > -300
 			if inTouchZone
@@ -105,7 +111,7 @@ tag reader
 				touch.dx > 64 ? activities.settingsDrawerOffset = 0 : activities.settingsDrawerOffset = -300
 			else
 				touch.dx < -64 ? activities.settingsDrawerOffset = -300 : activities.settingsDrawerOffset = 0
-		elif document.getSelection().isCollapsed && Math.abs(touch.dy) < 36 && !activities.selectedVerses.length
+		elif document.getSelection().isCollapsed && Math.abs(touch.dy / touch.dx) < 0.3 && !activities.selectedVerses.length
 			if window.innerWidth > 600
 				if touch.dx < -32
 					parallelReader.enabled && touch.clientX > window.innerWidth / 2 ? parallelReader.prevChapter! : reader.prevChapter!

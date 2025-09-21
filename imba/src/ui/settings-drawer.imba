@@ -195,7 +195,7 @@ tag settings-drawer < aside
 				<button.settings-btn @click=activities.toggleDownloads>
 					<svg src=CloudDownload aria-hidden=true>
 					t.download_translations
-			<a.settings-btn href='/downloads/' target="_blank" @click=pwa.deferredPrompt.prompt>
+			<a.settings-btn href='/downloads/' target="_blank" @click=pwa.install>
 				<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
 				t.install_app
 			<button.settings-btn @click=dictionary.showDictionary>
@@ -232,7 +232,7 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.1.17 🗓 "
+				"🍇 v3.1.18 🗓 "
 				<time dateTime='2025-9-13'> "13.9.2025"
 			<p[fs:0.75rem]>
 				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"

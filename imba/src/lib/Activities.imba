@@ -168,7 +168,8 @@ class Activities
 		openModal 'search'
 		search.generateSuggestions!
 		setTimeout(&, 300) do
-			search.inputElement\(as HTMLInputElement).select!
+			if search.inputElement
+				search.inputElement.focus!
 
 	def openCustomTheme
 		cleanUp!

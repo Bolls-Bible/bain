@@ -83,6 +83,8 @@ class PageSearch
 						range_start -= child.length
 						range_end_index -= child.length
 				else
+					unless child.firstChild
+						continue
 					# if child is not a text node then we need to check against its firstChild
 					# if the length of the firstChild is greater than the range_start
 					# then we found the node that contains the matched text

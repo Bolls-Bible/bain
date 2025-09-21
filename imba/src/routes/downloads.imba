@@ -14,8 +14,8 @@ tag downloads
 				<h1[m:4vw auto @lt-sm:4vw .5rem fs:2.3rem maw:50rem]> t.exhortation
 				if !(pwa.hideInstallPromotion or pwa.isWin10Plus)
 					<div id="pwa">
-						if pwa.showInstallButton
-							<button @click.prevent=pwa.deferredPrompt.prompt [display: inline-flex width: auto animation: text-came 300ms ease]>
+						if pwa.deferredPrompt
+							<button @click.prevent=pwa.install [display: inline-flex width: auto animation: text-came 300ms ease]>
 								<img src="/static/android-chrome-512x512.png" alt="Bolls logo">
 								<p> t.install_app
 						else
