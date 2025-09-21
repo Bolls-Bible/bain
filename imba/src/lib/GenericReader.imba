@@ -26,7 +26,7 @@ class GenericReader
 	me = '' # constant to indicate the main reader versus the parallel reader
 
 	@computed get books
-		unless translation in ALL_BOOKS
+		unless ALL_BOOKS[translation]
 			console.log "Translation {translation} not found in ALL_BOOKS, defaulting to YLT"
 			return ALL_BOOKS['YLT']
 		let orderBy = settings.chronorder ? 'chronorder' : 'bookid'

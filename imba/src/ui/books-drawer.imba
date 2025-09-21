@@ -17,7 +17,7 @@ tag books-drawer < nav
 		return reader.translation || 'YLT'
 
 	@computed get books
-		unless activeTranslation in ALL_BOOKS
+		unless ALL_BOOKS[activeTranslation]
 			console.log "Active Translation {activeTranslation} not found in ALL_BOOKS, defaulting to YLT"
 			return ALL_BOOKS['YLT']
 		let orderBy = settings.chronorder ? 'chronorder' : 'bookid'
