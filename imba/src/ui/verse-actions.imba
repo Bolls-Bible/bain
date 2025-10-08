@@ -38,6 +38,7 @@ tag verse-actions < section
 	def touchHandler event
 		#dy = Math.max(event.y - event.y0, -DEFAULT_Y) + DEFAULT_Y
 		#isSliding = null
+		event.stopPropagation!
 
 		if event.phase == "ended"
 			if #dy > DEFAULT_Y * 2
@@ -45,7 +46,7 @@ tag verse-actions < section
 				close!
 			#isSliding = null
 			#dy = DEFAULT_Y
-		
+
 
 	get transitionDuration
 		return #dy == DEFAULT_Y ? '0.5s' : '0s'
@@ -260,7 +261,6 @@ tag verse-actions < section
 			top:-0.25rem
 			scale-x: 2
 			scale-y: 0.5
-			stroke: $acc-bgc-hover
 
 		button
 			fs:0.875rem

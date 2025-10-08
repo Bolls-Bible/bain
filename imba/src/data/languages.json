@@ -374,6 +374,26 @@
         "short_name": "NBS",
         "full_name": "Nouvelle Bible Segond, 2002",
         "updated": 1636583761597
+      },
+      {
+        "short_name": "FRDBY",
+        "full_name": "la Bible de Darby, 1890",
+        "updated": 1759933357284
+      },
+      {
+        "short_name": "FRLSG",
+        "full_name": "Bible Segond 1910",
+        "updated": 1759933357284
+      },
+      {
+        "short_name": "FRPDV17",
+        "full_name": "Parole de Vie 2017",
+        "updated": 1759933357284
+      },
+      {
+        "short_name": "BDS",
+        "full_name": "La Bible du Semeur, 2015",
+        "updated": 1759933357284
       }
     ]
   },
@@ -539,6 +559,16 @@
         "short_name": "NJB",
         "full_name": "新改訳聖書 第三版, New Japanese Bible - Shinkai-yaku, 2003",
         "updated": 1626349711821
+      },
+      {
+        "short_name": "JPNICT",
+        "full_name": "新共同訳聖書, Japanese New Interconfessional Translation Bible - Shinkyodo-yaku, 1987",
+        "updated": 1759933357284
+      },
+      {
+        "short_name": "JPKJV",
+        "full_name": "口語訳聖書(ルビあり), Colloquial Japanese - Kougo-yaku, 1954/1955",
+        "updated": 1759933357284
       }
     ]
   },
@@ -549,6 +579,11 @@
         "short_name": "KRV",
         "full_name": "개역한글",
         "updated": 1741460720312
+      },
+      {
+        "short_name": "RNKSV",
+        "full_name": "새번역",
+        "updated": 1759933357284
       }
     ]
   },

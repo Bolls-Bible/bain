@@ -1,11 +1,11 @@
-// mark this file for ts server as worker
+/// <reference lib="webworker" />
 
 importScripts("/sw/dexie.min.js");
 importScripts("/sw/jszip.min.js");
 
 Dexie = Dexie.default;
 
-let db = new Dexie("versesdb");
+const db = new Dexie("versesdb");
 
 db.version(2).stores({
   verses:
@@ -20,24 +20,23 @@ db.version(3).stores({
 });
 
 async function downloadZip(url, filename) {
-  let data = await fetch(url) // 1) fetch the url
-    .then(function (response) {
+  const data = await fetch(url) // 1) fetch the url
+    .then((response) => {
       // 2) filter on 200 OK
       if (response.status === 200 || response.status === 0) {
         return Promise.resolve(response.blob());
-      } else {
-        return Promise.reject(new Error(response.statusText));
       }
+      return Promise.reject(new Error(response.statusText));
     })
     .then(JSZip.loadAsync) // 3) chain with the zip promise
-    .then(function (zip) {
-      return zip.file(filename + ".json").async("string"); // 4) chain with the text content promise
+    .then((zip) => {
+      return zip.file(`${filename}.json`).async("string"); // 4) chain with the text content promise
     })
     .then(
-      function success(text) {
+      (text) => {
         return JSON.parse(text);
       },
-      function error(e) {
+      (e) => {
         console.error(e);
         throw filename;
       }
@@ -47,7 +46,7 @@ async function downloadZip(url, filename) {
 
 async function downloadTranslation(url) {
   const translation = url.split("/")[5];
-  let data = await downloadZip(`${url}.zip`, translation);
+  const data = await downloadZip(`${url}.zip`, translation);
   return db
     .transaction("rw", db.verses, async () => {
       return db.verses.bulkPut(data).then(() => {
@@ -98,8 +97,8 @@ async function searchVerses(urlStr) {
   const query_parts = query.split(" ");
   const PAGE_SIZE = 128;
   const filterBook = url.searchParams.get("book");
-  const page = parseInt(url.searchParams.get("page") || "1");
-  const filterNumber = parseInt(filterBook);
+  const page = Number.parseInt(url.searchParams.get("page") || "1");
+  const filterNumber = Number.parseInt(filterBook);
 
   return db
     .transaction("r", db.verses, () => {
@@ -115,7 +114,7 @@ async function searchVerses(urlStr) {
               }
             } else if (filterNumber !== verse.book) return false;
           }
-          let lowercased_text = verse.text.toLowerCase();
+          const lowercased_text = verse.text.toLowerCase();
 
           // If a few words are searched, all words must be present
           if (query_parts.length > 1)
@@ -133,14 +132,14 @@ async function searchVerses(urlStr) {
               .length;
           }
           // highlight exact matches with <mark> tag
-          data.forEach((verse) => {
-            query_parts.forEach((query_part) => {
+          for (const verse of data) {
+            for (const query_part of query_parts) {
               verse.text = verse.text.replace(
                 new RegExp(query_part, "gi"),
                 (match) => `<mark>${match}</mark>`
               );
-            });
-          });
+            }
+          }
           return new Response(
             JSON.stringify({
               data: data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
@@ -164,7 +163,7 @@ async function searchVerses(urlStr) {
 
 async function downloadDictionary(url) {
   const dictionary = url.split("/")[5];
-  let data = await downloadZip(`${url}.zip`, dictionary);
+  const data = await downloadZip(`${url}.zip`, dictionary);
   for (const element of data) {
     element.dictionary = dictionary;
   }
@@ -207,18 +206,18 @@ async function dictionarySearch(url) {
   const url_parts = url.split("/");
   const dictionary = url_parts[5];
   const query = decodeURI(url_parts[6]);
-  let uppercase_query = query.toUpperCase();
+  const uppercase_query = query.toUpperCase();
   return db
     .transaction("r", db.dictionaries, () => {
       return db.dictionaries
         .where({ dictionary: dictionary })
         .filter((definition) => {
-          if (definition.topic.toUpperCase() == uppercase_query) {
+          if (definition.topic.toUpperCase() === uppercase_query) {
             return true;
           }
 
           if (definition.short_definition) {
-            let short_definition = definition.short_definition.toUpperCase();
+            const short_definition = definition.short_definition.toUpperCase();
             if (
               uppercase_query.indexOf(short_definition) > -1 ||
               short_definition.indexOf(uppercase_query) > -1
@@ -227,10 +226,10 @@ async function dictionarySearch(url) {
             }
           }
 
-          return query.includes(definition.lexeme) ||
+          return (
+            query.includes(definition.lexeme) ||
             definition.lexeme.includes(query)
-            ? true
-            : false;
+          );
         })
         .toArray()
         .then((data) => {

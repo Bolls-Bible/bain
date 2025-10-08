@@ -493,8 +493,8 @@ tag color-picker
 					")"
 
 				<[d:flex p:.5rem]>
-					<button.action [ml:auto] type="button" @click=closePicker(true)> t.cancel
-					<button.action type="button" @click=closePicker> "OK"
+					<button.action [ml:auto] type="button" @click=closePicker(true) title=t.cancel> t.cancel
+					<button.action type="button" @click=closePicker title="OK"> "OK"
 
 
 	css

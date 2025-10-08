@@ -19,7 +19,6 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.38.2",
     "@lezer/highlight": "^1.2.1",
-    "@types/serviceworker": "^0.0.153",
     "colorjs.io": "^0.5.2",
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.7",

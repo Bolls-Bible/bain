@@ -50942,5 +50942,3331 @@
       "chronorder": 65,
       "chapters": 22
     }
+  ],
+  "FRDBY": [
+    {
+      "bookid": 1,
+      "name": "Genèse",
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exode",
+      "chronorder": 3,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Lévitique",
+      "chronorder": 4,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Nombres",
+      "chronorder": 5,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deutéronome",
+      "chronorder": 6,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Josué",
+      "chronorder": 7,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Juges",
+      "chronorder": 8,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Ruth",
+      "chronorder": 9,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorder": 10,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorder": 11,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Rois",
+      "chronorder": 15,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Rois",
+      "chronorder": 28,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Chroniques",
+      "chronorder": 12,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Chroniques",
+      "chronorder": 16,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Esdras",
+      "chronorder": 37,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Néhémie",
+      "chronorder": 38,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Esther",
+      "chronorder": 36,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Job",
+      "chronorder": 2,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psaumes",
+      "chronorder": 13,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbes",
+      "chronorder": 17,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Ecclésiaste",
+      "chronorder": 18,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cantique des cantiques",
+      "chronorder": 14,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Ésaïe",
+      "chronorder": 25,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jérémie",
+      "chronorder": 29,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentations",
+      "chronorder": 30,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ézéchiel",
+      "chronorder": 32,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorder": 33,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osée",
+      "chronorder": 23,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joël",
+      "chronorder": 20,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorder": 21,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Abdias",
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorder": 19,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Michée",
+      "chronorder": 22,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Nahum",
+      "chronorder": 24,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habakuk",
+      "chronorder": 27,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sophonie",
+      "chronorder": 26,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Aggée",
+      "chronorder": 34,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacharie",
+      "chronorder": 35,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malachie",
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "Matthieu",
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marc",
+      "chronorder": 58,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luc",
+      "chronorder": 52,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Jean",
+      "chronorder": 66,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Actes",
+      "chronorder": 54,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romains",
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinthiens",
+      "chronorder": 44,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinthiens",
+      "chronorder": 45,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galates",
+      "chronorder": 41,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Éphésiens",
+      "chronorder": 47,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Philippiens",
+      "chronorder": 49,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Colossiens",
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Thessaloniciens",
+      "chronorder": 42,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Thessaloniciens",
+      "chronorder": 43,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timothée",
+      "chronorder": 55,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timothée",
+      "chronorder": 59,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tite",
+      "chronorder": 57,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Philémon",
+      "chronorder": 51,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Hébreux",
+      "chronorder": 53,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Jacques",
+      "chronorder": 48,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Pierre",
+      "chronorder": 56,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Pierre",
+      "chronorder": 60,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 Jean",
+      "chronorder": 61,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Jean",
+      "chronorder": 62,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Jean",
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Jude",
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalypse",
+      "chronorder": 65,
+      "chapters": 22
+    }
+  ],
+  "JPNICT": [
+    {
+      "bookid": 1,
+      "name": "創世記",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "出エジプト記",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 39
+    },
+    {
+      "bookid": 3,
+      "name": "レビ記",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "民数記",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "申命記",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "ヨシュア記",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "士師記",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "ルツ記",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 3
+    },
+    {
+      "bookid": 9,
+      "name": "サムエル記上",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "サムエル記下",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "列王記上",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "列王記下",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "歴代誌上",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "歴代誌下",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "エズラ記",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "ネヘミヤ記",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 18,
+      "name": "ヨブ記",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "詩編",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "箴言",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "コヘレトの言葉",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "雅歌",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "イザヤ書",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "エレミヤ書",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "哀歌",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "エゼキエル書",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "ダニエル書",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "ホセア書",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "ヨエル書",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "name": "アモス書",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "オバデヤ書",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "ヨナ書",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "ミカ書",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "ナホム書",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "ハバクク書",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "ゼファニヤ書",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "ハガイ書",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "ゼカリヤ書",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "マラキ書",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "name": "マタイによる福音書",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "マルコによる福音書",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "ルカによる福音書",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "ヨハネによる福音書",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "使徒言行録",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "ローマの信徒への手紙",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "コリントの信徒への手紙１",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "コリントの信徒への手紙２",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "ガラテヤの信徒への手紙",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "エフェソの信徒への手紙",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "フィリピの信徒への手紙",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "コロサイの信徒への手紙",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "テサロニケの信徒への手紙１",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "テサロニケの信徒への手紙２",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "テモテへの手紙１",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "テモテへの手紙２",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "テトスへの手紙",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "フィレモンへの手紙",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "ヘブライ人への手紙",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "ヤコブの手紙",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "ペトロの手紙１",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "ペトロの手紙２",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "ヨハネの手紙１",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "ヨハネの手紙２",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "ヨハネの手紙３",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "ユダの手紙",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "ヨハネの黙示録",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    },
+    {
+      "bookid": 67,
+      "name": "エズラ記１",
+      "chronorder": 67,
+      "chapters": 9
+    },
+    {
+      "bookid": 68,
+      "name": "トビト書",
+      "chronorder": 68,
+      "chapters": 14
+    },
+    {
+      "bookid": 69,
+      "name": "ユディト書",
+      "chronorder": 69,
+      "chapters": 16
+    },
+    {
+      "bookid": 17,
+      "name": "エステル記",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 89,
+      "name": "エステル記（ギリシア語）",
+      "chronorder": 89,
+      "chapters": 10
+    },
+    {
+      "bookid": 70,
+      "name": "知恵の書",
+      "chronorder": 70,
+      "chapters": 19
+    },
+    {
+      "bookid": 71,
+      "name": "シラ書",
+      "chronorder": 71,
+      "chapters": 51
+    },
+    {
+      "bookid": 88,
+      "name": "アザリヤの祈りと三人のユダヤ人の歌",
+      "chronorder": 88,
+      "chapters": 1
+    },
+    {
+      "bookid": 72,
+      "name": "エレミヤの手紙",
+      "chronorder": 72,
+      "chapters": 1
+    },
+    {
+      "bookid": 73,
+      "name": "バルク書",
+      "chronorder": 73,
+      "chapters": 5
+    },
+    {
+      "bookid": 78,
+      "name": "スザンナ",
+      "chronorder": 78,
+      "chapters": 1
+    },
+    {
+      "bookid": 79,
+      "name": "ベルと龍",
+      "chronorder": 79,
+      "chapters": 1
+    },
+    {
+      "bookid": 74,
+      "name": "マカベア記１",
+      "chronorder": 74,
+      "chapters": 16
+    },
+    {
+      "bookid": 75,
+      "name": "マカベア記２",
+      "chronorder": 75,
+      "chapters": 15
+    },
+    {
+      "bookid": 77,
+      "name": "エズラ記２",
+      "chronorder": 77,
+      "chapters": 16
+    },
+    {
+      "bookid": 83,
+      "name": "マナセの祈り",
+      "chronorder": 83,
+      "chapters": 1
+    }
+  ],
+  "FRLSG": [
+    {
+      "bookid": 1,
+      "name": "Genèse",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exode",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Lévitique",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Nombres",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deutéronome",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Josué",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Juges",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Ruth",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Rois",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Rois",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Chroniques",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Chroniques",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Esdras",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Néhémie",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Esther",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Job",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psaumes",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbes",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Ecclésiaste",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cantique",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Ésaïe",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jérémie",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentations",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ézékiel",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osée",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joël",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Abdias",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Michée",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Nahum",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuc",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sophonie",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Aggée",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacharie",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malachie",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "Matthieu",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marc",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luc",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Jean",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Actes",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romains",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinthiens",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinthiens",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galates",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Éphésiens",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Philippiens",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Colossiens",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Thessaloniciens",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Thessaloniciens",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timothée",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timothée",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tite",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Philémon",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Hébreux",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Jacques",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Pierre",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Pierre",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 Jean",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Jean",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Jean",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Jude",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalypse",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    }
+  ],
+  "FRPDV17": [
+    {
+      "bookid": 1,
+      "name": "Genèse",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exode",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Lévitique",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Nombres",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deutéronome",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Josué",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Juges",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Ruth",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Rois",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Rois",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Chroniques",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Chroniques",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Esdras",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Néhémie",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 68,
+      "name": "Tobit",
+      "chronorder": 68,
+      "chapters": 14
+    },
+    {
+      "bookid": 69,
+      "name": "Judith",
+      "chronorder": 69,
+      "chapters": 16
+    },
+    {
+      "bookid": 17,
+      "name": "Esther",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 81,
+      "name": "Esther grec",
+      "chronorder": 81,
+      "chapters": 10
+    },
+    {
+      "bookid": 74,
+      "name": "Premier livre des Maccabées",
+      "chronorder": 74,
+      "chapters": 16
+    },
+    {
+      "bookid": 75,
+      "name": "Deuxième livre des Maccabées",
+      "chronorder": 75,
+      "chapters": 15
+    },
+    {
+      "bookid": 18,
+      "name": "Job",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psaumes",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbes",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Ecclésiaste",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cantique des Cantiques",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 70,
+      "name": "Sagesse",
+      "chronorder": 70,
+      "chapters": 19
+    },
+    {
+      "bookid": 71,
+      "name": "Siracide",
+      "chronorder": 71,
+      "chapters": 51
+    },
+    {
+      "bookid": 23,
+      "name": "Ésaïe",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jérémie",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentations",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 73,
+      "name": "Baruc",
+      "chronorder": 73,
+      "chapters": 5
+    },
+    {
+      "bookid": 72,
+      "name": "Lettre de Jérémie",
+      "chronorder": 72,
+      "chapters": 1
+    },
+    {
+      "bookid": 26,
+      "name": "Ézékiel",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osée",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joël",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Abdias",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Michée",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Nahoum",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habacuc",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sophonie",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Aggée",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zakarie",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malachie",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "name": "Matthieu",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marc",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luc",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Jean",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Actes",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romains",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinthiens",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinthiens",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galates",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Éphésiens",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Philippiens",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Colossiens",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Thessaloniciens",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Thessaloniciens",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timothée",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timothée",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tite",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Philémon",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Hébreux",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Jacques",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Pierre",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Pierre",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 Jean",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Jean",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Jean",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Jude",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalypse",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    }
+  ],
+  "JPKJV": [
+    {
+      "bookid": 1,
+      "name": "創世記",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "出エジプト記",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "レビ記",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "民数記",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "申命記",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "ヨシュア記",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "士師記",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "ルツ記",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "サムエル記上",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "サムエル記下",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "列王記上",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "列王記下",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "歴代誌上",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "歴代誌下",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "エズラ記",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "ネヘミヤ記",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "エステル記",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "ヨブ記",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "詩編",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "箴言",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "コヘレトの言葉",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "雅歌",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "イザヤ書",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "エレミヤ書",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "哀歌",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "エゼキエル書",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "ダニエル書",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "ホセア書",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "ヨエル書",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "name": "アモス書",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "オバデヤ書",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "ヨナ書",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "ミカ書",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "ナホム書",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "ハバクク書",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "ゼファニヤ書",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "ハガイ書",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "ゼカリヤ書",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "マラキ書",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "name": "マタイによる福音書",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "マルコによる福音書",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "ルカによる福音書",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "ヨハネによる福音書",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "使徒言行録",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "ローマの信徒への手紙",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "コリントの信徒への手紙１",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "コリントの信徒への手紙２",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "ガラテヤの信徒への手紙",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "エフェソの信徒への手紙",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "フィリピの信徒への手紙",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "コロサイの信徒への手紙",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "テサロニケの信徒への手紙１",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "テサロニケの信徒への手紙２",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "テモテへの手紙１",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "テモテへの手紙２",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "テトスへの手紙",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "フィレモンへの手紙",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "ヘブライ人への手紙",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "ヤコブの手紙",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "ペトロの手紙１",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "ペトロの手紙２",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "ヨハネの手紙１",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "ヨハネの手紙２",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "ヨハネの手紙３",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "ユダの手紙",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "ヨハネの黙示録",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    }
+  ],
+  "BDS": [
+    {
+      "bookid": 1,
+      "name": "Genèse",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "Exode",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "Lévitique",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "Nombres",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "Deutéronome",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "Josué",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "Juges",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "Ruth",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "1 Samuel",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "2 Samuel",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "1 Rois",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "2 Rois",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "1 Chroniques",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "2 Chroniques",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "Esdras",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "Néhémie",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "Esther",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "Job",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "Psaumes",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "Proverbes",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "Ecclésiaste",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "Cantiques",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "Esaïe",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "Jérémie",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "Lamentations",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "Ezéchiel",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "Daniel",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "Osée",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "Joël",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "name": "Amos",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "Abdias",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "Jonas",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "Michée",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "Nahoum",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "Habaquq",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "Sophonie",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "Aggée",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "Zacharie",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "Malachie",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "name": "Matthieu",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "Marc",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "Luc",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "Jean",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "Actes",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "Romains",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "1 Corinthiens",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "2 Corinthiens",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "Galates",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "Ephésiens",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "Philippiens",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "Colossiens",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "1 Thessaloniciens",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "2 Thessaloniciens",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "1 Timothée",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "2 Timothée",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "Tite",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "Philémon",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "Hébreux",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "Jacques",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "1 Pierre",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "2 Pierre",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "1 Jean",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "2 Jean",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "3 Jean",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "Jude",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "Apocalypse",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    }
+  ],
+  "RNKSV": [
+    {
+      "bookid": 1,
+      "name": "창세기",
+      "chronorzder": 1,
+      "chronorder": 1,
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "name": "출애굽기",
+      "chronorzder": 3,
+      "chronorder": 2,
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "name": "레위기",
+      "chronorzder": 4,
+      "chronorder": 3,
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "name": "민수기",
+      "chronorzder": 5,
+      "chronorder": 4,
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "name": "신명기",
+      "chronorzder": 6,
+      "chronorder": 5,
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "name": "여호수아기",
+      "chronorzder": 7,
+      "chronorder": 6,
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "name": "사사기",
+      "chronorzder": 8,
+      "chronorder": 7,
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "name": "룻기",
+      "chronorzder": 9,
+      "chronorder": 8,
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "name": "사무엘기상",
+      "chronorzder": 10,
+      "chronorder": 9,
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "name": "사무엘기하",
+      "chronorzder": 11,
+      "chronorder": 10,
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "name": "열왕기상",
+      "chronorzder": 15,
+      "chronorder": 11,
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "name": "열왕기하",
+      "chronorzder": 28,
+      "chronorder": 12,
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "name": "역대지상",
+      "chronorzder": 12,
+      "chronorder": 13,
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "name": "역대지하",
+      "chronorzder": 16,
+      "chronorder": 14,
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "name": "에스라기",
+      "chronorzder": 37,
+      "chronorder": 15,
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "name": "느헤미야기",
+      "chronorzder": 38,
+      "chronorder": 16,
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "name": "에스더기",
+      "chronorzder": 36,
+      "chronorder": 17,
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "name": "욥기",
+      "chronorzder": 2,
+      "chronorder": 18,
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "name": "시편",
+      "chronorzder": 13,
+      "chronorder": 19,
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "name": "잠언",
+      "chronorzder": 17,
+      "chronorder": 20,
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "name": "전도서",
+      "chronorzder": 18,
+      "chronorder": 21,
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "name": "아가",
+      "chronorzder": 14,
+      "chronorder": 22,
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "name": "이사야서",
+      "chronorzder": 25,
+      "chronorder": 23,
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "name": "예레미야서",
+      "chronorzder": 29,
+      "chronorder": 24,
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "name": "예레미야 애가",
+      "chronorzder": 30,
+      "chronorder": 25,
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "name": "에스겔서",
+      "chronorzder": 32,
+      "chronorder": 26,
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "name": "다니엘서",
+      "chronorzder": 33,
+      "chronorder": 27,
+      "chapters": 12
+    },
+    {
+      "bookid": 28,
+      "name": "호세아서",
+      "chronorzder": 23,
+      "chronorder": 28,
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "name": "요엘서",
+      "chronorzder": 20,
+      "chronorder": 29,
+      "chapters": 3
+    },
+    {
+      "bookid": 30,
+      "name": "아모스서",
+      "chronorzder": 21,
+      "chronorder": 30,
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "name": "오바댜서",
+      "chronorzder": 31,
+      "chronorder": 31,
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "name": "요나서",
+      "chronorzder": 19,
+      "chronorder": 32,
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "name": "미가서",
+      "chronorzder": 22,
+      "chronorder": 33,
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "name": "나훔서",
+      "chronorzder": 24,
+      "chronorder": 34,
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "name": "하박국서",
+      "chronorzder": 27,
+      "chronorder": 35,
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "name": "스바냐서",
+      "chronorzder": 26,
+      "chronorder": 36,
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "name": "학개서",
+      "chronorzder": 34,
+      "chronorder": 37,
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "name": "스가랴서",
+      "chronorzder": 35,
+      "chronorder": 38,
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "name": "말라기서",
+      "chronorzder": 39,
+      "chronorder": 39,
+      "chapters": 4
+    },
+    {
+      "bookid": 40,
+      "name": "마태복음서",
+      "chronorzder": 40,
+      "chronorder": 40,
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "name": "마가복음서",
+      "chronorzder": 58,
+      "chronorder": 41,
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "name": "누가복음서",
+      "chronorzder": 52,
+      "chronorder": 42,
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "name": "요한복음서",
+      "chronorzder": 66,
+      "chronorder": 43,
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "name": "사도행전",
+      "chronorzder": 54,
+      "chronorder": 44,
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "name": "로마서",
+      "chronorzder": 46,
+      "chronorder": 45,
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "name": "고린도전서",
+      "chronorzder": 44,
+      "chronorder": 46,
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "name": "고린도후서",
+      "chronorzder": 45,
+      "chronorder": 47,
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "name": "갈라디아서",
+      "chronorzder": 41,
+      "chronorder": 48,
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "name": "에베소서",
+      "chronorzder": 47,
+      "chronorder": 49,
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "name": "빌립보서",
+      "chronorzder": 49,
+      "chronorder": 50,
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "name": "골로새서",
+      "chronorzder": 50,
+      "chronorder": 51,
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "name": "데살로니가전서",
+      "chronorzder": 42,
+      "chronorder": 52,
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "name": "데살로니가후서",
+      "chronorzder": 43,
+      "chronorder": 53,
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "name": "디모데전서",
+      "chronorzder": 55,
+      "chronorder": 54,
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "name": "디모데후서",
+      "chronorzder": 59,
+      "chronorder": 55,
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "name": "디도서",
+      "chronorzder": 57,
+      "chronorder": 56,
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "name": "빌레몬서",
+      "chronorzder": 51,
+      "chronorder": 57,
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "name": "히브리서",
+      "chronorzder": 53,
+      "chronorder": 58,
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "name": "야고보서",
+      "chronorzder": 48,
+      "chronorder": 59,
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "name": "베드로전서",
+      "chronorzder": 56,
+      "chronorder": 60,
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "name": "베드로후서",
+      "chronorzder": 60,
+      "chronorder": 61,
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "name": "요한1서",
+      "chronorzder": 61,
+      "chronorder": 62,
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "name": "요한2서",
+      "chronorzder": 62,
+      "chronorder": 63,
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "name": "요한3서",
+      "chronorzder": 63,
+      "chronorder": 64,
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "name": "유다서",
+      "chronorzder": 64,
+      "chronorder": 65,
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "name": "요한계시록",
+      "chronorzder": 65,
+      "chronorder": 66,
+      "chapters": 22
+    }
   ]
 }

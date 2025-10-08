@@ -1,8 +1,10 @@
+/// <reference lib="webworker" />
+
 importScripts("/sw/jszip.min.js");
 importScripts("/sw/dexie.min.js");
 importScripts("/sw/scripts.js");
 
-const CACHE_NAME = "v3.1.19";
+const CACHE_NAME = "v3.1.20";
 const STATICS_CACHE = "statics-v1.0.17";
 const TEXTS_CACHE = "texts-v1.0.8";
 
@@ -13,10 +15,10 @@ const urlsToCache = [
   "/sw/scripts.js",
 ];
 
-self.addEventListener("install", function (event) {
-  self.skipWaiting();
+self.addEventListener("install", (event) => {
+  // self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
+    caches.open(CACHE_NAME).then((cache) => {
       console.log("👷 Opened cache ", CACHE_NAME);
       return cache.addAll(urlsToCache);
     })
@@ -55,7 +57,7 @@ self.addEventListener("fetch", (event) => {
                 return response;
               }
               // if the response is a zip file, do not cache it
-              if (response.headers.get("Content-Type") == "application/zip") {
+              if (response.headers.get("Content-Type") === "application/zip") {
                 return response;
               }
 
@@ -63,18 +65,18 @@ self.addEventListener("fetch", (event) => {
               if (url.includes("chrome-extension")) {
                 return response;
               }
-              var responseClone = response.clone();
+              const responseClone = response.clone();
               const texts_cache_eligible =
                 url.includes("get-chapter/") ||
                 url.includes("get-text/") ||
                 url.includes("search/") ||
                 url.includes("dictionary-definition/");
               const statics_cache_eligible =
-                event.request.destination == "font" ||
-                event.request.destination == "script" ||
-                event.request.destination == "style" ||
-                event.request.destination == "manifest" ||
-                event.request.destination == "image";
+                event.request.destination === "font" ||
+                event.request.destination === "script" ||
+                event.request.destination === "style" ||
+                event.request.destination === "manifest" ||
+                event.request.destination === "image";
               if (texts_cache_eligible || statics_cache_eligible) {
                 console.log("Populating cache with ", url);
                 if (texts_cache_eligible) {

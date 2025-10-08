@@ -232,7 +232,7 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
 			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.1.19 🗓 "
+				"🍇 v3.1.20 🗓 "
 				<time dateTime='2025-9-22'> "22.9.2025"
 			<p[fs:0.75rem]>
 				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"

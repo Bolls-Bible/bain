@@ -84,7 +84,7 @@ extend tag element
 			return 'rtl'
 		return 'ltr'
 
-	def translationTextDirection translation\string
+	def translationTextDirection translation
 		# Sadly there are some translations that contain mixed rtl/ltr content
 		# So the best result is to strictly specify what translations what text direction should have
 		if RTLTranslations.includes(translation)
@@ -94,7 +94,7 @@ extend tag element
 	def translationFullName tr\string
 		unless tr
 			return ''
-		translations.find(do |translation| return translation.short_name == tr).full_name
+		translations.find(do |translation| return translation.short_name == tr)..full_name || tr
 
 	def getBookName translation\string, bookid\number|string
 		return bookNameIndex.get("{translation}:{bookid}") || bookid

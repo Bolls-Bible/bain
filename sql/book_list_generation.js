@@ -398,22 +398,22 @@ const ylt = [
   },
 ];
 
-let books = [
+const books = [
   // Here should be that books
 ];
 
 for (const book of ylt) {
-  let new_book = books.find((el) => {
-    return el.bookid == book.bookid;
+  const new_book = books.find((el) => {
+    return el.bookid === book.bookid;
   });
   if (new_book) {
-    new_book.chronorder = book.chronorder;
+    new_book.chronorzder = book.chronorder;
   }
 }
 
 // In a case when the ylt array doesn't contain some apocrifal books -- assign to the chronorder bookid of the book
 for (const book of books) {
-  if (book.chronorder == undefined) {
+  if (book.chronorder === undefined) {
     book.chronorder = book.bookid;
   }
   book.name = book.name.trim();
@@ -434,7 +434,7 @@ const chapters = [
 
 for (const chapter of chapters) {
   books.find((el) => {
-    return el.bookid == chapter.bookid;
+    return el.bookid === chapter.bookid;
   }).chapters = chapter.chapters;
 }
 
