@@ -187,6 +187,9 @@ class GenericReader
 			verseElement = document.getElementById(String(id))
 		else
 			verseElement = document.getElementById("p{id}")
+		
+		if !verseElement
+			return
 
 		const boundingRect = verseElement.getBoundingClientRect()
 		if boundingRect.bottom + activities.bottomDrawerOffset > window.innerHeight - 124 # 124 is the relative height of the bottom drawer

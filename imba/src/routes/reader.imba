@@ -128,6 +128,8 @@ tag reader
 
 
 	def closingdrawer e
+		unless e.changedTouches.length
+			return
 		e.dx = e.changedTouches[0].clientX - initialTouch.clientX
 
 		if activities.booksDrawerOffset > -300 && e.dx < 0
@@ -137,6 +139,8 @@ tag reader
 		inClosingTouchZone = yes
 
 	def openingdrawer e
+		unless e.changedTouches.length
+			return
 		if inTouchZone
 			e.dx = e.changedTouches[0].clientX - initialTouch.clientX
 
@@ -146,6 +150,8 @@ tag reader
 				activities.settingsDrawerOffset = - e.dx - 300
 
 	def closedrawersend touch
+		unless touch.changedTouches.length
+			return
 		touch.dx = touch.changedTouches[0].clientX - initialTouch.clientX
 
 		if activities.booksDrawerOffset > -300

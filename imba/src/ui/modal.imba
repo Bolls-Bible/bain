@@ -376,8 +376,8 @@ tag modal < section
 											<span[fs:.75rem o:.8]> format(new Date(history.date), 'PPpp')
 										<button
 											@click=openInParallel({
-												translation:history.translation,
-												book:history.book,
+												translation: history.translation,
+												book: history.book,
 												chapter: history.chapter,
 												verse: Number(history.verse)
 											}) title=t.open_in_parallel>

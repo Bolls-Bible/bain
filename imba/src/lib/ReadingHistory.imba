@@ -17,7 +17,7 @@ class ReadingHistory
 		else
 			deleteValue('history')
 
-	@autorun(delay:1s) def saveHistoryToServer
+	@autorun(delay:2s) def saveHistoryToServer
 		if user.username && window.navigator.onLine
 			API.put('/history/', {
 				history: JSON.stringify(history),
