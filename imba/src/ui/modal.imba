@@ -19,6 +19,7 @@ import Color from "colorjs.io"
 import languages from '../data/languages.json'
 import { MOBILE_PLATFORM, translations, contributors } from '../constants'
 import ALL_BOOKS from '../data/translations_books.json'
+import type { HistoryEntry } from '../lib/types'
 
 import * as ICONS from 'imba-phosphor-icons'
 
@@ -26,20 +27,20 @@ tag modal < section
 	fontsQuery = ''
 	expandedLanguage = ''
 
-	def changeTranslation translation\string
+	@action def changeTranslation translation\string
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
 			reader.book = ALL_BOOKS[reader.translation][0].bookid
 			reader.chapter = 1
 		reader.translation = translation
 
-	def openTranslationInParallel translation\string
+	@action def openTranslationInParallel translation\string
 		parallelReader.enable = yes
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == parallelReader.book)
 			parallelReader.book = ALL_BOOKS[translation][0].bookid
 			parallelReader.chapter = 1
 		parallelReader.translation = translation
 
-	def openVerseInParallel verse\{book:number, chapter:number, verse:number}
+	@action def openVerseInParallel verse\{book:number, chapter:number, verse:number}
 		# weirdly enough this has to be called through reader, otherwie it can backfire
 		if settings.parallel_sync && parallelReader.enabled
 			reader.book = verse.book
@@ -165,6 +166,12 @@ tag modal < section
 			chapter: search.suggestions.chapter,
 			verse: search.suggestions.verse
 		})
+	
+	@action def openHistoryEntry history\HistoryEntry
+		reader.translation = history.translation
+		reader.book = history.book
+		reader.chapter = history.chapter
+		reader.verse = history.verse
 
 	def render
 		<self
@@ -358,12 +365,7 @@ tag modal < section
 												c@hover:$acc-hover
 												ta:start
 
-										<button[fl:1 d:vbs g:.25rem] @click=(do
-											reader.translation = history.translation
-											reader.book = history.book
-											reader.chapter = history.chapter
-											reader.verse = history.verse
-										) dir="auto">
+										<button[fl:1 d:vbs g:.25rem] @click=(openHistoryEntry(history)) dir="auto">
 											<span>
 												getBookName(history.translation, history.book)
 												' '

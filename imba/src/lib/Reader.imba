@@ -47,8 +47,13 @@ class Reader < GenericReader
 	get myRenderer
 		document.getElementById('main-reader')
 
+	@action def updateParallelReader book, chapter
+		if settings.parallel_sync && parallelReader.enabled
+			parallelReader.book = book
+			parallelReader.chapter = chapter
+
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay:5ms)
+	@autorun
 	def fetchVerses
 		unless theChapterExistInThisTranslation
 			return
@@ -57,9 +62,7 @@ class Reader < GenericReader
 		loading = yes
 		imba.commit!
 
-		if settings.parallel_sync && parallelReader.enabled
-			parallelReader.book = book
-			parallelReader.chapter = chapter
+		updateParallelReader book, chapter
 
 		try
 			verses = []
@@ -103,7 +106,7 @@ class Reader < GenericReader
 				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 			)
 
-	def randomVerse
+	@action def randomVerse
 		try
 			let randomVerse
 			// check if the translation is available offline and make offline request

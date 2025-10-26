@@ -50,7 +50,7 @@ class GenericReader
 			if book.bookid == self.book
 				return book.chapters
 	
-	def nextChapter
+	@action def nextChapter
 		if chapter + 1 <= chaptersOfCurrentBook
 			chapter += 1
 		else
@@ -59,7 +59,7 @@ class GenericReader
 				book = books[current_index + 1].bookid
 				chapter = 1
 
-	def prevChapter
+	@action def prevChapter
 		if chapter - 1 > 0
 			chapter -= 1
 		else
@@ -86,13 +86,13 @@ class GenericReader
 				return "/{translation}/{books[current_index+1].bookid}/1/"
 		return "/{translation}/{book}/{chapter}/" # default plug
 
-	def nextBook
+	@action def nextBook
 		let current_index = books.indexOf(books.find(do |element| return element.bookid == book))
 		if books[current_index + 1]
 			book = books[current_index + 1].bookid
 			chapter = 1
 
-	def prevBook
+	@action def prevBook
 		let current_index = books.indexOf(books.find(do |element| return element.bookid == book))
 		if books[current_index - 1]
 			book = books[current_index - 1].bookid

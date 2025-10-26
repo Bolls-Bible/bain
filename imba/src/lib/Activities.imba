@@ -53,10 +53,10 @@ class Activities
 	note = ''
 	newCategoryName = ''
 
-	@observable activeTranslation\string = ''
+	@observable activeParallelAtBooksDrawer = no
 
 	# Clean all the variables in order to free space around the text
-	def cleanUp { onPopState } = {}
+	@action def cleanUp { onPopState } = {}
 		if activeModal == 'theme'
 			if theme.theme != 'custom'
 				customTheme.cleanUpCustomTheme!
@@ -126,10 +126,7 @@ class Activities
 				booksDrawerOffset = -300
 				imba.commit!
 		if typeof parallel == 'boolean'
-			if parallel
-				activeTranslation = parallelReader.translation
-			else
-				activeTranslation = reader.translation
+			activeParallelAtBooksDrawer = parallel
 
 	def toggleSettingsMenu
 		if settingsDrawerOffset
@@ -146,24 +143,24 @@ class Activities
 			activeModal = modal_name
 			window.history.pushState({}, modal_name)
 
-	def showHelp
+	@action def showHelp
 		cleanUp!
 		openModal 'help'
 
-	def showSupport
+	@action def showSupport
 		cleanUp!
 		openModal 'support'
 
-	def showFonts
+	@action def showFonts
 		cleanUp!
 		openModal 'font'
 
-	def showHistory
+	@action def showHistory
 		cleanUp!
 		readingHistory.syncHistory!
 		openModal 'history'
 
-	def showSearch
+	@action def showSearch
 		cleanUp!
 		openModal 'search'
 		search.generateSuggestions!
@@ -171,13 +168,13 @@ class Activities
 			if search.inputElement
 				search.inputElement.focus!
 
-	def openCustomTheme
+	@action def openCustomTheme
 		cleanUp!
 		openModal 'theme'
 		#hadTransitionsEnabled = theme.transitions
 		document.documentElement.dataset.transitions = 'false'
 
-	def toggleDownloads
+	@action def toggleDownloads
 		cleanUp!
 		openModal 'downloads'
 		show_dictionary_downloads = no

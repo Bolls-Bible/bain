@@ -1,5 +1,5 @@
 tag text-as-html
-	def goToVerse event
+	@action def goToVerse event
 		let route = "/{data.translation}/{data.book}/{data.chapter}"
 		if data.verse
 			route += "/{data.verse}"

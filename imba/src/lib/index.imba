@@ -99,7 +99,7 @@ extend tag element
 	def getBookName translation\string, bookid\number|string
 		return bookNameIndex.get("{translation}:{bookid}") || bookid
 
-	def openInParallel place\{translation:string, book:number, chapter:number, verse:number}
+	@action def openInParallel place\{translation:string, book:number, chapter:number, verse:number}
 		parallelReader.enabled = true
 		if settings.parallel_sync
 			if place.book then reader.book = place.book

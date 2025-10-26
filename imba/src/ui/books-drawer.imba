@@ -10,10 +10,10 @@ tag books-drawer < nav
 	unfoldTranslationsList = no
 	unfoldedLanguage = ''
 	unfoldedBook = reader.book
-	
-	@observable get activeTranslation
-		if activities.activeTranslation && parallelReader.enabled
-			return activities.activeTranslation
+
+	@computed get activeTranslation
+		if activities.activeParallelAtBooksDrawer && parallelReader.enabled
+			return parallelReader.translation
 		return reader.translation || 'YLT'
 
 	@computed get books
@@ -47,10 +47,10 @@ tag books-drawer < nav
 		else
 			return translation == reader.translation
 
-	def setActiveTranslation translation\string
-		activities.activeTranslation = translation
+	def setActiveTranslation parallel\boolean
+		activities.activeParallelAtBooksDrawer = parallel
 
-	def swapTranslations
+	@action def swapTranslations
 		let main_translation = reader.translation
 		let main_book = reader.book
 		let main_chapter = reader.chapter
@@ -82,7 +82,7 @@ tag books-drawer < nav
 		else
 			settings.favoriteTranslations.push(translation_short_name)
 
-	def changeTranslation translation\string
+	@action def changeTranslation translation\string
 		if parallelReader.enabled && activeTranslation == parallelReader.translation
 			unless ALL_BOOKS[translation].find(do |element| return element.bookid == parallelReader.book)
 				parallelReader.book = ALL_BOOKS[translation][0].bookid
@@ -95,7 +95,7 @@ tag books-drawer < nav
 			reader.translation = translation
 		unfoldTranslationsList = no
 
-	def goToChapter bookid\number, chapter\number
+	@action def goToChapter bookid\number, chapter\number
 		if parallelReader.enabled && activeTranslation == parallelReader.translation
 			parallelReader.book = bookid
 			parallelReader.chapter = chapter
@@ -107,9 +107,9 @@ tag books-drawer < nav
 		<header>
 			if parallelReader.enabled
 				<[d:flex mih:2.25rem]>
-					<button.btn title=translationFullName(reader.translation) .active=(activeTranslation == reader.translation) @click=setActiveTranslation(reader.translation)> reader.translation
+					<button.btn title=translationFullName(reader.translation) .active=(activeTranslation == reader.translation) @click=setActiveTranslation(no)> reader.translation
 					<button.btn [fw:black w:40%] @click=swapTranslations title=t.swap_parallels> "⇄"
-					<button.btn title=translationFullName(parallelReader.translation) .active=(activeTranslation == parallelReader.translation) @click=setActiveTranslation(parallelReader.translation)> parallelReader.translation
+					<button.btn title=translationFullName(parallelReader.translation) .active=(activeTranslation == parallelReader.translation) @click=setActiveTranslation(yes)> parallelReader.translation
 			<[d:flex jc:space-between ai:center cursor:pointer padding-inline:0.5rem]>
 				<svg src=HourGlassIcon
 					[transform:rotate({63 * (1 - +settings.chronorder)}deg)]

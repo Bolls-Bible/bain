@@ -47,7 +47,7 @@ class User
 		API.deleteAllCookies()
 		window.location.replace("/")
 
-	def getMe
+	@action def getMe
 		if window.navigator.onLine
 			try
 				let userdata = await API.getJson("/user-logged/")

@@ -32,7 +32,7 @@ class ParallelReader < GenericReader
 	@autorun def saveEnabled
 		setValue('parallel_display', enabled)
 
-	set enable value\boolean
+	@action set enable value\boolean
 		if value
 			book = reader..book
 			chapter = reader..chapter
@@ -41,8 +41,12 @@ class ParallelReader < GenericReader
 	get myRenderer
 		document.getElementById('parallel-reader')
 
+	@action def updateMainReader book, chapter
+		reader.book = book
+		reader.chapter = chapter
+
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay:5ms)
+	@autorun
 	def fetchVerses
 		unless theChapterExistInThisTranslation
 			return
@@ -66,8 +70,7 @@ class ParallelReader < GenericReader
 
 		if settings.parallel_sync && enabled
 			readingHistory.saveToHistory(translation, book, chapter, verse)
-			reader.book = book
-			reader.chapter = chapter
+			updateMainReader book, chapter
 
 		getBookmarks!
 

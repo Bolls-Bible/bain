@@ -1,4 +1,5 @@
 import index from './index.html'
+import notFound from './not-found.html'
 import express  from 'express'
 import type {Request, Response} from 'express'
 import { isNumber, getBookId } from './utils/books'
@@ -9,6 +10,7 @@ const port = process.env.PORT or 3000
 
 app.use(express.static('dist/public', maxAge:'1m'))
 
+# actually handled on nginx level, shouldn't get here
 def serviceWorker req, res
 	res.sendFile `{__dirname}/public/sw/service.worker.js`
 
@@ -59,13 +61,13 @@ def preloadChapter req\Request<{
 	try
 		let {translation, book, chapter, verseRange } = req.params
 		if !translationNames[translation]
-			return res.redirect(301, '/')
+			return res.redirect(404, '/')
 
 		const isBookANumber = isNumber(book)
 		book = getBookId(translation, book)
 
 		if !isBookANumber and isNumber(book)
-			return res.redirect(301, `/{translation}/{book}/{chapter}/{verseRange}`)
+			return res.redirect(307, `/{translation}/{book}/{chapter}/{verseRange}`)
 
 		let verses = await getChapterVerses translation, book, Number(chapter)
 
@@ -88,7 +90,7 @@ def preloadChapter req\Request<{
 
 		res.send result
 	catch error
-		res.send defaultIndex
+		res.status(404).send defaultIndex
 
 app.get '/:translation/:book/:chapter', preloadChapter
 app.get '/international/:translation/:book/:chapter', preloadChapter
@@ -97,7 +99,11 @@ app.get '/:translation/:book/:chapter/:verseRange', preloadChapter
 app.get '/international/:translation/:book/:chapter/:verseRange', preloadChapter
 
 
-app.get '/{*splat}' do(req, res)
+app.get ['/', '/downloads', '/profile', '/donate'] do(req, res)
 	res.send defaultIndex
+
+# 404 handler
+app.get '{*splat}', do(req, res)
+	res.status(404).send notFound.body
 
 imba.serve app.listen(port)

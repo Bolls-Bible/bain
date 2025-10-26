@@ -61,7 +61,7 @@ tag reader
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
 
-	def routed params
+	@action def routed params
 		const link_segments = window.location.pathname.split('/').filter(Boolean)
 		if params.translation && params.book && params.chapter
 			if 'international' in window.location.pathname
