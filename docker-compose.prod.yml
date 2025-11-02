@@ -73,7 +73,7 @@ services:
     restart: on-failure
     container_name: IMBA_SERVICE_NAME
     environment:
-      - API_URL=https://NGINX_DOMAIN_NAME
+      - API_URL=https://WEB_SERVICE_NAME:8000
     networks:
       - INTERNAL_NETWORK_NAME
 

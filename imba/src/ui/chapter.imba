@@ -18,16 +18,6 @@ tag chapter < section
 	get main
 		return document.getElementById "main"
 
-	def layerHeight 
-		if parallelReader.enabled
-			return self.clientHeight
-		return main.clientHeight
-
-	get layerWidth
-		if parallelReader.enabled
-			return self.clientWidth
-		return main.clientWidth
-
 	def calculateTopVerse e\Event
 		if activities.scrollLockTimeout != null
 			if activities.blockInScroll != self
@@ -164,12 +154,12 @@ tag chapter < section
 								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1.4rem]
 							>
 						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
-							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=layerWidth containerHeight=layerHeight(no)>
+							<note-tooltip style=superStyle bookmark=bookmark>
 								<svg src=Bookmark>
 									<title> bookmark.collection + ': ' + bookmark.note
 
 						if verse.comment and settings.verse_commentary
-							<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=verse.comment containerWidth=layerWidth containerHeight=layerHeight(no)>
+							<note-tooltip style=superStyle bookmark=verse.comment>
 								<span[c:$acc @hover:$acc-hover]> '†'
 
 						if settings.verse_break
@@ -184,12 +174,12 @@ tag chapter < section
 						getChevron(yes)
 
 			elif !window.navigator.onLine && vault.downloaded_translations.indexOf(me.translation) == -1
-				<p.in_offline>
+				<p.in-offline>
 					t.this_translation_is_unavailable
 					<br>
 					<a.reload @click=(do window.location.reload(yes))> t.reload
 			elif not me.loading
-				<p.in_offline>
+				<p.in-offline>
 					t.unexisten_chapter
 					<br>
 					<a.reload @click=(do window.location.reload(yes))> t.reload
@@ -287,3 +277,7 @@ tag chapter < section
 			cursor: pointer
 			text-decoration: solid underline
 			y@hover:-2px
+
+		.in-offline
+			padding: 2rem
+			text-align: center

@@ -1,70 +1,72 @@
 import { marked } from 'marked'
 import DOMPurify from 'dompurify';
+import { computePosition, autoUpdate, shift, offset, autoPlacement } from '@floating-ui/dom';
+import type { Bookmark } from '../lib/types'
+
 
 tag note-tooltip
-	prop text = ''
-	prop containerHeight = 0
-	prop containerWidth = 0
-	prop bookmark = {}
-	prop parallelMode = no
+	prop bookmark\(string|Bookmark)
 
-	#max_content_length = 0
-	#left_offset = '0px'
-	#right_offset = 'auto'
-	#vertclass = ''
-	#hortclass = ''
 	#show = no
+	#textToRender = ''
+	contentPosition = { x: undefined, y: undefined }
+	isExpanded = no
+	cleanupAutoupdate = null
 
-	def setBorders event
-		unless (event.target == self or event.target == children[0])
+	def updatePosition
+		contentPosition = await computePosition(self, $content, {
+			middleware: [offset(8), shift({ padding: 8 }), autoPlacement()],
+		})
+
+	def close
+		#show = no
+		contentPosition = { x: undefined, y: undefined }
+		if cleanupAutoupdate
+			cleanupAutoupdate()
+			cleanupAutoupdate = null
+
+	def toggle
+		#show = !#show
+
+		if !#show
+			close!
 			return
 
-		#show = !#show
-		event.target ||= event.target
-
-		let offsetX = 0
-		if parallelMode
-			offsetX = event.layerX
+		# put together text to render
+		if typeof bookmark == 'object'
+			if bookmark.note
+				const note = await marked.parse(DOMPurify.sanitize(bookmark.note))
+				if bookmark.collection
+					#textToRender = '<b>' + bookmark.collection + '</b><br>' + note
+				else
+					#textToRender = note
+			else
+				#textToRender = '<b>' + bookmark.collection + '</b>'
 		else
-			offsetX = event.clientX
+			#textToRender = bookmark
 
-		if containerHeight - event.clientY < 720
-			#vertclass = 'bottom'
-		else
-			#vertclass = ''
+		await imba.commit()
+		updatePosition()
 
-		if offsetX < containerWidth / 2
-			#left_offset = offsetX + 'px'
-			#right_offset = 'auto'
-		else
-			#left_offset = 'auto'
-			#right_offset = (containerWidth - offsetX) + 'px'
+		cleanupAutoupdate = autoUpdate(
+			self,
+			$content,
+			updatePosition.bind(this),
+		);
 
-		if containerWidth < 480
-			#left_offset = 'auto'
-			#right_offset = 'auto'
+	<self @click=toggle>
+		'\u2007\u2007'
+		<slot>
+		"  "
+		if #show
+			<aside$content @click.stop [o@off:0 scale@off:0.95 origin:top center maw:{theme.maxWidth}em t:{contentPosition.y}px l:{contentPosition.x}px] ease>
+				<p innerHTML=#textToRender>
 
-		let reader = self.parentElement.parentElement
-		if window.innerHeight - (self.offsetTop - reader.scrollTop) < 256 && reader
-			let style = window.getComputedStyle(self, null).getPropertyValue('line-height')
-			let line_height = parseFloat(style)
-			reader.scrollTo(reader.scrollLeft, reader.scrollTop + line_height + (288 - (window.innerHeight - (self.offsetTop - reader.scrollTop))))
-
-
-	def render
-		<self @click.stop.prevent=setBorders>
-			'\u2007\u2007'
-			<slot>
-			"  "
-			if #show
-				<note-body bookmark=bookmark .{#vertclass} [left:{#left_offset}px right:{#right_offset} w:{#max_content_length > 800 ? 48em : 'auto'} o@off:0 scale@off:0.75] ease>
-				<global @click.outside=(do #show = no)>
-
-
+			<global @click.outside=close>
 
 	css
+		pos:relative
 		d:inline
-		font-size: 0.68em
 		cursor:pointer
 		vertical-align: super
 		us:none
@@ -73,46 +75,18 @@ tag note-tooltip
 		bg@hover:$acc-bgc-hover
 
 
-		.bottom
-			transform:translateY(calc(-100% - 2em))
-
-
-tag note-body
-	prop bookmark\any
-
-	#inner_html = ''
-
-	def mount
-		if typeof bookmark == 'object'
-			if bookmark.note
-				const note = await marked.parse(DOMPurify.sanitize(bookmark.note))
-				if bookmark.collection
-					#inner_html = '<b>' + bookmark.collection + '</b><br>' + note
-				else
-					#inner_html = note
-			else
-				#inner_html = '<b>' + bookmark.collection + '</b>'
-		else
-			#inner_html = bookmark
-
-		imba.commit!
-
-	def render
-		<self>
-			<p innerHTML=#inner_html>
-
-	css
-		pos:absolute zi:1
-		p:12px
-		rd:12px
+	css aside
+		pos:fixed zi:1
+		p:1rem
+		rd:1rem
 		border:2px solid $acc-bgc
 		bg:$bgc
 		min-width:16em
-		max-height:256px
 		us:text
+		bxs:xl
 
-	css
 		p
+			font-size: 0.85em
 			overflow:auto
-			max-height:232px
+			max-height:42vh
 			cursor:text
