@@ -33,7 +33,7 @@ class Localization
 					#language = 'pt'
 					document.documentElement.lang = "pt"
 					if !window.translation
-						setValue('translation', 'TB10')
+						setValue('translation', 'NTJud')
 				when 'de'
 					#language = 'de'
 					document.documentElement.lang = "de"
@@ -43,7 +43,7 @@ class Localization
 					#language = 'ru'
 					document.documentElement.lang = "ru"
 					if !window.translation
-						setValue('translation', 'SYNOD')
+						setValue('translation', 'JNT')
 				when 'no'
 					setDefaultTranslation 'DNB'
 				when 'nl'

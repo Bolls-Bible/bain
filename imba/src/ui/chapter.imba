@@ -90,12 +90,13 @@ tag chapter < section
 		dictionary.tooltip = null
 		imba.commit!
 
-	def mousemove e\MouseEvent
-		if e.y < 32 && not MOBILE_PLATFORM
+	def enlargeHeader
+		unless MOBILE_PLATFORM
 			minHeaderFont = 1.2
-		else
-			minHeaderFont = 0
-		
+
+	def shrinkHeader
+		minHeaderFont = 0
+
 	# no -- means prev, yes -- means next
 	def getChevron direction\boolean
 		const textDirection = translationTextDirection(me.translation)
@@ -116,7 +117,7 @@ tag chapter < section
 			activities.IOSKeyboardHeight = Math.abs(cachedInnerHeight - window.innerHeight)
 
 		<self .parallel=parallelReader.enabled
-			@scroll=changeHeadersSizeOnScroll @mousemove=mousemove
+			@scroll=changeHeadersSizeOnScroll
 			@touchmove=changeHeadersSizeOnScroll
 			dir=translationTextDirection(me.translation)>
 			<>
@@ -124,7 +125,7 @@ tag chapter < section
 					<.{rect.class} id=rect.matchID [pos:absolute zi:-1 top:{rect.top}px left:{rect.left}px width:{rect.width}px height:{rect.height}px]>
 
 			if me.verses..length
-				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)>
+				<header[h:0 margin-block:min(4em, 8vw) zi:1] @click=activities.toggleBooksMenu(!!versePrefix)  @pointerleave=shrinkHeader @pointerenter=enlargeHeader>
 					#main_header_arrow_size = "min(64px, max({minHeaderFont}em, {headerFontSize}em))"
 					<h1
 						[lh:1 padding-block:0.2em m:0 d@md:flex ai@md:center jc@md:space-between font:inherit ff:{theme.fontFamily} fw:{theme.fontWeight + 200} fs:max({minHeaderFont}em, min({headerFontSize}em, 8vw))]

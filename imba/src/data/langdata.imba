@@ -181,8 +181,6 @@ export const english = {
 	"verse_number": "Verse number"
 	"verse_picker": "Verse picker",
 	"view_source": "View the source code",
-	"welcome": "Welcome to Bolls :)",
-	"welcome_msg": "This web app is for reading the Bible. The books / translations are in the left panel, other settings in the right one.\nEnjoy",
 	"write_something_awesone": "Write something awesome",
 	"ycdtitnw": "You can support this app in the next way:",
 	"hueSlider": 'Hue slider',
@@ -377,8 +375,6 @@ export const ukrainian = {
 	"verse_number": "Номер вірша"
 	"verse_picker": "Вибір вірша",
 	"view_source": "Дивитися джерельний код",
-	"welcome": "Ласкаво просимо в Bolls :)",
-	"welcome_msg": "Цей додаток призначений для читання Біблії. Навігація по книгам / перекладам знаходиться на панелі ліворуч, інші налаштування - праворуч.\nНасолоджуйтесь",
 	"write_something_awesone": "Напишіть щось дивовижне",
 	"ycdtitnw": "Ви можете підтримати даний додаток наступним чином:",
 	"hueSlider": "Колірний слайдер",
@@ -573,8 +569,6 @@ export const russian = {
 	"verse_number": "Номер стиха"
 	"verse_picker": "Выбор стиха",
 	"view_source": "Смотреть исходный код",
-	"welcome": "Добро пожаловать в Bolls :)",
-	"welcome_msg": "Это веб-приложение для чтения Библии. Навигация по книгам / переводам находится на левой панели, остальные настройки - на правой.\nНаслаждайтесь",
 	"write_something_awesone": "Напишите что-нибудь классное",
 	"ycdtitnw": "Вы можете поддержать данное приложение так:",
 	"hueSlider": "Цветовой слайдер",
@@ -769,8 +763,6 @@ export const portuguese = {
 	"verse_number": "Número do verso"
 	"verse_picker": "Seletor de versículo",
 	"view_source": "Veja o código fonte",
-	"welcome": "Bem-vindo ao Bolls :)",
-	"welcome_msg": "Este aplicativo da web é para leitura da Bíblia, a navegação de livros/traduções está no painel esquerdo e as outras configurações no painel direito.\nAprecie!",
 	"write_something_awesone": "Escreva algo incrível",
 	"ycdtitnw": "Você pode apoiar este aplicativo da próxima maneira:",
 	"hueSlider": "Deslizante de matiz",
@@ -964,8 +956,6 @@ export const espanol = {
 	"verse_number": "Número de versículo",
 	"verse_picker": "Selector de versículo",
 	"view_source": "Ver el código fuente",
-	"welcome": "Bienvenido a Bolls :)",
-	"welcome_msg": "Esta aplicación web es para leer la Biblia, la navegación de libros /traducciones está en el panel izquierdo, las otras configuraciones en el panel de la derecha.\nQue lo disfrutes",
 	"write_something_awesone": "Escribe algo asombroso",
 	"ycdtitnw": "Puedes apoyar a esta aplicación de la siguiente manera:",
 	"hueSlider": "Deslizador de matiz",
@@ -1161,8 +1151,6 @@ export const german = {
 	"verse_number": "Versnummer"
 	"verse_picker": "Versauswahl",
 	"view_source": "Source code anzeigen",
-	"welcome": "Willkommen bei Bolls :)",
-	"welcome_msg": "Diese App ist zum Lesen der Bibel.. Bücher und Übersetzungen befinden sich auf der linken Seite. Die Einstellungen befinden sich auf der rechten Seite.\nDanke schön!",
 	"write_something_awesone": "Schreibe etwas Tolles!",
 	"ycdtitnw": "Sie können diese App auf folgende Arten unterstützen::",
 	"hueSlider": "Farbtonregler",

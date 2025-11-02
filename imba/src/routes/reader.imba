@@ -17,7 +17,6 @@ tag reader
 	initialTouch = null
 	inTouchZone = no
 	inClosingTouchZone = no
-	welcomeLock = no
 
 	def onPopState event
 		if event.target.hash
@@ -99,8 +98,6 @@ tag reader
 		touch.dy = initialTouch.clientY - touch.clientY
 		touch.dx = initialTouch.clientX - touch.clientX
 
-		console.log "dx: {touch.dx}, dy: {touch.dy}, { Math.abs(touch.dy / touch.dx)}"
-
 		if activities.booksDrawerOffset > -300
 			if inTouchZone
 				touch.dx < -64 ? activities.booksDrawerOffset = 0 : activities.booksDrawerOffset = -300
@@ -160,23 +157,25 @@ tag reader
 			touch.dx > 64 ? activities.settingsDrawerOffset = -300 : activities.settingsDrawerOffset = 0
 		inClosingTouchZone = no
 
-	def mousemove e
-		const isRangeInputFocues = document.activeElement.tagName == 'INPUT' && document.activeElement.type == 'range'
-		if not MOBILE_PLATFORM and not settings.fixdrawers and not isRangeInputFocues
-			if e.x < 24
-				activities.booksDrawerOffset = 0
-			elif e.x > window.innerWidth - 24
-				activities.settingsDrawerOffset = 0
-			elif 300 < e.x < window.innerWidth - 300
-				activities.booksDrawerOffset = -300 unless welcomeLock
-				activities.settingsDrawerOffset = -300
+	def openBooksDrawer
+		unless settings.fixdrawers
+			activities.booksDrawerOffset = 0
+	
+	def closeBooksDrawer
+		unless settings.fixdrawers
+			activities.booksDrawerOffset = -300
 
-			if 300 > e.x
-				welcomeLock = no
+	def openSettingsDrawer
+		unless settings.fixdrawers
+			activities.settingsDrawerOffset = 0
+	
+	def closeSettingsDrawer
+		unless settings.fixdrawers
+			activities.settingsDrawerOffset = -300
 
 	def interpolate value, max
-		# vresult hsould be between 0 and max
-		const result = Math.min(Math.max(value, 0), max)
+		# result should be between 0 and max
+		Math.min(Math.max(value, 0), max)
 		
 
 	def boxShadow grade\number
@@ -217,14 +216,15 @@ tag reader
 
 	def openProfile
 		if user.username
-			router.go('profile')
+			router.go('/profile')
 		else
 			window.location.href = '/accounts/login'
 
 	def render
-		<self[d:flex] @mousemove=mousemove @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
+		<self[d:flex] @touchstart=slidestart @touchmove=openingdrawer @touchend=slideend @touchcancel=slideend>
 			<button.drawer-handle
 				[transform:translateX({bibleIconTransform}px)]
+				@pointerenter=openBooksDrawer
 				@click=activities.toggleBooksMenu>
 				<svg src=ChevronRight aria-label=t.change_book
 					[transform:rotate({180*+!!bibleIconTransform}deg)]>
@@ -239,6 +239,7 @@ tag reader
 
 			<button.drawer-handle
 				[transform:translateX({settingsIconTransform}px)]
+				@pointerenter=openSettingsDrawer
 				@click=activities.toggleSettingsMenu>
 				<svg src=ChevronLeft aria-label=t.change_book
 					[transform:rotate({180*+!!settingsIconTransform}deg)]>
@@ -273,11 +274,12 @@ tag reader
 			>
 				<books-drawer
 					[l:{activities.booksDrawerOffset}px bxs:{boxShadow(activities.booksDrawerOffset)} transition-duration:{drawerTransiton}]
-					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer @pointerleave=closeBooksDrawer>
 
 				<settings-drawer
 					[r:{activities.settingsDrawerOffset}px bxs:{boxShadow(activities.settingsDrawerOffset)} transition-duration:{drawerTransiton}]
-					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer>
+					@touchstart=slidestart @touchend=closedrawersend @touchcancel=closedrawersend @touchmove=closingdrawer @pointerleave=closeSettingsDrawer>
+
 
 				if activities.activeModal
 					<modal />

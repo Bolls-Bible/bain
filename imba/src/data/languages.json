@@ -159,6 +159,11 @@
         "updated": 1626349711821
       },
       {
+        "short_name": "CJB",
+        "full_name": "The Complete Jewish Bible (1998)",
+        "updated": 1635188106109
+      },
+      {
         "short_name": "KJV",
         "full_name": "King James Version 1769 with Apocrypha and Strong's Numbers",
         "updated": 1750968212682
@@ -176,11 +181,6 @@
       {
         "short_name": "RSV",
         "full_name": "Revised Standard Version (1952)",
-        "updated": 1635188106109
-      },
-      {
-        "short_name": "CJB",
-        "full_name": "The Complete Jewish Bible (1998)",
         "updated": 1635188106109
       },
       {
@@ -616,6 +616,11 @@
     "language": "Portuguese",
     "translations": [
       {
+        "short_name": "NTJud",
+        "full_name": "Novo Testamento Judaico",
+        "updated": 1591781197652
+      },
+      {
         "short_name": "TB10",
         "full_name": "Tradução Brasileira, 2010",
         "updated": 1726389786790
@@ -624,11 +629,6 @@
         "short_name": "ARA",
         "full_name": "Almeida Revista e Atualizada, 1993",
         "updated": 1591185595149
-      },
-      {
-        "short_name": "NTJud",
-        "full_name": "Novo Testamento Judaico",
-        "updated": 1591781197652
       },
       {
         "short_name": "OL",

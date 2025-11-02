@@ -59,8 +59,8 @@ class Dictionary
 		const selected = selection.toString!.trim!
 
 		# Trigger the definition popup only when a single hebrew or greekword is selected or there are Strong tags init <S> or <s>
-		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/) or selection.anchorNode.parentElement.querySelectorAll("s").length 
-		if [...selected.matchAll(/\s/g)].length > 1 or selected == '' or not hebrew_or_greek
+		let hebrew_or_greek = selected.match(/[\u0370-\u03FF]/) or  selected.match(/[\u0590-\u05FF]/) or selection.anchorNode..parentElement.querySelectorAll("s").length 
+		if [...selected.matchAll(/\s/g)].length > 1 or selected == '' or not hebrew_or_greek or selection.rangeCount == 0
 			tooltip = null
 			return imba.commit!
 

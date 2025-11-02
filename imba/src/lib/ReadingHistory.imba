@@ -19,11 +19,14 @@ class ReadingHistory
 
 	@autorun(delay:2s) def saveHistoryToServer
 		if user.username && window.navigator.onLine
-			API.put('/history/', {
-				history: JSON.stringify(history),
-			})
+			try
+				API.put('/history/', {
+					history: JSON.stringify(history),
+				})
+			catch error
+				console.warn(error)
 
-	def clear
+	@action def clear
 		history = []
 		if user.username && window.navigator.onLine
 			try
@@ -32,7 +35,7 @@ class ReadingHistory
 				console.warn(error)
 				notifications.push('error')
 
-	def saveToHistory translation\string, book\number, chapter\number, verse\number|string
+	@action def saveToHistory translation\string, book\number, chapter\number, verse\number|string
 		unless #omitInit
 			#omitInit = yes
 			return
@@ -56,19 +59,19 @@ class ReadingHistory
 		if history.length > 256
 			history.length = 256
 
-	def syncHistory
+	@action def syncHistory
 		if !user.username || !window.navigator.onLine
 			return
 
-		let cloudData = await API.getJson('/history/')
-		if cloudData.compare_translations..length
-			compare.translations = JSON.parse(cloudData.compare_translations) || []
-
-		if cloudData.favorite_translations
-			settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || []
-
-		# Merge local history and server copy
 		try
+			let cloudData = await API.getJson('/history/')
+			if cloudData.compare_translations..length
+				compare.translations = JSON.parse(cloudData.compare_translations) || []
+
+			if cloudData.favorite_translations
+				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || []
+
+			# Merge local history and server copy
 			const cloudHistory = JSON.parse(cloudData.history).concat(history)
 
 			# Remove duplicates
