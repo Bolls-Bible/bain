@@ -59,7 +59,7 @@ def preloadChapter req\Request<{
 	verseRange:string;
 	}>, res\Response<any, Record<string, any>, number>
 	try
-		let {translation, book, chapter, verseRange } = req.params
+		let { translation, book, chapter, verseRange } = req.params
 		if !translationNames[translation]
 			return res.redirect(404, '/')
 
@@ -90,7 +90,7 @@ def preloadChapter req\Request<{
 
 		res.send result
 	catch error
-		res.status(404).send defaultIndex
+		res.send defaultIndex
 
 app.get '/:translation/:book/:chapter', preloadChapter
 app.get '/international/:translation/:book/:chapter', preloadChapter
