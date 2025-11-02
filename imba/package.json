@@ -8,6 +8,7 @@
     "prod": "npx pm2 start server.mjs"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.4",
     "@sentry/browser": "^10.12.0",
     "pm2": "^6.0.11"
   },

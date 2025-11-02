@@ -346,7 +346,7 @@ global css
 		border-radius: .25rem
 		overflow: auto
 
-	note-body, .markdown
+	note-tooltip, .markdown
 		ul, ol
 			line-height: 1.6
 			padding: 1rem 0 1rem 2rem
