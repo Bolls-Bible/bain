@@ -12,6 +12,7 @@ import BookOpenText from 'lucide-static/icons/book-open-text.svg'
 import SlidersHorizontal from 'lucide-static/icons/sliders-horizontal.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
+const hasTouchEvents = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 tag reader
 	initialTouch = null
@@ -158,19 +159,19 @@ tag reader
 		inClosingTouchZone = no
 
 	def openBooksDrawer
-		unless settings.fixdrawers
+		unless settings.fixdrawers or hasTouchEvents
 			activities.booksDrawerOffset = 0
 	
 	def closeBooksDrawer
-		unless settings.fixdrawers
+		unless settings.fixdrawers or hasTouchEvents
 			activities.booksDrawerOffset = -300
 
 	def openSettingsDrawer
-		unless settings.fixdrawers
+		unless settings.fixdrawers or hasTouchEvents
 			activities.settingsDrawerOffset = 0
 	
 	def closeSettingsDrawer
-		unless settings.fixdrawers
+		unless settings.fixdrawers or hasTouchEvents
 			activities.settingsDrawerOffset = -300
 
 	def interpolate value, max

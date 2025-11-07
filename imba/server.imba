@@ -90,7 +90,7 @@ def preloadChapter req\Request<{
 
 		res.send result
 	catch error
-		res.send defaultIndex
+		res.status(404).send defaultIndex
 
 app.get '/:translation/:book/:chapter', preloadChapter
 app.get '/international/:translation/:book/:chapter', preloadChapter

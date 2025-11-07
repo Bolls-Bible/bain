@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import DOMPurify from 'dompurify';
 import { computePosition, autoUpdate, shift, offset, autoPlacement } from '@floating-ui/dom';
 import type { Bookmark } from '../lib/types'
+import X from 'lucide-static/icons/x.svg'
 
 
 tag note-tooltip
@@ -13,8 +14,11 @@ tag note-tooltip
 	isExpanded = no
 	cleanupAutoupdate = null
 
+	get anchorElement
+		return self.childNodes[1] || self
+
 	def updatePosition
-		contentPosition = await computePosition(self, $content, {
+		contentPosition = await computePosition(anchorElement, $content, {
 			middleware: [offset(8), shift({ padding: 8 }), autoPlacement()],
 		})
 
@@ -49,7 +53,7 @@ tag note-tooltip
 		updatePosition()
 
 		cleanupAutoupdate = autoUpdate(
-			self,
+			anchorElement,
 			$content,
 			updatePosition.bind(this),
 		);
@@ -61,6 +65,8 @@ tag note-tooltip
 		if #show
 			<aside$content @click.stop [o@off:0 scale@off:0.95 origin:top center maw:{theme.maxWidth}em t:{contentPosition.y}px l:{contentPosition.x}px] ease>
 				<p innerHTML=#textToRender>
+				<button @click=close aria-label=t.close [pos:absolute t:0 r:0 m:0.5em bxs:none]>
+					<svg src=X aria-hidden=true>
 
 			<global @click.outside=close>
 
@@ -81,7 +87,7 @@ tag note-tooltip
 		rd:1rem
 		border:2px solid $acc-bgc
 		bg:$bgc
-		min-width:16em
+		min-width:8em
 		us:text
 		bxs:xl
 
@@ -89,4 +95,5 @@ tag note-tooltip
 			font-size: 0.85em
 			overflow:auto
 			max-height:42vh
+			h:auto
 			cursor:text
