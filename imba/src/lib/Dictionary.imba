@@ -71,7 +71,7 @@ class Dictionary
 			let rangeContainer = range.endContainer.parentElement
 			const main = document.getElementById('main')
 
-			if main.contains(rangeContainer)
+			if main..contains(rangeContainer)
 				let viewportRectangle = range.getBoundingClientRect()
 				tooltip = {
 					top: viewportRectangle.top + theme.fontSize * (MOBILE_PLATFORM ? 2.2 : 1.4),

@@ -27,7 +27,6 @@ def clean_up_html raw_html\string
 
 def get_description verses, verse\number, endVerse\number
 	if verse <= verses.length and verses.length > 0
-		i = 0
 		let description = verses[verse - 1]["text"]
 		if endVerse > 0 and endVerse - verse != 0
 			for i in [verse .. endVerse]
@@ -38,6 +37,7 @@ def get_description verses, verse\number, endVerse\number
 		return "Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."
 
 def getChapterVerses translation\string, book\number|string, chapter\number
+	console.log("Fetching chapter verses {process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/")
 	const response = await fetch "{process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/"
 	return response.json()
 
@@ -90,6 +90,7 @@ def preloadChapter req\Request<{
 
 		res.send result
 	catch error
+		console.error error
 		res.status(404).send defaultIndex
 
 app.get '/:translation/:book/:chapter', preloadChapter
