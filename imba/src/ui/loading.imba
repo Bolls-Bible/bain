@@ -1,8 +1,8 @@
-import Moon from 'lucide-static/icons/moon.svg'
+import bird from 'lucide-static/icons/bird.svg'
 import Sun from 'lucide-static/icons/sun.svg'
 import Croissant from 'lucide-static/icons/croissant.svg'
-import Snowflake from 'lucide-static/icons/snowflake.svg'
-import Tent from 'lucide-static/icons/tent.svg'
+import Rabbit from 'lucide-static/icons/rabbit.svg'
+import Squirrel from 'lucide-static/icons/squirrel.svg'
 
 tag loading
 	prop genesis = Date.now()
@@ -10,10 +10,10 @@ tag loading
 	prop period = 6 * speed
 
 	def mount
-		#timer = setInterval(render.bind(self), 1000 / 25)
+		#raf = window.requestAnimationFrame(render.bind(self))
 
 	def unmount
-		clearInterval(#timer)
+		window.cancelAnimationFrame(#raf)
 
 	def scale delay\number
 		delay *= speed
@@ -33,11 +33,16 @@ tag loading
 
 
 	def render
+		#raf = window.requestAnimationFrame(render.bind(self))
 		<self aria-label=t.loading ease>
 			<div[transform: scale({scale(5)}) translateX({translateX(5)}px) translateY({translateY(5)}px)] aria-hidden=yes>
 				<svg
 					[transform: rotateY({rotate(5)}deg) fill:$c]
 					viewBox="0 0 11.144001 11.279001"
+					stroke="currentColor"
+					stroke-width="0.35"
+					stroke-linecap="round"
+					stroke-linejoin="round"
 					xmlns="http://www.w3.org/2000/svg">
 					<title> "Bolls Logo"
 					<path
@@ -45,7 +50,7 @@ tag loading
 
 			<div[transform: scale({scale(4)}) translateX({translateX(4)}px) translateY({translateY(4)}px)] aria-hidden=yes>
 				<svg[transform: rotateY({rotate(4)}deg)]
-					src=Tent
+					src=Squirrel
 					>
 
 			<div[transform: scale({scale(3)}) translateX({translateX(3)}px) translateY({translateY(3)}px)] aria-hidden=yes>
@@ -64,10 +69,10 @@ tag loading
 						<path d="M113.355,30.769c-2.479,11.326 -26.582,64.819 -29.675,76.941c-2.198,8.613 9.146,19.428 11.041,12.347c5.571,-20.811 30.4,-70.256 31.787,-80.555c1.196,-8.875 -11.941,-14.267 -13.153,-8.733Z">
 
 			<div[transform: scale({scale(1)}) translateX({translateX(1)}px) translateY({translateY(1)}px)] aria-hidden=yes>
-				<svg[transform: rotateY({rotate(1)}deg)] src=Snowflake>
+				<svg[transform: rotateY({rotate(1)}deg)] src=Rabbit>
 			
 			<div[transform: scale({scale(0)}) translateX({translateX(0)}px) translateY({translateY(0)}px)] aria-hidden=yes>
-				<svg[transform: rotateY({rotate(0)}deg) fill:$c] src=Moon>
+				<svg[transform: rotateY({rotate(0)}deg)] src=bird>
 
 	css
 		display: flex

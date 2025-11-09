@@ -77,7 +77,9 @@ tag chapter < section
 
 		if settings.parallel_sync and parallelReader.enabled
 			calculateTopVerse e
-		dictionary.tooltip = null
+		if dictionary.tooltip
+			# recalculate tooltip position
+			self.dictionary.showTooltip!
 		imba.commit!
 
 	def enlargeHeader
@@ -107,7 +109,7 @@ tag chapter < section
 			activities.IOSKeyboardHeight = Math.abs(cachedInnerHeight - window.innerHeight)
 
 		<self .parallel=parallelReader.enabled
-			@scroll=changeHeadersSizeOnScroll
+			@scroll.debounce(50ms)=changeHeadersSizeOnScroll
 			@touchmove=changeHeadersSizeOnScroll
 			dir=translationTextDirection(me.translation)>
 			<>

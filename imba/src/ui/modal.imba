@@ -138,6 +138,9 @@ tag modal < section
 				return <svg src=CloudDownload aria-hidden=yes>
 
 	def deleteAllDownloads
+		const confirmation = window.confirm((activities.show_dictionary_downloads ? t.remove_all_dictionaries : t.remove_all_translations) + '\n\n' + t.are_you_sure)
+		unless confirmation
+			return
 		if activities.show_dictionary_downloads
 			vault.clearDictionariesTable!
 		else
