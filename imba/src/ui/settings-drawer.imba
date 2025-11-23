@@ -7,7 +7,6 @@ import AlignJustify from 'lucide-static/icons/align-justify.svg'
 import MinimizeHorizontal from '../icons/minimize-horizontal.svg'
 import MaximizeHorizontal from '../icons/maximize-horizontal.svg'
 import Download from 'lucide-static/icons/download.svg'
-import CloudDownload from 'lucide-static/icons/cloud-download.svg'
 import BadgeInfo from 'lucide-static/icons/badge-info.svg'
 import HeartHandshake from 'lucide-static/icons/heart-handshake.svg'
 import Dices from 'lucide-static/icons/dices.svg'
@@ -32,7 +31,7 @@ tag settings-drawer < aside
 			when 'es' then "Español"
 			else "English"
 
-	def purcheCache
+	def purgeCache
 		# ask confirmation
 		const confirmed = await window.confirm(t.purge_cache + '?')
 		if confirmed
@@ -190,52 +189,67 @@ tag settings-drawer < aside
 			t.fixdrawers
 			<.checkbox> <span>
 
+		<button.settings-btn @click=reader.randomVerse>
+			<svg src=Dices aria-hidden=true>
+			t.random
+
 		if window.navigator.onLine
 			if vault.available
 				<button.settings-btn @click=activities.toggleDownloads>
-					<svg src=CloudDownload aria-hidden=true>
+					<svg src=Download aria-hidden=true>
 					t.download_translations
-			<a.settings-btn href='/downloads/' target="_blank" @click=pwa.install>
-				<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
-				t.install_app
 			<button.settings-btn @click=dictionary.showDictionary>
 				<span.font-icon aria-hidden=true> 'א'
 				t.dictionary
+			<a.settings-btn href='/downloads/' target="_blank" @click=pwa.install>
+				<img[size:2rem rd:23% mr:0.75rem] src='/bolls.png' aria-hidden=true>
+				t.install_app
 		<button.settings-btn @click=activities.showHelp>
 			<svg src=ICONS.CARROT aria-hidden=true>
 			t.help
 		<button.settings-btn @click=activities.showSupport>
 			<svg src=HeartHandshake aria-hidden=true>
 			t.support
-		<button.settings-btn @click=reader.randomVerse>
-			<svg src=Dices aria-hidden=true>
-			t.random
 
 		unless !"state.pswv"
 			<a.settings-btn route-to="/donate/">
 				<svg src=ICONS.TIP_JAR aria-hidden=true>
 				t.donate
 
-		<button.settings-btn @click=purcheCache>
+		<a.settings-btn target="_blank" href="/api">
+			<svg src=ICONS.CODE aria-hidden=true>
+			"API"
+
+		<button.settings-btn @click=purgeCache>
 			<svg src=ICONS.BROOM aria-hidden=true>
 			t.purge_cache
 
 		<footer>
-			<p.footer_links>
+			css
+				d:vflex ai:center jc:center
+				text-align: center gap:1rem
+				font-size: 0.875rem
+
+				a
+					color: $c
+					color@hover:$acc-hover
+					background-size: 100% 0.2em
+					background-image: linear-gradient($c 0px, $c 100%) @hover: linear-gradient($acc-hover 0px, $acc-hover 100%)
+
+			<p[d:flex jc:center ai:center flex-wrap:wrap g:0.5rem]>
 				<a target="_blank" rel="noreferrer" href="http://t.me/bollsbible"> "Official Telegram"
 				<a target="_blank" rel="noreferrer" href="https://github.com/Bolls-Bible/bain"> "GitHub"
-				<a target="_blank" href="/api"> "API "
 				<a target="_blank" href="/static/privacy_policy.html"> "Privacy Policy"
-				<a target="_blank" rel="noreferrer" href="http://www.patreon.com/bolls"> "Patreon"
 				<a target="_blank" href="/static/disclaimer.html"> "Disclaimer"
 				<a target="_blank" rel="noreferrer" href="https://imba.io"> "Imba"
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
-				<a target="_blank" rel="noreferrer" href="http://t.me/Boguslavv"> "My Telegram 📱"
-			<p[fs:0.75rem pb:0.75rem]>
-				"🍇 v3.1.26 🗓 "
-				<time dateTime='2025-11-09'> "9.11.2025"
-			<p[fs:0.75rem]>
-				"© 2019-present Павлишинець Богуслав 🎻 Pavlyshynets Bohuslav"
+
+			<p>
+				"v3.1.27 | "
+				<time dateTime='2025-11-23'> "23.11.2025"
+
+			<p>
+				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"
 
 		unless activities.settingsDrawerOffset
 			<global @click.outside.capture.stop.prevent=activities.toggleSettingsMenu>
@@ -316,25 +330,3 @@ tag settings-drawer < aside
 			ff:serif fs:1.6875rem
 			ta:center w:2rem
 			mr:0.75rem
-
-		footer
-			padding-bottom: .5rem
-			text-align: center
-
-		footer a
-			color: $c
-			color@hover:$acc-hover
-			font-size: 0.875rem
-			background-size: 100% 0.2em
-			display: inline-block
-			background-image: linear-gradient($c 0px, $c 100%) @hover: linear-gradient($acc-hover 0px, $acc-hover 100%)
-
-		.footer_links
-			padding-block: .5rem
-
-			a
-				margin-inline:.25rem
-				margin-block:.5rem 0
-
-
-

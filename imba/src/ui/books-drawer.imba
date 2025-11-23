@@ -2,7 +2,7 @@ import languages from '../data/languages.json'
 import ALL_BOOKS from '../data/translations_books.json'
 
 import HourGlassIcon from 'lucide-static/icons/hourglass.svg'
-import CloudDownload from 'lucide-static/icons/cloud-download.svg'
+import Download from 'lucide-static/icons/download.svg'
 import Heart from 'lucide-static/icons/heart.svg'
 import ChevronDown from 'lucide-static/icons/chevron-down.svg'
 
@@ -119,7 +119,7 @@ tag books-drawer < nav
 					activeTranslation
 					<svg[min-width:1rem h:1.1em mb:-0.2em transform:rotate({180 * +unfoldTranslationsList}deg)] src=ChevronDown aria-label="">
 				if vault.available
-					<svg src=CloudDownload role="button" @click=activities.toggleDownloads aria-label=t.download>
+					<svg src=Download role="button" @click=activities.toggleDownloads aria-label=t.download>
 			
 		if unfoldTranslationsList
 			<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-2rem] ease>

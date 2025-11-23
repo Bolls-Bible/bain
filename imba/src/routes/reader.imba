@@ -253,7 +253,7 @@ tag reader
 				@hotkey('alt+r').prevent.stop=reader.randomVerse
 				@hotkey('mod+y').prevent.stop=(settings.fixdrawers = !settings.fixdrawers)
 
-				@hotkey('mod+d').prevent.stop=dictionary.showDictionary
+				@hotkey('mod+d|mod+в').prevent.stop=dictionary.showDictionary
 				@hotkey('alt+s|alt+і').prevent.stop=dictionary.showStongNumberDefinition
 				@hotkey('escape').force.prevent.stop=activities.cleanUp
 				@hotkey('mod+alt+h').prevent.stop=(settings.menuicons = !settings.menuicons)

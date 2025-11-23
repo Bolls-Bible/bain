@@ -42,13 +42,15 @@ class ParallelReader < GenericReader
 		document.getElementById('parallel-reader')
 
 	@action def updateMainReader book, chapter
-		reader.book = book
-		reader.chapter = chapter
+		# first check if that chapter and book exist in the main reader
+		if reader.theChapterExistInThisTranslation(book, chapter)
+			reader.book = book
+			reader.chapter = chapter
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun
 	def fetchVerses
-		unless theChapterExistInThisTranslation
+		unless theChapterExistInThisTranslation book, chapter
 			return
 		
 		loading = yes

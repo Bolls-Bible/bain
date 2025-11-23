@@ -95,5 +95,15 @@ export type Definition = {
   transliteration: string;
   pronunciation: string;
   weight: number;
-  short_definition: string
+  short_definition: string;
+};
+
+export type DictionaryTooltip = {
+  top: number;
+  left: number | "auto";
+  right: number | "auto";
+  width: number;
+  height: number;
+  selected: string;
+  strong?: string;
 };

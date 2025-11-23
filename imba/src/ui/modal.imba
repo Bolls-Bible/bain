@@ -1,5 +1,5 @@
 import Search from 'lucide-static/icons/search.svg'
-import CloudDownload from 'lucide-static/icons/cloud-download.svg'
+import Download from 'lucide-static/icons/download.svg'
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
 import ChevronDown from 'lucide-static/icons/chevron-down.svg'
@@ -135,7 +135,7 @@ tag modal < section
 			when 'delete'
 				return <svg src=ICONS.TRASH aria-hidden=yes>
 			else
-				return <svg src=CloudDownload aria-hidden=yes>
+				return <svg src=Download aria-hidden=yes>
 
 	def deleteAllDownloads
 		const confirmation = window.confirm((activities.show_dictionary_downloads ? t.remove_all_dictionaries : t.remove_all_translations) + '\n\n' + t.are_you_sure)
@@ -406,7 +406,7 @@ tag modal < section
 							<button @click=dictionary.loadDefinitions title=t.search>
 								<svg src=Search aria-hidden=yes>
 							<button @click=openDictionaryDownloads title=t.download>
-								<svg src=CloudDownload aria-hidden=yes>
+								<svg src=Download aria-hidden=yes>
 
 						<menu-popup bind=activities.show_dictionaries [pos:relative]>
 							<[transform@important:none padding-block:.5rem c@hover:$acc-hover fill:$c @hover:$acc-hover cursor:pointer tt:uppercase fw:500 fs:0.9em d:hss]

@@ -2,19 +2,15 @@ export const english = {
 	"HB": [
 		[
 			"Where to find the necessary translation?",
-			"On the desktop, hover your mouse under mostleft edge of window or press the book icon at the up, on mobile phone swipe to right from the left edge of the screen and you will see the books menu, where just click on the translation abbreviation up and you will see all available translations. IF you lack some absent here translation, write me and I will add it."
-		],
-		[
-			"How to download a translation?",
-			"As you guess, this web app is available offline and you can download a translation to use it in offline. To do that go to left menu, find a cloud icon in the top and press it (it is visible if your browser has access to storage and does not have any restrictions in settings). Then you will see the list of available for downloading translations. Just press a cloud icon against the translation you want to download, and after a few seconds it will be downloaded."
+			"At the books menu, tap on the translation abbreviation (YLT, KJV, etc.) and you will see all available languages and their translations. If you lack some translation, please let me know and I will add them."
 		],
 		[
 			"Why register?",
-			"To save there your bookmarks, and get them available via your browser across all platforms."
+			"To save and synchronize your bookmarks and notes across devices."
 		],
 		[
 			"Where to see highlighted texts?",
-			"On the desktop, hover your mouse under mostright edge of window or press the menu icon at the up, on mobile phone swipe to left from the right edge of the screen and you will see the menu, where just click on your username below and you will see all youe highlightes."
+			"On the settings panel, click your username to open your highlights."
 		]
 	],
 	"settings": "Settings",
@@ -22,8 +18,8 @@ export const english = {
 		"Just share it -=> bolls.life",
 		"Write a feedback.",
 		"Submit an idea)",
-		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate its interface to a new language. </a>",
-		"<a target='_blank' relnoreferrer href='/donate/'>Donate 🐈</a>. This app is not free. There is always need in money for hosting and development time..."
+		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Translate the interface to a new language. </a>",
+		"<a target='_blank' relnoreferrer href='/donate/'>Donate 🐈</a>. This app is not free. There is always cost for hosting and development time..."
 	],
 	"all": "All"
 	"account_deleted": "Account Deleted",
@@ -196,19 +192,15 @@ export const ukrainian = {
 	"HB": [
 		[
 			"Де знайти необхідний переклад?",
-			"На робочому столі наведіть курсор миші над лівим краєм вікна або натисніть значок книги вгорі, на мобільному телефоні проведіть пальцем праворуч від лівого краю екрана, і ви побачите меню книг, де просто натисніть на абревіатуру перекладу вгорі і ви побачите всі доступні переклади. Якщо вам не вистачає якогось відсутнього тут перекладу, напишіть мені, і я додам його."
-		],
-		[
-			"Як завантажити переклад?",
-			"Як ви здогадуєтесь, цей веб-додаток доступний офлайн, і ви можете завантажити переклад, щоб використовувати його в режимі офлайн. Для цього перейдіть у меню ліворуч, знайдіть піктограму хмари у верхній частині та натисніть на неї (вона видна, якщо ваш браузер має доступ до пам’яті та не має обмежень у налаштуваннях). Тоді ви побачите список доступних для завантаження перекладів. Просто натисніть піктограму хмари напроти перекладу, який ви хочете завантажити, і через кілька секунд він буде завантажений."
+			"На меню книг натисніть на абревіатуру перекладу (UBIO, UKRK тощо), і ви побачите всі доступні мови та їх переклади. Якщо вам не вистачає якогось перекладу, будь ласка, повідомте мені, і я додам їх."
 		],
 		[
 			"Для чого потрібно реєструватися?",
-			"Щоб зберігати там свої закладки та мати їх доступними через ваш браузер на всіх платформах."
+			"Щоб зберігати та синхронізувати свої закладки та нотатки на різних пристроях."
 		],
 		[
 			"Де побачити виділені тексти?",
-			"На робочому столі наведіть курсор миші над лівим краєм вікна або натисніть піктограму меню вгорі, на мобільному телефоні проведіть пальцем ліворуч від правого краю екрана, і ви побачите меню, де просто натисніть своє ім’я користувача нижче, і ви побачите усі виділені вами тексти."
+			"На панелі налаштувань натисніть на своє ім’я користувача, щоб відкрити свої виділення."
 		]
 	],
 	"settings": "Налаштування",
@@ -390,19 +382,15 @@ export const russian = {
 	"HB": [
 		[
 			"Где найти нужный перевод?",
-			"На рабочем столе наведите указатель мыши на крайнюю левую сторону окна или нажмите на значок книги вверху, а на мобильном телефоне проведите вправо от левого края экрана, и вы увидите меню книг, где просто нажмите на аббревиатуру вверху, и вы увидите все доступные переводы. Если вам не хватает отсутствующего здесь перевода, напишите мне, и я добавлю его, по возможности."
-		],
-		[
-			"Как скачать перевод?",
-			"Как вы и подумали, это веб-приложение доступно в автономном режиме, и вы можете скачать перевод, чтобы использовать его в автономном режиме. Для этого перейдите в левое меню, найдите значок облака в верхней части и нажмите его (оно видно, если ваш браузер имеет доступ к хранилищу и не имеет никаких ограничений в настройках). Тогда вы увидите список доступных для скачивания переводов. Просто нажмите значок облака напротив перевода, который вы хотите загрузить, и через несколько секунд он будет загружен."
+			"На меню книг нажмите на аббревиатуру перевода (JNT, SYNOD и т.д.), и вы увидите все доступные языки и их переводы. Если вам не хватает какого-то перевода, пожалуйста, сообщите мне, и я добавлю их."
 		],
 		[
 			"Для чего нужно регистрироваться?",
-			"Чтобы хранить там свои закладки и иметь их доступными через ваш браузер на всех платформах."
+			"Чтобы сохранять и синхронизировать свои закладки и заметки на разных устройствах."
 		],
 		[
 			"Где увидеть выделенные тексты?",
-			"На рабочем столе наведите курсор мыши на крайний правый край окна или нажмите значок меню вверху, на мобильном телефоне проведите влево от правого края экрана, и вы увидите меню, где просто щелкните свое имя пользователя ниже и вы увидите все ваши выделенные тексты."
+			"На панели настроек нажмите на свое имя пользователя, чтобы открыть свои выделения."
 		]
 	],
 	"settings": "Настройки",
@@ -584,19 +572,15 @@ export const portuguese = {
 	"HB": [
 		[
 			"Onde encontrar a tradução necessária?",
-			"<b>No computador</b>, passe o mouse sob a extremidade esquerda da janela ou pressione o ícone do livro no canto superior esquerdo; <b>no celular</b>, toque no ícone do livro no canto inferior esquerdo, toque na seta apontando para baixo no canto superior direito, selecione o idioma desejado na lista e você verá todas as traduções disponíveis. Se sentir falta de alguma tradução ausente aqui, <a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>escreva-me</a> e eu a adicionarei."
-		],
-		[
-			"Como baixar uma tradução?",
-			"Como pode ser visto, este aplicativo web está disponível offline e você pode baixar outras traduções para usá-las também offline. Para fazer isso, vá para o menu à esquerda, encontre um ícone de nuvem no topo e pressione-o (é visível se o navegador tiver acesso ao armazenamento e não tiver restrições nas configurações). Então você verá a lista de versões disponíveis para download de traduções. Basta pressionar o ícone da nuvem para a tradução que deseja baixar, e depois de alguns segundos será baixado."
+			"No menu de livros, clique na abreviação da tradução (NTJud, ARA, etc.) e você verá todos os idiomas disponíveis e suas traduções. Se você sentir falta de alguma tradução, por favor, me avise e eu as adicionarei."
 		],
 		[
 			"Por quê se registrar?",
-			"Para salvar seus favoritos, sincronizá-los e disponibilizá-los através do navegador em todas as plataformas."
+			"Para salvar e sincronizar seus favoritos e anotações em diferentes dispositivos."
 		],
 		[
 			"Onde ver os textos destacados?",
-			"<b>No computador</b>, passe o mouse sob a borda mais à direita da janela ou pressione o ícone de menu na parte superior; <b>no celular</b>, deslize para a esquerda a partir da borda direita da tela e você verá o menu, onde basta clicar no seu nome de usuário e você verá todos os seus destaques."
+			"Na barra de configurações, toque no seu nome de usuário para abrir seus destaques."
 		]
 	],
 	"settings": "Configurações",
@@ -777,19 +761,15 @@ export const espanol = {
 	"HB": [
 		[
 			"¿Dónde encuentro la traducción necesaria?",
-			"En el escritorio, coloca el mouse debajo del borde izquierdo de la ventana o presiona el ícono del libro en la parte superior, desliza el teléfono hacia la derecha desde el borde izquierdo de la pantalla y verás el menú del libro, donde solo haces clic en la abreviatura de traducción y verás todas las traducciones disponibles. Si falta alguna traducción, escríbeme y la agregaré."
-		],
-		[
-			"¿Cómo bajar una traducción?",
-			"Como puedes imaginar, esta aplicación web está disponible sin conexión y puedes descargar una traducción para usarla de ese modo. Para hacer esto, ve al menú de la izquierda, busca el ícono de nube en la parte superior y presiónalo (es visible si tu navegador tiene acceso al almacenamiento y no tiene restricciones en la configuración). Luego verás la lista de traducciones disponibles para descargar. Simplemente presiona el ícono de nube en la traducción que deseas descargar, y después de unos segundos, se descargará."
+			"En el menú de libros, haz clic en la abreviatura de la traducción (BTX3, RV1960, etc.) y verás todos los idiomas disponibles y sus traducciones. Si falta alguna traducción, por favor avísame y la agregaré."
 		],
 		[
 			"¿Porqué registrarse?",
-			"Para guardar tus favoritos y disponer de ellos por medio del navegador en todas las plataformas"
+			"Para guardar y sincronizar tus favoritos y anotaciones en diferentes dispositivos."
 		],
 		[
 			"¿Dónde ver los textos destacados?",
-			"En el escritorio, coloca el mouse debajo del borde derecho de la ventana o presiona el ícono de menú en la parte superior, desliza el dedo hacia la izquierda desde el borde derecho de la pantalla y verás el menú, en donde simplemente debes hacer clic en tu nombre de usuario a continuación para ver todos tus resaltados."
+			"En la barra de configuraciones, toca tu nombre de usuario para abrir tus textos destacados."
 		]
 	],
 	"settings": "Ajustes",
@@ -970,20 +950,16 @@ export const espanol = {
 export const german = {
 	"HB": [
 		[
-			"Where to find the necessary translation?",
-			"On the desktop, hover your mouse under mostleft edge of window or press the book icon at the up, on mobile phone swipe to right from the left edge of the screen and you will see the books menu, where just click on the translation abbreviation up and you will see all available translations. IF you lack some absent here translation, write me and I will add it."
+			"Wo finde ich die benötigte Übersetzung?",
+			"Im Buchmenü klicken Sie auf die Abkürzung der Übersetzung (NTJud, ARA usw.), und Sie sehen alle verfügbaren Sprachen und deren Übersetzungen. Wenn eine Übersetzung fehlt, lassen Sie es mich bitte wissen, und ich werde sie hinzufügen."
 		],
 		[
-			"How to download a translation?",
-			"As you guess, this web app is available offline and you can download a translation to use it in offline. To do that go to left menu, find a cloud icon in the top and press it (it is visible if your browser has access to storage and does not have any restrictions in settings). Then you will see the list of available for downloading translations. Just press a cloud icon against the translation you want to download, and after a few seconds it will be downloaded."
+			"Warum registrieren?",
+			"Um Ihre Lesezeichen zu speichern und über Ihren Browser auf allen Plattformen verfügbar zu machen."
 		],
 		[
-			"Why register?",
-			"To save there your bookmarks, and get them available via your browser across all platforms."
-		],
-		[
-			"Where to see highlighted texts?",
-			"On the desktop, hover your mouse under mostright edge of window or press the menu icon at the up, on mobile phone swipe to left from the right edge of the screen and you will see the menu, where just click on your username below and you will see all youe highlightes."
+			"Wo kann man markierte Texte sehen?",
+			"Auf dem Desktop bewegen Sie die Maus unter den rechten Rand des Fensters oder drücken das Menüsymbol oben, auf dem Handy wischen Sie vom rechten Bildschirmrand nach links und Sie sehen das Menü, wo Sie einfach auf Ihren Benutzernamen unten klicken und alle Ihre Markierungen sehen."
 		]
 	],
 	"settings": "Einstellungen",

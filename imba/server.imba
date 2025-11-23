@@ -37,7 +37,6 @@ def get_description verses, verse\number, endVerse\number
 		return "Read God's Word with a deep understanding of His design. Bible elevates your soul with rapid ascension to calm, safety and more."
 
 def getChapterVerses translation\string, book\number|string, chapter\number
-	console.log("Fetching chapter verses {process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/")
 	const response = await fetch "{process.env.API_URL}/get-chapter/{translation}/{book}/{chapter}/"
 	return response.json()
 

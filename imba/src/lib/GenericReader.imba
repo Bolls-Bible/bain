@@ -38,7 +38,7 @@ class GenericReader
 				return tr_book.name
 		return book
 	
-	get theChapterExistInThisTranslation
+	def theChapterExistInThisTranslation book\number, chapter\number
 		const theBook = books.find(do |element| return element.bookid == book)
 		if theBook
 			if theBook.chapters >= chapter

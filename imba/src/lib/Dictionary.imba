@@ -13,7 +13,7 @@ import { getValue, setValue } from '../utils'
 
 import { MOBILE_PLATFORM } from '../constants'
 import { scoreSearch } from '../utils'
-import type { Definition } from './types.ts'
+import type { Definition, DictionaryTooltip } from './types.ts'
 
 class Dictionary
 	definitions\Definition[] = []
@@ -21,7 +21,7 @@ class Dictionary
 	historyIndex = -1
 	expandedTopic = ''
 	showDownloads = no
-	tooltip = null
+	tooltip\(DictionaryTooltip | null) = null
 	query = ''
 	loading = no
 	dictionaries = dictionaries
@@ -39,6 +39,9 @@ class Dictionary
 				currentDictionary = 'BDBT'
 
 	def strongNumber selection\Selection, number\string
+		# if the number is not number - return nothing
+		if not number.match(/^\d+$/)
+			return null
 		# checking for Hebrew symbols is not reliable for cases when translation is English or Dutch but we're still at the old testament
 		# And at the same time parallel mode may be selected and selection may be either in one or another parallel which may be both NT and OT
 		# So we need to check to what translation the selection belongs
@@ -143,7 +146,8 @@ class Dictionary
 
 	def showStongNumberDefinition
 		if tooltip..strong
-			loadDefinitions(tooltip.strong)
+			return loadDefinitions(tooltip.strong)
+		showDictionary!
 
 	def stripVowels rawString
 		# Clear Hebrew

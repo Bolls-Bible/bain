@@ -48,14 +48,14 @@ class Reader < GenericReader
 		document.getElementById('main-reader')
 
 	@action def updateParallelReader book, chapter
-		if settings.parallel_sync && parallelReader.enabled
+		if settings.parallel_sync && parallelReader.enabled && parallelReader.theChapterExistInThisTranslation(book, chapter)
 			parallelReader.book = book
 			parallelReader.chapter = chapter
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun
 	def fetchVerses
-		unless theChapterExistInThisTranslation
+		unless theChapterExistInThisTranslation book, chapter
 			return
 		
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationNames[translation] + " Bolls Bible"
