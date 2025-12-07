@@ -254,7 +254,7 @@ tag reader
 				@hotkey('mod+y').prevent.stop=(settings.fixdrawers = !settings.fixdrawers)
 
 				@hotkey('mod+d|mod+в').prevent.stop=dictionary.showDictionary
-				@hotkey('alt+s|alt+і').prevent.stop=dictionary.showStongNumberDefinition
+				@hotkey('alt+s|alt+і').prevent.stop=dictionary.showStrongNumberDefinition
 				@hotkey('escape').force.prevent.stop=activities.cleanUp
 				@hotkey('mod+alt+h').prevent.stop=(settings.menuicons = !settings.menuicons)
 

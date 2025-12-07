@@ -144,7 +144,7 @@ class Dictionary
 			const dictionarySearchInput\(as HTMLInputElement) = document.getElementById('dictionarysearch')
 			dictionarySearchInput..select!
 
-	def showStongNumberDefinition
+	def showStrongNumberDefinition
 		if tooltip..strong
 			return loadDefinitions(tooltip.strong)
 		showDictionary!
@@ -158,8 +158,7 @@ class Dictionary
 		res = res.replace('‎', '')
 
 		# Clear Greek
-		res = res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-		return res
+		return res.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
 	# Get query results from the dictionary, or Strong's number 
 	def loadDefinitions newQuery = undefined
@@ -181,11 +180,11 @@ class Dictionary
 
 			loading = yes
 			def loadDefinitionsFromOffline
-				let unvoweled_query = stripVowels(query)
-				let offlineResults = await vault.searchDefinitions({dictionary: currentDictionary, query: unvoweled_query})
+				let query_without_vowels = stripVowels(query)
+				let offlineResults = await vault.searchDefinitions({dictionary: currentDictionary, query: query_without_vowels})
 				definitions = []
 				for definition in offlineResults
-					const score = scoreSearch(definition.lexeme, unvoweled_query)
+					const score = scoreSearch(definition.lexeme, query_without_vowels)
 					if score or definition.topic == query.toUpperCase!
 						definitions.push({
 							... definition

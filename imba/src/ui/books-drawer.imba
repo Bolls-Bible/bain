@@ -30,7 +30,9 @@ tag books-drawer < nav
 
 	@computed get activeBook
 		if activeTranslation == parallelReader.translation
+			unfoldedBook = parallelReader.book
 			return parallelReader.book
+		unfoldedBook = reader.book
 		return reader.book
 
 	@computed get activeChapter

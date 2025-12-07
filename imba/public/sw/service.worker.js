@@ -4,9 +4,9 @@ importScripts("/sw/jszip.min.js");
 importScripts("/sw/dexie.min.js");
 importScripts("/sw/scripts.js");
 
-const CACHE_NAME = "v3.1.27";
+const CACHE_NAME = "v3.1.28";
 const STATICS_CACHE = "statics-v1.0.17";
-const TEXTS_CACHE = "texts-v1.0.8";
+const TEXTS_CACHE = "texts-v1.0.9";
 
 const urlsToCache = [
   "/",
@@ -53,7 +53,11 @@ self.addEventListener("fetch", (event) => {
             resp ||
             fetch(event.request).then((response) => {
               // if the response is not ok, do not cache it
-              if (!response || response.status < 200 || response.status >= 300) {
+              if (
+                !response ||
+                response.status < 200 ||
+                response.status >= 300
+              ) {
                 return response;
               }
               // if the response is a zip file, do not cache it

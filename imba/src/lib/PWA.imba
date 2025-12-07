@@ -38,7 +38,7 @@ class PWA
 			window.navigator.userAgentData.getHighEntropyValues(["platformVersion"])
 				.then(do(ua)
 					if (window.navigator.userAgentData.platform === "Windows")
-						const majorPlatformVersion = parseInt(ua.platformVersion.split('.')[0])
+						const majorPlatformVersion = parseInt(ua.platformVersion..split('.')[0])
 						if (majorPlatformVersion > 0)
 							isWin10Plus = yes)
 		catch

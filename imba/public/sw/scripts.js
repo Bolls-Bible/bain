@@ -202,6 +202,23 @@ async function deleteDictionary(url) {
     });
 }
 
+function stripVowels(rawString) {
+  return (
+    rawString
+      // Clear Hebrew
+      .replace(/[\u0591-\u05C7]/g, "")
+      // Replace some letters, which are not present in a given unicode range, manually.
+      .replace("שׁ", "ש")
+      .replace("שׂ", "ש")
+      .replace("‎", "")
+
+      // Clear Greek
+      .normalize("NFD")
+      // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
+      .replace(/[\u0300-\u036f]/g, "")
+  );
+}
+
 async function dictionarySearch(url) {
   const url_parts = url.split("/");
   const dictionary = url_parts[5];
@@ -226,9 +243,11 @@ async function dictionarySearch(url) {
             }
           }
 
+          // The query is already stripped of vowels
+          const stripped_lexeme = stripVowels(definition.lexeme).toUpperCase();
+
           return (
-            query.includes(definition.lexeme) ||
-            definition.lexeme.includes(query)
+            query.includes(stripped_lexeme) || stripped_lexeme.includes(query)
           );
         })
         .toArray()
