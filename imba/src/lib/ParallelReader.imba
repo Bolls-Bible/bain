@@ -54,17 +54,16 @@ class ParallelReader < GenericReader
 			return
 		
 		loading = yes
+		verses = []
+		imba.commit!
 
 		try
-			verses = []
-			imba.commit!
 			if vault.downloaded_translations.indexOf(translation) != -1
 				verses = await vault.getChapter(translation, book, chapter)
 			else
 				verses = await API.getJson("/get-chapter/{translation}/{book}/{chapter}/")
 		catch error
 			console.error(error)
-			# if window.navigator.onLine
 			notifications.push('error')
 		finally
 			loading = no

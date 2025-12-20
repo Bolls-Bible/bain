@@ -55,25 +55,24 @@ class Reader < GenericReader
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
 	@autorun
 	def fetchVerses
+		console.log("Fetching verses for {translation} {book}:{chapter}")
 		unless theChapterExistInThisTranslation book, chapter
 			return
 		
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationNames[translation] + " Bolls Bible"
 		loading = yes
+		verses = []
 		imba.commit!
 
 		updateParallelReader book, chapter
 
 		try
-			verses = []
-			imba.commit!
 			if vault.downloaded_translations.indexOf(translation) != -1
 				verses = await vault.getChapter(translation, book, chapter)
 			else
 				verses = await API.getJson("/get-chapter/{translation}/{book}/{chapter}/")
 		catch error
 			console.error(error)
-			# if window.navigator.onLine
 			notifications.push('error')
 		finally
 			loading = no
@@ -97,14 +96,16 @@ class Reader < GenericReader
 		# if the pathname has one of 4 `/` in it then call the pushState
 		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
 		if pathnameSlices == 0 or pathnameSlices > 2
-			window.history.pushState({
-					translation: translation,
-					book: book,
-					chapter: chapter,
-				},
-				'',
-				window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
-			)
+			const newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+			if window.location.href != newLocation
+				window.history.pushState({
+						translation: translation,
+						book: book,
+						chapter: chapter,
+					},
+					'',
+					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+				)
 
 	@action def randomVerse
 		try

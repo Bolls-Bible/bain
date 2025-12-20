@@ -209,8 +209,8 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
 
     def highlight_headline(text):
         highlighted_text = text
-        mark_replacement = re.compile(re.escape(piece), re.IGNORECASE)
-        highlighted_text = mark_replacement.sub("<mark>" + piece + "</mark>", highlighted_text)
+        text_to_wrap_in_mark_regex = re.compile(re.escape(piece), re.IGNORECASE)
+        highlighted_text = text_to_wrap_in_mark_regex.sub(r"<mark>\g<0></mark>", highlighted_text)
         if not match_whole:
             for word in piece.split():
                 if word == piece:
@@ -218,8 +218,8 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
                 # word may be just an article or an `I` which may replace all i`s in all words
                 if len(word) < 2:
                     continue
-                mark_replacement = re.compile(re.escape(word), re.IGNORECASE)
-                highlighted_text = mark_replacement.sub("<mark>" + word + "</mark>", highlighted_text)
+                text_to_wrap_in_mark_regex = re.compile(re.escape(word), re.IGNORECASE)
+                highlighted_text = text_to_wrap_in_mark_regex.sub(r"<mark>\g<0></mark>", highlighted_text)
         return highlighted_text
 
     # count number of all exact matches

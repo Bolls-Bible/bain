@@ -1,11 +1,11 @@
-asgiref==3.10.0
-certifi==2025.10.5
+asgiref==3.11.0
+certifi==2025.11.12
 cffi==2.0.0
 chardet==5.2.0
 charset-normalizer==3.4.4
 cryptography==46.0.3
 defusedxml==0.7.1
-Django==5.2.8
+Django==6.0
 docopt==0.6.2
 gunicorn==23.0.0
 idna==3.11
@@ -19,8 +19,8 @@ pytz==2025.2
 requests==2.32.5
 requests-oauthlib==2.0.0
 six==1.17.0
-social-auth-app-django==5.6.0
-social-auth-core==4.8.1
-sqlparse==0.5.3
-urllib3==2.5.0
+social-auth-app-django==5.7.0
+social-auth-core==4.8.3
+sqlparse==0.5.5
+urllib3==2.6.2
 yarg==0.1.10
