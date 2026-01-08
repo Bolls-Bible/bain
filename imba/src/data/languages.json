@@ -112,6 +112,11 @@
         "short_name": "PCBS",
         "full_name": "京委本圣经 - Peking Committee Bible, 1899",
         "updated": 1740517302264
+      },
+      {
+        "short_name": "ChiSB",
+        "full_name": "中文思高聖經 ChiSB",
+        "updated": 1736331000000
       }
     ]
   },
