@@ -81,7 +81,7 @@ def get_translation(_, translation):
             for item in commentary_index[(obj.book, obj.chapter, obj.verse)]:
                 if len(comment) > 0:
                     comment += "<br>"
-                comment = "%s%s" % (comment, item.text)
+                comment = f"{comment}{item.text}"
 
         if len(comment) > 0:
             verse["comment"] = comment
@@ -101,7 +101,7 @@ def get_text(_, translation, book, chapter):
         return cross_origin(JsonResponse(d, safe=False))
     except Exception as e:
         print(e)
-        return cross_origin(HttpResponse("The verses were not found", status=404))
+        return cross_origin(JsonResponse({"error": "The verses were not found"}, status=404))
 
 
 def get_chapter_with_comments(_, translation, book, chapter):
@@ -128,7 +128,7 @@ def get_chapter_with_comments(_, translation, book, chapter):
 
     except Exception as e:
         print(e)
-        return cross_origin(HttpResponse("The verses were not found", status=404))
+        return cross_origin(JsonResponse({"error": "The verses were not found"}, status=404))
 
 
 def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):

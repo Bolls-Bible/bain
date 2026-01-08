@@ -36,9 +36,7 @@ install_mkcert_dnf() {
 
   if ! command_exists mkcert; then
     echo "mkcert is not installed, installing..."
-    wget -q --progress=bar:force -O mkcert https://dl.filippo.io/mkcert/latest?for=linux/amd64
-    chmod +x mkcert
-    sudo mv mkcert /usr/local/bin/
+    sudo dnf install mkcert -y
   else
     echo "mkcert is already installed."
   fi

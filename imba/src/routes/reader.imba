@@ -1,6 +1,6 @@
 import '../ui'
 
-import { MOBILE_PLATFORM } from '../constants'
+import { hasTouchEvents } from '../constants'
 import { getValue, deleteValue } from '../utils'
 
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
@@ -12,7 +12,6 @@ import BookOpenText from 'lucide-static/icons/book-open-text.svg'
 import SlidersHorizontal from 'lucide-static/icons/sliders-horizontal.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
-const hasTouchEvents = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 tag reader
 	initialTouch = null
@@ -242,7 +241,7 @@ tag reader
 				[transform:translateX({settingsIconTransform}px)]
 				@pointerenter=openSettingsDrawer
 				@click=activities.toggleSettingsMenu>
-				<svg src=ChevronLeft aria-label=t.change_book
+				<svg src=ChevronLeft aria-label=t.settings
 					[transform:rotate({180*+!!settingsIconTransform}deg)]>
 
 			<global

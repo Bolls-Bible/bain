@@ -11,7 +11,7 @@ import dictionaries from "../data/dictionaries.json"
 
 import { getValue, setValue } from '../utils'
 
-import { MOBILE_PLATFORM } from '../constants'
+import { hasTouchEvents } from '../constants'
 import { scoreSearch } from '../utils'
 import type { Definition, DictionaryTooltip } from './types.ts'
 
@@ -77,7 +77,7 @@ class Dictionary
 			if main..contains(rangeContainer)
 				let viewportRectangle = range.getBoundingClientRect()
 				tooltip = {
-					top: viewportRectangle.top + theme.fontSize * (MOBILE_PLATFORM ? 2.2 : 1.4),
+					top: viewportRectangle.top + theme.fontSize * (hasTouchEvents ? 2.2 : 1.4),
 					left: 'auto'
 					right: 'auto'
 					width: viewportRectangle.width

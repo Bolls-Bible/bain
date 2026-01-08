@@ -17,7 +17,7 @@ import { format } from 'date-fns'
 import Color from "colorjs.io"
 
 import languages from '../data/languages.json'
-import { MOBILE_PLATFORM, translations, contributors } from '../constants'
+import { hasTouchEvents, translations, contributors } from '../constants'
 import ALL_BOOKS from '../data/translations_books.json'
 import type { HistoryEntry } from '../lib/types'
 
@@ -208,12 +208,12 @@ tag modal < section
 							<ul>
 								for q in t.HB
 									<li> <a href="#{q[0]}"> q[0]
-								if !MOBILE_PLATFORM
+								if !hasTouchEvents
 									<li> <a href="#shortcuts"> t.shortcuts
 							for q in t.HB
 								<h3 id=q[0] > q[0]
 								<p innerHTML=q[1]>
-							if !MOBILE_PLATFORM
+							if !hasTouchEvents
 								<h3 id="shortcuts"> t.shortcuts
 								for shortcut in t.shortcuts_list
 									<p> <span innerHTML=shortcut>

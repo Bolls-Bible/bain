@@ -8,6 +8,7 @@ global css
 		--acc-bgc: hsl(256, 100%, 92%)
 		--acc-bgc-hover: hsl(256, 100%, 96%)
 
+	html[data-theme="light"], html[data-theme="sepia"], html[data-theme="gray"], html[data-theme="white"]
 		# /* Markdown */
 		--codebg: hsla(0, 93.33%, 94.12%, 100%)
 		--code: hsla(12, 6.49%, 15.1%, 100%)
@@ -31,6 +32,7 @@ global css
 		--acc-bgc: #252749
 		--acc-bgc-hover: #383a6d
 
+	html[data-theme="black"], html[data-theme="dark"]
 		# /* Markdown */
 		--codebg: hsla(175.93, 60.82%, 19.02%, 50%)
 		--code: hsla(140.62, 84.21%, 92.55%, 100%)

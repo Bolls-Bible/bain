@@ -5,9 +5,7 @@ import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
 import Bookmark from 'lucide-static/icons/bookmark.svg'
 import * as ICONS from 'imba-phosphor-icons'
 
-const cachedInnerHeight = window.innerHeight
-
-import { MOBILE_PLATFORM, isApple } from '../constants'
+import { hasTouchEvents } from '../constants'
 
 tag chapter < section
 	prop me\(GenericReader)
@@ -83,7 +81,7 @@ tag chapter < section
 		imba.commit!
 
 	def enlargeHeader
-		unless MOBILE_PLATFORM
+		unless hasTouchEvents
 			minHeaderFont = 1.2
 
 	def shrinkHeader
@@ -105,9 +103,6 @@ tag chapter < section
 		return matchId.startsWith(versePrefix)
 
 	def render
-		if isApple
-			activities.IOSKeyboardHeight = Math.abs(cachedInnerHeight - window.innerHeight)
-
 		<self .parallel=parallelReader.enabled
 			@scroll.debounce(50ms)=changeHeadersSizeOnScroll
 			@touchmove=changeHeadersSizeOnScroll

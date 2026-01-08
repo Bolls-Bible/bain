@@ -8,11 +8,12 @@ services:
       - POSTGRES_USER=postgres_user
       - POSTGRES_PASSWORD=postgres_password
       - POSTGRES_DB=postgres_db
-      - PGDATA=/var/lib/postgresql/data/pgdata/bolls_dev
     security_opt:
       - label:disable
     labels:
       - "traefik.enable=false"
+    volumes:
+    - pgdata:/var/lib/postgresql/data
     networks:
       - internal
 
@@ -142,7 +143,7 @@ services:
     security_opt:
       - label:disable
     volumes:
-      - "/var/letsencrypt:/letsencrypt"
+      - "./traefik/letsencrypt:/letsencrypt"
       # - /var/run/docker.sock:/var/run/docker.sock # For use with Docker
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock # For use with Podman
       - ./traefik/config/static.yml:/etc/traefik/traefik.yml:ro
@@ -150,7 +151,10 @@ services:
       - ./traefik/certs:/etc/certs:ro
 
 networks:
-  internal:
-    external: false
   web:
     external: true
+  internal:
+    external: false
+
+volumes:
+  pgdata:

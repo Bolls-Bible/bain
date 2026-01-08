@@ -1,7 +1,6 @@
 import { getValue, setValue } from '../utils'
 
 import ALL_BOOKS from '../data/translations_books.json'
-import { isIOS } from '../constants'
 
 import API from './Api'
 import theme from './Theme'
@@ -247,7 +246,7 @@ class GenericReader
 
 
 	def highlightLinkedVerses verseNumber, endverse
-		if isIOS or !window.getSelection
+		if !window.getSelection
 			return
 
 		setTimeout(&, 250) do

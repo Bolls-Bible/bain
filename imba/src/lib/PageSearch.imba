@@ -103,8 +103,8 @@ class PageSearch
 			def getSearchSelectionTopOffset rect_top
 				if parallelReader.enabled
 					if window.innerWidth < 639 && parallel
-						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop + activities.IOSKeyboardHeight
-				return rect_top + chapter_articles[parallel].parentElement.scrollTop + activities.IOSKeyboardHeight
+						return rect_top + chapter_articles[parallel].parentElement.scrollTop - chapter_articles[parallel].parentElement.offsetTop
+				return rect_top + chapter_articles[parallel].parentElement.scrollTop
 
 			def getSearchSelectionLeftOffset rect_left
 				if parallelReader.enabled

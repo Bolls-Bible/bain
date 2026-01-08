@@ -1,7 +1,7 @@
 import Color from "colorjs.io"
 
 import readingHistory from './ReadingHistory'
-import { MOBILE_PLATFORM } from '../constants'
+import { hasTouchEvents } from '../constants'
 
 import { getBookName } from '../utils'
 
@@ -32,7 +32,6 @@ class Activities
 	show_add_bookmark = no
 	show_color_picker = no
 
-	IOSKeyboardHeight = 0
 	blockInScroll = null
 	scrollLockTimeout = null
 	menuIconsTransform = 0
@@ -118,7 +117,7 @@ class Activities
 
 	def toggleBooksMenu parallel
 		if booksDrawerOffset
-			if !settingsDrawerOffset && MOBILE_PLATFORM
+			if !settingsDrawerOffset && hasTouchEvents
 				return cleanUp!
 			booksDrawerOffset = 0
 		else
@@ -130,7 +129,7 @@ class Activities
 
 	def toggleSettingsMenu
 		if settingsDrawerOffset
-			if !booksDrawerOffset && MOBILE_PLATFORM
+			if !booksDrawerOffset && hasTouchEvents
 				return cleanUp!
 			settingsDrawerOffset = 0
 		else
@@ -220,12 +219,11 @@ class Activities
 		if event.detail
 			highlight_color = event.detail
 	
-	def cleanUpCopyText text\string
+	def cleanUpCopyText text\string = ''
 		let res = text.trim()
 		if !settings.verse_commentary
 			# remove <sup> tags with their content
 			res = res.replace(/<sup>.*?<\/sup>/gi, '')
-			console.log('cleanUpCopyText', res, text)
 		# Remove all HTML tags and <s> tags
 		return res.replace(/<s>\w+<\/s>/gi, '').replace(/<[^>]*>/gi, '')
 

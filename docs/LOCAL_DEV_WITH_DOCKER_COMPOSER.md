@@ -29,6 +29,7 @@ mkcert -cert-file "C:\path-to-the-project\bain\traefik\certs\local-cert.pem" -ke
 Then create .env.dev (may be empty) and run the application with
 
 ```bash
+sudo sysctl net.ipv4.ip_unprivileged_port_start=80 # only for linux to allow non-root process to bind to port 80
 make up
 ```
 
