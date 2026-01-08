@@ -54268,5 +54268,445 @@
       "chronorder": 66,
       "chapters": 22
     }
+  ],
+  "ChiSB": [
+    {
+      "bookid": 1,
+      "chronorder": 1,
+      "name": "創世紀",
+      "chapters": 50
+    },
+    {
+      "bookid": 2,
+      "chronorder": 3,
+      "name": "出谷紀",
+      "chapters": 40
+    },
+    {
+      "bookid": 3,
+      "chronorder": 4,
+      "name": "肋未紀",
+      "chapters": 27
+    },
+    {
+      "bookid": 4,
+      "chronorder": 5,
+      "name": "戶籍紀",
+      "chapters": 36
+    },
+    {
+      "bookid": 5,
+      "chronorder": 6,
+      "name": "申命紀",
+      "chapters": 34
+    },
+    {
+      "bookid": 6,
+      "chronorder": 7,
+      "name": "若蘇厄書",
+      "chapters": 24
+    },
+    {
+      "bookid": 7,
+      "chronorder": 8,
+      "name": "民長紀",
+      "chapters": 21
+    },
+    {
+      "bookid": 8,
+      "chronorder": 9,
+      "name": "盧德傳",
+      "chapters": 4
+    },
+    {
+      "bookid": 9,
+      "chronorder": 10,
+      "name": "撒慕爾紀上",
+      "chapters": 31
+    },
+    {
+      "bookid": 10,
+      "chronorder": 11,
+      "name": "撒慕爾紀下",
+      "chapters": 24
+    },
+    {
+      "bookid": 11,
+      "chronorder": 15,
+      "name": "列王紀上",
+      "chapters": 22
+    },
+    {
+      "bookid": 12,
+      "chronorder": 28,
+      "name": "列王紀下",
+      "chapters": 25
+    },
+    {
+      "bookid": 13,
+      "chronorder": 12,
+      "name": "編年紀上",
+      "chapters": 29
+    },
+    {
+      "bookid": 14,
+      "chronorder": 16,
+      "name": "編年紀下",
+      "chapters": 36
+    },
+    {
+      "bookid": 15,
+      "chronorder": 37,
+      "name": "厄斯德拉上",
+      "chapters": 10
+    },
+    {
+      "bookid": 16,
+      "chronorder": 38,
+      "name": "厄斯德拉下",
+      "chapters": 13
+    },
+    {
+      "bookid": 17,
+      "chronorder": 36,
+      "name": "艾斯德爾傳",
+      "chapters": 10
+    },
+    {
+      "bookid": 18,
+      "chronorder": 2,
+      "name": "約伯傳",
+      "chapters": 42
+    },
+    {
+      "bookid": 19,
+      "chronorder": 13,
+      "name": "聖詠集",
+      "chapters": 150
+    },
+    {
+      "bookid": 20,
+      "chronorder": 17,
+      "name": "箴言",
+      "chapters": 31
+    },
+    {
+      "bookid": 21,
+      "chronorder": 18,
+      "name": "訓道篇",
+      "chapters": 12
+    },
+    {
+      "bookid": 22,
+      "chronorder": 14,
+      "name": "雅歌",
+      "chapters": 8
+    },
+    {
+      "bookid": 23,
+      "chronorder": 25,
+      "name": "依撒依亞",
+      "chapters": 66
+    },
+    {
+      "bookid": 24,
+      "chronorder": 29,
+      "name": "耶肋米亞",
+      "chapters": 52
+    },
+    {
+      "bookid": 25,
+      "chronorder": 30,
+      "name": "耶肋米亞哀歌",
+      "chapters": 5
+    },
+    {
+      "bookid": 26,
+      "chronorder": 32,
+      "name": "厄則克耳",
+      "chapters": 48
+    },
+    {
+      "bookid": 27,
+      "chronorder": 33,
+      "name": "達尼爾",
+      "chapters": 14
+    },
+    {
+      "bookid": 28,
+      "chronorder": 23,
+      "name": "歐瑟亞",
+      "chapters": 14
+    },
+    {
+      "bookid": 29,
+      "chronorder": 20,
+      "name": "岳厄爾",
+      "chapters": 4
+    },
+    {
+      "bookid": 30,
+      "chronorder": 21,
+      "name": "亞毛斯",
+      "chapters": 9
+    },
+    {
+      "bookid": 31,
+      "chronorder": 31,
+      "name": "亞北底亞",
+      "chapters": 1
+    },
+    {
+      "bookid": 32,
+      "chronorder": 19,
+      "name": "約納",
+      "chapters": 4
+    },
+    {
+      "bookid": 33,
+      "chronorder": 22,
+      "name": "米該亞",
+      "chapters": 7
+    },
+    {
+      "bookid": 34,
+      "chronorder": 24,
+      "name": "納鴻",
+      "chapters": 3
+    },
+    {
+      "bookid": 35,
+      "chronorder": 27,
+      "name": "哈巴谷",
+      "chapters": 3
+    },
+    {
+      "bookid": 36,
+      "chronorder": 26,
+      "name": "索福尼亞",
+      "chapters": 3
+    },
+    {
+      "bookid": 37,
+      "chronorder": 34,
+      "name": "哈蓋",
+      "chapters": 2
+    },
+    {
+      "bookid": 38,
+      "chronorder": 35,
+      "name": "匝加利亞",
+      "chapters": 14
+    },
+    {
+      "bookid": 39,
+      "chronorder": 39,
+      "name": "馬拉基亞",
+      "chapters": 3
+    },
+    {
+      "bookid": 40,
+      "chronorder": 40,
+      "name": "瑪竇福音",
+      "chapters": 28
+    },
+    {
+      "bookid": 41,
+      "chronorder": 58,
+      "name": "馬爾谷福音",
+      "chapters": 16
+    },
+    {
+      "bookid": 42,
+      "chronorder": 52,
+      "name": "路加福音",
+      "chapters": 24
+    },
+    {
+      "bookid": 43,
+      "chronorder": 66,
+      "name": "若望福音",
+      "chapters": 21
+    },
+    {
+      "bookid": 44,
+      "chronorder": 54,
+      "name": "宗徒大事錄",
+      "chapters": 28
+    },
+    {
+      "bookid": 45,
+      "chronorder": 46,
+      "name": "羅馬書",
+      "chapters": 16
+    },
+    {
+      "bookid": 46,
+      "chronorder": 44,
+      "name": "格林多前書",
+      "chapters": 16
+    },
+    {
+      "bookid": 47,
+      "chronorder": 45,
+      "name": "格林多後書",
+      "chapters": 13
+    },
+    {
+      "bookid": 48,
+      "chronorder": 41,
+      "name": "迦拉達書",
+      "chapters": 6
+    },
+    {
+      "bookid": 49,
+      "chronorder": 47,
+      "name": "厄弗所書",
+      "chapters": 6
+    },
+    {
+      "bookid": 50,
+      "chronorder": 49,
+      "name": "斐理伯書",
+      "chapters": 4
+    },
+    {
+      "bookid": 51,
+      "chronorder": 50,
+      "name": "哥羅森書",
+      "chapters": 4
+    },
+    {
+      "bookid": 52,
+      "chronorder": 42,
+      "name": "得撒洛尼前書",
+      "chapters": 5
+    },
+    {
+      "bookid": 53,
+      "chronorder": 43,
+      "name": "得撒洛尼後書",
+      "chapters": 3
+    },
+    {
+      "bookid": 54,
+      "chronorder": 55,
+      "name": "弟茂德前書",
+      "chapters": 6
+    },
+    {
+      "bookid": 55,
+      "chronorder": 59,
+      "name": "弟茂德後書",
+      "chapters": 4
+    },
+    {
+      "bookid": 56,
+      "chronorder": 57,
+      "name": "弟鐸書",
+      "chapters": 3
+    },
+    {
+      "bookid": 57,
+      "chronorder": 51,
+      "name": "費肋孟書",
+      "chapters": 1
+    },
+    {
+      "bookid": 58,
+      "chronorder": 53,
+      "name": "希伯來書",
+      "chapters": 13
+    },
+    {
+      "bookid": 59,
+      "chronorder": 48,
+      "name": "雅各伯書",
+      "chapters": 5
+    },
+    {
+      "bookid": 60,
+      "chronorder": 56,
+      "name": "伯多祿前書",
+      "chapters": 5
+    },
+    {
+      "bookid": 61,
+      "chronorder": 60,
+      "name": "伯多祿後書",
+      "chapters": 3
+    },
+    {
+      "bookid": 62,
+      "chronorder": 61,
+      "name": "若望一書",
+      "chapters": 5
+    },
+    {
+      "bookid": 63,
+      "chronorder": 62,
+      "name": "若望二書",
+      "chapters": 1
+    },
+    {
+      "bookid": 64,
+      "chronorder": 63,
+      "name": "若望三書",
+      "chapters": 1
+    },
+    {
+      "bookid": 65,
+      "chronorder": 64,
+      "name": "猶達書",
+      "chapters": 1
+    },
+    {
+      "bookid": 66,
+      "chronorder": 65,
+      "name": "默示錄",
+      "chapters": 22
+    },
+    {
+      "bookid": 68,
+      "chronorder": 68,
+      "name": "多俾亞傳",
+      "chapters": 14
+    },
+    {
+      "bookid": 69,
+      "chronorder": 69,
+      "name": "友弟德傳",
+      "chapters": 16
+    },
+    {
+      "bookid": 70,
+      "chronorder": 70,
+      "name": "智慧篇",
+      "chapters": 19
+    },
+    {
+      "bookid": 71,
+      "chronorder": 71,
+      "name": "德訓篇",
+      "chapters": 51
+    },
+    {
+      "bookid": 73,
+      "chronorder": 73,
+      "name": "巴路克",
+      "chapters": 6
+    },
+    {
+      "bookid": 74,
+      "chronorder": 74,
+      "name": "馬加伯上",
+      "chapters": 16
+    },
+    {
+      "bookid": 75,
+      "chronorder": 75,
+      "name": "馬加伯下",
+      "chapters": 15
+    }
   ]
 }
