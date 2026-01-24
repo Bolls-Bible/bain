@@ -67,7 +67,7 @@ class Activities
 			activeModal = ''
 			return
 
-		if (activeModal and not onPopState) or selectedVerses.length > 0
+		if (activeModal or selectedVerses.length > 0) and not onPopState
 			window.history.back()
 
 		show_accents = no

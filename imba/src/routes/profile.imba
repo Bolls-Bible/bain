@@ -355,7 +355,7 @@ tag profile
 						<svg src=UserCog aria-hidden=yes>
 
 					if popups['account_actions']
-						<.popup-menu [y@off:-2rem o@off:0 r:.5rem] ease>
+						<.popup-menu [y@off:-1rem o@off:0 r:.5rem] ease>
 							<button @click=showEditForm> t.edit_account
 							if user.is_password_usable
 								<button @click.prevent=(do window.location.assign "/accounts/password_change/")> t.change_password
@@ -421,7 +421,7 @@ tag profile
 						<button @click.stop=showOptions(bookmark.date) title=t.options>
 							<svg src=EllipsisVertical aria-hidden=yes>
 						if popups[bookmark.date]
-							<.popup-menu [y@off:-2rem o@off:0] ease>
+							<.popup-menu [y@off:-1rem o@off:0] ease>
 								<button @click.stop=copyToClipboard(bookmark)> t.copy
 								<a route-to="/{bookmark.translation}/{bookmark.book}/{bookmark.chapter}/{bookmark.verse[0]}/"> t.open
 								<button @click.stop=deleteBookmark(bookmark)> t.delete

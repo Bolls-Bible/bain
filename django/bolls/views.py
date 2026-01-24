@@ -160,7 +160,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
             if match_case:
                 query_set.append('Q(translation="' + translation + '", text__contains=' + json.dumps(word) + ")")
             else:
-                query_set.append('Q(translation="' + translation + '", text__icontains=' + json.dumps(word) + ")")
+                query_set.append('Q(translation="' + translation + '", text__search=' + json.dumps(word) + ")")
         if book:
             if is_number(book):
                 query_set.append('Q(book="' + book + '")')

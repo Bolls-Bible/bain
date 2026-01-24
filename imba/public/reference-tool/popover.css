@@ -2,7 +2,7 @@ a.bibleref {
   position: relative;
 }
 .bg_popup {
-  position: absolute;
+  position: fixed;
   z-index: 9999999;
   font-family: sans-serif;
   font-style: normal;

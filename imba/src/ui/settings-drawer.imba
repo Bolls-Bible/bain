@@ -85,7 +85,7 @@ tag settings-drawer < aside
 				<svg src=SunMoon aria-hidden=true>
 				t.theme
 				if activities.show_themes
-					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+					<.popup-menu [l:0 y@off:-1rem o@off:0] ease>
 						<button[fw:900 bgc:black c:white bdr:2rem solid white]
 							@click=(theme.theme = 'black')> 'Black'
 						<button[fw:900 bgc:#00061A c:#B29595 bdr:2rem solid #B29595]
@@ -140,7 +140,7 @@ tag settings-drawer < aside
 				<span.font-icon aria-hidden=true> "B"
 				theme.fontName
 				if activities.show_fonts
-					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+					<.popup-menu [l:0 y@off:-1rem o@off:0] ease>
 						for font in theme.fonts
 							<button[ff: {font.code}] .active-butt=font.name==theme.fontName @click=theme.setFontFamily(font)> font.name
 						if theme.localFonts.size
@@ -150,7 +150,7 @@ tag settings-drawer < aside
 				<svg src=Languages aria-hidden=true>
 				currentLanguage
 				if activities.show_languages
-					<.popup-menu [l:0 y@off:-2rem o@off:0] ease>
+					<.popup-menu [l:0 y@off:-1rem o@off:0] ease>
 						<button .active-butt=('ukr'==language) @click=(language = 'ukr')> "Українська"
 						<button .active-butt=('eng'==language) @click=(language = 'eng')> "English"
 						<button .active-butt=('de'==language) @click=(language = 'de')> "Deutsch"
@@ -245,8 +245,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 
 			<p>
-				"v3.1.31 | "
-				<time dateTime='2026-1-10'> "10.1.2026"
+				"v3.1.32 | "
+				<time dateTime='2026-1-25'> "25.1.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"

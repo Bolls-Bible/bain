@@ -4,7 +4,7 @@ importScripts("/sw/jszip.min.js");
 importScripts("/sw/dexie.min.js");
 importScripts("/sw/scripts.js");
 
-const CACHE_NAME = "v3.1.31";
+const CACHE_NAME = "v3.1.32";
 const STATICS_CACHE = "statics-v1.0.17";
 const TEXTS_CACHE = "texts-v1.0.9";
 
@@ -21,7 +21,7 @@ self.addEventListener("install", (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       console.log("👷 Opened cache ", CACHE_NAME);
       return cache.addAll(urlsToCache);
-    })
+    }),
   );
 });
 
@@ -103,7 +103,7 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => {
           return caches.match("/");
-        })
+        }),
     );
   }
 });
@@ -119,12 +119,12 @@ self.addEventListener("activate", (event) => {
             if (!expectedCaches.includes(key)) {
               return caches.delete(key);
             }
-          })
-        )
+          }),
+        ),
       )
       .then(() => {
         console.log("👷 activated!", CACHE_NAME);
         return self.clients.claim();
-      })
+      }),
   );
 });

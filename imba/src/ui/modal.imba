@@ -229,7 +229,7 @@ tag modal < section
 								<button @click=(do activities.show_comparison_options = !activities.show_comparison_options) title=t.compare>
 									<svg src=ListPlus aria-hidden=yes>
 								if activities.show_comparison_options
-									<.popup-menu [t:0 y@off:-2rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
+									<.popup-menu [t:0 y@off:-1rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
 										<header[d:flex bg:$bgc pos:sticky t:0 padding-inline-end:0.5rem]>
 											<input bind=compare.search placeholder=t.search>
 											<button[p:0] title=t.close @click=(activities.show_comparison_options = no)>
@@ -414,7 +414,7 @@ tag modal < section
 								dictionary.currentDictionary
 								<svg src=ChevronDown aria-hidden=yes [transform:rotateX(180deg)]=activities.show_dictionaries>
 							if activities.show_dictionaries
-								<.popup-menu [l:0 t:100% y@off:-2rem o@off:0] ease>
+								<.popup-menu [l:0 t:100% y@off:-1rem o@off:0] ease>
 									for entry in dictionary.dictionaries
 										<button .active-butt=(dictionary.currentDictionary==entry.abbr) @click=(do
 												dictionary.currentDictionary = entry.abbr
@@ -570,7 +570,7 @@ tag modal < section
 
 							<input id="generalsearch"
 								[direction:{textDirection(search.query)}]
-								minLength=3 type='text' placeholder=(t.bible_search + ', ' + reader.translation) aria-label=t.bible_search
+								minLength=3 type='text' placeholder=(t.bible_search + ', ' + search.translation) aria-label=t.bible_search
 								bind=search.query @keydown.enter=search.run>
 
 							if search.suggestions.books..length or search.suggestions.translations..length
@@ -598,6 +598,19 @@ tag modal < section
 												@keydown.enter=openTranslationInParallel(translation.short_name) title=t.open_in_parallel>
 												<svg src=SquareSplitHorizontal aria-hidden=yes>
 
+							<button.focusable[d:hcc w:auto] @click=(do #showTranslationMenu = !#showTranslationMenu) @keydown.enter=(do #showTranslationMenu = !#showTranslationMenu) title=t.change_translation>
+								search.translation
+								<svg[s:1rem fill:$muted] src=ICONS.CARET_DOWN aria-hidden=true>
+
+								if #showTranslationMenu
+									<ul.suggestions.focusable>
+										for translation in translations
+											<li.li @click=(do search.translation = translation.short_name)>
+												translation.short_name
+												', '
+													translation.full_name
+
+
 							if window.navigator.onLine
 								<button.focusable title=t.match_case [o:0.5]=!search.match_case @click=(search.match_case = !search.match_case)>
 									<svg src=CaseSensitive aria-hidden=yes>
@@ -615,7 +628,7 @@ tag modal < section
 										<svg src=Filter aria-hidden=yes>
 
 									if activities.show_filters
-										<.popup-menu [t:0 y@off:-2rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
+										<.popup-menu [t:0 y@off:-1rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
 											<header[d:hcs bg:$bgc p:0 .5rem pos:sticky t:-.5rem zi:24]>
 												<p[ws:nowrap mr:.5rem fs:0.8em fw:bold]> t.addFilter
 												<button[c@hover:red4] @click=(activities.show_filters = no) title=t.close>
@@ -673,7 +686,7 @@ tag modal < section
 			d:hcc
 			g:0.5rem
 
-			button, a
+			& > button, a
 				bgc:transparent c:inherit @hover:$acc-hover
 				min-width:2rem w:2rem cursor:pointer
 				d:flex fls:0
@@ -690,7 +703,7 @@ tag modal < section
 
 			input
 				w:100% bg:transparent font:inherit c:inherit
-				p:0 0.5em fs:1.2em min-width:8rem
+				p:0 0.5em 0 0 fs:1.2em min-width:8rem
 				bd:none bdb@invalid:1px solid $acc-bgc bxs:none
 				lh:2rem
 
@@ -739,6 +752,7 @@ tag modal < section
 
 			li
 				d:hcs
+				c@hover:$acc
 
 		#search-header@focin
 			.suggestions

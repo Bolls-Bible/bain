@@ -285,7 +285,6 @@ class Theme
 			return
 		customTheme.applyCustomTheme!
 		theme = 'custom'
-		activities.cleanUp!
 
 
 const theme = new Theme()

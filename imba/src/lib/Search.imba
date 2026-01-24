@@ -23,6 +23,7 @@ class Search
 	page\number = 1
 	total = 0
 	pageSize = 128
+	translation = reader.translation
 
 	@autorun
 	def saveMatchCase
@@ -135,7 +136,9 @@ class Search
 		currentQuery = ''
 		loading = yes
 
-		const url = '/v2/find/' + reader.translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page + '&limit=' + pageSize
+		console.log('Running search for', query, 'in', translation)
+
+		const url = '/v2/find/' + translation + '?search=' + window.encodeURIComponent(query) + '&match_case=' + match_case + '&match_whole=' + match_whole + '&book=' + filter + '&page=' + page + '&limit=' + pageSize
 
 		results = []
 		total = 0
@@ -146,8 +149,8 @@ class Search
 			total = res["total"]
 		catch error
 			console.error error
-			if vault.downloaded_translations.indexOf(reader.translation) != -1
-				let result = await vault.search(reader.translation + '/' + query.toLowerCase() + '?book=' + filter + '&page=' + page)
+			if vault.downloaded_translations.indexOf(translation) != -1
+				let result = await vault.search(translation + '/' + query.toLowerCase() + '?book=' + filter + '&page=' + page)
 				results = result.data
 				total = result.total
 				exactMatchesCount = result.exact_matches

@@ -76,23 +76,35 @@ class ReferenceTagging {
 
   static setTooltipStyle(tooltip, anchor) {
     const boundingRect = anchor.getBoundingClientRect();
+    const tooltipHeight = 200; // Approximate or initial height
+
+    // Vertical positioning
     if (boundingRect.top > window.innerHeight / 2) {
-      tooltip.style.bottom = "100%";
-      tooltip.style.top = "unset";
+      // Show above the anchor
+      tooltip.style.top = `${boundingRect.top - tooltipHeight}px`; // Provide initial placement, though dynamic height might adjust
+      tooltip.style.bottom = `${window.innerHeight - boundingRect.top}px`;
+      tooltip.style.top = "auto";
     } else {
-      tooltip.style.top = "100%";
-      tooltip.style.bottom = "unset";
+      // Show below the anchor
+      tooltip.style.top = `${boundingRect.bottom}px`;
+      tooltip.style.bottom = "auto";
     }
-    if (
-      boundingRect.left > window.innerWidth / 2 ||
-      boundingRect.right > window.innerWidth / 2
-    ) {
-      tooltip.style.right = "0px";
-      tooltip.style.left = "unset";
+
+    // Horizontal positioning
+    if (boundingRect.left > window.innerWidth / 2) {
+      // Align right edge with anchor right edge if on the right side of screen
+      // Or simply keep it within bounds. Let's try aligning to the right of the anchor.
+      tooltip.style.left = "auto";
+      tooltip.style.right = `${window.innerWidth - boundingRect.right}px`;
     } else {
-      tooltip.style.left = "0px";
-      tooltip.style.right = "unset";
+      // Align left
+      tooltip.style.left = `${boundingRect.left}px`;
+      tooltip.style.right = "auto";
     }
+
+    // Since it's fixed, we need to ensure z-index is high
+    tooltip.style.position = "fixed";
+    tooltip.style.zIndex = "10000";
   }
 
   static getTooltip(reference, link) {
@@ -118,12 +130,12 @@ class ReferenceTagging {
       ReferenceTagging.addListener(
         tooltip,
         "mouseover",
-        ReferenceTagging.tooltipMouseover
+        ReferenceTagging.tooltipMouseover,
       );
       ReferenceTagging.addListener(
         tooltip,
         "mouseout",
-        ReferenceTagging.tooltipMouseout
+        ReferenceTagging.tooltipMouseout,
       );
     }
 
@@ -132,7 +144,7 @@ class ReferenceTagging {
     remote_passage.src = `${ReferenceTagging.host}/api/tag-tool-reference${reference}/?callback=ReferenceTagging.updateTooltip`;
     remote_passage.id = `bg_remote_passage_script-${reference.replace(
       /(?:%20)|\+|[^\x00-\x80]/g,
-      ""
+      "",
     )}`;
     remote_passage.id = remote_passage.id.replace(/:/g, "_");
     remote_passage.id = remote_passage.id.replace(/ /g, "");
@@ -240,18 +252,18 @@ class ReferenceTagging {
             ReferenceTagging.addListener(
               link,
               "mouseover",
-              ReferenceTagging.linkMouseover
+              ReferenceTagging.linkMouseover,
             );
             ReferenceTagging.addListener(
               link,
               "mouseout",
-              ReferenceTagging.linkMouseout
+              ReferenceTagging.linkMouseout,
             );
           } else {
             ReferenceTagging.addListener(
               link,
               "click",
-              ReferenceTagging.toggleTooltip
+              ReferenceTagging.toggleTooltip,
             );
           }
         }
@@ -321,7 +333,7 @@ class ReferenceTagging {
     const text = node.nodeValue;
     const before_text = text.substr(0, text.indexOf(verse_match[0]));
     const after_text = text.substr(
-      text.indexOf(verse_match[0]) + verse_match[0].length
+      text.indexOf(verse_match[0]) + verse_match[0].length,
     );
     if (before_text.length > 0) {
       newTxtNode = document.createTextNode(before_text);
@@ -368,7 +380,7 @@ class ReferenceTagging {
       node.parentNode.removeChild(node);
       inserted_nodes = ReferenceTagging.searchNode(
         newTxtNode,
-        inserted_nodes + 1
+        inserted_nodes + 1,
       );
     } else {
       node.parentNode.removeChild(node);
@@ -384,7 +396,7 @@ class ReferenceTagging {
 
     let reference_display = tooltip_content.reference_display.replace(
       /%20/g,
-      " "
+      " ",
     );
     if (tooltip_content.text === undefined) {
       if (tooltip.text === undefined) {
@@ -406,7 +418,7 @@ class ReferenceTagging {
         ReferenceTagging.addListener(
           divs[i],
           "click",
-          ReferenceTagging.hideAllTooltips
+          ReferenceTagging.hideAllTooltips,
         );
       }
     }

@@ -124,7 +124,7 @@ tag books-drawer < nav
 					<svg src=Download role="button" @click=activities.toggleDownloads aria-label=t.download>
 			
 		if unfoldTranslationsList
-			<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-2rem] ease>
+			<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-1rem] ease>
 				if settings.favoriteTranslations.length
 					<[d:flex flw:wrap ai:center p:0.5rem]>
 						<svg src=Heart [size:1em stroke:$c fill:currentColor]>
@@ -149,7 +149,7 @@ tag books-drawer < nav
 								if vault.downloaded_translations.length == 0 && !window.navigator.onLine
 									<p.li> t["no_translation_downloaded"]
 		else
-			<ul[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-2rem] ease>
+			<ul[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-1rem] ease>
 				for book, index in books
 					<li key=book.bookid>
 						<p.li dir="auto" .active=(book.bookid == activeBook) @click=(unfoldedBook = book.bookid)> book.name

@@ -13,6 +13,8 @@ import SlidersHorizontal from 'lucide-static/icons/sliders-horizontal.svg'
 
 import * as ICONS from 'imba-phosphor-icons'
 
+let lastPopStateTime = 0;
+
 tag reader
 	initialTouch = null
 	inTouchZone = no
@@ -21,6 +23,10 @@ tag reader
 	def onPopState event
 		if event.target.hash
 			return
+		const currentTime = Date.now();
+		if (currentTime - lastPopStateTime) < 300
+			return
+		lastPopStateTime = currentTime;
 		activities.cleanUp { onPopState: yes }
 
 	def onSelectionChange
