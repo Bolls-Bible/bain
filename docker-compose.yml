@@ -14,7 +14,7 @@ services:
     labels:
       - "traefik.enable=false"
     volumes:
-    - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     networks:
       - internal
 
@@ -102,6 +102,16 @@ services:
       - "traefik.http.routers.nginx-router.rule=Host(`bolls.local`)"
       # - "traefik.http.routers.nginx-router.service=whoami1_service"
       - "traefik.http.services.nginx-router.loadbalancer.server.port=80"
+
+      # Rate limited router for specific paths
+      - "traefik.http.routers.nginx-router-limited.rule=Host(`bolls.local`) && PathRegexp(`^(/api|/get-*|/search/|/find/|/v2/|/dictionary-definition/|/dictionary-definition/)`)"
+      - "traefik.http.routers.nginx-router-limited.service=nginx-router"
+      - "traefik.http.routers.nginx-router-limited.tls=true"
+      - "traefik.http.routers.nginx-router-limited.middlewares=nginx-rate-limit"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.average=256"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.burst=128"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.period=1m"
+
       # - "traefik.http.routers.nginx-router.tls.certresolver=myresolver"
       # - "traefik.webservice.frontend.entryPoints=http"
 
