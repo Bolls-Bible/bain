@@ -88,6 +88,19 @@ services:
       - "traefik.http.routers.WEBSITE_ROUTER.rule=Host(`NGINX_DOMAIN_NAME`)"
       - "traefik.http.routers.WEBSITE_ROUTER.tls.certresolver=myresolver"
       - "traefik.webservice.frontend.entryPoints=http,https"
+      - "traefik.http.services.nginx-router.loadbalancer.server.port=80"
+
+      # Rate limited router for specific paths
+      - "traefik.http.routers.WEBSITE_ROUTER-limited.rule=Host(`NGINX_DOMAIN_NAME`) && PathRegexp(`^(/api|/get-*|/search/|/find/|/v2/|/dictionary-definition/|/dictionary-definition/)`)"
+      - "traefik.http.routers.WEBSITE_ROUTER-limited.service=WEBSITE_ROUTER"
+      - "traefik.http.routers.WEBSITE_ROUTER-limited.tls=true"
+      - "traefik.http.routers.WEBSITE_ROUTER-limited.tls.certresolver=myresolver"
+      - "traefik.http.routers.WEBSITE_ROUTER-limited.middlewares=nginx-rate-limit"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.average=256"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.burst=128"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.period=1m"
+      - "traefik.http.middlewares.nginx-rate-limit.ratelimit.sourceCriterion.requestHeaderName=User-Agent"
+
     volumes:
       - STATIC_VOLUME_NAME:/home/bolls/web/static
       - IMBA_VOLUME_NAME:/imba

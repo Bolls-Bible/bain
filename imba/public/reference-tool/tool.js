@@ -125,7 +125,7 @@ class ReferenceTagging {
     tooltip.style.display = "block";
     ReferenceTagging.addCloseButton(tooltip);
 
-    tooltip = link.appendChild(tooltip);
+    tooltip = document.body.appendChild(tooltip);
     if (ReferenceTagging.clickTooltip !== true) {
       ReferenceTagging.addListener(
         tooltip,
