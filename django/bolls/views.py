@@ -133,7 +133,7 @@ def get_chapter_with_comments(_, translation, book, chapter):
 
 def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     d = []
-    results_of_search = []
+    search_results = []
     if match_whole:
         linear_search_params = {
             "translation": translation,
@@ -145,14 +145,14 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
             else:
                 if book == "ot":
                     linear_search_params["book__lt"] = 40
-                else:
+                if book == "nt":
                     linear_search_params["book__gte"] = 40
 
         if match_case:
             linear_search_params["text__contains"] = piece
         else:
             linear_search_params["text__icontains"] = piece
-        results_of_search = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
+        search_results = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
     else:
         query_set = []
 
@@ -167,7 +167,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
             else:
                 if book == "ot":
                     query_set.append("Q(book__lt=40)")
-                else:
+                if book == "nt":
                     query_set.append("Q(book__gte=40)")
 
         query = " & ".join(query_set)
@@ -175,9 +175,6 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
         results_of_exec_search = Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse")
 
         if len(results_of_exec_search) < 24:
-            vector = SearchVector("text")
-            query = SearchQuery(piece)
-
             search_params = {
                 "translation": translation,
             }
@@ -187,25 +184,27 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
                 else:
                     if book == "ot":
                         search_params["book__lt"] = 40
-                    else:
+                    if book == "nt":
                         search_params["book__gte"] = 40
 
-            results_of_rank = Verses.objects.annotate(rank=SearchRank(vector, query)).filter(**search_params, rank__gt=(0.05)).order_by("-rank")
+            results_of_rank = (
+                Verses.objects.annotate(rank=SearchRank("text", SearchQuery(piece))).filter(**search_params, rank__gt=(0.1)).order_by("-rank")
+            )
 
-            results_of_search = []
+            search_results = []
             if len(results_of_rank) < 24:
                 results_of_similarity = (
-                    Verses.objects.annotate(rank=TrigramWordSimilarity(piece, "text")).filter(**search_params, rank__gt=0.5).order_by("-rank")
+                    Verses.objects.annotate(rank=TrigramWordSimilarity(piece, "text")).filter(**search_params, rank__gt=0.7).order_by("-rank")
                 )
 
-                results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
+                search_results = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
 
-            results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+            search_results.sort(key=lambda verse: verse.rank, reverse=True)
 
             if len(results_of_exec_search) > 0:
-                results_of_search = list(results_of_exec_search) + list(set(results_of_search) - set(results_of_exec_search))
+                search_results = list(results_of_exec_search) + list(set(search_results) - set(results_of_exec_search))
         else:
-            results_of_search = results_of_exec_search
+            search_results = results_of_exec_search
 
     def highlight_headline(text):
         highlighted_text = text
@@ -224,10 +223,10 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
 
     # count number of all exact matches
     exact_matches = 0
-    for obj in results_of_search:
+    for obj in search_results:
         exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
-    for obj in results_of_search[(page * limit - limit) : (page * limit)]:
+    for obj in search_results[(page * limit - limit) : (page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -241,7 +240,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     return {
         "results": d,
         "exact_matches": exact_matches,
-        "total": len(results_of_search),
+        "total": len(search_results),
     }
 
 
@@ -839,8 +838,8 @@ def dictionary_search(request, dict, query):
     )
 
     # Merge both kinds of search
-    results_of_search = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
-    results_of_search.sort(key=lambda verse: verse.rank, reverse=True)
+    search_results = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
+    search_results.sort(key=lambda verse: verse.rank, reverse=True)
 
     # for farther refactoring of inner Bible links
     translation = ""
@@ -851,7 +850,7 @@ def dictionary_search(request, dict, query):
 
     # Serialize final data
     d = []
-    for result in results_of_search:
+    for result in search_results:
         serialized_result = {
             "topic": result.topic,
             "definition": parse_links(result.definition, translation),

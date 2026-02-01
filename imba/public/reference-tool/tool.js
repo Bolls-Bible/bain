@@ -19,11 +19,14 @@ class ReferenceTagging {
   static showTimer = 0;
   static hideTimer = 0;
 
+  static mousePos = { x: 0, y: 0 };
+
   version = "1.0.0";
 
   static init() {
     if (ReferenceTagging.showTooltips) {
       document.addEventListener("onclick", ReferenceTagging.hideAllTooltips);
+      document.addEventListener("mousemove", ReferenceTagging.trackMouse);
     }
   }
 
@@ -32,6 +35,11 @@ class ReferenceTagging {
     for (let i = 0; i < divs.length; i++) {
       divs[i].style.display = "none";
     }
+  }
+
+  static trackMouse(e) {
+    ReferenceTagging.mousePos.x = e.pageX;
+    ReferenceTagging.mousePos.y = e.pageY;
   }
 
   static tooltipMouseover(e) {
@@ -52,8 +60,7 @@ class ReferenceTagging {
       return;
   }
 
-  static tooltipMouseout(e) {
-    let relNode = e.relatedTarget || e.toElement;
+  static parentIsBGPopup(relNode) {
     while (
       relNode &&
       relNode != null &&
@@ -63,42 +70,44 @@ class ReferenceTagging {
     ) {
       relNode = relNode.parentNode;
     }
-    if (
-      relNode?.className &&
-      relNode.className.indexOf("bg_popup-outer") !== -1
-    )
-      return;
+    return (
+      relNode?.className && relNode.className.indexOf("bg_popup-outer") !== -1
+    );
+  }
+
+  static tooltipMouseout(e) {
+    let relNode = e.relatedTarget || e.toElement;
     window.clearTimeout(ReferenceTagging.hideTimer);
+    if (ReferenceTagging.parentIsBGPopup(relNode)) return;
     ReferenceTagging.hideTimer = window.setTimeout(() => {
-      ReferenceTagging.hideAllTooltips(e);
+      ReferenceTagging.hideAllTooltips();
     }, ReferenceTagging.delay);
   }
 
   static setTooltipStyle(tooltip, anchor) {
-    const boundingRect = anchor.getBoundingClientRect();
-    const tooltipHeight = 200; // Approximate or initial height
+    const x = ReferenceTagging.mousePos.x;
+    const y = ReferenceTagging.mousePos.y;
+    // const tooltipHeight = 200; // Approximate or initial height
 
     // Vertical positioning
-    if (boundingRect.top > window.innerHeight / 2) {
-      // Show above the anchor
-      tooltip.style.top = `${boundingRect.top - tooltipHeight}px`; // Provide initial placement, though dynamic height might adjust
-      tooltip.style.bottom = `${window.innerHeight - boundingRect.top}px`;
+    if (y > window.innerHeight / 2 + window.scrollY) {
+      // Show above the mouse
+      tooltip.style.bottom = `${window.innerHeight - (y - window.scrollY)}px`;
       tooltip.style.top = "auto";
     } else {
-      // Show below the anchor
-      tooltip.style.top = `${boundingRect.bottom}px`;
+      // Show below the mouse
+      tooltip.style.top = `${y - window.scrollY + 10}px`; // +10 for some offset
       tooltip.style.bottom = "auto";
     }
 
     // Horizontal positioning
-    if (boundingRect.left > window.innerWidth / 2) {
-      // Align right edge with anchor right edge if on the right side of screen
-      // Or simply keep it within bounds. Let's try aligning to the right of the anchor.
+    if (x > window.innerWidth / 2 + window.scrollX) {
+      // Align right edge near mouse
       tooltip.style.left = "auto";
-      tooltip.style.right = `${window.innerWidth - boundingRect.right}px`;
+      tooltip.style.right = `${window.innerWidth - (x - window.scrollX)}px`;
     } else {
-      // Align left
-      tooltip.style.left = `${boundingRect.left}px`;
+      // Align left near mouse
+      tooltip.style.left = `${x - window.scrollX}px`;
       tooltip.style.right = "auto";
     }
 
@@ -222,6 +231,8 @@ class ReferenceTagging {
   }
 
   static hideTooltip(e) {
+    let relNode = e.relatedTarget || e.toElement;
+    if (ReferenceTagging.parentIsBGPopup(relNode)) return;
     const link = e.target || e.srcElement;
     let reference;
     const bibleref = link.getAttribute("data-bibleref");

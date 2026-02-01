@@ -423,7 +423,10 @@ tag modal < section
 
 						if window.navigator.onLine
 							<button.option-box.checkbox-parent [fs:0.85em mr:auto ws:pre padding-block:0.5rem]
-								@click=(do settings.extended_dictionary_search = !settings.extended_dictionary_search) .checkbox-turned=settings.extended_dictionary_search>
+								@click=(do
+										settings.extended_dictionary_search = !settings.extended_dictionary_search
+										dictionary.loadDefinitions!)
+									.checkbox-turned=settings.extended_dictionary_search>
 								<span[ml:auto]> t.extended_search
 								<.checkbox [margin-inline:1.5rem .5rem]> <span>
 						if !dictionary.loading && dictionary.history.length

@@ -2,7 +2,7 @@
 services:
   database:
     image: postgres:15-alpine
-    # image: pgvector/pgvector:pg17
+    # image: pgvector/pgvector:pg18
     restart: on-failure
     container_name: database
     environment:

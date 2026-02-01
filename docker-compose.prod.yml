@@ -94,7 +94,6 @@ services:
       - "traefik.http.routers.WEBSITE_ROUTER-limited.rule=Host(`NGINX_DOMAIN_NAME`) && PathRegexp(`^(/api|/get-*|/search/|/find/|/v2/|/dictionary-definition/|/dictionary-definition/)`)"
       - "traefik.http.routers.WEBSITE_ROUTER-limited.service=WEBSITE_ROUTER"
       - "traefik.http.routers.WEBSITE_ROUTER-limited.tls=true"
-      - "traefik.http.routers.WEBSITE_ROUTER-limited.tls.certresolver=myresolver"
       - "traefik.http.routers.WEBSITE_ROUTER-limited.middlewares=nginx-rate-limit"
       - "traefik.http.middlewares.nginx-rate-limit.ratelimit.average=256"
       - "traefik.http.middlewares.nginx-rate-limit.ratelimit.burst=128"
