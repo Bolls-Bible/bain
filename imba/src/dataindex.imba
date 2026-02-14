@@ -1,7 +1,7 @@
 import languages from './data/languages.json'
 import ALL_BOOKS from './data/translations_books.json'
 
-export const translations = languages.flatMap(do(language) return language.translations)
+export const translations = languages.flatMap(do(language) return language.translations.map(do(translation) return { ...translation, language: language.language }))
 
 export const RTLTranslations = languages.flatMap(do(language)
 	return language.translations.reduce(&, []) do(accumulator, translation)

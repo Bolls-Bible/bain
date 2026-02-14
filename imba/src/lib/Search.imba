@@ -48,7 +48,7 @@ class Search
 		let suggested_translations = []
 		if query.length > 2
 			for translation in translations
-				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase!
+				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase! or query in translation.language.toLowerCase!
 					suggested_translations.push(translation)
 		return suggested_translations
 

@@ -407,7 +407,7 @@ for (const book of ylt) {
     return el.bookid === book.bookid;
   });
   if (new_book) {
-    new_book.chronorzder = book.chronorder;
+    new_book.chronorder = book.chronorder;
   }
 }
 

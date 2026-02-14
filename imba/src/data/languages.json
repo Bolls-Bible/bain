@@ -523,6 +523,21 @@
     ]
   },
   {
+    "language": "Kannada ಕನ್ನಡ",
+    "translations": [
+      {
+        "short_name": "KNCL",
+        "full_name": "ಕನ್ನಡ ಸತ್ಯವೇದವು C.L. (BSI)",
+        "updated": 1771102752252
+      },
+      {
+        "short_name": "ERVKN",
+        "full_name": "ಕ್ರೈಸ್ತರ ಧರ್ಮಗ್ರಂಥ, Kannada Bible: Easy-to-Read Version, 2007",
+        "updated": 1771102752252
+      }
+    ]
+  },
+  {
     "language": "Malayalam മലയാളം",
     "translations": [
       {
