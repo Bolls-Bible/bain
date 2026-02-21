@@ -68,6 +68,12 @@
     "language": "Arabic العربية",
     "translations": [
       {
+        "full_name": "كتاب الحياة",
+        "short_name": "NAV",
+        "updated": 1771704695932,
+        "dir": "rtl"
+      },
+      {
         "full_name": "Smith and Van Dyke",
         "short_name": "SVD",
         "updated": 1671955360023,

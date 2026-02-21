@@ -48,11 +48,11 @@ class ParallelReader < GenericReader
 			reader.chapter = chapter
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay: 2ms)
+	@autorun(delay: 4ms)
 	def fetchVerses
-		unless theChapterExistInThisTranslation book, chapter
+		if not theChapterExistInThisTranslation(book, chapter) or not enabled
 			return
-		
+
 		loading = yes
 		verses = []
 		imba.commit!

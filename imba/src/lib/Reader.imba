@@ -53,9 +53,8 @@ class Reader < GenericReader
 			parallelReader.chapter = chapter
 
 	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay: 2ms)
+	@autorun(delay: 4ms)
 	def fetchVerses
-		console.log("Fetching verses for {translation} {book}:{chapter}")
 		unless theChapterExistInThisTranslation book, chapter
 			return
 		

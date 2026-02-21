@@ -62,6 +62,8 @@ class Localization
 					setDefaultTranslation 'NJB'
 				when 'kn'
 					setDefaultTranslation 'KNCL'
+				when 'ar'
+					setDefaultTranslation 'NAV'
 				else
 					#language = 'eng'
 					document.documentElement.lang = "en"
