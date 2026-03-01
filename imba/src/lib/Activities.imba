@@ -67,7 +67,7 @@ class Activities
 			activeModal = ''
 			return
 
-		if (activeModal or selectedVerses.length > 0) and not onPopState
+		if (activeModal or (selectedVerses.length > 0 && selectedParallel === reader.me)) and not onPopState
 			window.history.back()
 
 		show_accents = no

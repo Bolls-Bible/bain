@@ -392,7 +392,7 @@ tag profile
 						bcb:$acc-hover
 
 				<button .active-tab=tab==0 @click=getProfileBookmarks()> t.all
-				<button .active-tab=tab==1 @click=getSearchedBookmarks('')> t.collections
+				<button .active-tab=tab==1 @click=getSearchedBookmarks('')> t.tags
 				<button .active-tab=tab==2 @click=getBookmarksWithNotes> t.notes
 
 		if tab == 1

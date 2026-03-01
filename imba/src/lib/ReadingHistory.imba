@@ -17,20 +17,30 @@ class ReadingHistory
 		else
 			deleteValue('history')
 
-	@autorun(delay:2s) def saveHistoryToServer
-		if user.username && window.navigator.onLine
-			try
-				API.put('/history/', {
-					history: JSON.stringify(history),
-				})
-			catch error
-				console.warn(error)
+	@autorun(delay:500ms) def saveHistoryToServer
+		if !user.username || !window.navigator.onLine
+			return
+
+		try
+			const cloudData = await API.requestJson('/v2/history/', "PUT", {
+				history: JSON.stringify(history),
+			})
+			if cloudData.compare_translations..length
+				compare.translations = JSON.parse(cloudData.compare_translations) || cloudData.compare_translations
+
+			if cloudData.favorite_translations
+				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || cloudData.favorite_translations
+
+			if cloudData.history
+				history = JSON.parse(cloudData.history) || history
+		catch error
+			console.warn(error)
 
 	@action def clear
 		history = []
 		if user.username && window.navigator.onLine
 			try
-				await API.delete('/history/')
+				await API.delete('/v2/history/')
 			catch error
 				console.warn(error)
 				notifications.push('error')
@@ -40,14 +50,12 @@ class ReadingHistory
 			#omitInit = yes
 			return
 
-		await syncHistory!
-
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
 
 		history.sort(do(a, b) return b.date - a.date)
-		
+
 		history.unshift({
 			translation: translation,
 			book: book,
@@ -55,6 +63,7 @@ class ReadingHistory
 			verse: verse,
 			date: Date.now!
 		})
+
 		# Remove items exceeding limit to avoid UI lag
 		if history.length > 256
 			history.length = 256
@@ -71,17 +80,8 @@ class ReadingHistory
 			if cloudData.favorite_translations
 				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || []
 
-			# Merge local history and server copy
-			const cloudHistory = JSON.parse(cloudData.history).concat(history)
-
-			# Remove duplicates
-			let unique_history = []
-			for place in cloudHistory
-				let isAlreadyIn = unique_history.find(do |element| return element.chapter == place.chapter && element.book == place.book && element.translation == place.translation)
-				if !isAlreadyIn && place.date >= cloudData.purge_date
-					unique_history.push(place)
-
-			history = unique_history
+			if cloudData.history
+				history = JSON.parse(cloudData.history) || history
 		catch error
 			console.warn('Error syncing history', error)
 

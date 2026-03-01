@@ -134,6 +134,10 @@ def get_chapter_with_comments(_, translation, book, chapter):
 def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     d = []
     search_results = []
+    # ensure page is a positive integer
+    if page < 1:
+        page = 1
+
     if match_whole:
         linear_search_params = {
             "translation": translation,
@@ -187,9 +191,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
                     if book == "nt":
                         search_params["book__gte"] = 40
 
-            results_of_rank = (
-                Verses.objects.annotate(rank=SearchRank("text", SearchQuery(piece))).filter(**search_params, rank__gt=(0.1)).order_by("-rank")
-            )
+            results_of_rank = Verses.objects.annotate(rank=SearchRank("text", SearchQuery(piece))).filter(**search_params, rank__gt=(0.1)).order_by("-rank")
 
             search_results = []
             if len(results_of_rank) < 24:
@@ -226,7 +228,7 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
     for obj in search_results:
         exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
-    for obj in search_results[(page * limit - limit) : (page * limit)]:
+    for obj in search_results[(page * limit - limit):(page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -642,6 +644,7 @@ def get_user_history(user):
         return default_response_obj
 
 
+# DEPRECATED, use history_v2 instead
 @require_http_methods(["POST", "DELETE", "PUT", "GET"])
 def history(request):
     if request.user.is_authenticated:
@@ -692,6 +695,71 @@ def history(request):
             return HttpResponse(status=405)
         else:
             return JsonResponse([], safe=False)
+
+
+@require_http_methods(["DELETE", "PUT", "GET"])
+def history_v2(request):
+    if not request.user.is_authenticated:
+        if request.method == "POST":
+            return HttpResponse(status=405)
+        else:
+            return JsonResponse([], safe=False)
+
+    user = request.user
+    if request.method == "PUT":
+        received_json_data = json.loads(request.body)
+        try:
+            obj = user.history_set.get(user=user)
+            # Merge existing history with the new one
+            merged_history = json.loads(obj.history) + json.loads(received_json_data["history"])
+
+            # remove outdated history entries that are behind purge date
+            received_purge_date = received_json_data.get("purge_date", 0)
+            latest_purge_date = max(received_purge_date, obj.purge_date)
+            merged_history = [h for h in merged_history if h["date"] > latest_purge_date]
+            # Remove duplicates, keeping the entry with the most recent date
+            seen = {}
+            for h in merged_history:
+                key = (h.get("translation"), h.get("book"), h.get("chapter"), h.get("verse"))
+                if key not in seen or h["date"] > seen[key]["date"]:
+                    seen[key] = h
+            # sort it from the newest to the oldest and crop it to 256 entries
+            merged_history = sorted(seen.values(), key=lambda x: x["date"], reverse=True)[:256]
+
+            obj.history = json.dumps(merged_history)
+            obj.save()
+
+        except History.DoesNotExist:
+            user.history_set.create(history=received_json_data["history"])
+
+        except History.MultipleObjectsReturned:
+            user.history_set.all().delete()
+            user.history_set.create(history=received_json_data["history"])
+
+        return JsonResponse(get_user_history(request.user), safe=False)
+
+    elif request.method == "DELETE":
+        received_json_data = json.loads(request.body)
+        try:
+            obj = user.history_set.get(user=user)
+            obj.history = received_json_data["history"]
+            obj.purge_date = received_json_data["purge_date"]
+            obj.save()
+
+        except History.DoesNotExist:
+            user.history_set.create(history=received_json_data["history"])
+
+        except History.MultipleObjectsReturned:
+            user.history_set.all().delete()
+            user.history_set.create(history=received_json_data["history"])
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=400)
+
+        return HttpResponse(status=200)
+    else:
+        return JsonResponse(get_user_history(request.user), safe=False)
 
 
 def get_user_bookmarks_map(request):

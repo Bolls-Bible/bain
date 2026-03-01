@@ -5,7 +5,6 @@ import Dices from 'lucide-static/icons/dices.svg'
 import Share from 'lucide-static/icons/share.svg'
 import Split from 'lucide-static/icons/split.svg'
 import NotebookPen from 'lucide-static/icons/notebook-pen.svg'
-import Bookmark from 'lucide-static/icons/bookmark.svg'
 import Facebook from 'lucide-static/icons/facebook.svg'
 import Eraser from 'lucide-static/icons/eraser.svg'
 import Plus from 'lucide-static/icons/plus.svg'
@@ -167,8 +166,8 @@ tag verse-actions < section
 			<li>
 				<menu-popup bind=activities.show_bookmarks>
 					<button @click=activities.toggleBookmarks .applied=(activities.selectedCategories.length > 0)>
-						<svg src=Bookmark aria-hidden=yes>
-						t.bookmark
+						<svg src=ICONS.BOOKMARK aria-hidden=yes>
+						t.tag
 					css
 						input
 							w:100% bg:transparent
@@ -215,7 +214,7 @@ tag verse-actions < section
 												category
 							<button[d:hcc p:0.5rem 1rem mt:.25rem] @click=showAddNewCategory>
 								<svg src=Plus aria-hidden=yes>
-								t.new_collection
+								t.new_tag
 
 					<menu-popup bind=activities.show_add_bookmark>
 						if activities.show_add_bookmark
@@ -237,7 +236,7 @@ tag verse-actions < section
 										# should not have white space
 										pattern="^(?!.* \\| ).*"
 										required
-										placeholder=t.new_collection
+										placeholder=t.new_tag
 										bind=activities.newCategoryName />
 									<button
 										[p:0 jc:center bgc@hover:transparent]
@@ -246,7 +245,7 @@ tag verse-actions < section
 									>
 										<svg src=X aria-hidden=yes>
 								<button[jc:center]>
-									t.create_collection
+									t.create_tag
 
 	css
 		pos:fixed b:0 l:0 r:0 zi:1100

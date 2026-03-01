@@ -25,6 +25,9 @@ class Search
 	pageSize = 128
 	translation = reader.translation
 
+	@autorun def resetTranslation
+		translation = reader.translation
+
 	@autorun
 	def saveMatchCase
 		setValue('match_case', match_case)

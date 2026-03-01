@@ -168,7 +168,7 @@ global css
 		cursor: pointer
 		bgc:transparent
 	
-	.ws, nav, button, aside, .platform-item, img, .mark-grid, #page-search, .collectionshat
+	.ws, nav, button, aside, .platform-item, img, .mark-grid, #page-search
 		user-select: none
 
 	html

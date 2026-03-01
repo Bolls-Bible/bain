@@ -65,8 +65,8 @@ tag note-tooltip
 		if #show
 			<aside$content @click.stop [o@off:0 scale@off:0.95 origin:top center maw:{theme.maxWidth}em t:{contentPosition.y}px l:{contentPosition.x}px] ease>
 				<p innerHTML=#textToRender>
-				<button @click=close aria-label=t.close [pos:absolute t:0 r:0 m:0.5em bxs:none]>
-					<svg src=X aria-hidden=true>
+				<button @click=close aria-label=t.close [pos:absolute t:-1.2em r:-1.2em m:0.5em bxs:none scale@hover:1.2]>
+					<svg src=X aria-hidden=true [stroke:$acc]>
 
 			<global @click.outside=close>
 
@@ -92,7 +92,7 @@ tag note-tooltip
 		bxs:xl
 
 		p
-			font-size: 0.85em
+			font-size: 1.2em
 			overflow:auto
 			max-height:42vh
 			h:auto

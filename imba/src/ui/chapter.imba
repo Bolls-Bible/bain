@@ -130,7 +130,7 @@ tag chapter < section
 				<article[text-indent: {settings.verse_number ? 0 : 2.5}em]>
 					for verse, verse_index in me.verses
 						let bookmark = me.getBookmark(verse.pk, 'bookmarks')
-						let superStyle = "padding-bottom:{0.8 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1}em;scroll-margin-top:1.4rem;"
+						let superStyle = "padding-bottom:{0.6 * theme.lineHeight}em;padding-top:{theme.lineHeight - 1.2}em;scroll-margin-top:1.4rem;font-size:.68em"
 
 						if settings.verse_number
 							unless settings.verse_break
@@ -150,6 +150,7 @@ tag chapter < section
 								@keydown.enter=me.saveBookmark
 								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1.4rem]
 							>
+						
 						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 							<note-tooltip style=superStyle bookmark=bookmark>
 								<svg src=Bookmark>
@@ -245,7 +246,6 @@ tag chapter < section
 			padding-bottom: .25rem
 
 		.verse
-			fs: 0.68em
 			c: $acc @hover:$acc-hover
 			bgc@hover:$acc-bgc-hover
 			vertical-align: super
