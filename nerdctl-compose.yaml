@@ -1,0 +1,105 @@
+# For development purposes only!!!
+# Migrated from docker-compose.yml for use with containerd + nerdctl
+# Usage: nerdctl compose -f nerdctl-compose.yaml up
+services:
+  database:
+    image: postgres:15-alpine
+    shm_size: 256mb
+    restart: on-failure
+    container_name: database
+    environment:
+      - POSTGRES_USER=postgres_user
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=postgres_db
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - internal
+    deploy:
+      resources:
+        limits:
+          memory: 1gb
+
+  django:
+    build:
+      context: ./django/
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    command: python manage.py runserver 0:8000
+    container_name: django
+    volumes:
+      - ./django:/code
+      - ./imba/:/imba
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1 localhost
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=postgres_db
+      - SQL_USER=postgres_user
+      - SQL_PASSWORD=postgres_password
+      - SQL_HOST=database
+      - SQL_PORT=5432
+      - DATABASE=postgres
+    env_file:
+      - .env.dev
+    networks:
+      - internal
+    depends_on:
+      - database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/get-text/YLT/1/1/"]
+      interval: 30s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
+
+  imba:
+    build:
+      context: ./imba/
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    container_name: imba
+    command: sh -c "npm i && npm run dev"
+    environment:
+      - API_URL=http://django:8000
+    volumes:
+      - ./imba:/app
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    networks:
+      - internal
+    depends_on:
+      - django
+
+  nginx:
+    image: nginx:latest
+    restart: on-failure
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./django/bolls/static/:/home/bolls/web/static/:delegated
+      - ./imba/:/imba/:delegated
+      - ./nginx_dev/certs:/etc/nginx/certs:ro
+      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_dev/conf.d:/etc/nginx/conf.d
+    networks:
+      - internal
+    depends_on:
+      - django
+      - imba
+
+networks:
+  internal:
+    external: false
+
+volumes:
+  pgdata:
+    driver: local

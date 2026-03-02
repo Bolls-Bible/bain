@@ -1,0 +1,126 @@
+services:
+  DB_SERVICE_NAME:
+    image: pgvector/pgvector:pg18-trixie
+    shm_size: 256mb
+    restart: always
+    container_name: DB_SERVICE_NAME
+    environment:
+      - POSTGRES_USER=POSTGRES_USER_SECRET
+      - POSTGRES_PASSWORD=POSTGRES_PASSWORD_SECRET
+      - POSTGRES_DB=POSTGRES_DB_SECRET
+      - PGDATA=PGDATA_SECRET
+    networks:
+      - INTERNAL_NETWORK_NAME
+    volumes:
+      - DATABASE_VOLUME_SECRET:/var/lib/postgresql
+    deploy:
+      resources:
+        limits:
+          memory: 1gb
+
+  WEB_SERVICE_NAME:
+    build:
+      context: ./django/
+      dockerfile: Dockerfile
+    restart: always
+    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
+    container_name: WEB_CONTAINER_NAME
+    volumes:
+      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static
+      - /var/static/IMBA_VOLUME_NAME:/imba
+    environment:
+      - DEBUG=DEBUG_SECRET
+      - SECRET_KEY=SECRET_KEY_SECRET
+      - DJANGO_ALLOWED_HOSTS=DJANGO_ALLOWED_HOSTS_SECRET
+      - SQL_ENGINE=SQL_ENGINE_SECRET
+      - SQL_DATABASE=POSTGRES_DB_SECRET
+      - SQL_USER=POSTGRES_USER_SECRET
+      - SQL_PASSWORD=POSTGRES_PASSWORD_SECRET
+      - SQL_HOST=DB_SERVICE_NAME
+      - SQL_PORT=SQL_PORT_SECRET
+      - DATABASE=DATABASE_SECRET
+      - EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD_SECRET
+      - EMAIL_HOST_USER=EMAIL_HOST_USER_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
+      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
+      - SOCIAL_AUTH_GITHUB_KEY=SOCIAL_AUTH_GITHUB_KEY_SECRET
+      - SOCIAL_AUTH_GITHUB_SECRET=SOCIAL_AUTH_GITHUB_SECRET_SECRET
+    networks:
+      - INTERNAL_NETWORK_NAME
+    depends_on:
+      - DB_SERVICE_NAME
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/get-text/YLT/1/1/"]
+      interval: 30s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
+
+  IMBA_SERVICE_NAME-statics-initializer:
+    build:
+      context: ./imba/
+      dockerfile: Dockerfile
+    command: sh -c "cp -r /build/. /app/"
+    volumes:
+      - /var/static/IMBA_VOLUME_NAME:/app
+    deploy:
+      restart_policy:
+        condition: none
+
+  IMBA_SERVICE_NAME:
+    build:
+      context: ./imba/
+      dockerfile: Dockerfile
+    restart: on-failure
+    container_name: IMBA_SERVICE_NAME
+    environment:
+      - API_URL=http://WEB_SERVICE_NAME:8000
+    networks:
+      - INTERNAL_NETWORK_NAME
+    depends_on:
+      - WEB_SERVICE_NAME
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - /var/letsencrypt:/etc/letsencrypt
+      - ./challenges:/var/www/certbot:rw
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"  # Renew certificates every 12 hours
+
+  NGINX_SERVICE_NAME:
+    image: nginx:latest
+    restart: always
+    container_name: NGINX_CONTAINER_NAME
+    environment:
+      - APP_DOMAIN=NGINX_DOMAIN_NAME
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static
+      - /var/static/IMBA_VOLUME_NAME:/imba
+      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /var/letsencrypt:/etc/letsencrypt
+      - ./challenges:/var/www/certbot:ro
+    networks:
+      - web
+      - INTERNAL_NETWORK_NAME
+    depends_on:
+      WEB_SERVICE_NAME:
+        condition: service_started
+      IMBA_SERVICE_NAME:
+        condition: service_started
+
+volumes:
+  DATABASE_VOLUME_SECRET:
+    driver: local
+
+networks:
+  internal:
+    external: false
+  internal_dev:
+    external: false
+  web:
+    external: true

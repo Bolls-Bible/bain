@@ -7,9 +7,11 @@ GREEN := "\033[32m"
 CYAN := "\033[36m"
 YELLOW := "\033[33m"
 
-# Use podman or docker for container management
-# DOCKER := docker
-DOCKER := podman
+# Use nerdctl for container management (containerd)
+# CONTAINER_MANAGER := docker
+# CONTAINER_MANAGER := podman
+CONTAINER_MANAGER := nerdctl
+COMPOSE_FILE := -f nerdctl-compose.yaml
 
 help:
 	@echo -e ${BOLD}Usage:${RESET}
@@ -51,7 +53,7 @@ help:
 
 # Run once only
 create-network:
-	$(DOCKER) network create web
+	$(CONTAINER_MANAGER) network create web
 
 mkcert-install:
 	./mkcert/mkcert-install.sh
@@ -62,10 +64,10 @@ certs-generate:
 
 
 build:
-	$(DOCKER) compose build
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) build
 
 build-no-cache:
-	$(DOCKER) compose build --no-cache
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) build --no-cache
 
 restore-db:
 	# first, make sure we have all migrations run
@@ -75,31 +77,35 @@ restore-db:
 	[ -f sql/restore.sql ] || wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O sql/restore.sql
 
 	# copy the file to the db container
-	$(DOCKER) cp sql/restore.sql database:/restore.sql
+	$(CONTAINER_MANAGER) cp sql/restore.sql database:/restore.sql
 
 	# restore the database
-	$(DOCKER) compose exec database psql -U postgres_user -d postgres_db -f ./restore.sql
+	$(CONTAINER_MANAGER) exec database psql -U postgres_user -d postgres_db -f ./restore.sql
 
 	# restore sequences and indexes
-	$(DOCKER) cp sql/restore-indexes-sequences.sql database:/restore-indexes-sequences.sql
-	$(DOCKER) compose exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
+	$(CONTAINER_MANAGER) cp sql/restore-indexes-sequences.sql database:/restore-indexes-sequences.sql
+	$(CONTAINER_MANAGER) exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
 
 	# add UNACCENT rules
-	$(DOCKER) cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
-	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
-	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+	$(CONTAINER_MANAGER) cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
+	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
 	# create extension pg_trgm;
-	$(DOCKER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
+	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
 
 up:
-	$(DOCKER) compose up
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) up
 
 stop:
-	$(DOCKER) compose stop
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) stop
 
 down:
-	$(DOCKER) compose down --remove-orphans
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) down
+
+# complete down, with volumes:
+down-volumes:
+	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) down -v
 
 restart:
 	@$(MAKE) down
@@ -108,48 +114,56 @@ restart:
 
 # Django commands
 createsuperuser:
-	$(DOCKER) compose exec django python manage.py createsuperuser
+	$(CONTAINER_MANAGER) exec django python manage.py createsuperuser
 
 migrations:
-	$(DOCKER) compose exec django python manage.py makemigrations
+	$(CONTAINER_MANAGER) exec django python manage.py makemigrations
 
 migrate:
-	$(DOCKER) compose exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
 
 showmigrations:
-	$(DOCKER) compose exec django python manage.py showmigrations
+	$(CONTAINER_MANAGER) exec django python manage.py showmigrations
 
 shell:
-	$(DOCKER) compose exec django python manage.py shell
+	$(CONTAINER_MANAGER) exec django python manage.py shell
 
 django-logs dl:
-	$(DOCKER) compose logs -f django
+	$(CONTAINER_MANAGER) logs -f django
 
 # Node/Imba commands
 npm-install ni:
-	$(DOCKER) compose exec imba npm install $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec imba npm install $(filter-out $@,$(MAKECMDGOALS))
 
 npm-run nr:
-	$(DOCKER) compose exec imba npm run $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec imba npm run $(filter-out $@,$(MAKECMDGOALS))
 
 npm-update nu:
-	$(DOCKER) compose exec imba npm update $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec imba npm update $(filter-out $@,$(MAKECMDGOALS))
 
 npm-outdated no:
-	$(DOCKER) compose exec imba npm outdated $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec imba npm outdated $(filter-out $@,$(MAKECMDGOALS))
 
 npm-uninstall nd:
-	$(DOCKER) compose exec imba npm uninstall $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec imba npm uninstall $(filter-out $@,$(MAKECMDGOALS))
 
 npm-update-all nua:
-	$(DOCKER) compose exec imba npx npm-check-updates -u
-	$(DOCKER) compose exec imba npm i
+	$(CONTAINER_MANAGER) exec imba npx npm-check-updates -u
+	$(CONTAINER_MANAGER) exec imba npm i
 
 imba-logs il:
-	$(DOCKER) compose logs -f imba
+	$(CONTAINER_MANAGER) logs -f imba
 
 enter-node en:
-	$(DOCKER) compose exec imba bash
+	$(CONTAINER_MANAGER) exec imba bash
+
+
+# nginx commands
+nginx-logs nl:
+	$(CONTAINER_MANAGER) logs -f nginx
+
+nginx-reload:
+	$(CONTAINER_MANAGER) exec nginx nginx -s reload
 
 # TODO: Add commands for adding translations along with commentaries
 

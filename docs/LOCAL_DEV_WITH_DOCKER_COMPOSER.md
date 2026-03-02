@@ -23,7 +23,7 @@ If you're on Windows, install mkcert using chocolatey or scoop and run the follo
 
 ```powershell
 mkcert -install
-mkcert -cert-file "C:\path-to-the-project\bain\traefik\certs\local-cert.pem" -key-file "C:\path-to-the-project\bain\traefik\certs\local-key.pem" "bolls.local"
+mkcert -cert-file "C:\path-to-the-project\bain\nginx_dev\certs\local-cert.pem" -key-file "C:\path-to-the-project\bain\nginx_dev\certs\local-key.pem" "bolls.local"
 ```
 
 Then create .env.dev (may be empty) and run the application with

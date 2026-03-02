@@ -7,4 +7,4 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 set +a
 
-mkcert -cert-file "$PROJECT_DIR/traefik/certs/local-cert.pem" -key-file "$PROJECT_DIR/traefik/certs/local-key.pem" "bolls.local"
+mkcert -cert-file "$PROJECT_DIR/nginx_dev/certs/local-cert.pem" -key-file "$PROJECT_DIR/nginx_dev/certs/local-key.pem" "bolls.local"

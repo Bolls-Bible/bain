@@ -1,14 +1,17 @@
 {
     "cSpell.words": [
         "autorun",
+        "certbot",
         "chronorder",
         "csrftoken",
         "dexie",
         "elif",
         "endverse",
         "imba",
+        "letsencrypt",
         "lucide",
         "mousemove",
+        "nerdctl",
         "nowrap",
         "rgba",
         "serviceworker",

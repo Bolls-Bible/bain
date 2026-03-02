@@ -1,0 +1,1 @@
+Run `make certs-generate` to generate self-signed certificates for local development. The generated certificates will be stored in this directory and mounted to the nginx container in the nerdctl compose configuration.

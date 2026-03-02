@@ -1,0 +1,23 @@
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - /var/letsencrypt:/etc/letsencrypt
+      - ./challenges:/var/www/certbot
+    ports:
+      - "80:80"
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot-initializer
+    volumes:
+      - /var/letsencrypt:/etc/letsencrypt
+      - ./challenges:/var/www/certbot
+    entrypoint: >
+      sh -c "certbot certonly --staging --webroot --webroot-path=/var/www/certbot 
+      --email bpavlisinec@gmail.com --agree-tos --no-eff-email 
+      --keep-until-expiring -d bolls.life && echo '✅ Certbot finished successfully!'"
+    depends_on:
+      nginx:
+        condition: service_started

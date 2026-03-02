@@ -20,3 +20,9 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . /code/
+
+# copy dev-entrypoint.sh
+COPY ./dev-entrypoint.sh /code/
+
+# run dev-entrypoint.sh
+ENTRYPOINT ["/code/dev-entrypoint.sh"]
