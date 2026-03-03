@@ -12,7 +12,6 @@ import ListPlus from 'lucide-static/icons/list-plus.svg'
 import Send from 'lucide-static/icons/send.svg'
 import LoaderPinwheel from 'lucide-static/icons/loader-pinwheel.svg'
 import Check from 'lucide-static/icons/check.svg'
-import Bookmark from 'lucide-static/icons/bookmark.svg'
 import { format } from 'date-fns'
 import Color from "colorjs.io"
 
@@ -554,7 +553,7 @@ tag modal < section
 										>
 									if bookmark and not reader.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 										<note-tooltip style=superStyle parallelMode=parallelReader.enabled bookmark=bookmark containerWidth=self.clientWidth containerHeight=self.clientHeight>
-											<svg src=Bookmark>
+											<svg src=ICONS.BOOKMARK>
 												<title> bookmark.collection + ': ' + bookmark.note
 
 									if verse.comment and settings.verse_commentary

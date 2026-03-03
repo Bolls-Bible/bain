@@ -2,8 +2,6 @@ on:
   push:
     tags:
       - v**
-    branches:
-      - master
 
   workflow_dispatch:
     inputs:
@@ -119,5 +117,5 @@ jobs:
 
             echo "Running tests..."
             nerdctl exec -t $WEB_CONTAINER_NAME python manage.py test --keepdb
-            # nerdctl system prune -a -f
+            # nerdctl system prune -a -f # nerdctl is so nerdy that it says clean on its own
             echo "Done."

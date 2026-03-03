@@ -2,7 +2,6 @@ import GenericReader from '../lib/GenericReader'
 
 import ChevronRight from 'lucide-static/icons/chevron-right.svg'
 import ChevronLeft from 'lucide-static/icons/chevron-left.svg'
-import Bookmark from 'lucide-static/icons/bookmark.svg'
 import * as ICONS from 'imba-phosphor-icons'
 
 import { hasTouchEvents } from '../constants'
@@ -153,7 +152,7 @@ tag chapter < section
 						
 						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)
 							<note-tooltip style=superStyle bookmark=bookmark>
-								<svg src=Bookmark>
+								<svg src=ICONS.BOOKMARK>
 									<title> bookmark.collection + ': ' + bookmark.note
 
 						if verse.comment and settings.verse_commentary
