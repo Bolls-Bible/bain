@@ -17,25 +17,6 @@ class ReadingHistory
 		else
 			deleteValue('history')
 
-	@autorun(delay:500ms) def saveHistoryToServer
-		if !user.username || !window.navigator.onLine
-			return
-
-		try
-			const cloudData = await API.requestJson('/v2/history/', "PUT", {
-				history: JSON.stringify(history),
-			})
-			if cloudData.compare_translations..length
-				compare.translations = JSON.parse(cloudData.compare_translations) || cloudData.compare_translations
-
-			if cloudData.favorite_translations
-				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || cloudData.favorite_translations
-
-			if cloudData.history
-				history = JSON.parse(cloudData.history) || history
-		catch error
-			console.warn(error)
-
 	@action def clear
 		history = []
 		if user.username && window.navigator.onLine
@@ -67,18 +48,22 @@ class ReadingHistory
 		# Remove items exceeding limit to avoid UI lag
 		if history.length > 256
 			history.length = 256
+		
+		syncHistory!
 
 	@action def syncHistory
 		if !user.username || !window.navigator.onLine
 			return
 
 		try
-			let cloudData = await API.getJson('/history/')
+			let cloudData = await API.requestJson('/v2/history/', "PUT", {
+				history: JSON.stringify(history),
+			})
 			if cloudData.compare_translations..length
-				compare.translations = JSON.parse(cloudData.compare_translations) || []
+				compare.translations = JSON.parse(cloudData.compare_translations) || compare.translations
 
 			if cloudData.favorite_translations
-				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || []
+				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || settings.favoriteTranslations
 
 			if cloudData.history
 				history = JSON.parse(cloudData.history) || history

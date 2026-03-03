@@ -114,7 +114,7 @@ restart:
 
 # Django commands
 createsuperuser:
-	$(CONTAINER_MANAGER) exec django python manage.py createsuperuser
+	$(CONTAINER_MANAGER) exec -it django python manage.py createsuperuser
 
 migrations:
 	$(CONTAINER_MANAGER) exec django python manage.py makemigrations
