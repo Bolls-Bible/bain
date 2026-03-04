@@ -27,10 +27,6 @@ class ReadingHistory
 				notifications.push('error')
 
 	@action def saveToHistory translation\string, book\number, chapter\number, verse\number|string
-		unless #omitInit
-			#omitInit = yes
-			return
-
 		let already_recorded = history.find(do |element| return element.chapter == chapter && element.book == book && element.translation == translation && element.verse == verse)
 		if already_recorded
 			history.splice(history.indexOf(already_recorded), 1)
@@ -49,7 +45,9 @@ class ReadingHistory
 		if history.length > 256
 			history.length = 256
 		
-		syncHistory!
+		# Debounce syncing to avoid excessive API calls when user is quickly navigating through chapters
+		clearTimeout(#debounceTimeout)
+		#debounceTimeout = setTimeout(syncHistory.bind(this), 500)
 
 	@action def syncHistory
 		if !user.username || !window.navigator.onLine

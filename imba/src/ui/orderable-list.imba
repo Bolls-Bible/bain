@@ -64,6 +64,7 @@ tag orderable-list
 		for item in self.querySelectorAll('li')
 			newOrder.push(item.id)
 		compare.translations = newOrder
+		compare.saveTranslations()
 
 
 	def triggerAutoscroll event

@@ -83,6 +83,7 @@ tag books-drawer < nav
 			settings.favoriteTranslations.splice(settings.favoriteTranslations.indexOf(translation_short_name), 1)
 		else
 			settings.favoriteTranslations.push(translation_short_name)
+		settings.saveFavoriteTranslations()
 
 	@action def changeTranslation translation\string
 		if parallelReader.enabled && activeTranslation == parallelReader.translation

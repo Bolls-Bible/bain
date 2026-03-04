@@ -24,11 +24,8 @@ class Compare
 
 	search = ''
 
-	@autorun def saveTranslations
+	def saveTranslations
 		setValue('compare_translations', translations)
-		unless #omitInit
-			#omitInit = yes
-			return
 
 		if window.navigator.onLine && user.username
 			API.put('/save-compare-translations/', {

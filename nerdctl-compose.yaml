@@ -3,7 +3,7 @@
 # Usage: nerdctl compose -f nerdctl-compose.yaml up
 services:
   database:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg18-trixie
     shm_size: 256mb
     restart: on-failure
     container_name: database

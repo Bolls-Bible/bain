@@ -50,11 +50,8 @@ class SettingsState
 	@autorun def saveChronorder
 		setValue('chronorder', chronorder)
 	
-	@autorun def saveFavoriteTranslations
+	def saveFavoriteTranslations
 		setValue('favorite_translations', favoriteTranslations)
-		unless #omitInit
-			#omitInit = yes
-			return favoriteTranslations
 
 		try
 			if window.navigator.onLine && user.username

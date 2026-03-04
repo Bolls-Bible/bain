@@ -110,7 +110,7 @@ jobs:
             echo "Migrating the database..."
             nerdctl exec -t $WEB_CONTAINER_NAME python manage.py migrate --noinput
             nerdctl exec -t $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
-            nerdctl cp ./sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+            nerdctl cp ./sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
             nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
             nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
             nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION pg_trgm"

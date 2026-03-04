@@ -87,7 +87,7 @@ restore-db:
 	$(CONTAINER_MANAGER) exec database psql -U postgres_user -d postgres_db -f ./restore-indexes-sequences.sql
 
 	# add UNACCENT rules
-	$(CONTAINER_MANAGER) cp sql/unaccent_plus.rules database:/usr/local/share/postgresql/tsearch_data/unaccent_plus.rules
+	$(CONTAINER_MANAGER) cp sql/unaccent_plus.rules database:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
 	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
 	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
