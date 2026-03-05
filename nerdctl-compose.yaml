@@ -30,10 +30,6 @@ services:
     volumes:
       - ./django:/code
       - ./imba/:/imba
-    expose:
-      - 8000
-    ports:
-      - 8000:8000
     environment:
       - DEBUG=1
       - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1 localhost
@@ -68,10 +64,6 @@ services:
       - API_URL=http://django:8000
     volumes:
       - ./imba:/app
-    expose:
-      - 3000
-    ports:
-      - 3000:3000
     networks:
       - internal
     depends_on:
