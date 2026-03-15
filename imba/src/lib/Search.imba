@@ -49,7 +49,7 @@ class Search
 
 	def suggestTranslations query\string
 		let suggested_translations = []
-		if query.length > 2
+		if query.length >= 2
 			for translation in translations
 				if query in translation.short_name.toLowerCase! or query in translation.full_name.toLowerCase! or query in translation.language.toLowerCase!
 					suggested_translations.push(translation)

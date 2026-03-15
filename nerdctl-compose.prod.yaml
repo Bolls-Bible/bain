@@ -19,9 +19,7 @@ services:
           memory: 1gb
 
   WEB_SERVICE_NAME:
-    build:
-      context: ./django/
-      dockerfile: Dockerfile
+    image: ghcr.io/bolls-bible/bain/django:latest 
     restart: always
     command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
     container_name: WEB_CONTAINER_NAME
@@ -57,9 +55,7 @@ services:
       start_period: 10s
 
   IMBA_SERVICE_NAME-statics-initializer:
-    build:
-      context: ./imba/
-      dockerfile: Dockerfile
+    image: ghcr.io/bolls-bible/bain/imba:latest 
     command: sh -c "cp -r /build/. /app/"
     volumes:
       - /var/static/IMBA_VOLUME_NAME:/app
@@ -68,9 +64,7 @@ services:
         condition: none
 
   IMBA_SERVICE_NAME:
-    build:
-      context: ./imba/
-      dockerfile: Dockerfile
+    image: ghcr.io/bolls-bible/bain/imba:latest 
     restart: on-failure
     container_name: IMBA_SERVICE_NAME
     environment:

@@ -2,6 +2,8 @@ on:
   push:
     tags:
       - v**
+    # branches:
+    #   - master
 
   workflow_dispatch:
     inputs:
@@ -11,9 +13,25 @@ on:
         default: '0.0.0'
 
 jobs:
+  build:
+    name: Build and Push Docker Images to GitHub Container Registry
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3
+      - name: build images for ghcr
+        run: |
+          echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$REPO_LOWER/django:latest -f ./django/Dockerfile ./django
+          docker build -t ghcr.io/$REPO_LOWER/imba:latest -f ./imba/Dockerfile ./imba
+          docker push ghcr.io/$REPO_LOWER/django:latest
+          docker push ghcr.io/$REPO_LOWER/imba:latest
+
   deploy:
     name: Deploy to Prod
     runs-on: ubuntu-latest
+    needs: build
     environment: prod
     env:
       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
@@ -105,17 +123,17 @@ jobs:
             sh ./init-certs/check-certs.sh
 
             echo "Starting deploy..."
-            nerdctl compose -f nerdctl-compose.prod.yaml up -d --build --force-recreate
+            nerdctl compose -f nerdctl-compose.prod.yaml up -d --pull always
 
             echo "Migrating the database..."
-            nerdctl exec -t $WEB_CONTAINER_NAME python manage.py migrate --noinput
-            nerdctl exec -t $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
+            nerdctl exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
+            nerdctl exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
             nerdctl cp ./sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
-            nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
-            nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
-            nerdctl exec -t $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION pg_trgm"
+            nerdctl exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
+            nerdctl exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            nerdctl exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION pg_trgm"
 
             echo "Running tests..."
-            nerdctl exec -t $WEB_CONTAINER_NAME python manage.py test --keepdb
+            nerdctl exec $WEB_CONTAINER_NAME python manage.py test --keepdb
             # nerdctl system prune -a -f # nerdctl is so nerdy that it says clean on its own
             echo "Done."

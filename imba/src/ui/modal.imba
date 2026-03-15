@@ -25,6 +25,7 @@ import * as ICONS from 'imba-phosphor-icons'
 tag modal < section
 	fontsQuery = ''
 	expandedLanguage = ''
+	translationsSearch = ''
 
 	@action def changeTranslation translation\string
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
@@ -391,7 +392,7 @@ tag modal < section
 						
 					when "dictionary"
 						<header[pos:relative]>
-							<button[c@hover:red4] @click=activities.cleanUp title=t.close>
+							<button[c@hover:red4 px:0] @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X aria-hidden=yes>
 							<button @click=dictionary.prevDefinition [o:0.5]=(dictionary.historyIndex == 0 or dictionary.history.length == 0) title=t.back>
 								<svg src=ChevronLeft aria-hidden=yes>
@@ -402,8 +403,6 @@ tag modal < section
 								bind=dictionary.query minLength=2 type='text' placeholder=(t.search) aria-label=t.search
 								@keydown.enter=dictionary.loadDefinitions>
 
-							<button @click=dictionary.loadDefinitions title=t.search>
-								<svg src=Search aria-hidden=yes>
 							<button @click=openDictionaryDownloads title=t.download>
 								<svg src=Download aria-hidden=yes>
 
@@ -605,12 +604,14 @@ tag modal < section
 								<svg[s:1rem fill:$muted] src=ICONS.CARET_DOWN aria-hidden=true>
 
 								if #showTranslationMenu
-									<ul.suggestions.focusable>
-										for translation in translations
-											<li.li @click=(do search.translation = translation.short_name)>
-												translation.short_name
-												', '
-													translation.full_name
+									<div.suggestions>
+										<input.suggestions-search [mb:0] placeholder=t.search bind=translationsSearch minLength=2 @click.stop>
+										<ul.focusable[visibility:visible o:1]>
+											for translation in translationsQuery.length >= 2 ? search.suggestTranslations(translationsSearch) : translations
+												<li.li @click=(do search.translation = translation.short_name)>
+													translation.short_name
+													', '
+														translation.full_name
 
 
 							if window.navigator.onLine
@@ -618,9 +619,6 @@ tag modal < section
 									<svg src=CaseSensitive aria-hidden=yes>
 								<button.focusable title=t.match_whole [o:0.5]=!search.match_whole @click=(search.match_whole = !search.match_whole)>
 									<svg src=WholeWord aria-hidden=yes>
-
-							<button.focusable @click=search.run title=t.close>
-								<svg src=Search aria-hidden=yes>
 
 							if search.results.length
 								<menu-popup bind=activities.show_filters>
@@ -686,11 +684,10 @@ tag modal < section
 	css
 		header
 			d:hcc
-			g:0.5rem
 
 			& > button, a
 				bgc:transparent c:inherit @hover:$acc-hover
-				min-width:2rem w:2rem cursor:pointer
+				px:.25em w:2rem cursor:pointer
 				d:flex fls:0
 				o@disabled:0.5
 
@@ -705,7 +702,7 @@ tag modal < section
 
 			input
 				w:100% bg:transparent font:inherit c:inherit
-				p:0 0.5em 0 0 fs:1.2em min-width:8rem
+				p:0 0.25em fs:1.2em min-width:8rem
 				bd:none bdb@invalid:1px solid $acc-bgc bxs:none
 				lh:2rem
 

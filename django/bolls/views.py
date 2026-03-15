@@ -131,7 +131,7 @@ def get_chapter_with_comments(_, translation, book, chapter):
         return cross_origin(JsonResponse({"error": "The verses were not found"}, status=404))
 
 
-def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
+def find(translation: str, piece: str, book: int, match_case: bool, match_whole: bool, page: int = 1, limit: int = 1024):
     d = []
     search_results = []
     # ensure page is a positive integer
@@ -249,8 +249,8 @@ def find(translation, piece, book, match_case, match_whole, page=1, limit=1024):
 def search(request, translation, piece=""):
     if len(piece) == 0:
         piece = request.GET.get("search", "")
-    match_case = request.GET.get("match_case", "") == "true"
-    match_whole = request.GET.get("match_whole", "") == "true"
+    match_case = request.GET.get("match_case", "") in ["true", "1", "yes"]
+    match_whole = request.GET.get("match_whole", "") in ["true", "1", "yes"]
     book = request.GET.get("book", None)
 
     piece = piece.strip()
@@ -264,18 +264,25 @@ def search(request, translation, piece=""):
 
 def v2_search(request, translation):
     piece = request.GET.get("search", "")
-    match_case = request.GET.get("match_case", "") == "true"
-    match_whole = request.GET.get("match_whole", "") == "true"
+    match_case = request.GET.get("match_case", "") in ["true", "1", "yes"]
+    match_whole = request.GET.get("match_whole", "") in ["true", "1", "yes"]
     book = request.GET.get("book", None)
     page = request.GET.get("page", 1)
     limit = request.GET.get("limit", 128)
 
+    # Validate page and limit are numbers
+    if not str(page).isdigit() or not str(limit).isdigit():
+        return cross_origin(JsonResponse([{"error": "Page and limit must be numbers"}], safe=False, status=400))
+
+    page = int(page)
+    limit = int(limit)
+
     piece = piece.strip()
-    if len(piece) > 2 or piece.isdigit():
-        result = find(translation, piece, book, match_case, match_whole, int(page), int(limit))
-        return cross_origin(JsonResponse(result, safe=False))
-    else:
+    if len(piece) <= 2 and not piece.isdigit():
         return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
+
+    result = find(translation, piece, book, match_case, match_whole, page, limit)
+    return cross_origin(JsonResponse(result, safe=False))
 
 
 def sign_up(request):
