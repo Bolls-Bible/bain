@@ -8,6 +8,7 @@
     "prod": "npx pm2 start server.mjs"
   },
   "dependencies": {
+    "grab-bcv": "^0.1.5",
     "pm2": "^6.0.14"
   },
   "devDependencies": {
