@@ -83,6 +83,7 @@ class ParallelReader < GenericReader
 				findVerse(verse, undefined, yes)
 			verse = undefined
 		else
+			linkedVerses = []
 			show_verse_picker = yes
 			if myRenderer
 				myRenderer.scrollTop = 0

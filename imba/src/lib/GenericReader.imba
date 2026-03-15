@@ -21,6 +21,7 @@ class GenericReader
 	@observable bookmarks\Bookmark[] = []
 	show_verse_picker\boolean = no
 	verse\number|string = 0
+	linkedVerses\number[] = []
 
 	me = '' # constant to indicate the main reader versus the parallel reader
 
@@ -246,27 +247,19 @@ class GenericReader
 
 
 	def highlightLinkedVerses verseNumber, endverse
-		if !window.getSelection
-			return
+		linkedVerses = []
 
-		setTimeout(&, 250) do
-			const verseNode = document.getElementById(verseNumber)
-			unless verseNode
-				return highlightLinkedVerses verseNumber, endverse
+		const start = parseInt(verseNumber)
+		const finish = endverse ? parseInt(endverse) : start
 
-			const selection = window.getSelection()
-			selection.removeAllRanges()
-			if endverse
-				for id in [parseInt(verseNumber) .. parseInt(endverse)]
-					if id <= verses.length
-						const range = document.createRange()
-						const node = document.getElementById(String(id))
-						range.selectNodeContents(node)
-						selection.addRange(range)
-			else
-				const range = document.createRange()
-				range.selectNodeContents(verseNode)
-				selection.addRange(range)
+		for id in [start .. finish]
+			if id <= verses.length
+				linkedVerses.push(id)
+
+		imba.commit!
+
+	def isLinkedVerse verseNumber\number
+		return linkedVerses.includes(verseNumber)
 
 	def saveBookmark
 		unless user.username
