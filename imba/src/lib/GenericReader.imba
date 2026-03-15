@@ -213,7 +213,7 @@ class GenericReader
 		activities.selectedVersesPKs = []
 		activities.selectedCategories = []
 
-		for verse in verses when start <= verse.verse <= finish
+		for verse in verses when verse.verse >= start and verse.verse <= finish
 			activities.selectedVersesPKs.push(verse.pk)
 			activities.selectedVerses.push(verse.verse)
 			pushCollectionIfExist(verse.pk)
