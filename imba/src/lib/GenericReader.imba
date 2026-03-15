@@ -21,7 +21,6 @@ class GenericReader
 	@observable bookmarks\Bookmark[] = []
 	show_verse_picker\boolean = no
 	verse\number|string = 0
-	linkedVerses\number[] = []
 
 	me = '' # constant to indicate the main reader versus the parallel reader
 
@@ -112,19 +111,6 @@ class GenericReader
 				return  "linear-gradient({highlight.color} 0px, {highlight.color} 100%)"
 			else
 				return ''
-
-	def getLinkedHighlight
-		let width = Math.ceil(0.5 * theme.fontSize)
-		return "repeating-linear-gradient(90deg, var(--acc), var(--acc) {width}px, rgba(0,0,0,0) {width}px, rgba(0,0,0,0) {width * 2}px)"
-
-	def getVerseHighlight pk\number, verseNumber\number
-		let backgrounds = []
-		const savedHighlight = getHighlight(pk)
-		if savedHighlight
-			backgrounds.push(savedHighlight)
-		if isLinkedVerse(verseNumber)
-			backgrounds.push(getLinkedHighlight!)
-		return backgrounds.join(', ')
 	
 	def getBookmarks
 		if !user.username
@@ -168,8 +154,6 @@ class GenericReader
 
 		if activities.selectedParallel != undefined and activities.selectedParallel != me
 			return
-
-		clearLinkedVerses!
 
 		activities.selectedParallel = me
 		activities.highlight_color = activities.randomColor
@@ -218,6 +202,31 @@ class GenericReader
 			activities.activeVerseAction = undefined
 			activities.selectedParallel = undefined
 
+	def selectVersesRange verseNumber, endverse = undefined
+		const start = parseInt(verseNumber)
+		const finish = endverse ? parseInt(endverse) : start
+
+		activities.selectedParallel = me
+		if !activities.highlight_color
+			activities.highlight_color = activities.randomColor
+		activities.selectedVerses = []
+		activities.selectedVersesPKs = []
+		activities.selectedCategories = []
+
+		for verse in verses when start <= verse.verse <= finish
+			activities.selectedVersesPKs.push(verse.pk)
+			activities.selectedVerses.push(verse.verse)
+			pushCollectionIfExist(verse.pk)
+
+		if activities.selectedVersesPKs.length
+			mergeNotes!
+			activities.activeVerseAction = 'options'
+		else
+			activities.activeVerseAction = undefined
+			activities.selectedParallel = undefined
+
+		imba.commit!
+
 
 	def mergeNotes
 		activities.note = ''
@@ -256,30 +265,9 @@ class GenericReader
 					behavior: theme.scrollBehavior,
 					top: verseNumberElement.offsetTop - theme.fontSize
 				})
-				if highlight then highlightLinkedVerses(id, endverse)
+				if highlight then selectVersesRange(id, endverse)
 			else
 				findVerse(id, endverse, highlight)
-
-
-	def clearLinkedVerses
-		if linkedVerses.length
-			linkedVerses = []
-			imba.commit!
-
-	def highlightLinkedVerses verseNumber, endverse
-		clearLinkedVerses!
-
-		const start = parseInt(verseNumber)
-		const finish = endverse ? parseInt(endverse) : start
-
-		for id in [start .. finish]
-			if id <= verses.length
-				linkedVerses.push(id)
-
-		imba.commit!
-
-	def isLinkedVerse verseNumber\number
-		return linkedVerses.includes(verseNumber)
 
 	def saveBookmark
 		unless user.username

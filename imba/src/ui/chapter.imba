@@ -147,7 +147,7 @@ tag chapter < section
 								# make it focus-able to get keydown working on it
 								tabIndex=0
 								@keydown.enter=me.saveBookmark
-								[background-image: {me.getVerseHighlight(verse.pk, verse.verse)} scroll-margin-top: 1.4rem]
+								[background-image: {me.getHighlight(verse.pk)} scroll-margin-top: 1.4rem]
 							>
 						
 						if bookmark and not me.nextVerseHasTheSameBookmark(verse_index) and (bookmark.collection || bookmark.note)

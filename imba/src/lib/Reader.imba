@@ -87,7 +87,6 @@ class Reader < GenericReader
 			else
 				findVerse(verse, undefined, yes)
 		else
-			clearLinkedVerses!
 			show_verse_picker = yes
 			if myRenderer
 				myRenderer.scrollTop = 0
