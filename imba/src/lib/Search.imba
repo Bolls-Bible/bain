@@ -1,4 +1,6 @@
 import { setValue, getValue, scoreSearch } from '../utils'
+import { getBookId } from '../../utils/books'
+import { findAnyPassage } from 'grab-bcv'
 
 import activities from './Activities'
 import API from './Api'
@@ -55,11 +57,113 @@ class Search
 					suggested_translations.push(translation)
 		return suggested_translations
 
+	def findExactTranslation query\string
+		const normalizedQuery = query.trim!.toLowerCase!
+		unless normalizedQuery.length
+			return null
+
+		for translation in translations
+			if normalizedQuery == translation.short_name.toLowerCase! or normalizedQuery == translation.full_name.toLowerCase!
+				return translation
+
+		return null
+
+	def normalizeReferenceQuery query\string
+		const trimmedQuery = query.trim!
+		unless trimmedQuery.length
+			return trimmedQuery
+
+		let normalizedQuery = trimmedQuery
+
+		try
+			let possibleUrl = trimmedQuery
+			if !/^https?:\/\//i.test(possibleUrl) and possibleUrl.includes('/')
+				possibleUrl = 'https://' + possibleUrl
+
+			if /^https?:\/\//i.test(possibleUrl)
+				const parsedUrl = new URL(possibleUrl)
+				const pathParts = parsedUrl.pathname.split('/').filter(Boolean)
+				if pathParts.length
+					normalizedQuery = window.decodeURIComponent(pathParts[-1])
+		catch error
+			normalizedQuery = trimmedQuery
+
+		return normalizedQuery
+
+	def parseReferenceQuery query\string
+		const trimmedQuery = normalizeReferenceQuery(query)
+		unless trimmedQuery.length
+			return null
+
+		let referenceTranslation = translation
+		const lastWord = trimmedQuery.split(/\s+/)[-1]
+		const matchedTranslation = findExactTranslation(lastWord)
+		if matchedTranslation and trimmedQuery.split(/\s+/).length > 1
+			referenceTranslation = matchedTranslation.short_name
+
+		const parsedReference = findAnyPassage(trimmedQuery)
+		if !parsedReference or Array.isArray(parsedReference)
+			return null
+
+		let bookId
+		try
+			bookId = parseInt(getBookId(referenceTranslation, parsedReference.start.book))
+		catch error
+			console.warn('Failed to resolve book from parsed reference', error)
+			return null
+
+		unless reader.theChapterExistInThisTranslation(bookId, parsedReference.start.chapter)
+			return null
+
+		let verse = undefined
+		if parsedReference.rangeType == 'single' and parsedReference.start.verse
+			verse = parsedReference.start.verse
+		elif parsedReference.rangeType == 'same_chapter' and parsedReference.start.verse and parsedReference.end.verse
+			verse = "{parsedReference.start.verse}-{parsedReference.end.verse}"
+		elif parsedReference.rangeType == 'cross_reference' and parsedReference.start.verse
+			verse = parsedReference.start.verse
+
+		return {
+			translation: referenceTranslation
+			book: bookId
+			chapter: parsedReference.start.chapter
+			verse: verse
+		}
+
+	def openReferenceQuery result
+		const sameChapter = reader.translation == result.translation and reader.book == result.book and reader.chapter == result.chapter
+
+		reader.translation = result.translation
+		reader.book = result.book
+		reader.chapter = result.chapter
+
+		if sameChapter and result.verse
+			if typeof result.verse == 'string' and result.verse.includes('-')
+				const parts = result.verse.split('-')
+				reader.findVerse(parts[0], parts[1], yes)
+			else
+				reader.findVerse(result.verse, undefined, yes)
+		else
+			reader.verse = result.verse
+
+		activities.cleanUp!
+		return yes
+
 	@autorun
 	def generateSuggestions
 		const trimmedQuery = query.trim!.toLowerCase!
 		unless trimmedQuery.length
 			suggestions = {}
+			return
+
+		const parsedReference = parseReferenceQuery(query)
+		if parsedReference
+			const parsedBook = reader.books.find(do |book| return book.bookid == parsedReference.book)
+			suggestions.chapter = parsedReference.chapter
+			suggestions.verse = parsedReference.verse
+			suggestions.translation = parsedReference.translation
+			suggestions.books = parsedBook ? [parsedBook] : []
+			suggestions.translations = []
 			return
 
 		const parts = trimmedQuery.split(' ')
@@ -80,7 +184,7 @@ class Search
 				const ch_v_numbers = numbers_part.split(':')
 				suggestions.chapter = parseInt(ch_v_numbers[0])
 				if ch_v_numbers[1].length
-					suggestions.verse = parseInt(ch_v_numbers[1])
+					suggestions.verse = ch_v_numbers[1]
 			else
 				suggestions.chapter = parseInt(numbers_part)
 
@@ -126,6 +230,10 @@ class Search
 		return !isNaN(str) && !isNaN(parseFloat(str))
 
 	def run
+		const parsedReference = parseReferenceQuery(query)
+		if parsedReference
+			return openReferenceQuery(parsedReference)
+
 		# Clear the searched text to avoid 400 error
 		# If the query is long enough -- do the search
 		if query.length <= 2 && !isNumber(query)
