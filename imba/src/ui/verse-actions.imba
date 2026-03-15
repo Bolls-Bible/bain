@@ -28,6 +28,25 @@ tag verse-actions < section
 	#dy = DEFAULT_Y
 	categoriesSearch = ''
 
+	def updateBottomDrawerOffset
+		setTimeout(&, 0) do
+			if self.isConnected
+				activities.bottomDrawerOffset = self.offsetHeight
+
+	def mount
+		updateBottomDrawerOffset!
+
+	def unmount
+		activities.bottomDrawerOffset = 0
+
+	@autorun
+	def syncBottomDrawerOffset
+		activities.selectedVersesTitle
+		activities.show_sharing
+		activities.show_bookmarks
+		activities.show_add_bookmark
+		updateBottomDrawerOffset!
+
 	def close
 		# should await for the transition-duration property update to achieve smoothness
 		#dy = DEFAULT_Y

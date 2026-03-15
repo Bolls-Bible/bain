@@ -202,6 +202,31 @@ class GenericReader
 			activities.activeVerseAction = undefined
 			activities.selectedParallel = undefined
 
+	def selectVersesRange verseNumber, endverse = undefined
+		const start = parseInt(verseNumber)
+		const finish = endverse ? parseInt(endverse) : start
+
+		activities.selectedParallel = me
+		if !activities.highlight_color
+			activities.highlight_color = activities.randomColor
+		activities.selectedVerses = []
+		activities.selectedVersesPKs = []
+		activities.selectedCategories = []
+
+		for verse in verses when start <= verse.verse <= finish
+			activities.selectedVersesPKs.push(verse.pk)
+			activities.selectedVerses.push(verse.verse)
+			pushCollectionIfExist(verse.pk)
+
+		if activities.selectedVersesPKs.length
+			mergeNotes!
+			activities.activeVerseAction = 'options'
+		else
+			activities.activeVerseAction = undefined
+			activities.selectedParallel = undefined
+
+		imba.commit!
+
 
 	def mergeNotes
 		activities.note = ''
@@ -240,33 +265,9 @@ class GenericReader
 					behavior: theme.scrollBehavior,
 					top: verseNumberElement.offsetTop - theme.fontSize
 				})
-				if highlight then highlightLinkedVerses(id, endverse)
+				if highlight then selectVersesRange(id, endverse)
 			else
 				findVerse(id, endverse, highlight)
-
-
-	def highlightLinkedVerses verseNumber, endverse
-		if !window.getSelection
-			return
-
-		setTimeout(&, 250) do
-			const verseNode = document.getElementById(verseNumber)
-			unless verseNode
-				return highlightLinkedVerses verseNumber, endverse
-
-			const selection = window.getSelection()
-			selection.removeAllRanges()
-			if endverse
-				for id in [parseInt(verseNumber) .. parseInt(endverse)]
-					if id <= verses.length
-						const range = document.createRange()
-						const node = document.getElementById(String(id))
-						range.selectNodeContents(node)
-						selection.addRange(range)
-			else
-				const range = document.createRange()
-				range.selectNodeContents(verseNode)
-				selection.addRange(range)
 
 	def saveBookmark
 		unless user.username

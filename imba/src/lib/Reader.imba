@@ -36,7 +36,7 @@ class Reader < GenericReader
 				translation = window.translation
 				book = window.book
 				chapter = window.chapter
-				verse = window.verse
+				verse = window.endVerse ? "{window.verse}-{window.endVerse}" : window.verse
 			verses = window.verses
 			loading = no
 		else
@@ -86,7 +86,6 @@ class Reader < GenericReader
 				findVerse(parts[0], parts[1], yes)
 			else
 				findVerse(verse, undefined, yes)
-			verse = undefined
 		else
 			show_verse_picker = yes
 			if myRenderer
@@ -95,7 +94,9 @@ class Reader < GenericReader
 		# if the pathname has one of 4 `/` in it then call the pushState
 		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
 		if pathnameSlices == 0 or pathnameSlices > 2
-			const newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+			let newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+			if verse
+				newLocation += verse + '/'
 			if window.location.href != newLocation
 				window.history.pushState({
 						translation: translation,
@@ -103,8 +104,11 @@ class Reader < GenericReader
 						chapter: chapter,
 					},
 					'',
-					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
+					newLocation
 				)
+
+		if verse
+			verse = undefined
 
 	@action def randomVerse
 		try
