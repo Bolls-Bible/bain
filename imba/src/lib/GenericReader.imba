@@ -112,6 +112,19 @@ class GenericReader
 				return  "linear-gradient({highlight.color} 0px, {highlight.color} 100%)"
 			else
 				return ''
+
+	def getLinkedHighlight
+		let width = Math.ceil(0.5 * theme.fontSize)
+		return "repeating-linear-gradient(90deg, var(--acc), var(--acc) {width}px, rgba(0,0,0,0) {width}px, rgba(0,0,0,0) {width * 2}px)"
+
+	def getVerseHighlight pk\number, verseNumber\number
+		let backgrounds = []
+		const savedHighlight = getHighlight(pk)
+		if savedHighlight
+			backgrounds.push(savedHighlight)
+		if isLinkedVerse(verseNumber)
+			backgrounds.push(getLinkedHighlight!)
+		return backgrounds.join(', ')
 	
 	def getBookmarks
 		if !user.username
