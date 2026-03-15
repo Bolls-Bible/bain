@@ -156,6 +156,8 @@ class GenericReader
 		if activities.selectedParallel != undefined and activities.selectedParallel != me
 			return
 
+		clearLinkedVerses!
+
 		activities.selectedParallel = me
 		activities.highlight_color = activities.randomColor
 
@@ -246,8 +248,13 @@ class GenericReader
 				findVerse(id, endverse, highlight)
 
 
+	def clearLinkedVerses
+		if linkedVerses.length
+			linkedVerses = []
+			imba.commit!
+
 	def highlightLinkedVerses verseNumber, endverse
-		linkedVerses = []
+		clearLinkedVerses!
 
 		const start = parseInt(verseNumber)
 		const finish = endverse ? parseInt(endverse) : start

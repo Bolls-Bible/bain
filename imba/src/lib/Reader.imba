@@ -80,16 +80,14 @@ class Reader < GenericReader
 		readingHistory.saveToHistory(translation, book, chapter, verse)
 		getBookmarks!
 
-		const linkedVerse = verse
-		if linkedVerse
-			if typeof linkedVerse === 'string' and linkedVerse.includes('-')
-				const parts = linkedVerse.split('-')
+		if verse
+			if typeof verse === 'string' and verse.includes('-')
+				const parts = verse.split('-')
 				findVerse(parts[0], parts[1], yes)
 			else
-				findVerse(linkedVerse, undefined, yes)
-			verse = undefined
+				findVerse(verse, undefined, yes)
 		else
-			linkedVerses = []
+			clearLinkedVerses!
 			show_verse_picker = yes
 			if myRenderer
 				myRenderer.scrollTop = 0
@@ -98,8 +96,8 @@ class Reader < GenericReader
 		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
 		if pathnameSlices == 0 or pathnameSlices > 2
 			let newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
-			if linkedVerse
-				newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/' + linkedVerse + '/'
+			if verse
+				newLocation += verse + '/'
 			if window.location.href != newLocation
 				window.history.pushState({
 						translation: translation,
@@ -109,6 +107,9 @@ class Reader < GenericReader
 					'',
 					newLocation
 				)
+
+		if verse
+			verse = undefined
 
 	@action def randomVerse
 		try
