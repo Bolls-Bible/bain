@@ -123,7 +123,7 @@ jobs:
             sh ./init-certs/check-certs.sh
 
             echo "Starting deploy..."
-            nerdctl compose -f nerdctl-compose.prod.yaml up -d --pull always
+            nerdctl compose -f nerdctl-compose.prod.yaml up -d --pull always --quiet-pull
 
             echo "Migrating the database..."
             nerdctl exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
