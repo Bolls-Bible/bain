@@ -25,11 +25,11 @@ services:
       context: ./django/
       dockerfile: Dockerfile.dev
     restart: on-failure
-    command: python manage.py runserver 0:8000
+    command: uvicorn bain.asgi:application --host 0.0.0.0 --port 8000 --reload
     container_name: django
     volumes:
-      - ./django:/code
-      - ./imba/:/imba
+      - ./django:/code:z
+      - ./imba/:/imba:z
     environment:
       - DEBUG=1
       - DJANGO_ALLOWED_HOSTS=bolls.local 127.0.0.1 localhost
@@ -63,7 +63,7 @@ services:
     environment:
       - API_URL=http://django:8000
     volumes:
-      - ./imba:/app
+      - ./imba:/app:z
     networks:
       - internal
     depends_on:
@@ -77,11 +77,11 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./django/bolls/static/:/home/bolls/web/static/:delegated
-      - ./imba/:/imba/:delegated
-      - ./nginx_dev/certs:/etc/nginx/certs:ro
-      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx_dev/conf.d:/etc/nginx/conf.d
+      - ./django/bolls/static/:/home/bolls/web/static/:delegated,z
+      - ./imba/:/imba/:delegated,z
+      - ./nginx_dev/certs:/etc/nginx/certs:ro,Z
+      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro,Z
+      - ./nginx_dev/conf.d:/etc/nginx/conf.d:Z
     networks:
       - internal
     depends_on:

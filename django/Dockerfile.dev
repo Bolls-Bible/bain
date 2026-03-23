@@ -2,27 +2,23 @@
 FROM python
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # set work directory
 WORKDIR /code
 
 # install psycopg2 dependencies
 RUN apt update -y \
-    && apt install -y postgresql postgresql-contrib netcat-traditional
-
-# # lint
-# RUN pip install --upgrade pip
+    && apt install -y postgresql postgresql-contrib netcat-traditional \
+    && rm -rf /var/lib/apt/lists/*
 
 # install dependencies
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . /code/
-
-# copy dev-entrypoint.sh
 COPY ./dev-entrypoint.sh /code/
 
 # run dev-entrypoint.sh
-ENTRYPOINT ["/code/dev-entrypoint.sh"]
+ENTRYPOINT ["sh", "/code/dev-entrypoint.sh"]

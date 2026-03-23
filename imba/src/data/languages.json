@@ -55,7 +55,7 @@
       {
         "short_name": "TUB",
         "full_name": "Біблія. Новий переклад УБТ Рафаїла Турконяка (1997-2007) 76 книг",
-        "updated": 1753649119979
+        "updated": 1774251896791
       },
       {
         "short_name": "CSL",
@@ -730,6 +730,11 @@
         "short_name": "BG",
         "full_name": "Biblia gdańska, 1881",
         "updated": 1591185595149
+      },
+      {
+        "short_name": "UBG18",
+        "full_name": "UWSPÓŁCZEŚNIONA BIBLIA GDAŃSKA, 2018",
+        "updated": 1774176705701
       },
       {
         "short_name": "BW",

@@ -338,7 +338,7 @@ tag modal < section
 								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
 							<h2> t.note, ', ', activities.selectedVersesTitle
 							<button @click=activities.saveBookmark title=t.save>
-								<svg src=Check [c@hover:lime4] aria-hidden=true>
+								<svg src=ICONS.CHECK [c@hover:lime4] aria-hidden=true>
 						<article[o:0.8 fs:0.8em]>
 							# display here the chosen verses
 							let chosenVersesToIterate = activities.selectedParallel == reader.me ? reader.verses : parallelReader.verses
@@ -473,8 +473,13 @@ tag modal < section
 							<button @click=activities.cleanUp title=t.close>
 								<svg src=ICONS.X [c@hover:red4] aria-hidden=true>
 							<h2> t.theme
+
+							if Math.abs(customTheme.contrast) < 15
+								<svg src=ICONS.WARNING aria-label=t.contrast [c:$acc-hover s:1.5rem]>
+								<span[c:{customTheme.contrastRateColor}]>
+									customTheme.contrast
 							<button @click=theme.applyCustomTheme title=t.save disabled=(Math.abs(customTheme.contrast) < 15)>
-								<svg src=Check  aria-hidden=true>
+								<svg src=ICONS.CHECK  aria-hidden=true>
 
 						<article.body>
 							css
@@ -512,7 +517,7 @@ tag modal < section
 							<p.range>
 								<label htmlFor="fgl"> t.foregroundLight
 								<input id="fgl" type="range" min=0 max=1 step=.00125 bind=customTheme.lightness>
-							<p[d:hcl g:1rem]>
+							<p[d:hcl g:.5rem]>
 								<color-picker color=customTheme.color @change=customTheme.setColor>
 								t.contrast
 								<span[c:{customTheme.contrastRateColor}]>
@@ -607,7 +612,7 @@ tag modal < section
 									<div.suggestions>
 										<input.suggestions-search [mb:0] placeholder=t.search bind=translationsSearch minLength=2 @click.stop>
 										<ul.focusable[visibility:visible o:1]>
-											for translation in translationsQuery.length >= 2 ? search.suggestTranslations(translationsSearch) : translations
+											for translation in translationsSearch.length >= 2 ? search.suggestTranslations(translationsSearch) : translations
 												<li.li @click=(do search.translation = translation.short_name)>
 													translation.short_name
 													', '

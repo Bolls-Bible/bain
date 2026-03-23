@@ -1,10 +1,10 @@
-from bain.wsgi import application
+from bain.asgi import application
 
 # App Engine by default looks for a main.py file at the root of the app
-# directory with a WSGI-compatible object called app.
-# This file imports the WSGI-compatible object of your Django app,
-# application from bain/wsgi.py and renames it app so it is discoverable by
+# directory with a callable object called app.
+# This file imports the ASGI-compatible object of your Django app,
+# application from bain/asgi.py and renames it app so it is discoverable by
 # App Engine without additional configuration.
 # Alternatively, you can add a custom entrypoint field in your app.yaml:
-# entrypoint: gunicorn -b :$PORT bain.wsgi
+# entrypoint: uvicorn bain.asgi:application --host 0.0.0.0 --port $PORT
 app = application

@@ -9,8 +9,8 @@ YELLOW := "\033[33m"
 
 # Use nerdctl for container management (containerd)
 # CONTAINER_MANAGER := docker
-# CONTAINER_MANAGER := podman
-CONTAINER_MANAGER := nerdctl
+CONTAINER_MANAGER := podman
+# CONTAINER_MANAGER := nerdctl
 COMPOSE_FILE := -f nerdctl-compose.yaml
 
 help:

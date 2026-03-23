@@ -29,7 +29,7 @@ mkcert -cert-file "C:\path-to-the-project\bain\nginx_dev\certs\local-cert.pem" -
 Then create .env.dev (may be empty) and run the application with
 
 ```bash
-sudo sysctl net.ipv4.ip_unprivileged_port_start=80 # only for linux to allow non-root process to bind to port 80
+sudo sysctl net.ipv4.ip_unprivileged_port_start=80 # only for linux to allow non-root process to bind to port 80, or add that as an option to /etc/sysctl.conf to make it permanent
 make up
 ```
 

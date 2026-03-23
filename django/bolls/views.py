@@ -723,15 +723,15 @@ def history_v2(request):
             # remove outdated history entries that are behind purge date
             received_purge_date = received_json_data.get("purge_date", 0)
             latest_purge_date = max(received_purge_date, obj.purge_date)
-            merged_history = [h for h in merged_history if h["date"] > latest_purge_date]
+            merged_history = [h for h in merged_history if h.get("date", 0) > latest_purge_date]
             # Remove duplicates, keeping the entry with the most recent date
             seen = {}
             for h in merged_history:
                 key = (h.get("translation"), h.get("book"), h.get("chapter"), h.get("verse"))
-                if key not in seen or h["date"] > seen[key]["date"]:
+                if key not in seen or h.get("date", 0) > seen[key].get("date", 0):
                     seen[key] = h
             # sort it from the newest to the oldest and crop it to 256 entries
-            merged_history = sorted(seen.values(), key=lambda x: x["date"], reverse=True)[:256]
+            merged_history = sorted(seen.values(), key=lambda x: x.get("date", 0), reverse=True)[:256]
 
             obj.history = json.dumps(merged_history)
             obj.save()
@@ -750,7 +750,7 @@ def history_v2(request):
         try:
             obj = user.history_set.get(user=user)
             obj.history = received_json_data["history"]
-            obj.purge_date = received_json_data["purge_date"]
+            obj.purge_date = received_json_data.get("purge_date", 0)
             obj.save()
 
         except History.DoesNotExist:

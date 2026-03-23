@@ -94,7 +94,7 @@ tag chapter < section
 		return <svg src=ChevronRight aria-label=t.next>
 	
 	def isMyRect matchId\string
-		if activities.activeModal != ''
+		if activities.activeModal != '' || !matchId
 			return no
 		if versePrefix == ''
 			// check if there is any letter in the matchId

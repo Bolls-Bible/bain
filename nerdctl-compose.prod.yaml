@@ -21,7 +21,7 @@ services:
   WEB_SERVICE_NAME:
     image: ghcr.io/bolls-bible/bain/django:latest 
     restart: always
-    command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
+    command: uvicorn bain.asgi:application --host 0.0.0.0 --port 8000 --timeout-keep-alive 300
     container_name: WEB_CONTAINER_NAME
     volumes:
       - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static
