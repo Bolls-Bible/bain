@@ -7,11 +7,11 @@ GREEN := "\033[32m"
 CYAN := "\033[36m"
 YELLOW := "\033[33m"
 
-# Use nerdctl for container management (containerd)
+# Use podman for container management
 # CONTAINER_MANAGER := docker
 CONTAINER_MANAGER := podman
 # CONTAINER_MANAGER := nerdctl
-COMPOSE_FILE := -f nerdctl-compose.yaml
+COMPOSE_FILE := -f podman-compose.yaml
 
 help:
 	@echo -e ${BOLD}Usage:${RESET}

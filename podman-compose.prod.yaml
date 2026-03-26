@@ -1,7 +1,6 @@
 services:
   DB_SERVICE_NAME:
     image: pgvector/pgvector:pg18-trixie
-    shm_size: 256mb
     restart: always
     container_name: DB_SERVICE_NAME
     environment:
@@ -12,11 +11,8 @@ services:
     networks:
       - INTERNAL_NETWORK_NAME
     volumes:
-      - DATABASE_VOLUME_SECRET:/var/lib/postgresql
-    deploy:
-      resources:
-        limits:
-          memory: 1gb
+      - DATABASE_VOLUME_SECRET:/var/lib/postgresql:Z
+    shm_size: 1g
 
   WEB_SERVICE_NAME:
     image: ghcr.io/bolls-bible/bain/django:latest 
@@ -24,8 +20,8 @@ services:
     command: uvicorn bain.asgi:application --host 0.0.0.0 --port 8000 --timeout-keep-alive 300
     container_name: WEB_CONTAINER_NAME
     volumes:
-      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static
-      - /var/static/IMBA_VOLUME_NAME:/imba
+      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static:z
+      - /var/static/IMBA_VOLUME_NAME:/imba:z
     environment:
       - DEBUG=DEBUG_SECRET
       - SECRET_KEY=SECRET_KEY_SECRET
@@ -55,17 +51,18 @@ services:
       start_period: 10s
 
   IMBA_SERVICE_NAME-statics-initializer:
-    image: ghcr.io/bolls-bible/bain/imba:latest 
+    image: ghcr.io/bolls-bible/bain/imba:latest
     command: sh -c "cp -r /build/. /app/"
     volumes:
-      - /var/static/IMBA_VOLUME_NAME:/app
+      - /var/static/IMBA_VOLUME_NAME:/app:z
     deploy:
       restart_policy:
         condition: none
+    restart: "no"
 
   IMBA_SERVICE_NAME:
-    image: ghcr.io/bolls-bible/bain/imba:latest 
-    restart: on-failure
+    image: ghcr.io/bolls-bible/bain/imba:latest
+    restart: always
     container_name: IMBA_SERVICE_NAME
     environment:
       - API_URL=http://WEB_SERVICE_NAME:8000
@@ -78,8 +75,8 @@ services:
     image: certbot/certbot:latest
     container_name: certbot
     volumes:
-      - /var/letsencrypt:/etc/letsencrypt
-      - ./challenges:/var/www/certbot:rw
+      - /var/letsencrypt:/etc/letsencrypt:z
+      - ./challenges:/var/www/certbot:rw,z
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"  # Renew certificates every 12 hours
 
   NGINX_SERVICE_NAME:
@@ -92,12 +89,12 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static
-      - /var/static/IMBA_VOLUME_NAME:/imba
-      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - /var/letsencrypt:/etc/letsencrypt
-      - ./challenges:/var/www/certbot:ro
+      - /var/static/STATIC_VOLUME_NAME:/home/bolls/web/static:delegated,z
+      - /var/static/IMBA_VOLUME_NAME:/imba:delegated,z
+      - ./nginx/main/nginx.conf:/etc/nginx/nginx.conf:ro,Z
+      - ./nginx/conf.d:/etc/nginx/conf.d:Z
+      - /var/letsencrypt:/etc/letsencrypt:z
+      - ./challenges:/var/www/certbot:ro,z
     networks:
       - web
       - INTERNAL_NETWORK_NAME

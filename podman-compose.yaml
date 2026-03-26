@@ -4,7 +4,6 @@
 services:
   database:
     image: pgvector/pgvector:pg18-trixie
-    shm_size: 256mb
     restart: on-failure
     container_name: database
     environment:
@@ -15,10 +14,7 @@ services:
       - pgdata:/var/lib/postgresql
     networks:
       - internal
-    deploy:
-      resources:
-        limits:
-          memory: 1gb
+    shm_size: 1g
 
   django:
     build:
