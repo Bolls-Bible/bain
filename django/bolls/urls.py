@@ -10,7 +10,6 @@ urlpatterns = [
     path("downloads/", views.index),
 
     path("signup/", views.sign_up, name="signup"),
-    path("api/", views.api),
     path("history/", views.history),
     path("v2/history/", views.history_v2),
     path("save-bookmarks/", views.save_bookmarks),

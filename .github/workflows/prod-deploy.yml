@@ -2,8 +2,8 @@ on:
   push:
     tags:
       - v**
-    branches:
-      - master
+    # branches:
+    #   - master
 
   workflow_dispatch:
     inputs:
@@ -33,18 +33,18 @@ jobs:
     environment: prod
     env:
       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
+      NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
+      POSTGRES_DB_SECRET: ${{ secrets.POSTGRES_DB_SECRET }}
+      POSTGRES_PASSWORD_SECRET: ${{ secrets.POSTGRES_PASSWORD_SECRET }}
+      POSTGRES_USER_SECRET: ${{ secrets.POSTGRES_USER_SECRET }}
       SECRET_KEY_SECRET: ${{ secrets.SECRET_KEY_SECRET }}
       DJANGO_ALLOWED_HOSTS_SECRET: ${{ vars.DJANGO_ALLOWED_HOSTS_SECRET }}
-      POSTGRES_DB_SECRET: ${{ secrets.POSTGRES_DB_SECRET }}
       EMAIL_HOST_PASSWORD_SECRET: ${{ secrets.EMAIL_HOST_PASSWORD_SECRET }}
       EMAIL_HOST_USER_SECRET: ${{ secrets.EMAIL_HOST_USER_SECRET }}
       SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET }}
       SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET }}
       SOCIAL_AUTH_GITHUB_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_KEY_SECRET }}
       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
-      POSTGRES_USER_SECRET: ${{ secrets.POSTGRES_USER_SECRET }}
-      POSTGRES_PASSWORD_SECRET: ${{ secrets.POSTGRES_PASSWORD_SECRET }}
-      NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
 
     steps:
       - name: SSH and Deploy
@@ -92,7 +92,8 @@ jobs:
             nerdctl pull  ghcr.io/bolls-bible/bain/django
 
             echo "Starting deploy..."
-            nerdctl compose -f nerdctl-compose.prod.yaml up -d
+            nerdctl compose -f nerdctl-compose.prod.yaml up -d --force-recreate web
+            nerdctl restart nginx
 
             nerdctl cp ./sql/unaccent_plus.rules db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
             nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION unaccent;"

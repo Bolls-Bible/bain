@@ -922,10 +922,6 @@ def get_me_if_am_logged_in(request):
     return JsonResponse({"username": ""}, safe=False)
 
 
-def api(request):
-    return render(request, "bolls/api.html")
-
-
 def strip_vowels(raw_string):
     res = ""
     if len(re.findall("[α-ωΑ-Ω]", raw_string)):
