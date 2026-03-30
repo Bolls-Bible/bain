@@ -26,7 +26,6 @@ class GenericReader
 
 	@computed get books
 		unless ALL_BOOKS[translation]
-			console.log "Translation {translation} not found in ALL_BOOKS, defaulting to YLT"
 			return ALL_BOOKS['YLT']
 		let orderBy = settings.chronorder ? 'chronorder' : 'bookid'
 		return ALL_BOOKS[translation].sort(do(a, b) return a[orderBy] - b[orderBy])

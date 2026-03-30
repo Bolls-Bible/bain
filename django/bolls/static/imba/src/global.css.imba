@@ -1,3 +1,5 @@
+import "./fonts/fontstylesheet.css"
+
 global css
 	html[data-theme="light"]
 		color-scheme: light
