@@ -89,8 +89,7 @@ ASGI_APPLICATION = "bain.asgi.application"
 
 DATABASES = {
     "default": {
-        # Use postgres by default
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("SQL_DATABASE", "bain"),
         "USER": os.environ.get("SQL_USER", ""),
         "PASSWORD": os.environ.get("SQL_PASSWORD", ""),
@@ -179,3 +178,5 @@ AUTHENTICATION_BACKENDS = (
 )
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024  # 25 MB

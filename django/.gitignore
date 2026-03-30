@@ -118,7 +118,6 @@ build/
 develop-eggs/
 /static/
 eggs/
-lib/
 lib64/
 parts/
 var/

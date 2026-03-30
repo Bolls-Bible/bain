@@ -1,10 +1,11 @@
 import json
 
+from bolls.utils.find_static_match import find_static_match
+
 from .score_search import score_search
 
-
 BOOKS = []
-with open("/imba/src/data/translations_books.json") as json_file:
+with open(find_static_match("data/translations_books.json")['absolute_path']) as json_file:
     BOOKS = json.load(json_file)
 
 
@@ -172,6 +173,8 @@ def get_book_id(translation, book_slug):
     book_slug = book_slug.lower()
 
     suggestions = []
+    if translation not in BOOKS:
+        raise ValueError(f"Translation '{translation}' not found. Please check the translation name.")
     for b in BOOKS[translation]:
         if b["name"].lower() == book_slug:
             return b["bookid"]

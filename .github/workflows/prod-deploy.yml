@@ -2,8 +2,8 @@ on:
   push:
     tags:
       - v**
-    # branches:
-    #   - master
+    branches:
+      - master
 
   workflow_dispatch:
     inputs:
@@ -14,19 +14,17 @@ on:
 
 jobs:
   build:
-    name: Build and Push Docker Images to GitHub Container Registry
+    name: Build and Push Docker Image to GitHub Container Registry
     runs-on: ubuntu-latest
     environment: prod
     steps:
       - uses: actions/checkout@v3
-      - name: build images for ghcr
+      - name: build django image for ghcr
         run: |
           echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           docker build -t ghcr.io/$REPO_LOWER/django:latest -f ./django/Dockerfile ./django
-          docker build -t ghcr.io/$REPO_LOWER/imba:latest -f ./imba/Dockerfile ./imba
           docker push ghcr.io/$REPO_LOWER/django:latest
-          docker push ghcr.io/$REPO_LOWER/imba:latest
 
   deploy:
     name: Deploy to Prod
@@ -37,12 +35,7 @@ jobs:
       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
       SECRET_KEY_SECRET: ${{ secrets.SECRET_KEY_SECRET }}
       DJANGO_ALLOWED_HOSTS_SECRET: ${{ vars.DJANGO_ALLOWED_HOSTS_SECRET }}
-      SQL_ENGINE_SECRET: ${{ secrets.SQL_ENGINE_SECRET }}
       POSTGRES_DB_SECRET: ${{ secrets.POSTGRES_DB_SECRET }}
-      IMBA_VOLUME_NAME: ${{ secrets.IMBA_VOLUME_NAME }}
-      SQL_PORT_SECRET: ${{ secrets.SQL_PORT_SECRET }}
-      DATABASE_SECRET: ${{ secrets.DATABASE_SECRET }}
-      DATABASE_VOLUME_SECRET: ${{ secrets.DATABASE_VOLUME_SECRET }}
       EMAIL_HOST_PASSWORD_SECRET: ${{ secrets.EMAIL_HOST_PASSWORD_SECRET }}
       EMAIL_HOST_USER_SECRET: ${{ secrets.EMAIL_HOST_USER_SECRET }}
       SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET }}
@@ -51,17 +44,7 @@ jobs:
       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
       POSTGRES_USER_SECRET: ${{ secrets.POSTGRES_USER_SECRET }}
       POSTGRES_PASSWORD_SECRET: ${{ secrets.POSTGRES_PASSWORD_SECRET }}
-      NGINX_CONTAINER_NAME: ${{ secrets.NGINX_CONTAINER_NAME }}
-      STATIC_VOLUME_NAME: ${{ secrets.STATIC_VOLUME_NAME }}
-      INTERNAL_NETWORK_NAME: ${{ secrets.INTERNAL_NETWORK_NAME }}
-      WEB_SERVICE_NAME: ${{ secrets.WEB_SERVICE_NAME }}
-      WEB_CONTAINER_NAME: ${{ secrets.WEB_CONTAINER_NAME }}
-      POSTGRES_CONTAINER_NAME: ${{ secrets.POSTGRES_CONTAINER_NAME }}
-      DB_SERVICE_NAME: ${{ secrets.DB_SERVICE_NAME }}
-      IMBA_SERVICE_NAME: ${{ secrets.IMBA_SERVICE_NAME }}
-      NGINX_SERVICE_NAME: ${{ secrets.NGINX_SERVICE_NAME }}
       NGINX_DOMAIN_NAME: ${{ secrets.NGINX_DOMAIN_NAME }}
-      PGDATA_SECRET: ${{ secrets.PGDATA_SECRET }}
 
     steps:
       - name: SSH and Deploy
@@ -71,80 +54,52 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,SQL_ENGINE_SECRET,POSTGRES_DB_SECRET,IMBA_VOLUME_NAME,SQL_PORT_SECRET,DATABASE_SECRET,DATABASE_VOLUME_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_CONTAINER_NAME,STATIC_VOLUME_NAME,INTERNAL_NETWORK_NAME,WEB_SERVICE_NAME,WEB_CONTAINER_NAME,POSTGRES_CONTAINER_NAME,DB_SERVICE_NAME,IMBA_SERVICE_NAME,NGINX_SERVICE_NAME,NGINX_DOMAIN_NAME,PGDATA_SECRET
+          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,POSTGRES_DB_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_DOMAIN_NAME
           script: |
-            # if the repo already exists, enter it and pull the latest changes, otherwise clone it
-            if [ -d "bain" ]; then
-              cd bain
-              # clean up any changes made
-              git reset --hard
-              git pull
-            else
-              git clone https://github.com/Bolls-Bible/bain
-              cd bain
-            fi
+            rm -rf bain
+            git clone https://github.com/Bolls-Bible/bain
+            cd bain
             git checkout ${{ github.ref }}
 
             echo "Injecting secrets..."
-            sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SQL_ENGINE_SECRET/$SQL_ENGINE_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/POSTGRES_DB_SECRET/$POSTGRES_DB_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/IMBA_VOLUME_NAME/$IMBA_VOLUME_NAME/g" podman-compose.prod.yaml
-            sed -i "s/SQL_PORT_SECRET/$SQL_PORT_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/DATABASE_SECRET/$DATABASE_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/DATABASE_VOLUME_SECRET/$DATABASE_VOLUME_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/POSTGRES_USER_SECRET/$POSTGRES_USER_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/POSTGRES_PASSWORD_SECRET/$POSTGRES_PASSWORD_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/NGINX_CONTAINER_NAME/$NGINX_CONTAINER_NAME/g" podman-compose.prod.yaml
-            sed -i "s/STATIC_VOLUME_NAME/$STATIC_VOLUME_NAME/g" podman-compose.prod.yaml
-            sed -i "s/INTERNAL_NETWORK_NAME/$INTERNAL_NETWORK_NAME/g" podman-compose.prod.yaml
-            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" podman-compose.prod.yaml
-            sed -i "s/WEB_CONTAINER_NAME/$WEB_CONTAINER_NAME/g" podman-compose.prod.yaml
-            sed -i "s/POSTGRES_CONTAINER_NAME/$POSTGRES_CONTAINER_NAME/g" podman-compose.prod.yaml
-            sed -i "s/DB_SERVICE_NAME/$DB_SERVICE_NAME/g" podman-compose.prod.yaml
-            sed -i "s/IMBA_SERVICE_NAME/$IMBA_SERVICE_NAME/g" podman-compose.prod.yaml
-            sed -i "s/NGINX_SERVICE_NAME/$NGINX_SERVICE_NAME/g" podman-compose.prod.yaml
-            sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" podman-compose.prod.yaml
-            sed -i "s/PGDATA_SECRET/$PGDATA_SECRET/g" podman-compose.prod.yaml
-            sed -i "s/WEB_SERVICE_NAME/$WEB_SERVICE_NAME/g" nginx/conf.d/nginx.conf
-            sed -i "s/IMBA_SERVICE_NAME/$IMBA_SERVICE_NAME/g" nginx/conf.d/nginx.conf
+            sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/POSTGRES_DB_SECRET/$POSTGRES_DB_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/POSTGRES_USER_SECRET/$POSTGRES_USER_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/POSTGRES_PASSWORD_SECRET/$POSTGRES_PASSWORD_SECRET/g" nerdctl-compose.prod.yaml
+            sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" nerdctl-compose.prod.yaml
 
             echo "Setting up environment..."
-            apt update -y && apt install -y unzip
-            for i in $(ls django/bolls/static/translations); do unzip django/bolls/static/translations/$i -d django/bolls/static/translations; done
-            for i in $(ls django/bolls/static/dictionaries); do unzip django/bolls/static/dictionaries/$i -d django/bolls/static/dictionaries; done
-            
             sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
-            echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee /etc/sysctl.d/99-podman-ports.conf
+            echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee /etc/sysctl.d/99-nerdctl-ports.conf
 
-            podman network create web
-            podman network create $INTERNAL_NETWORK_NAME
+            nerdctl network create web
+            nerdctl network create internal
 
             curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf >"/var/letsencrypt/options-ssl-nginx.conf"
             curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem >"/var/letsencrypt/ssl-dhparams.pem"
 
             sh ./init-certs/check-certs.sh
 
-            echo "Starting deploy..."
-            podman-compose -f podman-compose.prod.yaml up -d --pull always --quiet-pull
+            echo "Pulling latest image..."
+            nerdctl pull  ghcr.io/bolls-bible/bain/django
 
-            echo "Migrating the database..."
-            podman exec $WEB_CONTAINER_NAME python manage.py migrate --noinput
-            podman exec $WEB_CONTAINER_NAME python manage.py collectstatic --no-input --clear
-            podman cp ./sql/unaccent_plus.rules $DB_SERVICE_NAME:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
-            podman exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION unaccent;"
-            podman exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
-            podman exec $DB_SERVICE_NAME psql -U $POSTGRES_USER_SECRET -d $DATABASE_SECRET -c "CREATE EXTENSION pg_trgm"
+            echo "Starting deploy..."
+            nerdctl compose -f nerdctl-compose.prod.yaml up -d
+
+            nerdctl cp ./sql/unaccent_plus.rules db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
+            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION unaccent;"
+            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION pg_trgm"
 
             echo "Running tests..."
-            podman exec $WEB_CONTAINER_NAME python manage.py test --keepdb
-            # podman system prune -a -f # podman is so nerdy that it says clean on its own
+            nerdctl exec web python manage.py test --keepdb
+            # nerdctl system prune -a -f # nerdctl is so nerdy that it says clean on its own
             echo "Done."

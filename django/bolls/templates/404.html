@@ -1,6 +1,6 @@
 {% load static %}
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-transitions="false" style="color-scheme: dark light">
 
 <head>
 	<meta charset="utf-8">
@@ -10,7 +10,23 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="icon" type="image/png" href="/favicon.ico" />
 	<link rel="manifest" href="/static/site.webmanifest">
+    <meta property="og:site_name" content="Bolls Bible" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width,minimum-scale=1,maximum-scale=5,initial-scale=1"
+    />
+    <meta property="og:title" content="Bolls Bible" />
+    <meta property="og:image" content="bolls.png" />
+    <meta name="theme-color" content="#04060c" />
+    <meta name="twitter:card" content="app" />
+    <meta name="twitter:title" content="Bolls Bible" />
+    <meta name="twitter:image:src" content="bolls.png" />
+    <meta name="twitter:image:alt" content="Bolls logo" />
+    <meta name="twitter:app:name:googleplay" content="Bolls" />
+    <meta name="twitter:app:id:googleplay" content="life.bolls.bolls" />
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/static/bolls/errors/app.css">
 </style>
@@ -19,6 +35,11 @@
 <body>
 	<noscript>404 Not Found</noscript>
 	<script src="/static/bolls/errors/app.js"></script>
+    <noscript>
+      <h1>404 - Page Not Found</h1>
+      <p style="color: var(--c)">
+        Unfortunately, this site requires JavaScript that is disabled in your
+        browser :(
+      </p>
+	</noscript>
 </body>
-
-</html>

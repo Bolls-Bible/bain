@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "name": "Docker root",
+      "name": "Root",
       "path": "."
     },
     {
@@ -10,7 +10,7 @@
     },
     {
       "name": "Imba",
-      "path": "imba"
+      "path": "django/bolls/static/imba"
     }
   ],
   "settings": {

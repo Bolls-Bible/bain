@@ -16,11 +16,14 @@ from django.contrib.auth.hashers import is_password_usable
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from django.template import RequestContext
 from django.http import JsonResponse, HttpResponse
+from django.conf import settings
+
+# from django.templatetags.static import static
 
 from bolls.books_map import books_map
 from bolls.forms import SignUpForm
+from bolls.utils.find_static_match import find_static_match
 
 from .models import Verses, Bookmarks, History, Note, Commentary, Dictionary
 
@@ -28,28 +31,26 @@ from .utils.books import BOOKS, get_book_id, is_number
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+bolls_index = "bolls/index.html"
 incorrect_body = "The body of the request is incorrect"
 
+_imba_assets_cache = None
 
-def cross_origin(response, headers={}):
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"  # REMOVE POST?
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With,X-CSRFToken,Content-Type"
-    response["Cross-Origin-Opener-Policy"] = "unsafe-none"
-    response["Cross-Origin-Embedder-Policy"] = "unsafe-none"
-    response["Cross-Origin-Resource-Policy"] = "cross-origin"
-    response["Content-Security-Policy"] = "cross-origin"
-    response["referrer-policy"] = "unsafe-url"
-    response["x-frame-options"] = "*"
-    # add custom headers
-    for key, value in headers.items():
-        response[key] = value
-    return response
+
+# The function is used to get the paths of the imba assets. It uses caching to avoid unnecessary file system operations, which can be expensive. The cache is invalidated in DEBUG mode to ensure that changes to static files are reflected immediately during development.
+def getImbaIndexAssets():
+    global _imba_assets_cache
+    if _imba_assets_cache is None or settings.DEBUG:
+        _imba_assets_cache = {
+            "imba_css": f"/static/{find_static_match(r'assets/main.*\.css$')['relative_path']}",
+            "imba_js": f"/static/{find_static_match(r'assets/main.*\.js$')['relative_path']}",
+        }
+        print("Imba assets found:", _imba_assets_cache, BASE_DIR)
+    return _imba_assets_cache
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the bolls index.")
+    return render(request, bolls_index, getImbaIndexAssets())
 
 
 def get_translation(_, translation):
@@ -88,7 +89,7 @@ def get_translation(_, translation):
         return verse
 
     verses = [serialize_verse(obj) for obj in all_verses]
-    return cross_origin(JsonResponse(verses, safe=False))
+    return JsonResponse(verses, safe=False)
 
 
 def get_text(_, translation, book, chapter):
@@ -98,37 +99,137 @@ def get_text(_, translation, book, chapter):
         d = []
         for obj in all_objects:
             d.append({"pk": obj.pk, "verse": obj.verse, "text": obj.text})
-        return cross_origin(JsonResponse(d, safe=False))
+        return JsonResponse(d, safe=False)
     except Exception as e:
         print(e)
-        return cross_origin(JsonResponse({"error": "The verses were not found"}, status=404))
+        return JsonResponse({"error": "The verses were not found"}, status=404)
+
+
+def get_chapter_with_commentaries(translation, book, chapter):
+    bookid = get_book_id(translation, book)
+
+    all_verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
+
+    all_commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
+
+    d = []
+    for obj in all_verses:
+        verse = {"pk": obj.pk, "verse": obj.verse, "text": obj.text}
+        comment = ""
+        for item in all_commentaries:
+            if item.verse == obj.verse:
+                if len(comment) > 0:
+                    comment += "<br>"
+                comment += item.text
+        if len(comment) > 0:
+            verse["comment"] = comment
+        d.append(verse)
+    return d
 
 
 def get_chapter_with_comments(_, translation, book, chapter):
     try:
-        bookid = get_book_id(translation, book)
-
-        all_verses = Verses.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
-
-        all_commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation).order_by("verse")
-
-        d = []
-        for obj in all_verses:
-            verse = {"pk": obj.pk, "verse": obj.verse, "text": obj.text}
-            comment = ""
-            for item in all_commentaries:
-                if item.verse == obj.verse:
-                    if len(comment) > 0:
-                        comment += "<br>"
-                    comment += item.text
-            if len(comment) > 0:
-                verse["comment"] = comment
-            d.append(verse)
-        return cross_origin(JsonResponse(d, safe=False))
+        return JsonResponse(get_chapter_with_commentaries(translation, book, chapter), safe=False)
 
     except Exception as e:
         print(e)
-        return cross_origin(JsonResponse({"error": "The verses were not found"}, status=404))
+        return JsonResponse({"error": "The verses were not found"}, status=404)
+
+
+def clean_up_html(raw_html):
+    # remove strong numbers. They are not needed in the description
+    raw_html = re.sub(r"<S>(.*?)</S>", "", raw_html)
+    clean_regex = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
+    clean_text = re.sub(clean_regex, "", raw_html)
+    return clean_text
+
+
+def get_description(verses, verse, endverse):
+    if verse <= len(verses) and len(verses) > 0:
+        i = 0
+        description = verses[verse - 1]["text"]
+        if endverse > 0 and endverse - verse != 0:
+            for i in range(verse, endverse):
+                if i < len(verses):
+                    description += " " + verses[i]["text"]
+        return clean_up_html(description)
+    else:
+        return "Corrupt link!"
+
+
+def link_to_verse(request, translation, book, chapter, verse):
+    try:
+        bookid = get_book_id(translation, book)
+        if str(bookid) != book:
+            return redirect('link_to_verse', translation=translation, book=bookid, chapter=chapter, verse=verse)
+    except Exception as e:
+        print(e)
+        return HttpResponse("The verse is not found", status=404)
+
+    verses = get_chapter_with_commentaries(translation, book, chapter)
+    return render(
+        request,
+        bolls_index,
+        {
+            "translation": translation,
+            "book": book,
+            "chapter": chapter,
+            "verse": verse,
+            "verses": verses,
+            "description": get_description(verses, verse, 0),
+            **getImbaIndexAssets()
+        },
+    )
+
+
+def link_to_verses(request, translation, book, chapter, verse, endverse):
+    try:
+        bookid = get_book_id(translation, book)
+        if str(bookid) != book:
+            return redirect('link_to_verses', translation=translation, book=bookid, chapter=chapter, verse=verse, endverse=endverse)
+    except Exception as e:
+        print(e)
+        return HttpResponse("The verses are not found", status=404)
+
+    verses = get_chapter_with_commentaries(translation, book, chapter)
+    return render(
+        request,
+        bolls_index,
+        {
+            "translation": translation,
+            "book": book,
+            "chapter": chapter,
+            "verse": verse,
+            "endverse": endverse,
+            "verses": verses,
+            "description": get_description(verses, verse, endverse),
+            **getImbaIndexAssets()
+        },
+    )
+
+
+def link_to_chapter(request, translation, book, chapter):
+    try:
+        bookid = get_book_id(translation, book)
+        if str(bookid) != book:
+            return redirect('link_to_chapter', translation=translation, book=bookid, chapter=chapter)
+    except Exception as e:
+        print(e)
+        return HttpResponse("The chapter is not found", status=404)
+
+    verses = get_chapter_with_commentaries(translation, book, chapter)
+    return render(
+        request,
+        bolls_index,
+        {
+            "translation": translation,
+            "book": book,
+            "chapter": chapter,
+            "verses": verses,
+            "description": get_description(verses, 1, 3),
+            **getImbaIndexAssets()
+        },
+    )
 
 
 def find(translation: str, piece: str, book: int, match_case: bool, match_whole: bool, page: int = 1, limit: int = 1024):
@@ -228,7 +329,7 @@ def find(translation: str, piece: str, book: int, match_case: bool, match_whole:
     for obj in search_results:
         exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
-    for obj in search_results[(page * limit - limit):(page * limit)]:
+    for obj in search_results[(page * limit - limit) : (page * limit)]:
         d.append(
             {
                 "pk": obj.pk,
@@ -257,9 +358,11 @@ def search(request, translation, piece=""):
 
     if len(piece) > 2 or piece.isdigit():
         result = find(translation, piece, book, match_case, match_whole)
-        return cross_origin(JsonResponse(result["results"], safe=False), headers={"Exact_matches": result["exact_matches"]})
+        response = JsonResponse(result["results"], safe=False)
+        response["Exact_matches"] = result["exact_matches"]
+        return response
     else:
-        return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
+        return JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it"}], safe=False, status=400)
 
 
 def v2_search(request, translation):
@@ -272,17 +375,17 @@ def v2_search(request, translation):
 
     # Validate page and limit are numbers
     if not str(page).isdigit() or not str(limit).isdigit():
-        return cross_origin(JsonResponse([{"error": "Page and limit must be numbers"}], safe=False, status=400))
+        return JsonResponse([{"error": "Page and limit must be numbers"}], safe=False, status=400)
 
     page = int(page)
     limit = int(limit)
 
     piece = piece.strip()
     if len(piece) <= 2 and not piece.isdigit():
-        return cross_origin(JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it)"}], safe=False, status=400))
+        return JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it"}], safe=False, status=400)
 
     result = find(translation, piece, book, match_case, match_whole, page, limit)
-    return cross_origin(JsonResponse(result, safe=False))
+    return JsonResponse(result, safe=False)
 
 
 def sign_up(request):
@@ -430,7 +533,7 @@ def get_safe_array(array):
 def get_parallel_verses(request):
     # Handle preflight requests
     if request.method == "OPTIONS":
-        return cross_origin(HttpResponse(status=204))
+        return HttpResponse(status=204)
 
     try:
         received_json_data = json.loads(request.body)
@@ -474,11 +577,11 @@ def get_parallel_verses(request):
                             }
                         )
                 response.append(verses)
-            return cross_origin(JsonResponse(response, safe=False))
+            return JsonResponse(response, safe=False)
         else:
-            return cross_origin(HttpResponse(incorrect_body, status=400))
+            return HttpResponse(incorrect_body, status=400)
     except:
-        return cross_origin(HttpResponse("Body json is incorrect", status=400))
+        return HttpResponse("Body json is incorrect", status=400)
 
 
 @require_http_methods(["POST", "OPTIONS"])
@@ -487,7 +590,7 @@ def get_verses(request):
     try:
         received_json_data = json.loads(request.body)
         if not received_json_data:
-            return cross_origin(HttpResponse(incorrect_body, status=400))
+            return HttpResponse(incorrect_body, status=400)
 
         response = []
         query_set = []
@@ -524,9 +627,9 @@ def get_verses(request):
                             }
                         )
             response.append(verses)
-        return cross_origin(JsonResponse(response, safe=False))
+        return JsonResponse(response, safe=False)
     except:
-        return cross_origin(HttpResponse(incorrect_body + str(request.body), status=400))
+        return HttpResponse(incorrect_body + str(request.body), status=400)
 
 
 def get_a_verse(_, translation, book, chapter, verse):
@@ -542,9 +645,9 @@ def get_a_verse(_, translation, book, chapter, verse):
                 "text": verses[0].text,
             }
         else:
-            return cross_origin(HttpResponse("The verse is not found", status=404))
+            return HttpResponse("The verse is not found", status=404)
 
-        commentaries = Commentary.objects.filter(book=book, chapter=chapter, translation=translation, verse=verse)
+        commentaries = Commentary.objects.filter(book=bookid, chapter=chapter, translation=translation, verse=verse)
 
         comment = ""
         for item in commentaries:
@@ -555,10 +658,10 @@ def get_a_verse(_, translation, book, chapter, verse):
         if len(comment) > 0:
             result_verse["comment"] = comment
 
-        return cross_origin(JsonResponse(result_verse, safe=False))
+        return JsonResponse(result_verse, safe=False)
     except Exception as e:
         print(e)
-        return cross_origin(HttpResponse("The verse is not found", status=404))
+        return HttpResponse("The verse is not found", status=404)
 
 
 @require_POST
@@ -823,18 +926,6 @@ def api(request):
     return render(request, "bolls/api.html")
 
 
-def handler404(request, *args, **argv):
-    response = render("404.html", {}, context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
-
-
-def handler500(request, *args, **argv):
-    response = render("500.html", {}, context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
-
-
 def strip_vowels(raw_string):
     res = ""
     if len(re.findall("[α-ωΑ-Ω]", raw_string)):
@@ -938,7 +1029,7 @@ def dictionary_search(request, dict, query):
             serialized_result["short_definition"] = result.short_definition
 
         d.append(serialized_result)
-    return cross_origin(JsonResponse(d, safe=False))
+    return JsonResponse(d, safe=False)
 
 
 def get_dictionary(_, dictionary):
@@ -960,14 +1051,14 @@ def get_dictionary(_, dictionary):
             serialized_definition["short_definition"] = definition.short_definition
         d.append(serialized_definition)
 
-    return cross_origin(JsonResponse(d, safe=False))
+    return JsonResponse(d, safe=False)
 
 
 def get_books(_, translation):
     try:
-        return cross_origin(JsonResponse(BOOKS[translation], safe=False))
+        return JsonResponse(BOOKS[translation], safe=False)
     except:
-        return cross_origin(HttpResponse("There is no such translation: " + translation, status=404))
+        return HttpResponse("There is no such translation: " + translation, status=404)
 
 
 def download_notes(request):
@@ -1092,7 +1183,7 @@ def get_verse_counts(_, translation):
             if verse.chapter not in verses_coun_map[verse.book]:
                 verses_coun_map[verse.book][verse.chapter] = 0
             verses_coun_map[verse.book][verse.chapter] += 1
-        return cross_origin(JsonResponse(verses_coun_map, safe=False))
+        return JsonResponse(verses_coun_map, safe=False)
     except Exception as error:
         print(error)
         return HttpResponse(status=400, content="Translation is not found")
@@ -1101,18 +1192,16 @@ def get_verse_counts(_, translation):
 def get_random_verse(_, translation):
     try:
         verse = Verses.objects.filter(translation=translation).order_by("?").first()
-        return cross_origin(
-            JsonResponse(
-                {
-                    "pk": verse.pk,
-                    "translation": verse.translation,
-                    "book": verse.book,
-                    "chapter": verse.chapter,
-                    "verse": verse.verse,
-                    "text": verse.text,
-                },
-                safe=False,
-            )
+        return JsonResponse(
+            {
+                "pk": verse.pk,
+                "translation": verse.translation,
+                "book": verse.book,
+                "chapter": verse.chapter,
+                "verse": verse.verse,
+                "text": verse.text,
+            },
+            safe=False,
         )
     except Exception as error:
         print(error)
@@ -1140,7 +1229,7 @@ def tag_tool_reference(request, translation, book, chapter, verses):
         )
 
         if len(texts) == 0:
-            return cross_origin(HttpResponse(status=404, content="The verse is not found"))
+            return HttpResponse(status=404, content="The verse is not found")
 
         tooltip = {
             "reference_display": f"{book} {chapter}:{verse}" + (f"-{endVerse}" if endVerse != verse else ""),
@@ -1148,12 +1237,10 @@ def tag_tool_reference(request, translation, book, chapter, verses):
             "text": " ".join([v.text for v in texts]),
         }
 
-        return cross_origin(
-            HttpResponse(
-                f"{callback}({json.dumps(tooltip)});",
-                content_type="text/javascript",
-            )
+        return HttpResponse(
+            f"{callback}({json.dumps(tooltip)});",
+            content_type="text/javascript",
         )
     except Exception as error:
         print(error)
-        return cross_origin(HttpResponse(status=400, content="Something went wrong"))
+        return HttpResponse(status=400, content="Something went wrong")
