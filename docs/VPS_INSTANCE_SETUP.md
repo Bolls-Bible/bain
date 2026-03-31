@@ -1,53 +1,98 @@
-### 1. Install `docker` and `docker-compose`
-https://docs.docker.com/engine/install/debian/
+## VPS Instance Setup (Current Production Flow)
 
-### 2. Map domain name anf GitHub Actions to the new host ip
-1) Update GitHub Secrets for Actions. Set SSH_HOST to the new host ip and SSH_KEY to the ssh rsa key used on the server
-2) Also update domain name DNS to point ot the new host ip
+### 1. Install nerdctl + containerd (not Docker)
+Use the script in this repo:
 
-### 3. Run pipeline
-Create a brunch `feature/setup` and push it to GitHub to trigger automated pipeline. You may need to run it twice if database wasn't well setup at first run.
-
-### 4. Restore database with default data dump
-Go into database container. Download backup:
-`wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.dump`
-
-If you copy backup from your laptop to server
-`scp backup.dump root@ip.ip.ip.ip:/root`
-
-Or if downloaded outside container copy to container:
-`docker cp ./backup.dump db_dev:backup.dump`
-
-Restore in one of these ways (depends on the backup you have done)
-`docker exec -i db_dev pg_restore -U django_dev -v -d cotton < backup.dump`
-`docker exec -i db_dev psql -U django_dev cotton < backup.dump`
-
-
-### 5. After successful dump restoring -- don't forget to reset sequences. Log into dbs psql
-`docker exec -it db_dev psql -U django_dev -d cotton`
-
-Then run this code
+```bash
+bash docs/install_nerdctl+containerd_on_debian12.bash
 ```
-CREATE OR REPLACE FUNCTION "reset_sequence" (tablename text, columnname text)
-RETURNS "pg_catalog"."void" AS
-$body$
-DECLARE
-BEGIN
-    EXECUTE 'SELECT setval( pg_get_serial_sequence(''' || tablename || ''', ''' || columnname || '''),
-    (SELECT COALESCE(MAX(id)+1,1) FROM ' || tablename || '), false)';
-END;
-$body$  LANGUAGE 'plpgsql';
 
-SELECT table_name || '_' || column_name || '_seq', reset_sequence(table_name, column_name) FROM information_schema.columns where column_default like 'nextval%';
--- END
+Verify installation:
+
+```bash
+nerdctl --version
+containerd --version
 ```
-It may take a while before it completes
 
+### 2. Prepare host directories and network
+Create required host paths used by production compose mounts:
 
+```bash
+sudo mkdir -p /var/static/static_volume
+sudo mkdir -p /var/letsencrypt
+```
 
-# What to test after set up
+The deploy workflow creates networks, but you can pre-create them safely:
 
-- login
-- presense of bookmarks
-- saving bookmarks
-- apis are mostly covered with automated tests in the deploy pipeline -- watch it.
+```bash
+nerdctl network create web || true
+nerdctl network create internal || true
+```
+
+### 3. Point DNS and update GitHub Actions settings
+Update DNS A/AAAA records to the new host IP.
+
+Update GitHub Actions environment/secrets used by production deploy:
+
+- `SSH_HOST`, `SSH_PORT`, `SSH_USERNAME`, `SSH_KEY`
+- `GH_PAT`
+- `DEBUG_SECRET`, `SECRET_KEY_SECRET`
+- `POSTGRES_DB_SECRET`, `POSTGRES_USER_SECRET`, `POSTGRES_PASSWORD_SECRET`
+- `EMAIL_HOST_USER_SECRET`, `EMAIL_HOST_PASSWORD_SECRET`
+- `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET`, `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET`
+- `SOCIAL_AUTH_GITHUB_KEY_SECRET`, `SOCIAL_AUTH_GITHUB_SECRET_SECRET`
+- variable: `DJANGO_ALLOWED_HOSTS_SECRET`
+- `NGINX_DOMAIN_NAME`
+
+### 4. Trigger deployment pipeline
+Production deployment is triggered by:
+
+- pushing a version tag matching `v**` (for example `v1.4.0`), or
+- manual `workflow_dispatch` in GitHub Actions.
+
+Example:
+
+```bash
+git checkout master
+git pull
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+What the pipeline now does:
+
+- builds and pushes `ghcr.io/bolls-bible/bain/django:latest`
+- SSHes to VPS, clones the repo, injects secrets into `nerdctl-compose.prod.yaml`
+- ensures nerdctl networks + TLS helper files exist
+- initializes certs on first deploy (`init-certs/check-certs.sh`)
+- runs compose deploy, restarts nginx, applies DB extensions, runs tests
+
+### 5. Restore production database (if needed)
+Container name in prod is `db`.
+
+Download backup on VPS:
+
+```bash
+wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O backup.sql
+```
+
+Restore:
+
+```bash
+nerdctl cp ./backup.sql db:/backup.sql
+nerdctl exec db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /backup.sql
+```
+
+Restore indexes and sequences using the repo script:
+
+```bash
+nerdctl cp ./sql/restore-indexes-sequences.sql db:/restore-indexes-sequences.sql
+nerdctl exec db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /restore-indexes-sequences.sql
+```
+
+### 6. Post-setup checks
+
+- login works
+- bookmarks are present
+- bookmarks can be saved
+- deployed API checks and tests pass in GitHub Actions
