@@ -7,7 +7,7 @@
   - [Before fetching Bible text](#before-fetching-bible-text)
   - [Fetch a chapter](#fetch-a-chapter)
   - [Search](#search)
-  - [Get a translation](#get-a-translation)
+  - [Get a full translation](#get-a-full-translation)
   - [Compare versions](#compare-versions)
   - [Fetch a verse](#fetch-a-verse)
   - [Soft links](#soft-links)
@@ -20,7 +20,10 @@
 
 ## Before fetching Bible text
 
-Updated at: 17 February 2021.
+Updated at: 31 March 2026.
+
+> [!Caution]
+> I noticed that some of you use `get-text` and `get-chapter` endpoints to ~~scrape~~ fetch the whole Bible. Please do not do that! It is not what these endpoints are for, and it may cause performance issues, i.e. you'll ddos my single core 14€ server and crash it. If you want to get the whole Bible just [download the translation in JSON or ZIP format](#get-a-translation) and use and abuse it on your side however you want.
 
 First of all, get:
 
@@ -134,7 +137,7 @@ Curl example:
 curl --location --request GET 'https://bolls.life/v2/find/YLT?search=haggi&match_case=false&match_whole=true'
 ```
 
-## Get a translation
+## Get a full translation
 
 You can get a full translation in zip or json:
 
@@ -146,6 +149,7 @@ https://bolls.life/static/translations/<slug:translation>.json
 Example:
 
 - https://bolls.life/static/translations/YLT.json
+- https://bolls.life/static/translations/TB.zip
 
 The result is an array of all translation verses with comments.
 
@@ -153,7 +157,11 @@ Curl example:
 
 ```bash
 curl --location --request GET 'https://bolls.life/static/translations/YLT.json'
+curl --location --request GET 'https://bolls.life/static/translations/TB.zip'
 ```
+
+> [!Tip]
+> The zip files are just zipped json files. You can unzip them and get the same json. If json endpoint doesn't work for some reason -- zip will always work, and you can get the json from it.
 
 ## Compare versions
 
