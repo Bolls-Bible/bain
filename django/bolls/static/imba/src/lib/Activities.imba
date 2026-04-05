@@ -279,26 +279,22 @@ class Activities
 		)
 		notifications.push('copied')
 
-	def copyToClipboard 
-		let text = '«' + copyObject.text + '»\n\n' + copyObject.title
-		copyTextToClipboard(text)
-
 	# returns a string with the range of verses in format 1-3 or 1
 	def versesRange verses\number[]
 		verses.length > 1 ? (verses.sort(do |a, b| return a - b)[0] + '-' + verses.sort(do |a, b| return b - a)[0]) : verses[0]
 
 	def copyWithoutLink 
 		copyTextToClipboard
-			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation
+			'"' + copyObject.text + ' (' + copyObject.title + ', ' + copyObject.translation + ')"'
 		cleanUp!
 
 	def copyWithLink copy\CopyObject
 		copyTextToClipboard
-			'«' + cleanUpCopyText(copy.text) + '»\n\n' + copy.title + ' ' + copy.translation + ' ' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copy.verses) + '/'
+			'"' + cleanUpCopyText(copy.text) + ' (' + copy.title + ', ' + copy.translation + ')"\n\n' + "https://bolls.life" + '/'+ copy.translation + '/' + copy.book + '/' + copy.chapter + '/' + versesRange(copy.verses) + '/'
 
 	def copyWithInternationalLink
 		copyTextToClipboard
-			'«' + copyObject.text + '»\n\n' + copyObject.title + ' ' + copyObject.translation + ' ' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
+			'"' + copyObject.text + ' (' + copyObject.title + ', ' + copyObject.translation + ')"\n\n' + "https://bolls.life/international" + '/'+ copyObject.translation + '/' + copyObject.book + '/' + copyObject.chapter + '/' + versesRange(copyObject.verses) + '/'
 		cleanUp!
 
 

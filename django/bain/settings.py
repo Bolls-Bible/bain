@@ -81,7 +81,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "bain.wsgi.application"
-ASGI_APPLICATION = "bain.asgi.application"
 
 
 # Database

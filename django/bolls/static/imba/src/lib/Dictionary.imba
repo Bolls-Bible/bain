@@ -182,7 +182,6 @@ class Dictionary
 			def loadDefinitionsFromOffline
 				let query_without_vowels = stripVowels(query)
 				let offlineResults = await vault.searchDefinitions({dictionary: currentDictionary, query: query_without_vowels})
-				definitions = []
 				for definition in offlineResults
 					const score = scoreSearch(definition.lexeme, query_without_vowels)
 					if score or definition.topic == query.toUpperCase!

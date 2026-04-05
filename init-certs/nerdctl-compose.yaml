@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:stable-alpine
     volumes:
       - ./conf.d:/etc/nginx/conf.d
       - /var/letsencrypt:/etc/letsencrypt
