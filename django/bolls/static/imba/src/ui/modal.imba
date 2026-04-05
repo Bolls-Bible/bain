@@ -436,10 +436,10 @@ tag modal < section
 										if expanded
 											<div[p:16px 0px 32px @off:0 h:auto @off:0px overflow:hidden o@off:0] innerHTML=definition.definition ease>
 
-						if dictionary.definitions.length == 0 and !dictionary.loading && dictionary.history.length
+						if dictionary.definitions.length == 0 and !dictionary.loading
 							<div.body[ai:center p:4rem 0 lh:1.6]>
 								<p> t.nothing
-								<p[pt:16px]> t.dictionary_help
+								<p[pt:1rem]> t.dictionary_help
 
 					when 'font'
 						<header>

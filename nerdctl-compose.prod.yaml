@@ -1,6 +1,6 @@
 services:
   db:
-    image: pgvector/pgvector:pg18-trixie
+    image: docker.io/postgres:18-bookworm
     restart: always
     container_name: db
     environment:
@@ -12,12 +12,29 @@ services:
       - internal
     volumes:
       - bolls_db:/var/lib/postgresql:Z
-    shm_size: 1g
+    shm_size: '256mb' # Matches shared_buffers below
+    deploy:
+      resources:
+        limits:
+          memory: 800M
+        reservations:
+          memory: 512M
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c effective_cache_size=600MB
+      -c work_mem=16MB
 
   web:
     image: ghcr.io/bolls-bible/bain/django:latest 
     restart: always
-    command: uvicorn bain.asgi:application --host 0.0.0.0 --port 8000 --timeout-keep-alive 300
+    # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
+    command: gunicorn bain.wsgi:application \
+      --bind 0.0.0.0:8000 \
+      --workers 2 \
+      --worker-tmp-dir /dev/shm \
+      --max-requests 1000 \
+      --max-requests-jitter 50
     container_name: web
     volumes:
       - /var/static/static_volume:/home/bolls/web/static:z
@@ -46,6 +63,12 @@ services:
       timeout: 3s
       retries: 2
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+        reservations:
+          memory: 400M
 
   certbot:
     image: certbot/certbot:latest
@@ -56,7 +79,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"  # Renew certificates every 12 hours
 
   nginx:
-    image: nginx:latest
+    image: nginx:stable-alpine
     restart: always
     container_name: nginx
     environment:
@@ -76,6 +99,10 @@ services:
     depends_on:
       web:
         condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 64M
 
 volumes:
   bolls_db:

@@ -1,9 +1,8 @@
 # For development purposes only!!!
-# Migrated from docker-compose.yml for use with containerd + nerdctl
-# Usage: nerdctl compose -f nerdctl-compose.yaml up
+# Use with containerd + nerdctl or Podman + podman-compose.
 services:
   database:
-    image: docker.io/postgres:trixie
+    image: docker.io/postgres:18-bookworm
     restart: on-failure
     container_name: database
     environment:
@@ -14,11 +13,18 @@ services:
       - pgdata:/var/lib/postgresql
     networks:
       - internal
-    shm_size: 1g
+    shm_size: '256mb' # Matches shared_buffers below
     deploy:
       resources:
         limits:
-          memory: 1gb
+          memory: 800M
+        reservations:
+          memory: 512M
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c effective_cache_size=600MB
+      -c work_mem=16MB
 
   django:
     build:
@@ -26,7 +32,6 @@ services:
       dockerfile: Dockerfile.dev
     restart: on-failure
     command: python manage.py runserver 0:8000
-    # command: uvicorn bain.asgi:application --host 0.0.0.0 --port 8000 --reload
     container_name: django
     volumes:
       - ./django:/code:z
@@ -52,6 +57,12 @@ services:
       timeout: 3s
       retries: 2
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+        reservations:
+          memory: 400M
 
   imba:
     build:
@@ -70,7 +81,7 @@ services:
       - django
 
   nginx:
-    image: nginx:latest
+    image: nginx:stable-alpine
     restart: on-failure
     container_name: nginx
     ports:
