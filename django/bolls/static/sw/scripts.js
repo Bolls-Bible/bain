@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
-importScripts("/sw/dexie.min.js");
-importScripts("/sw/jszip.min.js");
+importScripts("/static/sw/dexie.min.js");
+importScripts("/static/sw/jszip.min.js");
 
 Dexie = Dexie.default;
 

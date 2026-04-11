@@ -9,8 +9,8 @@ YELLOW := "\033[33m"
 
 # Use podman for container management
 # CONTAINER_MANAGER := docker
-CONTAINER_MANAGER := podman
-# CONTAINER_MANAGER := nerdctl
+# CONTAINER_MANAGER := podman
+CONTAINER_MANAGER := nerdctl # closer to prod, even tho a bit more burdensome to set up
 COMPOSE_FILE := -f podman-compose.yaml
 
 help:

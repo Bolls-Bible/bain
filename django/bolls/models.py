@@ -1,5 +1,8 @@
 from django.db import models
+from django.db.models import F, Func
 from django.contrib.auth.models import User
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVector
 
 
 class Verses(models.Model):
@@ -62,3 +65,15 @@ class Dictionary(models.Model):
     transliteration = models.TextField()
     pronunciation = models.TextField()
     short_definition = models.TextField(null=True)
+
+    class Meta:
+        indexes = [
+            GinIndex(
+                SearchVector(
+                    Func(F("lexeme"), function="immutable_unaccent"),
+                    config="simple",
+                ),
+                name="bolls_dict_lexeme_unaccent_idx",
+            ),
+            models.Index(fields=["topic"], name="bolls_dict_topic_idx"),
+        ]
