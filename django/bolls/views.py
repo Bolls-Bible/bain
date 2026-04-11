@@ -972,36 +972,46 @@ def parse_links(text, translation):
     return result
 
 
+def is_strongs_number_query(query):
+    return re.fullmatch(r"[HGhg]\d{1,4}", query.strip()) is not None
+
+
 def dictionary_search(request, dict, query):
     query = query.strip()
-    unaccented_query = strip_vowels(query.lower())
 
-    similarity_rank = 0.5
-    if request.GET.get("extended", False):
-        similarity_rank = 0.3
+    if is_strongs_number_query(query):
+        search_results = Dictionary.objects.filter(dictionary=dict, topic=query.upper())
+    else:
+        unaccented_query = strip_vowels(query.lower())
 
-    # Rank search
-    search_vector = SearchVector("lexeme__unaccent")
-    search_query = SearchQuery(unaccented_query)
-    results_of_rank = (
-        Dictionary.objects.annotate(rank=SearchRank(search_vector, search_query))
-        .filter(
-            Q(short_definition__search=unaccented_query) | Q(topic=query.upper()) | Q(rank__gt=0),
-            dictionary=dict,
+        similarity_rank = 0.5
+        if request.GET.get("extended", False):
+            similarity_rank = 0.3
+
+        unaccented_lexeme = Func(F("lexeme"), function="immutable_unaccent")
+
+        # Rank search
+        search_vector = SearchVector(unaccented_lexeme, config="simple")
+        search_query = SearchQuery(unaccented_query, config="simple")
+        results_of_rank = (
+            Dictionary.objects.annotate(rank=SearchRank(search_vector, search_query))
+            .filter(
+                Q(short_definition__search=unaccented_query) | Q(topic=query.upper()) | Q(rank__gt=0),
+                dictionary=dict,
+            )
+            .order_by("-rank")
         )
-        .order_by("-rank")
-    )
 
-    # SImilarity search
-    results_of_similarity = (
-        Dictionary.objects.annotate(rank=TrigramWordSimilarity(unaccented_query, "lexeme__unaccent"))
-        .filter(dictionary=dict, rank__gt=similarity_rank)
-        .order_by("-rank")
-    )
+        # Similarity search
+        results_of_similarity = (
+            Dictionary.objects.annotate(rank=TrigramWordSimilarity(unaccented_query, unaccented_lexeme))
+            .filter(dictionary=dict, rank__gt=similarity_rank)
+            .order_by("-rank")
+        )
 
-    # Merge both kinds of search
-    search_results = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
-    search_results.sort(key=lambda verse: verse.rank, reverse=True)
+        # Merge both kinds of search
+        search_results = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
+        search_results.sort(key=lambda verse: verse.rank, reverse=True)
 
     # for farther refactoring of inner Bible links
     translation = ""
@@ -1019,7 +1029,7 @@ def dictionary_search(request, dict, query):
             "lexeme": result.lexeme,
             "transliteration": result.transliteration,
             "pronunciation": result.pronunciation,
-            "weight": result.rank,
+            "weight": getattr(result, "rank", 1.0),
         }
         if result.short_definition:
             serialized_result["short_definition"] = result.short_definition

@@ -624,8 +624,8 @@ tag modal < section
 										<.popup-menu [t:0 y@off:-1rem o@off:0 mah:72vh @lt-sm:96vh of:auto] ease>
 											<header[d:hcs bg:$bgc p:0 .5rem pos:sticky t:-.5rem zi:24]>
 												<p[ws:nowrap mr:.5rem fs:0.8em fw:bold]> t.addFilter
-												<button[c@hover:red4] @click=(activities.show_filters = no) title=t.close>
-													<svg src=ICONS.X aria-hidden=yes>
+												<button[c@hover:red4 miw:1.5rem] @click=(activities.show_filters = no) title=t.close>
+													<svg[s:1.5rem] src=ICONS.X aria-hidden=yes>
 
 											if search.filter
 												<button[w:100% p:0.5rem] @click=search.dropFilter> t.drop_filter
@@ -775,7 +775,8 @@ tag modal < section
 			bgc:$acc-bgc-hover c:$acc-hover
 
 		.li
-			d:hcs
+			d:hsl
+			ta:justify
 			p:0.5rem c@hover:$acc-hover
 			cursor:pointer
 			width:100%

@@ -2,6 +2,8 @@ from django.test import TestCase, override_settings
 from django.contrib.staticfiles import finders
 from django.urls import reverse
 
+from bolls.views import is_strongs_number_query
+
 
 @override_settings(
     CACHES={
@@ -47,6 +49,13 @@ class BollsTestCase(TestCase):
         request = self.client.get("/dictionary-definition/BDBT/אֹ֑ור/")
         self.assertIn(b"to be or become light, shine", request.content)
         self.assertEqual(request.status_code, 200)
+
+    def test_is_strongs_number_query(self):
+        self.assertTrue(is_strongs_number_query("H123"))
+        self.assertTrue(is_strongs_number_query("g1"))
+        self.assertFalse(is_strongs_number_query("H12345"))
+        self.assertFalse(is_strongs_number_query("X123"))
+        self.assertFalse(is_strongs_number_query("light"))
 
     # get-parallel-verses
     # check if verses are returned

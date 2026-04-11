@@ -1,18 +1,18 @@
 /// <reference lib="webworker" />
 
-importScripts("/sw/jszip.min.js");
-importScripts("/sw/dexie.min.js");
-importScripts("/sw/scripts.js");
+importScripts("/static/sw/jszip.min.js");
+importScripts("/static/sw/dexie.min.js");
+importScripts("/static/sw/scripts.js");
 
-const CACHE_NAME = "v3.3.2";
+const CACHE_NAME = "v3.3.3";
 const STATICS_CACHE = "statics-v1.0.19";
 const TEXTS_CACHE = "texts-v1.1.3";
 
 const urlsToCache = [
   "/",
-  "/sw/jszip.min.js",
-  "/sw/dexie.min.js",
-  "/sw/scripts.js",
+  "/static/sw/jszip.min.js",
+  "/static/sw/dexie.min.js",
+  "/static/sw/scripts.js",
 ];
 
 self.addEventListener("install", (event) => {
