@@ -14,6 +14,15 @@ from bolls.views import is_strongs_number_query
     }
 )
 class BollsTestCase(TestCase):
+    def test_health_live(self):
+        request = self.client.get("/health/live/")
+        self.assertEqual(request.status_code, 204)
+
+    def test_health_ready(self):
+        request = self.client.get("/health/ready/")
+        self.assertEqual(request.status_code, 200)
+        self.assertJSONEqual(request.content, {"status": "ok", "database": "ok"})
+
     # check if translation books are returned
     def test_get_books(self):
         request = self.client.get("/get-books/YLT/")

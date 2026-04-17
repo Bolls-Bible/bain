@@ -61,6 +61,9 @@ tag books-drawer < nav
 		parallelReader.translation = main_translation
 		parallelReader.book = main_book
 		parallelReader.chapter = main_chapter
+
+		reader.fetchVerses!
+		parallelReader.fetchVerses!
 	
 	def toggleChronorder
 		settings.chronorder = !settings.chronorder
@@ -83,20 +86,24 @@ tag books-drawer < nav
 				parallelReader.book = ALL_BOOKS[translation][0].bookid
 				parallelReader.chapter = 1
 			parallelReader.translation = translation
+			parallelReader.fetchVerses!
 		else
 			unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
 				reader.book = ALL_BOOKS[translation][0].bookid
 				reader.chapter = 1
 			reader.translation = translation
+			reader.fetchVerses!
 		unfoldTranslationsList = no
 
 	@action def goToChapter bookid\number, chapter\number
 		if parallelReader.enabled && activeTranslation == parallelReader.translation
 			parallelReader.book = bookid
 			parallelReader.chapter = chapter
+			parallelReader.fetchVerses!
 		else
 			reader.book = bookid
 			reader.chapter = chapter
+			reader.fetchVerses!
 
 	<self [left@important: 0]=settings.lock_books_menu>
 		<header>

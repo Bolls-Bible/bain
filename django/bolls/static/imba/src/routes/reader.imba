@@ -71,6 +71,7 @@ tag reader
 					reader.verse = link_segments[-1]
 			reader.book = parseInt(params.book)
 			reader.chapter = parseInt(params.chapter)
+			reader.fetchVerses!
 
 
 	def hidePanels event\MouseEvent

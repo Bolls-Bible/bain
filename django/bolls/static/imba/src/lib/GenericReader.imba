@@ -24,6 +24,9 @@ class GenericReader
 
 	me = '' # constant to indicate the main reader versus the parallel reader
 
+	def fetchVerses
+		throw new Error("fetchVerses method should be implemented in the child class")
+
 	@computed get books
 		unless ALL_BOOKS[translation]
 			return ALL_BOOKS['YLT']
@@ -35,9 +38,9 @@ class GenericReader
 			if tr_book.bookid == book
 				return tr_book.name
 		return book
-	
+
 	def theChapterExistInThisTranslation book\number, chapter\number
-		const theBook = books.find(do |element| return element.bookid == book)
+		const theBook = books.find(do|element| return element.bookid == book)
 		if theBook
 			if theBook.chapters >= chapter
 				return yes
@@ -56,6 +59,7 @@ class GenericReader
 			if books[current_index + 1]
 				book = books[current_index + 1].bookid
 				chapter = 1
+		fetchVerses!
 
 	@action def prevChapter
 		if chapter - 1 > 0
@@ -65,6 +69,7 @@ class GenericReader
 			if books[current_index - 1]
 				book = books[current_index - 1].bookid
 				chapter = books[current_index - 1].chapters
+		fetchVerses!
 
 	@computed get prevChapterLink
 		if chapter - 1 > 0
@@ -89,12 +94,14 @@ class GenericReader
 		if books[current_index + 1]
 			book = books[current_index + 1].bookid
 			chapter = 1
+			fetchVerses!
 
 	@action def prevBook
 		let current_index = books.indexOf(books.find(do |element| return element.bookid == book))
 		if books[current_index - 1]
 			book = books[current_index - 1].bookid
 			chapter = 1
+			fetchVerses!
 
 	def getBookmark verseNumber\number
 		if user.username

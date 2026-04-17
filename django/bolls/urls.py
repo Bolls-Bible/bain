@@ -3,6 +3,8 @@ from . import views
 from django.conf.urls import include
 
 urlpatterns = [
+    path("health/live/", views.health_live),
+    path("health/ready/", views.health_ready),
     path("", include("social_django.urls", namespace="social")),
     path("", views.index, name="index"),
     path("donate/", views.index),
@@ -60,7 +62,6 @@ urlpatterns = [
     path("dictionary-definition/<slug:dict>/<str:query>", views.dictionary_search),
     path("get-dictionary/<slug:dictionary>/", views.get_dictionary),
     # AAA
-    path("<slug:translation>/<str:piece>/", views.search),
     path(
         "international/<slug:translation>/<str:book>/<int:chapter>/<int:verse>/",
         views.link_to_verse,

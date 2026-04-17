@@ -1,3 +1,4 @@
+from django.db import connection
 from django.db.models import F, Func
 import re
 import os
@@ -51,6 +52,29 @@ def getImbaIndexAssets():
 
 def index(request):
     return render(request, bolls_index, getImbaIndexAssets())
+
+
+@require_http_methods(["GET", "HEAD"])
+def health_live(_):
+    response = HttpResponse(status=204)
+    response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    return response
+
+
+@require_http_methods(["GET", "HEAD"])
+def health_ready(_):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except Exception:
+        response = JsonResponse({"status": "error", "database": "unavailable"}, status=503)
+        response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        return response
+
+    response = JsonResponse({"status": "ok", "database": "ok"})
+    response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    return response
 
 
 def get_translation(_, translation):

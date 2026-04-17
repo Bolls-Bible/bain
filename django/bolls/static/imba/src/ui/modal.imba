@@ -19,6 +19,7 @@ tag modal < section
 			reader.book = ALL_BOOKS[reader.translation][0].bookid
 			reader.chapter = 1
 		reader.translation = translation
+		reader.fetchVerses!
 
 	@action def openTranslationInParallel translation\string
 		parallelReader.enable = yes
@@ -26,6 +27,7 @@ tag modal < section
 			parallelReader.book = ALL_BOOKS[translation][0].bookid
 			parallelReader.chapter = 1
 		parallelReader.translation = translation
+		parallelReader.fetchVerses!
 
 	@action def openVerseInParallel verse\{book:number, chapter:number, verse:number}
 		# weirdly enough this has to be called through reader, otherwie it can backfire
@@ -33,11 +35,13 @@ tag modal < section
 			reader.book = verse.book
 			reader.chapter = verse.chapter
 			reader.verse = verse.verse
+			reader.fetchVerses!
 		else
 			parallelReader.enable = yes
 			parallelReader.book = verse.book
 			parallelReader.chapter = verse.chapter
 			parallelReader.verse = verse.verse
+			parallelReader.fetchVerses!
 	
 	def copyComparisonList
 		let msg = activities.selectedVersesTitle
@@ -144,12 +148,13 @@ tag modal < section
 		const color = new Color(bgc || fallbackColor)
 		color.alpha = 0.5
 		return color.to("hsl").toString()
-	
+
 	def openSuggestedBook bookId\string
-		reader.book=bookId
-		reader.chapter=search.suggestions.chapter
-		reader.verse=search.suggestions.verse
-	
+		reader.book = bookId
+		reader.chapter = search.suggestions.chapter
+		reader.verse = search.suggestions.verse
+		reader.fetchVerses!
+
 	def openSuggestedBookInParallel bookId\string
 		openInParallel({
 			translation:search.suggestions.translation,
@@ -157,12 +162,13 @@ tag modal < section
 			chapter: search.suggestions.chapter,
 			verse: search.suggestions.verse
 		})
-	
+
 	@action def openHistoryEntry history\HistoryEntry
 		reader.translation = history.translation
 		reader.book = history.book
 		reader.chapter = history.chapter
 		reader.verse = history.verse
+		reader.fetchVerses!
 
 	def render
 		<self
@@ -377,7 +383,7 @@ tag modal < section
 												<svg[s:1.5rem] src=ICONS.GIT_MERGE aria-hidden=yes>
 						else
 							<p[pt:1rem]> t.empty_history
-						
+
 					when "dictionary"
 						<header[pos:relative]>
 							<button[c@hover:red4 px:0] @click=activities.cleanUp title=t.close>
