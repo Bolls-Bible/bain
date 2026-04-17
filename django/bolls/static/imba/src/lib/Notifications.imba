@@ -9,6 +9,9 @@ class Notifications
 		const searchParams = new URLSearchParams window.location.search
 		if searchParams.has 'message'
 			push searchParams.get 'message'
+		if "message" in window
+			push window.message
+			delete window.message
 
 	def push notification\string
 		if typeof notificationsTimeout === 'number'

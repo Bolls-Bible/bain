@@ -43,17 +43,11 @@ class Reader < GenericReader
 		else
 			book = getValue('book') || 1
 			chapter = getValue('chapter') || 1
+			fetchVerses()
 
 	get myRenderer
 		document.getElementById('main-reader')
 
-	def updateParallelReader book, chapter
-		if settings.parallel_sync && parallelReader.enabled && parallelReader.theChapterExistInThisTranslation(book, chapter)
-			parallelReader.book = book
-			parallelReader.chapter = chapter
-
-	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay: 4ms)
 	def fetchVerses
 		unless theChapterExistInThisTranslation book, chapter
 			return
@@ -63,7 +57,10 @@ class Reader < GenericReader
 		verses = []
 		imba.commit!
 
-		updateParallelReader book, chapter
+		if settings.parallel_sync && parallelReader.enabled && parallelReader.theChapterExistInThisTranslation(book, chapter) && (parallelReader.book !== book || parallelReader.chapter !== chapter)
+			parallelReader.book = book
+			parallelReader.chapter = chapter
+			parallelReader.fetchVerses!
 
 		try
 			if vault.downloaded_translations.indexOf(translation) != -1

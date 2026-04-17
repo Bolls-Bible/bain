@@ -104,10 +104,12 @@ extend tag element
 		if settings.parallel_sync
 			if place.book then reader.book = place.book
 			if place.chapter then reader.chapter = place.chapter
+			reader.fetchVerses!
 		else
 			if place.book then parallelReader.book = place.book
 			if place.chapter then parallelReader.chapter = place.chapter
 
 		if place.translation !== reader.translation
 			parallelReader.translation = place.translation
+		parallelReader.fetchVerses!
 

@@ -11,6 +11,7 @@ tag text-as-html
 			reader.book = data.book
 			reader.chapter = data.chapter
 			reader.verse = data.verse
+			reader.fetchVerses!
 
 	def render
 		<self [d:inline dir:auto ff:{theme.fontFamily} fs:{theme.fontSize}px lh:{theme.lineHeight} fw:{theme.fontWeight}] dir=translationTextDirection(data.translation) @click=goToVerse .hide-comments=!settings.verse_commentary>

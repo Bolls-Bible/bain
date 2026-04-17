@@ -58,11 +58,11 @@ services:
     depends_on:
       - db
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/get-text/YLT/1/1/"]
-      interval: 30s
-      timeout: 3s
-      retries: 2
-      start_period: 10s
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health/live/ && curl -fsS http://localhost:8000/health/ready/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   certbot:
     image: certbot/certbot:latest
@@ -92,7 +92,7 @@ services:
       - internal
     depends_on:
       web:
-        condition: service_started
+        condition: service_healthy
 
 volumes:
   bolls_db:

@@ -19,6 +19,11 @@ class ParallelReader < GenericReader
 
 	me = 'parallel'
 
+	def constructor
+		super()
+		if getValue('parallel_display')
+			fetchVerses!
+
 	@autorun def saveTranslation
 		if translationNames[translation]
 			setValue('parallel_translation', translation)
@@ -41,14 +46,6 @@ class ParallelReader < GenericReader
 	get myRenderer
 		document.getElementById('parallel-reader')
 
-	def updateMainReader book, chapter
-		# first check if that chapter and book exist in the main reader
-		if reader.theChapterExistInThisTranslation(book, chapter)
-			reader.book = book
-			reader.chapter = chapter
-
-	# Whenever translation, book or chapter changes, we need to fetch the verses for the current chapter.
-	@autorun(delay: 4ms)
 	def fetchVerses
 		if not theChapterExistInThisTranslation(book, chapter) or not enabled
 			return
@@ -71,7 +68,12 @@ class ParallelReader < GenericReader
 
 		if settings.parallel_sync && enabled
 			readingHistory.saveToHistory(translation, book, chapter, verse)
-			updateMainReader book, chapter
+			# first check if that chapter and book exist in the main reader
+			if reader.theChapterExistInThisTranslation(book, chapter)
+				if reader.book != book or reader.chapter != chapter
+					reader.book = book
+					reader.chapter = chapter
+					reader.fetchVerses!
 
 		getBookmarks!
 

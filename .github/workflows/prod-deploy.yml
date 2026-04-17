@@ -89,11 +89,10 @@ jobs:
             sh ./init-certs/check-certs.sh
 
             echo "Pulling latest image..."
-            nerdctl pull  ghcr.io/bolls-bible/bain/django
+            nerdctl pull ghcr.io/bolls-bible/bain/django
 
             echo "Starting deploy..."
             nerdctl compose -f nerdctl-compose.prod.yaml up -d --force-recreate web
-            nerdctl restart nginx
 
             nerdctl cp ./sql/unaccent_plus.rules db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
             nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION unaccent;"
