@@ -23,8 +23,13 @@ jobs:
         run: |
           echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          docker build -t ghcr.io/$REPO_LOWER/django:latest -f ./django/Dockerfile ./django
+          IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+          docker build \
+            -t ghcr.io/$REPO_LOWER/django:latest \
+            -t ghcr.io/$REPO_LOWER/django:$IMAGE_TAG \
+            -f ./django/Dockerfile ./django
           docker push ghcr.io/$REPO_LOWER/django:latest
+          docker push ghcr.io/$REPO_LOWER/django:$IMAGE_TAG
 
   deploy:
     name: Deploy to Prod
@@ -88,11 +93,15 @@ jobs:
 
             sh ./init-certs/check-certs.sh
 
-            echo "Pulling latest image..."
-            nerdctl pull ghcr.io/bolls-bible/bain/django
+            IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+
+            echo "Pulling release image: $IMAGE_TAG"
+            nerdctl pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
 
             echo "Starting deploy..."
-            nerdctl compose -f nerdctl-compose.prod.yaml up -d --force-recreate web
+            export IMAGE_TAG
+            nerdctl compose -f nerdctl-compose.prod.yaml up -d --force-recreate web nginx
+            # nerdctl exec nginx nginx -s reload || nerdctl restart nginx
 
             nerdctl cp ./sql/unaccent_plus.rules db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
             nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION unaccent;"

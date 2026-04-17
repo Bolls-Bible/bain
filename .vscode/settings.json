@@ -16,5 +16,12 @@
         "rgba",
         "serviceworker",
         "touchmove"
+    ],
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:pipenv",
+            "packageManager": "ms-python.python:pip"
+        }
     ]
 }

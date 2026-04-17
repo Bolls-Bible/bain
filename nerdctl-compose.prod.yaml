@@ -26,7 +26,7 @@ services:
       -c work_mem=16MB
 
   web:
-    image: ghcr.io/bolls-bible/bain/django:latest 
+    image: ghcr.io/bolls-bible/bain/django:${IMAGE_TAG:-latest}
     restart: always
     # command: gunicorn bain.wsgi:application --bind 0.0.0.0:8000 -t 300
     command: gunicorn bain.wsgi:application \
