@@ -1,9 +1,12 @@
+run-name: Deploy ${{ startsWith(github.ref, 'refs/heads/feat/') && github.sha || github.event.inputs.version || github.ref_name }}
+
 on:
   push:
     tags:
       - v**
-    # branches:
-    #   - master
+    branches:
+      # - master
+      - feat/**
 
   workflow_dispatch:
     inputs:
@@ -13,28 +16,32 @@ on:
         default: '0.0.0'
 
 jobs:
-  build:
-    name: Build and Push Docker Image to GitHub Container Registry
-    runs-on: ubuntu-latest
-    environment: prod
-    steps:
-      - uses: actions/checkout@v3
-      - name: build django image for ghcr
-        run: |
-          echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
-          docker build \
-            -t ghcr.io/$REPO_LOWER/django:latest \
-            -t ghcr.io/$REPO_LOWER/django:$IMAGE_TAG \
-            -f ./django/Dockerfile ./django
-          docker push ghcr.io/$REPO_LOWER/django:latest
-          docker push ghcr.io/$REPO_LOWER/django:$IMAGE_TAG
+  # build:
+  #   name: Build and Push Docker Image to GitHub Container Registry
+  #   runs-on: ubuntu-latest
+  #   environment: prod
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: build django image for ghcr
+  #       run: |
+  #         echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #         REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+  #         if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
+  #           IMAGE_TAG="${GITHUB_SHA}"
+  #         else
+  #           IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+  #         fi
+  #         docker build \
+  #           -t ghcr.io/$REPO_LOWER/django:latest \
+  #           -t ghcr.io/$REPO_LOWER/django:$IMAGE_TAG \
+  #           -f ./django/Dockerfile ./django
+  #         docker push ghcr.io/$REPO_LOWER/django:latest
+  #         docker push ghcr.io/$REPO_LOWER/django:$IMAGE_TAG
 
   deploy:
-    name: Deploy to Prod
-    runs-on: ubuntu-latest
-    needs: build
+    name: Deploy to Podman Quadlets
+    runs-on: [self-hosted, fedora, Linux, X64]
+    # needs: build
     environment: prod
     env:
       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
@@ -52,63 +59,128 @@ jobs:
       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
 
     steps:
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          envs: DEBUG_SECRET,SECRET_KEY_SECRET,DJANGO_ALLOWED_HOSTS_SECRET,POSTGRES_DB_SECRET,EMAIL_HOST_PASSWORD_SECRET,EMAIL_HOST_USER_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET,SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET,SOCIAL_AUTH_GITHUB_KEY_SECRET,SOCIAL_AUTH_GITHUB_SECRET_SECRET,POSTGRES_USER_SECRET,POSTGRES_PASSWORD_SECRET,NGINX_DOMAIN_NAME
-          script: |
-            rm -rf bain
-            git clone https://github.com/Bolls-Bible/bain
-            cd bain
-            git checkout ${{ github.ref }}
+      - uses: actions/checkout@v4
 
-            echo "Injecting secrets..."
-            sed -i "s/DEBUG_SECRET/$DEBUG_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/SECRET_KEY_SECRET/$SECRET_KEY_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/DJANGO_ALLOWED_HOSTS_SECRET/$DJANGO_ALLOWED_HOSTS_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/POSTGRES_DB_SECRET/$POSTGRES_DB_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/EMAIL_HOST_PASSWORD_SECRET/$EMAIL_HOST_PASSWORD_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/EMAIL_HOST_USER_SECRET/$EMAIL_HOST_USER_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GITHUB_KEY_SECRET/$SOCIAL_AUTH_GITHUB_KEY_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/SOCIAL_AUTH_GITHUB_SECRET_SECRET/$SOCIAL_AUTH_GITHUB_SECRET_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/POSTGRES_USER_SECRET/$POSTGRES_USER_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/POSTGRES_PASSWORD_SECRET/$POSTGRES_PASSWORD_SECRET/g" nerdctl-compose.prod.yaml
-            sed -i "s/NGINX_DOMAIN_NAME/$NGINX_DOMAIN_NAME/g" nerdctl-compose.prod.yaml
+      - name: Deploy on VPS runner
+        shell: bash
+        run: |
+          set -euo pipefail
 
-            echo "Setting up environment..."
-            sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
-            echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee /etc/sysctl.d/99-nerdctl-ports.conf
+          REPO_DIR="$GITHUB_WORKSPACE"
+          APP_DOMAIN="${NGINX_DOMAIN_NAME:-dev.bolls.life}"
+          # if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
+          #   IMAGE_TAG="${GITHUB_SHA}"
+          # else
+          #   IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+          # fi
+          IMAGE_TAG="v3.3.4b"
 
-            nerdctl network create web
-            nerdctl network create internal
+          DEPLOY_BASE="$HOME/.local/share/bolls"
+          QUADLET_DIR="$HOME/.config/containers/systemd"
+          ENV_DIR="$HOME/.config/bolls"
+          STATIC_DIR="$DEPLOY_BASE/static_volume"
+          LETSENCRYPT_DIR="$DEPLOY_BASE/letsencrypt"
+          POSTGRES_DIR="$DEPLOY_BASE/postgres"
+          CONFIG_ROOT="$DEPLOY_BASE/config"
+          CHALLENGES_DIR="$REPO_DIR/challenges"
+          RUNNER_UID="$(id -u)"
+          export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$RUNNER_UID}"
+          
+          if ! systemctl --user show-environment >/dev/null 2>&1; then
+            echo "User systemd is not available for the runner account."
+            echo "Enable lingering once on the VPS for $(id -un) using 'sudo loginctl enable-linger $(id -un)', then rerun the deploy."
+            exit 1
+          fi
 
-            curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf >"/var/letsencrypt/options-ssl-nginx.conf"
-            curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem >"/var/letsencrypt/ssl-dhparams.pem"
+          export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
 
-            sh ./init-certs/check-certs.sh
+          cd "$REPO_DIR"
+          mkdir -p "$QUADLET_DIR" "$ENV_DIR" "$STATIC_DIR" "$LETSENCRYPT_DIR" "$POSTGRES_DIR" \
+            "$CONFIG_ROOT/nginx/main" "$CONFIG_ROOT/nginx/conf.d" "$CHALLENGES_DIR" "$HOME/.config/containers"
 
-            IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+          echo "Configuring Podman for the runner service..."
+          cat > "$HOME/.config/containers/containers.conf" <<'EOF'
+          [engine]
+          cgroup_manager="cgroupfs"
+          events_logger="file"
+          EOF
 
-            echo "Pulling release image: $IMAGE_TAG"
-            nerdctl pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
+          echo "Writing production environment..."
+          cat > "$ENV_DIR/bolls-dev.env" <<EOF
+          APP_DOMAIN=$APP_DOMAIN
+          DEBUG=$DEBUG_SECRET
+          SECRET_KEY=$SECRET_KEY_SECRET
+          DJANGO_ALLOWED_HOSTS=$DJANGO_ALLOWED_HOSTS_SECRET
+          POSTGRES_DB=$POSTGRES_DB_SECRET
+          POSTGRES_USER=$POSTGRES_USER_SECRET
+          POSTGRES_PASSWORD=$POSTGRES_PASSWORD_SECRET
+          SQL_DATABASE=$POSTGRES_DB_SECRET
+          SQL_USER=$POSTGRES_USER_SECRET
+          SQL_PASSWORD=$POSTGRES_PASSWORD_SECRET
+          SQL_HOST=bolls-dev-db
+          SQL_PORT=5432
+          EMAIL_HOST_USER=$EMAIL_HOST_USER_SECRET
+          EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD_SECRET
+          SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=$SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET
+          SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=$SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET
+          SOCIAL_AUTH_GITHUB_KEY=$SOCIAL_AUTH_GITHUB_KEY_SECRET
+          SOCIAL_AUTH_GITHUB_SECRET=$SOCIAL_AUTH_GITHUB_SECRET_SECRET
+          EOF
+          chmod 600 "$ENV_DIR/bolls-dev.env"
 
-            echo "Starting deploy..."
-            export IMAGE_TAG
-            nerdctl compose -f nerdctl-compose.prod.yaml up -d --force-recreate web nginx
-            # nerdctl exec nginx nginx -s reload || nerdctl restart nginx
+          echo "Preparing nginx for $APP_DOMAIN..."
+          cp nginx/main/nginx.conf "$CONFIG_ROOT/nginx/main/nginx.conf"
+          sed "s/NGINX_DOMAIN_NAME/$APP_DOMAIN/g" nginx/conf.d/nginx.conf > "$CONFIG_ROOT/nginx/conf.d/nginx.conf"
 
-            nerdctl cp ./sql/unaccent_plus.rules db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
-            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION unaccent;"
-            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
-            nerdctl exec db psql -U $POSTGRES_USER_SECRET -d $POSTGRES_DB_SECRET -c "CREATE EXTENSION pg_trgm"
+          curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "$LETSENCRYPT_DIR/options-ssl-nginx.conf"
+          curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "$LETSENCRYPT_DIR/ssl-dhparams.pem"
 
-            echo "Running tests..."
-            nerdctl exec web python manage.py test --keepdb
-            # nerdctl system prune -a -f # nerdctl is so nerdy that it says clean on its own
-            echo "Done."
+          APP_DOMAIN="$APP_DOMAIN" LETSENCRYPT_DIR="$LETSENCRYPT_DIR" sh ./init-certs/check-certs.sh
+
+          echo "Installing quadlets..."
+          for unit in bolls-dev.network bolls-dev-db.container bolls-dev-nginx.container bolls-dev-certbot-init.container bolls-dev-certbot-renew.container; do
+            sed \
+              -e "s|ENV_FILE_PATH|$ENV_DIR/bolls-dev.env|g" \
+              -e "s|POSTGRES_HOST_PATH|$POSTGRES_DIR|g" \
+              -e "s|STATIC_HOST_PATH|$STATIC_DIR|g" \
+              -e "s|LETSENCRYPT_HOST_PATH|$LETSENCRYPT_DIR|g" \
+              -e "s|CHALLENGES_HOST_PATH|$CHALLENGES_DIR|g" \
+              -e "s|NGINX_MAIN_HOST_PATH|$CONFIG_ROOT/nginx/main/nginx.conf|g" \
+              -e "s|NGINX_CONFD_HOST_PATH|$CONFIG_ROOT/nginx/conf.d|g" \
+              "deploy/quadlets/$unit" > "$QUADLET_DIR/$unit"
+          done
+          sed \
+            -e "s|IMAGE_TAG_PLACEHOLDER|$IMAGE_TAG|g" \
+            -e "s|ENV_FILE_PATH|$ENV_DIR/bolls-dev.env|g" \
+            -e "s|POSTGRES_HOST_PATH|$POSTGRES_DIR|g" \
+            -e "s|STATIC_HOST_PATH|$STATIC_DIR|g" \
+            -e "s|LETSENCRYPT_HOST_PATH|$LETSENCRYPT_DIR|g" \
+            -e "s|CHALLENGES_HOST_PATH|$CHALLENGES_DIR|g" \
+            -e "s|NGINX_MAIN_HOST_PATH|$CONFIG_ROOT/nginx/main/nginx.conf|g" \
+            -e "s|NGINX_CONFD_HOST_PATH|$CONFIG_ROOT/nginx/conf.d|g" \
+            deploy/quadlets/bolls-dev-web.container > "$QUADLET_DIR/bolls-dev-web.container"
+
+          echo "Pulling release image: $IMAGE_TAG"
+          podman pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
+
+          echo "Reloading systemd and starting services..."
+          systemctl --user daemon-reload
+          systemctl --user start bolls-dev-network.service
+          systemctl --user restart bolls-dev-db.service
+          systemctl --user restart bolls-dev-web.service
+          systemctl --user restart bolls-dev-nginx.service
+
+          echo "Requesting TLS certificate for $APP_DOMAIN..."
+          systemctl --user start bolls-dev-certbot-init.service || true
+          systemctl --user restart bolls-dev-certbot-renew.service
+          systemctl --user restart bolls-dev-nginx.service
+
+          echo "Applying DB extensions..."
+          podman cp ./sql/unaccent_plus.rules bolls-dev-db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
+          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS unaccent;"
+          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+
+          echo "Running tests..."
+          podman exec bolls-dev-web python manage.py test --keepdb
+          echo "Done."

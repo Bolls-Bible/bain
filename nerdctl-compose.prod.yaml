@@ -1,3 +1,5 @@
+# Legacy production compose file kept for reference.
+# Active production deployment now uses the Podman quadlets in ./deploy/quadlets.
 services:
   db:
     image: pgvector/pgvector:pg18-trixie
@@ -102,4 +104,5 @@ networks:
   internal:
     external: false
   web:
+    name: web
     external: true

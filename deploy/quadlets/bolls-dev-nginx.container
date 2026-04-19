@@ -1,0 +1,25 @@
+[Unit]
+Description=Nginx reverse proxy for dev.bolls.life
+After=bolls-dev-network.service bolls-dev-web.service
+Requires=bolls-dev-network.service bolls-dev-web.service
+
+[Container]
+Image=docker.io/library/nginx:stable-alpine
+ContainerName=bolls-dev-nginx
+Network=bolls-dev.network
+PublishPort=80:80
+PublishPort=443:443
+Volume=STATIC_HOST_PATH:/home/bolls/web/static:ro,Z
+Volume=NGINX_MAIN_HOST_PATH:/etc/nginx/nginx.conf:ro,Z
+Volume=NGINX_CONFD_HOST_PATH:/etc/nginx/conf.d:ro,Z
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:ro,Z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:ro,Z
+PodmanArgs=--cgroup-manager=cgroupfs
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

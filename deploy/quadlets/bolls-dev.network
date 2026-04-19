@@ -1,0 +1,6 @@
+[Unit]
+Description=Network for the dev.bolls.life deployment
+
+[Network]
+NetworkName=bolls-dev
+Driver=bridge

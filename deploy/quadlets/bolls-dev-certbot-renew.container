@@ -1,0 +1,20 @@
+[Unit]
+Description=Certbot renewal loop for dev.bolls.life
+After=bolls-dev-nginx.service
+Requires=bolls-dev-nginx.service
+
+[Container]
+Image=docker.io/library/certbot/certbot:latest
+ContainerName=bolls-dev-certbot-renew
+Network=bolls-dev.network
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:Z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:Z
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=sh -c 'trap exit TERM; while :; do certbot renew --webroot --webroot-path=/var/www/certbot; sleep 12h & wait $!; done'
+
+[Service]
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,21 @@
+[Unit]
+Description=Initial Let's Encrypt certificate request for dev.bolls.life
+After=bolls-dev-nginx.service
+Requires=bolls-dev-nginx.service
+
+[Container]
+Image=docker.io/library/certbot/certbot:latest
+ContainerName=bolls-dev-certbot-init
+Network=bolls-dev.network
+EnvironmentFile=ENV_FILE_PATH
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:Z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:Z
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=sh -c 'certbot certonly --non-interactive --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email bpavlisinec@gmail.com --keep-until-expiring -d "$APP_DOMAIN"'
+
+[Service]
+Type=oneshot
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
