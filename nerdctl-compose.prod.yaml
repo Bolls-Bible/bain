@@ -2,7 +2,7 @@
 # Active production deployment now uses the Podman quadlets in ./deploy/quadlets.
 services:
   db:
-    image: pgvector/pgvector:pg18-trixie
+    image: docker.io/pgvector/pgvector:pg18-trixie
     restart: always
     container_name: db
     environment:

@@ -83,16 +83,30 @@ jobs:
           POSTGRES_DIR="$DEPLOY_BASE/postgres"
           CONFIG_ROOT="$DEPLOY_BASE/config"
           CHALLENGES_DIR="$REPO_DIR/challenges"
+          RUNNER_USER="$(id -un)"
           RUNNER_UID="$(id -u)"
           export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$RUNNER_UID}"
-          
-          if ! systemctl --user show-environment >/dev/null 2>&1; then
-            echo "User systemd is not available for the runner account."
-            echo "Enable lingering once on the VPS for $(id -un) using 'sudo loginctl enable-linger $(id -un)', then rerun the deploy."
-            exit 1
-          fi
+          export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=$XDG_RUNTIME_DIR/bus}"
 
-          export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+          if ! systemctl --user show-environment >/dev/null 2>&1; then
+            echo "No user systemd bus detected for $RUNNER_USER; attempting bootstrap..."
+
+            if command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1; then
+              sudo loginctl enable-linger "$RUNNER_USER" || true
+              sudo systemctl start "user@${RUNNER_UID}.service" || true
+            fi
+
+            export XDG_RUNTIME_DIR="/run/user/$RUNNER_UID"
+            export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+
+            if ! systemctl --user show-environment >/dev/null 2>&1; then
+              echo "User systemd is still unavailable for the runner account."
+              echo "Run these once on the VPS as root, then rerun the deploy:"
+              echo "  loginctl enable-linger $RUNNER_USER"
+              echo "  systemctl start user@${RUNNER_UID}.service"
+              exit 1
+            fi
+          fi
 
           cd "$REPO_DIR"
           mkdir -p "$QUADLET_DIR" "$ENV_DIR" "$STATIC_DIR" "$LETSENCRYPT_DIR" "$POSTGRES_DIR" \

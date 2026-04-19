@@ -68,28 +68,32 @@ Set the same production secrets already used by the workflow:
 
 ### 5. What the deploy pipeline does now
 
+The current deployment is rootless and managed through the runner user's systemd session with `systemctl --user`.
+
+For observation, debugging, and routine maintenance after setup, see [PODMAN_QUADLETS_OPERATIONS.md](./PODMAN_QUADLETS_OPERATIONS.md).
+
 The production workflow now:
 
 - builds and pushes the Django image to GHCR
 - runs the deploy job directly on the VPS self-hosted runner
 - checks out the repo in the runner workspace
-- writes the runtime environment file to `/etc/bolls/bolls-dev.env`
-- installs the quadlets from `deploy/quadlets/` into `/etc/containers/systemd/`
+- writes the runtime environment file to `~/.config/bolls/bolls-dev.env`
+- renders the quadlets from `deploy/quadlets/` into `~/.config/containers/systemd/`
 - bootstraps TLS files and requests the certificate for `dev.bolls.life`
-- starts the stack with `systemctl` and Podman quadlets
-- applies DB extensions and verifies the health endpoint
+- starts the stack with `systemctl --user` and Podman quadlets
+- applies DB extensions and runs the Django test suite in the web container
 
 ### 6. Manual service management on the VPS
 
-Useful commands:
+Useful commands as the runner user:
 
 ```bash
-sudo systemctl status bolls-dev-db.service
-sudo systemctl status bolls-dev-web.service
-sudo systemctl status bolls-dev-nginx.service
-sudo systemctl status bolls-dev-certbot-renew.service
-sudo journalctl -u bolls-dev-web.service -n 200 --no-pager
-sudo podman ps
+systemctl --user status bolls-dev-db.service
+systemctl --user status bolls-dev-web.service
+systemctl --user status bolls-dev-nginx.service
+systemctl --user status bolls-dev-certbot-renew.service
+journalctl --user -u bolls-dev-web.service -n 200 --no-pager
+podman ps
 ```
 
 ### 7. Restore production data if needed

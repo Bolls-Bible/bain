@@ -11,4 +11,6 @@ This directory contains the production systemd quadlets used to run the stack on
 - `bolls-dev-certbot-init.container` requests the first certificate.
 - `bolls-dev-certbot-renew.container` keeps certificates renewed.
 
-The deployment workflow installs these files into `/etc/containers/systemd/` and writes the environment file to `/etc/bolls/bolls-dev.env`.
+The deployment workflow renders these files into the runner user's `~/.config/containers/systemd/` directory and writes the environment file to `~/.config/bolls/bolls-dev.env`.
+
+For day-2 operations, troubleshooting, and maintenance, see [docs/PODMAN_QUADLETS_OPERATIONS.md](../../docs/PODMAN_QUADLETS_OPERATIONS.md).

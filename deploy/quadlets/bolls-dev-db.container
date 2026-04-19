@@ -4,7 +4,7 @@ After=bolls-dev-network.service
 Requires=bolls-dev-network.service
 
 [Container]
-Image=docker.io/library/pgvector/pgvector:pg18-trixie
+Image=docker.io/pgvector/pgvector:pg18-trixie
 ContainerName=bolls-dev-db
 Network=bolls-dev.network
 Volume=POSTGRES_HOST_PATH:/var/lib/postgresql:Z
