@@ -1,15 +1,15 @@
 [Unit]
-Description=Django web app for dev.bolls.life
-After=bolls-dev-network.service bolls-dev-db.service
-Requires=bolls-dev-network.service bolls-dev-db.service
+Description=Django web app for the production Bolls Bible deployment
+After=bolls-network.service bolls-db.service
+Requires=bolls-network.service bolls-db.service
 
 [Container]
 Image=ghcr.io/bolls-bible/bain/django:IMAGE_TAG_PLACEHOLDER
-ContainerName=bolls-dev-web
-Network=bolls-dev.network
-Volume=STATIC_HOST_PATH:/home/bolls/web/static:Z
+ContainerName=bolls-web
+Network=bolls.network
+Volume=STATIC_HOST_PATH:/home/bolls/web/static:z
 EnvironmentFile=ENV_FILE_PATH
-Environment=SQL_HOST=bolls-dev-db
+Environment=SQL_HOST=bolls-db
 Environment=SQL_PORT=5432
 PodmanArgs=--cgroup-manager=cgroupfs
 Exec=gunicorn bain.wsgi:application --bind 0.0.0.0:8000 --workers 2 --worker-tmp-dir /dev/shm --max-requests 1000 --max-requests-jitter 50

@@ -9,7 +9,7 @@ services:
       - "80:80"
 
   certbot:
-    image: certbot/certbot:latest
+    image: docker.io/certbot/certbot:latest
     container_name: certbot-initializer
     volumes:
       - /var/letsencrypt:/etc/letsencrypt

@@ -1,12 +1,12 @@
 [Unit]
-Description=PostgreSQL for dev.bolls.life
-After=bolls-dev-network.service
-Requires=bolls-dev-network.service
+Description=PostgreSQL for the production Bolls Bible deployment
+After=bolls-network.service
+Requires=bolls-network.service
 
 [Container]
-Image=docker.io/pgvector/pgvector:pg18-trixie
-ContainerName=bolls-dev-db
-Network=bolls-dev.network
+Image=docker.io/library/postgres:18-trixie
+ContainerName=bolls-db
+Network=bolls.network
 Volume=POSTGRES_HOST_PATH:/var/lib/postgresql:Z
 EnvironmentFile=ENV_FILE_PATH
 Environment=PGDATA=/var/lib/postgresql/data/bolls

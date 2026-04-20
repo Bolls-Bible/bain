@@ -77,7 +77,7 @@ The production workflow now:
 - builds and pushes the Django image to GHCR
 - runs the deploy job directly on the VPS self-hosted runner
 - checks out the repo in the runner workspace
-- writes the runtime environment file to `~/.config/bolls/bolls-dev.env`
+- writes the runtime environment file to `~/.config/bolls/bolls.env`
 - renders the quadlets from `deploy/quadlets/` into `~/.config/containers/systemd/`
 - bootstraps TLS files and requests the certificate for `dev.bolls.life`
 - starts the stack with `systemctl --user` and Podman quadlets
@@ -88,22 +88,31 @@ The production workflow now:
 Useful commands as the runner user:
 
 ```bash
-systemctl --user status bolls-dev-db.service
-systemctl --user status bolls-dev-web.service
-systemctl --user status bolls-dev-nginx.service
-systemctl --user status bolls-dev-certbot-renew.service
-journalctl --user -u bolls-dev-web.service -n 200 --no-pager
+systemctl --user status bolls-db.service
+systemctl --user status bolls-web.service
+systemctl --user status bolls-nginx.service
+systemctl --user status bolls-certbot-init.service
+systemctl --user status bolls-certbot-renew.service
+journalctl --user -u bolls-web.service -n 200 --no-pager
 podman ps
+```
+
+Stream logs from the services
+```bash
+journalctl --user -u bolls-web.service -f
+journalctl --user -u bolls-nginx.service -f
+journalctl --user -u bolls-certbot-init.service -f
+journalctl --user -u bolls-certbot-renew.service -f
 ```
 
 ### 7. Restore production data if needed
 
-The database container name in the quadlet deployment is `bolls-dev-db`.
+The database container name in the quadlet deployment is `bolls-db`.
 
 ```bash
 wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O backup.sql
-sudo podman cp ./backup.sql bolls-dev-db:/backup.sql
-sudo podman exec bolls-dev-db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /backup.sql
+sudo podman cp ./backup.sql bolls-db:/backup.sql
+sudo podman exec bolls-db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /backup.sql
 ```
 
 ### 8. Post-deploy checks

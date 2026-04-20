@@ -1,0 +1,21 @@
+[Unit]
+Description=Initial Let's Encrypt certificate request for the production Bolls Bible deployment
+After=bolls-nginx.service
+Requires=bolls-nginx.service
+
+[Container]
+Image=docker.io/certbot/certbot:latest
+ContainerName=bolls-certbot-init
+Network=bolls.network
+EnvironmentFile=ENV_FILE_PATH
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:z
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=certonly --non-interactive --webroot --webroot-path=/var/www/certbot --agree-tos --no-eff-email --email bpavlisinec@gmail.com --keep-until-expiring CERTBOT_DOMAIN_ARGS_PLACEHOLDER
+
+[Service]
+Type=oneshot
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

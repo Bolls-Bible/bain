@@ -67,7 +67,9 @@ jobs:
           set -euo pipefail
 
           REPO_DIR="$GITHUB_WORKSPACE"
-          APP_DOMAIN="${NGINX_DOMAIN_NAME:-dev.bolls.life}"
+          APP_DOMAIN="${NGINX_DOMAIN_NAME:-bolls.life}"
+          SERVER_NAMES="$APP_DOMAIN"
+          CERTBOT_DOMAIN_ARGS="-d $APP_DOMAIN"
           # if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
           #   IMAGE_TAG="${GITHUB_SHA}"
           # else
@@ -120,7 +122,7 @@ jobs:
           EOF
 
           echo "Writing production environment..."
-          cat > "$ENV_DIR/bolls-dev.env" <<EOF
+          cat > "$ENV_DIR/bolls.env" <<EOF
           APP_DOMAIN=$APP_DOMAIN
           DEBUG=$DEBUG_SECRET
           SECRET_KEY=$SECRET_KEY_SECRET
@@ -131,7 +133,7 @@ jobs:
           SQL_DATABASE=$POSTGRES_DB_SECRET
           SQL_USER=$POSTGRES_USER_SECRET
           SQL_PASSWORD=$POSTGRES_PASSWORD_SECRET
-          SQL_HOST=bolls-dev-db
+          SQL_HOST=bolls-db
           SQL_PORT=5432
           EMAIL_HOST_USER=$EMAIL_HOST_USER_SECRET
           EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD_SECRET
@@ -140,11 +142,13 @@ jobs:
           SOCIAL_AUTH_GITHUB_KEY=$SOCIAL_AUTH_GITHUB_KEY_SECRET
           SOCIAL_AUTH_GITHUB_SECRET=$SOCIAL_AUTH_GITHUB_SECRET_SECRET
           EOF
-          chmod 600 "$ENV_DIR/bolls-dev.env"
+          chmod 600 "$ENV_DIR/bolls.env"
 
           echo "Preparing nginx for $APP_DOMAIN..."
           cp nginx/main/nginx.conf "$CONFIG_ROOT/nginx/main/nginx.conf"
-          sed "s/NGINX_DOMAIN_NAME/$APP_DOMAIN/g" nginx/conf.d/nginx.conf > "$CONFIG_ROOT/nginx/conf.d/nginx.conf"
+          sed \
+            -e "s|NGINX_DOMAIN_NAME|$APP_DOMAIN|g" \
+            nginx/conf.d/nginx.conf > "$CONFIG_ROOT/nginx/conf.d/nginx.conf"
 
           curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "$LETSENCRYPT_DIR/options-ssl-nginx.conf"
           curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "$LETSENCRYPT_DIR/ssl-dhparams.pem"
@@ -152,49 +156,62 @@ jobs:
           APP_DOMAIN="$APP_DOMAIN" LETSENCRYPT_DIR="$LETSENCRYPT_DIR" sh ./init-certs/check-certs.sh
 
           echo "Installing quadlets..."
-          for unit in bolls-dev.network bolls-dev-db.container bolls-dev-nginx.container bolls-dev-certbot-init.container bolls-dev-certbot-renew.container; do
+          for unit in bolls.network bolls-db.container bolls-nginx.container bolls-certbot-init.container bolls-certbot-renew.container; do
             sed \
-              -e "s|ENV_FILE_PATH|$ENV_DIR/bolls-dev.env|g" \
+              -e "s|ENV_FILE_PATH|$ENV_DIR/bolls.env|g" \
               -e "s|POSTGRES_HOST_PATH|$POSTGRES_DIR|g" \
               -e "s|STATIC_HOST_PATH|$STATIC_DIR|g" \
               -e "s|LETSENCRYPT_HOST_PATH|$LETSENCRYPT_DIR|g" \
               -e "s|CHALLENGES_HOST_PATH|$CHALLENGES_DIR|g" \
               -e "s|NGINX_MAIN_HOST_PATH|$CONFIG_ROOT/nginx/main/nginx.conf|g" \
               -e "s|NGINX_CONFD_HOST_PATH|$CONFIG_ROOT/nginx/conf.d|g" \
+              -e "s|CERTBOT_DOMAIN_ARGS_PLACEHOLDER|$CERTBOT_DOMAIN_ARGS|g" \
               "deploy/quadlets/$unit" > "$QUADLET_DIR/$unit"
           done
           sed \
             -e "s|IMAGE_TAG_PLACEHOLDER|$IMAGE_TAG|g" \
-            -e "s|ENV_FILE_PATH|$ENV_DIR/bolls-dev.env|g" \
+            -e "s|ENV_FILE_PATH|$ENV_DIR/bolls.env|g" \
             -e "s|POSTGRES_HOST_PATH|$POSTGRES_DIR|g" \
             -e "s|STATIC_HOST_PATH|$STATIC_DIR|g" \
             -e "s|LETSENCRYPT_HOST_PATH|$LETSENCRYPT_DIR|g" \
             -e "s|CHALLENGES_HOST_PATH|$CHALLENGES_DIR|g" \
             -e "s|NGINX_MAIN_HOST_PATH|$CONFIG_ROOT/nginx/main/nginx.conf|g" \
             -e "s|NGINX_CONFD_HOST_PATH|$CONFIG_ROOT/nginx/conf.d|g" \
-            deploy/quadlets/bolls-dev-web.container > "$QUADLET_DIR/bolls-dev-web.container"
+            deploy/quadlets/bolls-web.container > "$QUADLET_DIR/bolls-web.container"
 
           echo "Pulling release image: $IMAGE_TAG"
           podman pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
 
           echo "Reloading systemd and starting services..."
           systemctl --user daemon-reload
-          systemctl --user start bolls-dev-network.service
-          systemctl --user restart bolls-dev-db.service
-          systemctl --user restart bolls-dev-web.service
-          systemctl --user restart bolls-dev-nginx.service
+          systemctl --user start bolls-network.service
+          systemctl --user restart bolls-db.service
+          systemctl --user restart bolls-web.service
+          systemctl --user restart bolls-nginx.service
+
+          echo "Verifying ACME challenge path..."
+          mkdir -p "$CHALLENGES_DIR/.well-known/acme-challenge"
+          ACME_PROBE="bolls-acme-probe-$(date +%s)"
+          echo "ok" > "$CHALLENGES_DIR/.well-known/acme-challenge/$ACME_PROBE"
+          for host in $SERVER_NAMES; do
+            curl -fsS "http://$host/.well-known/acme-challenge/$ACME_PROBE" >/dev/null
+          done
+          rm -f "$CHALLENGES_DIR/.well-known/acme-challenge/$ACME_PROBE"
 
           echo "Requesting TLS certificate for $APP_DOMAIN..."
-          systemctl --user start bolls-dev-certbot-init.service || true
-          systemctl --user restart bolls-dev-certbot-renew.service
-          systemctl --user restart bolls-dev-nginx.service
+          if ! systemctl --user start bolls-certbot-init.service; then
+            journalctl --user -u bolls-certbot-init.service -n 200 --no-pager || true
+            exit 1
+          fi
+          systemctl --user restart bolls-certbot-renew.service
+          systemctl --user restart bolls-nginx.service
 
           echo "Applying DB extensions..."
-          podman cp ./sql/unaccent_plus.rules bolls-dev-db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
-          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS unaccent;"
-          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
-          podman exec bolls-dev-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+          podman cp ./sql/unaccent_plus.rules bolls-db:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
+          podman exec bolls-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS unaccent;"
+          podman exec bolls-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
+          podman exec bolls-db psql -U "$POSTGRES_USER_SECRET" -d "$POSTGRES_DB_SECRET" -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 
           echo "Running tests..."
-          podman exec bolls-dev-web python manage.py test --keepdb
+          podman exec bolls-web python manage.py test --keepdb
           echo "Done."

@@ -1,0 +1,6 @@
+[Unit]
+Description=Network for the production Bolls Bible deployment
+
+[Network]
+NetworkName=bolls
+Driver=bridge

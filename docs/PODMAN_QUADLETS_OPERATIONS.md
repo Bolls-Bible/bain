@@ -294,3 +294,13 @@ If a runtime file under the runner's home directory looks wrong, ask:
 4. Were both the web and nginx services restarted together?
 
 That sequence resolves most operational issues in this setup.
+
+### In case wrong image name was used
+
+```bash
+systemctl --user cat bolls-dev-db.service | grep -F 'pgvector/pgvector:pg18-trixie'
+systemctl --user stop bolls-dev-db.service || true
+systemctl --user reset-failed bolls-dev-db.service || true
+podman rm -f bolls-dev-db || true
+systemctl --user start bolls-dev-db.service
+```

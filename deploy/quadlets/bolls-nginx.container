@@ -1,0 +1,25 @@
+[Unit]
+Description=Nginx reverse proxy for the production Bolls Bible deployment
+After=bolls-network.service bolls-web.service
+Requires=bolls-network.service bolls-web.service
+
+[Container]
+Image=docker.io/library/nginx:stable-alpine
+ContainerName=bolls-nginx
+Network=bolls.network
+PublishPort=80:80
+PublishPort=443:443
+Volume=STATIC_HOST_PATH:/home/bolls/web/static:ro,z
+Volume=NGINX_MAIN_HOST_PATH:/etc/nginx/nginx.conf:ro,Z
+Volume=NGINX_CONFD_HOST_PATH:/etc/nginx/conf.d:ro,Z
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:ro,z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:ro,z
+PodmanArgs=--cgroup-manager=cgroupfs
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
