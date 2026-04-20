@@ -1,0 +1,17 @@
+[Unit]
+Description=Database pod for the production Bolls Bible deployment
+After=bolls-back-network.service
+Requires=bolls-back-network.service
+
+[Pod]
+Network=bolls-back.network
+NetworkAlias=bolls-db
+ExitPolicy=continue
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

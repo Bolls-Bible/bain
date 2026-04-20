@@ -1,12 +1,13 @@
 [Unit]
 Description=Django web app for the production Bolls Bible deployment
-After=bolls-network.service bolls-db.service
-Requires=bolls-network.service bolls-db.service
+After=bolls-network.service bolls-back-network.service bolls-db.service bolls-app-pod.service
+Requires=bolls-network.service bolls-back-network.service bolls-db.service bolls-app-pod.service
 
 [Container]
 Image=ghcr.io/bolls-bible/bain/django:IMAGE_TAG_PLACEHOLDER
 ContainerName=bolls-web
-Network=bolls.network
+Pod=bolls-app.pod
+CgroupsMode=no-conmon
 Volume=STATIC_HOST_PATH:/home/bolls/web/static:z
 EnvironmentFile=ENV_FILE_PATH
 Environment=SQL_HOST=bolls-db

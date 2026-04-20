@@ -156,7 +156,7 @@ jobs:
           APP_DOMAIN="$APP_DOMAIN" LETSENCRYPT_DIR="$LETSENCRYPT_DIR" sh ./init-certs/check-certs.sh
 
           echo "Installing quadlets..."
-          for unit in bolls.network bolls-db.container bolls-nginx.container bolls-certbot-init.container bolls-certbot-renew.container; do
+          for unit in bolls.network bolls-back.network bolls-edge.pod bolls-app.pod bolls-db.pod bolls-db.container bolls-nginx.container bolls-certbot-init.container bolls-certbot-renew.container; do
             sed \
               -e "s|ENV_FILE_PATH|$ENV_DIR/bolls.env|g" \
               -e "s|POSTGRES_HOST_PATH|$POSTGRES_DIR|g" \
@@ -182,9 +182,13 @@ jobs:
           echo "Pulling release image: $IMAGE_TAG"
           podman pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
 
-          echo "Reloading systemd and starting services..."
+          echo "Reloading systemd and starting pod-based services..."
           systemctl --user daemon-reload
           systemctl --user start bolls-network.service
+          systemctl --user start bolls-back-network.service
+          systemctl --user restart bolls-db-pod.service
+          systemctl --user restart bolls-app-pod.service
+          systemctl --user restart bolls-edge-pod.service
           systemctl --user restart bolls-db.service
           systemctl --user restart bolls-web.service
           systemctl --user restart bolls-nginx.service

@@ -16,7 +16,7 @@ The production deploy job renders the quadlet templates from `deploy/quadlets/` 
 These are created by the workflow at deploy time:
 
 - Quadlets: `~/.config/containers/systemd/`
-- Environment file: `~/.config/bolls/bolls-dev.env`
+- Environment file: `~/.config/bolls/bolls.env`
 - App data root: `~/.local/share/bolls/`
 - Static files: `~/.local/share/bolls/static_volume`
 - Certificates: `~/.local/share/bolls/letsencrypt`
@@ -27,12 +27,12 @@ These are created by the workflow at deploy time:
 
 ### User services managed by systemd
 
-- `bolls-dev-network.service`
-- `bolls-dev-db.service`
-- `bolls-dev-web.service`
-- `bolls-dev-nginx.service`
-- `bolls-dev-certbot-init.service`
-- `bolls-dev-certbot-renew.service`
+- `bolls-network.service`
+- `bolls-db.service`
+- `bolls-web.service`
+- `bolls-nginx.service`
+- `bolls-certbot-init.service`
+- `bolls-certbot-renew.service`
 
 ## 2. Observing the deployment
 
@@ -41,7 +41,7 @@ Run all of the following as the same Linux user that owns the self-hosted runner
 ### Quick health snapshot
 
 ```bash
-systemctl --user status bolls-dev-db.service bolls-dev-web.service bolls-dev-nginx.service --no-pager
+systemctl --user status bolls-db.service bolls-web.service bolls-nginx.service --no-pager
 podman ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
 curl -fsS https://dev.bolls.life/health/live/
 curl -fsS https://dev.bolls.life/health/ready/
@@ -50,28 +50,32 @@ curl -fsS https://dev.bolls.life/health/ready/
 ### Live logs
 
 ```bash
-journalctl --user -u bolls-dev-web.service -f
-journalctl --user -u bolls-dev-nginx.service -f
-journalctl --user -u bolls-dev-db.service -f
-journalctl --user -u bolls-dev-certbot-renew.service -f
+journalctl --user -u bolls-web.service -f
+journalctl --user -u bolls-nginx.service -f
+journalctl --user -u bolls-db.service -f
+journalctl --user -u bolls-certbot-init.service -f
+journalctl --user -u bolls-certbot-renew.service -f
 ```
 
 ### Container-level inspection
 
 ```bash
-podman logs --tail=200 bolls-dev-web
-podman logs --tail=200 bolls-dev-nginx
-podman logs --tail=200 bolls-dev-db
-podman inspect bolls-dev-web --format '{{json .State.Health}}'
-podman inspect bolls-dev-db --format '{{json .State.Health}}'
+podman logs --tail=200 bolls-web
+podman logs --tail=200 bolls-nginx
+podman logs --tail=200 bolls-db
+podman inspect bolls-web --format '{{json .State.Health}}'
+podman inspect bolls-db --format '{{json .State.Health}}'
 ```
 
 ### Useful in-container checks
 
 ```bash
-podman exec bolls-dev-web python manage.py check
-podman exec bolls-dev-web python manage.py showmigrations
-podman exec bolls-dev-db sh -lc 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+podman exec bolls-web python manage.py check
+podman exec bolls-web python manage.py showmigrations
+podman exec bolls-web python manage.py migrate --noinput
+podman exec bolls-web python manage.py migrate --fake bolls 0014_dictionary_search_indexes
+podman exec bolls-web python manage.py migrate --fake
+podman exec bolls-db sh -lc 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 ```
 
 ## 3. Debugging common problems
@@ -87,7 +91,7 @@ What to do:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user restart bolls-dev-db.service bolls-dev-web.service bolls-dev-nginx.service
+systemctl --user restart bolls-db.service bolls-web.service bolls-nginx.service
 ```
 
 If the change came from the repository template, prefer rerunning the deploy workflow so the generated quadlets are recreated cleanly.
@@ -122,17 +126,17 @@ Those settings are written during deploy to avoid the usual rootless runner warn
 Check the service first:
 
 ```bash
-systemctl --user status bolls-dev-web.service --no-pager
-journalctl --user -u bolls-dev-web.service -n 200 --no-pager
-podman logs --tail=200 bolls-dev-web
+systemctl --user status bolls-web.service --no-pager
+journalctl --user -u bolls-web.service -n 200 --no-pager
+podman logs --tail=200 bolls-web
 ```
 
 Then verify the main dependencies:
 
 ```bash
-podman exec bolls-dev-web env | grep -E 'SQL_HOST|SQL_PORT|DJANGO_ALLOWED_HOSTS|DEBUG'
-podman exec bolls-dev-web curl -fsS http://localhost:8000/health/live/
-podman exec bolls-dev-web curl -fsS http://localhost:8000/health/ready/
+podman exec bolls-web env | grep -E 'SQL_HOST|SQL_PORT|DJANGO_ALLOWED_HOSTS|DEBUG'
+podman exec bolls-web curl -fsS http://localhost:8000/health/live/
+podman exec bolls-web curl -fsS http://localhost:8000/health/ready/
 ```
 
 Typical causes:
@@ -148,15 +152,15 @@ This has happened when nginx kept proxying an old upstream address after only th
 Fix by reloading both services together:
 
 ```bash
-systemctl --user restart bolls-dev-web.service
-systemctl --user restart bolls-dev-nginx.service
+systemctl --user restart bolls-web.service
+systemctl --user restart bolls-nginx.service
 ```
 
 If needed, confirm the proxy container and port mappings:
 
 ```bash
-podman ps --filter name=bolls-dev-nginx
-podman logs --tail=200 bolls-dev-nginx
+podman ps --filter name=bolls-nginx
+podman logs --tail=200 bolls-nginx
 ```
 
 ### Problem: TLS issuance or renewal is failing
@@ -164,9 +168,9 @@ podman logs --tail=200 bolls-dev-nginx
 Check DNS first, then inspect the certbot units:
 
 ```bash
-systemctl --user status bolls-dev-certbot-init.service bolls-dev-certbot-renew.service --no-pager
-journalctl --user -u bolls-dev-certbot-init.service -n 200 --no-pager
-journalctl --user -u bolls-dev-certbot-renew.service -n 200 --no-pager
+systemctl --user status bolls-certbot-init.service bolls-certbot-renew.service --no-pager
+journalctl --user -u bolls-certbot-init.service -n 200 --no-pager
+journalctl --user -u bolls-certbot-renew.service -n 200 --no-pager
 ```
 
 Also verify:
@@ -181,9 +185,9 @@ Also verify:
 Start with:
 
 ```bash
-systemctl --user status bolls-dev-db.service --no-pager
-podman logs --tail=200 bolls-dev-db
-podman exec bolls-dev-db sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\\dx"'
+systemctl --user status bolls-db.service --no-pager
+podman logs --tail=200 bolls-db
+podman exec bolls-db sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\\dx"'
 ```
 
 This repo expects the `unaccent` and `pg_trgm` extensions to be available after deploy.
@@ -195,7 +199,7 @@ This repo expects the `unaccent` and `pg_trgm` extensions to be available after 
 Run this quick checklist:
 
 ```bash
-systemctl --user --no-pager --full status bolls-dev-db.service bolls-dev-web.service bolls-dev-nginx.service
+systemctl --user --no-pager --full status bolls-db.service bolls-web.service bolls-nginx.service
 podman ps
 curl -fsS https://dev.bolls.life/health/live/
 curl -fsS https://dev.bolls.life/health/ready/
@@ -205,7 +209,7 @@ curl -fsS https://dev.bolls.life/health/ready/
 
 1. Change the GitHub Actions secrets or variables.
 2. Rerun the deploy workflow.
-3. Confirm the new values were rendered into `~/.config/bolls/bolls-dev.env`.
+3. Confirm the new values were rendered into `~/.config/bolls/bolls.env`.
 4. Restart the affected services if needed.
 
 ### When changing quadlet behavior
@@ -238,8 +242,8 @@ Only do this when you understand which images are still needed on the host.
 Examples:
 
 ```bash
-podman exec bolls-dev-db sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "VACUUM (ANALYZE);"'
-podman exec bolls-dev-web python manage.py clearsessions
+podman exec bolls-db sh -lc 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "VACUUM (ANALYZE);"'
+podman exec bolls-web python manage.py clearsessions
 ```
 
 ## 5. Recommended restart order
@@ -247,17 +251,17 @@ podman exec bolls-dev-web python manage.py clearsessions
 For routine recovery or after config changes, use this order:
 
 ```bash
-systemctl --user restart bolls-dev-db.service
-systemctl --user restart bolls-dev-web.service
-systemctl --user restart bolls-dev-nginx.service
+systemctl --user restart bolls-db.service
+systemctl --user restart bolls-web.service
+systemctl --user restart bolls-nginx.service
 ```
 
 If you changed the network quadlet or regenerated units:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user start bolls-dev-network.service
-systemctl --user restart bolls-dev-db.service bolls-dev-web.service bolls-dev-nginx.service
+systemctl --user start bolls-network.service
+systemctl --user restart bolls-db.service bolls-web.service bolls-nginx.service
 ```
 
 ## 6. Incident checklist
@@ -267,9 +271,9 @@ If the site is down, collect these before making larger changes:
 ```bash
 date
 hostname
-systemctl --user --no-pager --full status bolls-dev-db.service bolls-dev-web.service bolls-dev-nginx.service
-journalctl --user -u bolls-dev-web.service -n 200 --no-pager
-journalctl --user -u bolls-dev-nginx.service -n 200 --no-pager
+systemctl --user --no-pager --full status bolls-db.service bolls-web.service bolls-nginx.service
+journalctl --user -u bolls-web.service -n 200 --no-pager
+journalctl --user -u bolls-nginx.service -n 200 --no-pager
 podman ps -a
 podman system df
 curl -I https://dev.bolls.life/
@@ -298,9 +302,9 @@ That sequence resolves most operational issues in this setup.
 ### In case wrong image name was used
 
 ```bash
-systemctl --user cat bolls-dev-db.service | grep -F 'pgvector/pgvector:pg18-trixie'
-systemctl --user stop bolls-dev-db.service || true
-systemctl --user reset-failed bolls-dev-db.service || true
-podman rm -f bolls-dev-db || true
-systemctl --user start bolls-dev-db.service
+systemctl --user cat bolls-db.service | grep -F 'pgvector/pgvector:pg18-trixie'
+systemctl --user stop bolls-db.service || true
+systemctl --user reset-failed bolls-db.service || true
+podman rm -f bolls-db || true
+systemctl --user start bolls-db.service
 ```

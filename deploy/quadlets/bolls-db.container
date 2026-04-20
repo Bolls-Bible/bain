@@ -1,12 +1,13 @@
 [Unit]
 Description=PostgreSQL for the production Bolls Bible deployment
-After=bolls-network.service
-Requires=bolls-network.service
+After=bolls-back-network.service bolls-db-pod.service
+Requires=bolls-back-network.service bolls-db-pod.service
 
 [Container]
 Image=docker.io/library/postgres:18-trixie
 ContainerName=bolls-db
-Network=bolls.network
+Pod=bolls-db.pod
+CgroupsMode=no-conmon
 Volume=POSTGRES_HOST_PATH:/var/lib/postgresql:Z
 EnvironmentFile=ENV_FILE_PATH
 Environment=PGDATA=/var/lib/postgresql/data/bolls
