@@ -4,9 +4,9 @@ on:
   push:
     tags:
       - v**
-    branches:
-      # - master
-      - feat/**
+    # branches:
+    #   # - master
+    #   - feat/**
 
   workflow_dispatch:
     inputs:
@@ -16,32 +16,32 @@ on:
         default: '0.0.0'
 
 jobs:
-  # build:
-  #   name: Build and Push Docker Image to GitHub Container Registry
-  #   runs-on: ubuntu-latest
-  #   environment: prod
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: build django image for ghcr
-  #       run: |
-  #         echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-  #         REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-  #         if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
-  #           IMAGE_TAG="${GITHUB_SHA}"
-  #         else
-  #           IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
-  #         fi
-  #         docker build \
-  #           -t ghcr.io/$REPO_LOWER/django:latest \
-  #           -t ghcr.io/$REPO_LOWER/django:$IMAGE_TAG \
-  #           -f ./django/Dockerfile ./django
-  #         docker push ghcr.io/$REPO_LOWER/django:latest
-  #         docker push ghcr.io/$REPO_LOWER/django:$IMAGE_TAG
+  build:
+    name: Build and Push Docker Image to GitHub Container Registry
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - name: build django image for ghcr
+        run: |
+          echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
+            IMAGE_TAG="${GITHUB_SHA}"
+          else
+            IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+          fi
+          docker build \
+            -t ghcr.io/$REPO_LOWER/django:latest \
+            -t ghcr.io/$REPO_LOWER/django:$IMAGE_TAG \
+            -f ./django/Dockerfile ./django
+          docker push ghcr.io/$REPO_LOWER/django:latest
+          docker push ghcr.io/$REPO_LOWER/django:$IMAGE_TAG
 
   deploy:
     name: Deploy to Podman Quadlets
     runs-on: [self-hosted, fedora, Linux, X64]
-    # needs: build
+    needs: build
     environment: prod
     env:
       DEBUG_SECRET: ${{ secrets.DEBUG_SECRET }}
@@ -70,12 +70,11 @@ jobs:
           APP_DOMAIN="${NGINX_DOMAIN_NAME:-bolls.life}"
           SERVER_NAMES="$APP_DOMAIN"
           CERTBOT_DOMAIN_ARGS="-d $APP_DOMAIN"
-          # if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
-          #   IMAGE_TAG="${GITHUB_SHA}"
-          # else
-          #   IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
-          # fi
-          IMAGE_TAG="v3.3.4b"
+          if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
+            IMAGE_TAG="${GITHUB_SHA}"
+          else
+            IMAGE_TAG="${{ github.event.inputs.version || github.ref_name }}"
+          fi
 
           DEPLOY_BASE="$HOME/.local/share/bolls"
           QUADLET_DIR="$HOME/.config/containers/systemd"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-APP_DOMAIN="${APP_DOMAIN:-dev.bolls.life}"
+APP_DOMAIN="${APP_DOMAIN:-bolls.life}"
 LETSENCRYPT_ROOT="${LETSENCRYPT_DIR:-/var/letsencrypt}"
 CERT_DIR="$LETSENCRYPT_ROOT/live/$APP_DOMAIN"
 

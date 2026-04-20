@@ -1,4 +1,5 @@
 # Legacy production compose file kept for reference.
+# You may still use it as a reference for your deployment, but be aware that it is not actively maintained and may not reflect the current state of the production deployment. The active production deployment now uses the Podman quadlets in ./deploy/quadlets.
 # Active production deployment now uses the Podman quadlets in ./deploy/quadlets.
 services:
   db:

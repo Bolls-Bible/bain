@@ -6,6 +6,15 @@ This guide explains how to observe, debug, and maintain the production deploymen
 
 The production deploy job renders the quadlet templates from `deploy/quadlets/` into the runner user's systemd directory and manages them with `systemctl --user`.
 
+### Pod and network topology
+
+The stack is intentionally split so only nginx is public:
+
+- the **edge pod** publishes ports 80 and 443 and runs nginx
+- the **app pod** runs Django and joins both the front and backend networks
+- the **db pod** runs PostgreSQL and joins only the backend network
+- `bolls-back.network` is created with `Internal=true`, so the database is not exposed directly
+
 ### Canonical source files
 
 - Quadlet templates: `deploy/quadlets/`
@@ -27,7 +36,19 @@ These are created by the workflow at deploy time:
 
 ### User services managed by systemd
 
+**Networks**
+
 - `bolls-network.service`
+- `bolls-back-network.service`
+
+**Pods**
+
+- `bolls-edge-pod.service`
+- `bolls-app-pod.service`
+- `bolls-db-pod.service`
+
+**Containers**
+
 - `bolls-db.service`
 - `bolls-web.service`
 - `bolls-nginx.service`
@@ -41,10 +62,14 @@ Run all of the following as the same Linux user that owns the self-hosted runner
 ### Quick health snapshot
 
 ```bash
-systemctl --user status bolls-db.service bolls-web.service bolls-nginx.service --no-pager
+systemctl --user status \
+  bolls-back-network.service bolls-network.service \
+  bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service \
+  bolls-db.service bolls-web.service bolls-nginx.service --no-pager
+podman pod ps
 podman ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
-curl -fsS https://dev.bolls.life/health/live/
-curl -fsS https://dev.bolls.life/health/ready/
+curl -fsS https://bolls.life/health/live/
+curl -fsS https://bolls.life/health/ready/
 ```
 
 ### Live logs
@@ -91,6 +116,8 @@ What to do:
 
 ```bash
 systemctl --user daemon-reload
+systemctl --user start bolls-network.service bolls-back-network.service
+systemctl --user restart bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service
 systemctl --user restart bolls-db.service bolls-web.service bolls-nginx.service
 ```
 
@@ -199,10 +226,13 @@ This repo expects the `unaccent` and `pg_trgm` extensions to be available after 
 Run this quick checklist:
 
 ```bash
-systemctl --user --no-pager --full status bolls-db.service bolls-web.service bolls-nginx.service
+systemctl --user --no-pager --full status \
+  bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service \
+  bolls-db.service bolls-web.service bolls-nginx.service
+podman pod ps
 podman ps
-curl -fsS https://dev.bolls.life/health/live/
-curl -fsS https://dev.bolls.life/health/ready/
+curl -fsS https://bolls.life/health/live/
+curl -fsS https://bolls.life/health/ready/
 ```
 
 ### When updating secrets or environment values
@@ -248,7 +278,7 @@ podman exec bolls-web python manage.py clearsessions
 
 ## 5. Recommended restart order
 
-For routine recovery or after config changes, use this order:
+For routine application recovery, use this order:
 
 ```bash
 systemctl --user restart bolls-db.service
@@ -256,11 +286,12 @@ systemctl --user restart bolls-web.service
 systemctl --user restart bolls-nginx.service
 ```
 
-If you changed the network quadlet or regenerated units:
+If you changed pod or network quadlets, use the full topology restart:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user start bolls-network.service
+systemctl --user start bolls-network.service bolls-back-network.service
+systemctl --user restart bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service
 systemctl --user restart bolls-db.service bolls-web.service bolls-nginx.service
 ```
 
@@ -271,12 +302,15 @@ If the site is down, collect these before making larger changes:
 ```bash
 date
 hostname
-systemctl --user --no-pager --full status bolls-db.service bolls-web.service bolls-nginx.service
+systemctl --user --no-pager --full status \
+  bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service \
+  bolls-db.service bolls-web.service bolls-nginx.service
 journalctl --user -u bolls-web.service -n 200 --no-pager
 journalctl --user -u bolls-nginx.service -n 200 --no-pager
+podman pod ps
 podman ps -a
 podman system df
-curl -I https://dev.bolls.life/
+curl -I https://bolls.life/
 ```
 
 This usually tells you whether the issue is:
@@ -295,14 +329,14 @@ If a runtime file under the runner's home directory looks wrong, ask:
 1. Is the repository template correct?
 2. Was the deploy workflow rerun after the change?
 3. Was `systemctl --user daemon-reload` executed?
-4. Were both the web and nginx services restarted together?
+4. Were the relevant pod services and the web/nginx containers restarted?
 
 That sequence resolves most operational issues in this setup.
 
-### In case wrong image name was used
+### In case the wrong DB image was used
 
 ```bash
-systemctl --user cat bolls-db.service | grep -F 'pgvector/pgvector:pg18-trixie'
+systemctl --user cat bolls-db.service | grep -F 'docker.io/library/postgres:18-trixie'
 systemctl --user stop bolls-db.service || true
 systemctl --user reset-failed bolls-db.service || true
 podman rm -f bolls-db || true

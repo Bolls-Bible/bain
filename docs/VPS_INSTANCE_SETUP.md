@@ -1,4 +1,4 @@
-## VPS Instance Setup for dev.bolls.life with Podman Quadlets
+## VPS Instance Setup for bolls.life with Podman Quadlets
 
 ### 1. Install Podman on the VPS
 
@@ -49,9 +49,9 @@ sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
 echo 'net.ipv4.ip_unprivileged_port_start=80' | sudo tee /etc/sysctl.d/99-rootless-ports.conf
 ```
 
-### 3. Point DNS for dev.bolls.life
+### 3. Point DNS for bolls.life
 
-Create the A or AAAA record for `dev.bolls.life` and point it to the VPS before the first real TLS issuance.
+Create the A or AAAA record for `bolls.life` and point it to the VPS before the first real TLS issuance.
 
 ### 4. Required GitHub Actions secrets and variables
 
@@ -64,7 +64,7 @@ Set the same production secrets already used by the workflow:
 - `SOCIAL_AUTH_GOOGLE_OAUTH2_KEY_SECRET`, `SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET_SECRET`
 - `SOCIAL_AUTH_GITHUB_KEY_SECRET`, `SOCIAL_AUTH_GITHUB_SECRET_SECRET`
 - variable: `DJANGO_ALLOWED_HOSTS_SECRET`
-- secret: `NGINX_DOMAIN_NAME=dev.bolls.life`
+- secret: `NGINX_DOMAIN_NAME=bolls.life`
 
 ### 5. What the deploy pipeline does now
 
@@ -79,7 +79,9 @@ The production workflow now:
 - checks out the repo in the runner workspace
 - writes the runtime environment file to `~/.config/bolls/bolls.env`
 - renders the quadlets from `deploy/quadlets/` into `~/.config/containers/systemd/`
-- bootstraps TLS files and requests the certificate for `dev.bolls.life`
+- creates two networks: a shared front network and an internal-only backend network
+- creates three pods: edge for nginx, app for Django, and db for PostgreSQL
+- bootstraps TLS files and requests the certificate for `bolls.life`
 - starts the stack with `systemctl --user` and Podman quadlets
 - applies DB extensions and runs the Django test suite in the web container
 
@@ -88,12 +90,12 @@ The production workflow now:
 Useful commands as the runner user:
 
 ```bash
-systemctl --user status bolls-db.service
-systemctl --user status bolls-web.service
-systemctl --user status bolls-nginx.service
-systemctl --user status bolls-certbot-init.service
-systemctl --user status bolls-certbot-renew.service
+systemctl --user status bolls-back-network.service bolls-network.service
+systemctl --user status bolls-db-pod.service bolls-app-pod.service bolls-edge-pod.service
+systemctl --user status bolls-db.service bolls-web.service bolls-nginx.service
+systemctl --user status bolls-certbot-init.service bolls-certbot-renew.service
 journalctl --user -u bolls-web.service -n 200 --no-pager
+podman pod ps
 podman ps
 ```
 
@@ -111,13 +113,13 @@ The database container name in the quadlet deployment is `bolls-db`.
 
 ```bash
 wget https://storage.googleapis.com/resurrecting-cat.appspot.com/backup.sql -O backup.sql
-sudo podman cp ./backup.sql bolls-db:/backup.sql
-sudo podman exec bolls-db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /backup.sql
+podman cp ./backup.sql bolls-db:/backup.sql
+podman exec bolls-db psql -U <POSTGRES_USER_SECRET> -d <POSTGRES_DB_SECRET> -f /backup.sql
 ```
 
 ### 8. Post-deploy checks
 
-- `https://dev.bolls.life/health/live/` responds
+- `https://bolls.life/health/live/` responds
 - login works
 - bookmarks are present and can be saved
 - GitHub Actions deploy job completes successfully
