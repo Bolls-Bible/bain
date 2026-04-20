@@ -6,6 +6,8 @@ Go to [docs/LOCAL_DEV_WITH_DOCKER_COMPOSER.md](docs/LOCAL_DEV_WITH_DOCKER_COMPOS
 
 ## Some other useful docs at docs/
 
+[Podman Quadlets operations guide](./docs/PODMAN_QUADLETS_OPERATIONS.md)
+
 [How to add a new translation](./docs/HOW_TO_ADD_A_NEW_TRANSLATION.md)
 
 [How to add a new dictionary](./docs/HOW_TO_ADD_A_NEW_DICTIONARY.md)

@@ -1,0 +1,7 @@
+[Unit]
+Description=Private backend network for the production Bolls Bible deployment
+
+[Network]
+NetworkName=bolls-back
+Driver=bridge
+Internal=true

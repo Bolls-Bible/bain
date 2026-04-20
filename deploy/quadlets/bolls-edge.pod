@@ -1,0 +1,18 @@
+[Unit]
+Description=Edge pod for the production Bolls Bible deployment
+After=bolls-network.service
+Requires=bolls-network.service
+
+[Pod]
+Network=bolls.network
+PublishPort=80:80
+PublishPort=443:443
+ExitPolicy=continue
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

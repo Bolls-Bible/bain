@@ -1,0 +1,20 @@
+[Unit]
+Description=Certbot renewal loop for the production Bolls Bible deployment
+After=bolls-nginx.service
+Requires=bolls-nginx.service
+
+[Container]
+Image=docker.io/certbot/certbot:latest
+ContainerName=bolls-certbot-renew
+Network=bolls.network
+Volume=LETSENCRYPT_HOST_PATH:/etc/letsencrypt:z
+Volume=CHALLENGES_HOST_PATH:/var/www/certbot:z
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=renew --webroot --webroot-path=/var/www/certbot
+
+[Service]
+Restart=always
+RestartSec=12h
+
+[Install]
+WantedBy=default.target

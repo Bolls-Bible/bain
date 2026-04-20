@@ -1,0 +1,18 @@
+[Unit]
+Description=Application pod for the production Bolls Bible deployment
+After=bolls-network.service bolls-back-network.service
+Requires=bolls-network.service bolls-back-network.service
+
+[Pod]
+Network=bolls.network
+Network=bolls-back.network
+NetworkAlias=bolls-web
+ExitPolicy=continue
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

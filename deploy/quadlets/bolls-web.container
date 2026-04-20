@@ -1,0 +1,29 @@
+[Unit]
+Description=Django web app for the production Bolls Bible deployment
+After=bolls-network.service bolls-back-network.service bolls-db.service bolls-app-pod.service
+Requires=bolls-network.service bolls-back-network.service bolls-db.service bolls-app-pod.service
+
+[Container]
+Image=ghcr.io/bolls-bible/bain/django:IMAGE_TAG_PLACEHOLDER
+ContainerName=bolls-web
+Pod=bolls-app.pod
+CgroupsMode=no-conmon
+Volume=STATIC_HOST_PATH:/home/bolls/web/static:z
+EnvironmentFile=ENV_FILE_PATH
+Environment=SQL_HOST=bolls-db
+Environment=SQL_PORT=5432
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=gunicorn bain.wsgi:application --bind 0.0.0.0:8000 --workers 2 --worker-tmp-dir /dev/shm --max-requests 1000 --max-requests-jitter 50
+HealthCmd=sh -c 'curl -fsS http://localhost:8000/health/live/ && curl -fsS http://localhost:8000/health/ready/'
+HealthInterval=10s
+HealthTimeout=5s
+HealthRetries=5
+HealthStartPeriod=30s
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
