@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import Color from "colorjs.io"
 import WholeWord from 'lucide-static/icons/whole-word.svg'
 
+import { translationNames } from '../constants' 
 import languages from '../data/languages.json'
 import { hasTouchEvents, translations, contributors } from '../constants'
 import ALL_BOOKS from '../data/translations_books.json'
@@ -170,6 +171,22 @@ tag modal < section
 		reader.verse = history.verse
 		reader.fetchVerses!
 
+	def copyToClipboardFromParallel tr
+		activities.copyWithLink({
+			translation: tr[0].translation,
+			book: tr[0].book,
+			chapter: tr[0].chapter,
+			verses: tr.map(do|t| return t.verse),
+			text: tr.map(do|t| return t.text).join(' '),
+			title: activities.getSelectedVersesTitle(tr[0].translation, tr[0].book, tr[0].chapter, tr.map(do|t| return t.verse)),
+		})
+
+	def onCompareListSorted { detail: freshList }
+		let newOrder = freshList.map(do(item) item[0].translation)
+		console.log('New compare list order', newOrder)
+		compare.translations = newOrder
+		compare.saveTranslations()
+
 	def render
 		<self
 			[pos:fixed inset:0 bg:{backdropColor} h:100% d:htc p:14vh 0 @lt-sm:0 o@off:0 zi:{activities.activeModal == "notes" ? 1200 : 3}]
@@ -253,7 +270,57 @@ tag modal < section
 						<article.body id="compare" [scroll-behavior:auto]>
 							<p[o:0.75 mb:.5rem]> t.add_translations_msg
 
-							<orderable-list>
+							<sortable bind=compare.list idKey="0.translation" namespace="compare" @sorted=onCompareListSorted>
+								css
+									sortable-li
+										cursor:default
+										fs:1.2rem
+										pb:2
+
+									menu
+										d:flex ai:center
+										g:0.5rem w:100%
+										o:0.75 p:0
+
+										button
+											bgc:transparent c:inherit @hover:$acc-hover
+											min-width:1.625rem w:1.5rem h:100% cursor:pointer
+
+								for tr in compare.list
+									<sortable-li id=tr[0].translation key=tr[0].translation item=tr>
+										if tr[0].text
+											<>
+												for verse in tr when verse.text
+													<text-as-html data=verse innerHTML="{verse.text} ">
+
+												<menu>
+													<svg[mr:auto cursor:move touch-action:none fls:0] src=ICONS.DOTS_SIX
+														width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes
+													>
+													<svg[cursor:grab @active:grabbing fill:currentColor o:0.5 mr:1] src=ICONS.DOTS_SIX width="1rem" />
+
+													<span title=translationNames[tr[0].translation]>
+														tr[0].translation
+
+													<button @click.prevent=copyToClipboardFromParallel(tr) title=t.copy>
+														<svg src=ICONS.COPY aria-hidden=yes>
+
+													<button @click.prevent=openInParallel({translation: tr[0].translation, book: tr[0].book, chapter: tr[0].chapter,verse: tr[0].verse}, yes) title=t.open_in_parallel>
+														<svg src=ICONS.GIT_MERGE aria-hidden=yes>
+
+													<button @click.prevent=compare.toggleTranslation({short_name: tr[0].translation}) title=t.delete>
+														<svg src=ICONS.X aria-hidden=yes>
+										else
+											<menu>
+												<svg[mr:auto cursor:move touch-action:none fls:0] src=ICONS.DOTS_SIX
+													width="1.5rem" height="1.5rem" fill="currentColor" aria-hidden=yes
+												>
+												<svg src=ICONS.DOTS_SIX width="1rem" />
+
+												t.the_verse_is_not_available, ' ', tr.translation
+												
+												<button @click.prevent=compare.toggleTranslation({short_name: tr[0].translation}) title=t.delete>
+													<svg src=ICONS.X aria-hidden=yes>
 
 							unless compare.translations.length
 								<button[m:1rem auto d:flex].more_results @click=(do activities.show_comparison_options = !activities.show_comparison_options)> t.add_translation_btn

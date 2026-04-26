@@ -38,10 +38,12 @@ class ParallelReader < GenericReader
 		setValue('parallel_display', enabled)
 
 	@action set enable value\boolean
-		if value
-			book = reader..book
-			chapter = reader..chapter
 		enabled = value
+		if value
+			if settings.parallel_sync
+				book = reader..book
+				chapter = reader..chapter
+			fetchVerses!
 
 	get myRenderer
 		document.getElementById('parallel-reader')

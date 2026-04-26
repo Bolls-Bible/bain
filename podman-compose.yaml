@@ -1,5 +1,5 @@
 # For development purposes only!!!
-# Use with containerd + nerdctl or Podman + podman-compose.
+# Use with docker, or containerd + nerdctl or Podman + podman-compose.
 services:
   database:
     image: docker.io/postgres:18-trixie
@@ -26,13 +26,13 @@ services:
       -c effective_cache_size=600MB
       -c work_mem=16MB
 
-  django:
+  web:
     build:
       context: ./django/
       dockerfile: Dockerfile.dev
     restart: on-failure
     command: python manage.py runserver 0:8000
-    container_name: django
+    container_name: web
     volumes:
       - ./django:/code:z
     environment:
@@ -57,12 +57,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
-    deploy:
-      resources:
-        limits:
-          memory: 700M
-        reservations:
-          memory: 400M
 
   imba:
     build:
@@ -72,13 +66,13 @@ services:
     container_name: imba
     command: sh -c "npm i && npm run dev"
     environment:
-      - API_URL=http://django:8000
+      - API_URL=http://web:8000
     volumes:
       - ./django/bolls/static/imba:/app:z
     networks:
       - internal
     depends_on:
-      - django
+      - web
 
   nginx:
     image: nginx:stable-alpine
@@ -95,8 +89,7 @@ services:
     networks:
       - internal
     depends_on:
-      django:
-        condition: service_healthy
+      - web
 
 networks:
   internal:

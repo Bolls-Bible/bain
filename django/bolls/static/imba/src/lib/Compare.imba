@@ -24,6 +24,7 @@ class Compare
 
 	search = ''
 
+	@autorun
 	def saveTranslations
 		setValue('compare_translations', translations)
 
@@ -74,14 +75,14 @@ class Compare
 				loading = no
 		imba.commit!
 	
-	def addAllTranslations language\{translations: Translation[]}
+	@action def addAllTranslations language\{translations: Translation[]}
 		for translation in language.translations
 			if translations.indexOf(translation.short_name) == -1
 				translations.unshift(translation.short_name)
 		load!
 		imba.commit!
 
-	def toggleTranslation translation\{short_name: string}
+	@action def toggleTranslation translation\{short_name: string}
 		if translations.indexOf(translation.short_name) < 0
 			translations.unshift(translation.short_name)
 			try
@@ -108,7 +109,6 @@ class Compare
 			translations.splice(translations.indexOf(translation.short_name), 1)
 			translations = translations
 			list.splice(list.indexOf(list.find(do |parallel| return parallel[0].translation == translation.short_name)), 1)
-		window.localStorage.setItem("translations", JSON.stringify(translations))
 		activities.show_comparison_options = no
 		imba.commit!
 

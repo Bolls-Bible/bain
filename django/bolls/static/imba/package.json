@@ -8,21 +8,23 @@
     "preview": "npx vite preview"
   },
   "devDependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.8.1",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.1.0",
     "@codemirror/autocomplete": "^6.20.1",
     "@codemirror/commands": "^6.10.3",
     "@codemirror/lang-markdown": "^6.3.4",
     "@codemirror/language": "^6.12.3",
     "@codemirror/state": "^6.6.0",
-    "@codemirror/view": "^6.40.0",
+    "@codemirror/view": "^6.41.1",
     "@floating-ui/dom": "^1.7.6",
     "@lezer/highlight": "^1.2.1",
-    "@sentry/browser": "^10.46.0",
+    "@sentry/browser": "^10.50.0",
     "colorjs.io": "^0.6.1",
     "date-fns": "^4.1.0",
-    "dompurify": "^3.3.3",
+    "dompurify": "^3.4.1",
     "imba": "^2.0.0-alpha.247",
     "imba-phosphor-icons": "^2.2.0",
-    "lucide-static": "^0.575.0",
-    "marked": "^17.0.5"
+    "lucide-static": "^1.11.0",
+    "marked": "^18.0.2"
   }
 }

@@ -77,6 +77,11 @@ class Reader < GenericReader
 		readingHistory.saveToHistory(translation, book, chapter, verse)
 		getBookmarks!
 
+		# if the pathname has one of 4 `/` in it then call the pushState
+		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
+		const newLocation = "/{translation}/{book}/{chapter}/"
+		const stayingOnTheSamePage = window.location.pathname.startsWith(newLocation)
+
 		if verse
 			if typeof verse === 'string' and verse.includes('-')
 				const parts = verse.split('-')
@@ -86,22 +91,16 @@ class Reader < GenericReader
 			verse = undefined
 		else
 			show_verse_picker = yes
-			if myRenderer
+			if myRenderer and not stayingOnTheSamePage
 				myRenderer.scrollTop = 0
 
-		# if the pathname has one of 4 `/` in it then call the pushState
-		const pathnameSlices = window.location.pathname.split('/').filter(Boolean).length
-		console.log(pathnameSlices, translation, book, chapter)
 		if pathnameSlices == 0 or pathnameSlices > 2
-			const newLocation = window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
-			if window.location.href != newLocation
-				window.history.pushState({
+			unless stayingOnTheSamePage
+				imba.router.go(newLocation, {
 						translation: translation,
 						book: book,
 						chapter: chapter,
 					},
-					'',
-					window.location.origin + '/' + translation + '/' + book + '/' + chapter + '/'
 				)
 
 	@action def randomVerse

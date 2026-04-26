@@ -255,7 +255,7 @@ class Dictionary
 		else
 			expandedTopic = topic
 			setTimeout(&, 500) do
-				definitionEl.scrollIntoView()
+				definitionEl.scrollIntoView({behavior: 'smooth', block: 'start'})
 
 	def currentDictionaryName
 		for dictionary in dictionaries

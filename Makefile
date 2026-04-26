@@ -9,8 +9,8 @@ YELLOW := "\033[33m"
 
 # Use podman for container management
 # CONTAINER_MANAGER := docker
-# CONTAINER_MANAGER := podman
-CONTAINER_MANAGER := nerdctl # closer to prod, even tho a bit more burdensome to set up
+CONTAINER_MANAGER := podman
+# CONTAINER_MANAGER := nerdctl # closer to prod, even tho a bit more burdensome to set up
 COMPOSE_FILE := -f podman-compose.yaml
 
 help:
@@ -88,11 +88,11 @@ restore-db:
 
 	# add UNACCENT rules
 	$(CONTAINER_MANAGER) cp sql/unaccent_plus.rules database:/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules
-	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION unaccent;"
+	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION IF NOT EXISTS unaccent;"
 	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "ALTER TEXT SEARCH DICTIONARY unaccent (RULES='unaccent_plus')"
 
 	# create extension pg_trgm;
-	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION pg_trgm;"
+	$(CONTAINER_MANAGER) exec -t database psql -U postgres_user -d postgres_db -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 
 up:
 	$(CONTAINER_MANAGER) compose $(COMPOSE_FILE) up
@@ -114,19 +114,19 @@ restart:
 
 # Django commands
 createsuperuser:
-	$(CONTAINER_MANAGER) exec -it django python manage.py createsuperuser
+	$(CONTAINER_MANAGER) exec -it web python manage.py createsuperuser
 
 migrations:
-	$(CONTAINER_MANAGER) exec django python manage.py makemigrations
+	$(CONTAINER_MANAGER) exec web python manage.py makemigrations
 
 migrate:
-	$(CONTAINER_MANAGER) exec django python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
+	$(CONTAINER_MANAGER) exec web python manage.py migrate $(filter-out $@,$(MAKECMDGOALS))
 
 showmigrations:
-	$(CONTAINER_MANAGER) exec django python manage.py showmigrations
+	$(CONTAINER_MANAGER) exec web python manage.py showmigrations
 
 shell:
-	$(CONTAINER_MANAGER) exec django python manage.py shell
+	$(CONTAINER_MANAGER) exec web python manage.py shell
 
 django-logs dl:
 	$(CONTAINER_MANAGER) logs -f django
@@ -155,7 +155,7 @@ imba-logs il:
 	$(CONTAINER_MANAGER) logs -f imba
 
 enter-node en:
-	$(CONTAINER_MANAGER) exec imba bash
+	$(CONTAINER_MANAGER) exec -it imba bash
 
 
 # nginx commands

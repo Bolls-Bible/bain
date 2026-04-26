@@ -234,19 +234,20 @@ tag profile
 		popups['account_actions'] = no
 		account_action = 2
 		store.username = ''
-		window.history.pushState({profile: yes}, t.delete_account)
+		# There is no handling of the back button for this action
+		# window.history.pushState({profile: yes}, t.delete_account)
 
 	def showImportExport
 		popups['account_actions'] = no
 		account_action = 3
-		window.history.pushState({profile: yes}, t.export_bookmarks)
+		# window.history.pushState({profile: yes}, t.export_bookmarks)
 
 	def showEditForm
 		popups['account_actions'] = no
 		account_action = 1
 		store.username = user.username
 		store.name = user.name
-		window.history.pushState({profile: yes}, t.edit_account)
+		# window.history.pushState({profile: yes}, t.edit_account)
 
 	def editAccount
 		if window.navigator.onLine
