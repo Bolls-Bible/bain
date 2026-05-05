@@ -317,7 +317,7 @@ tag modal < section
 												>
 												<svg src=ICONS.DOTS_SIX width="1rem" />
 
-												t.the_verse_is_not_available, ' ', tr.translation
+												t.the_verse_is_not_available, ' ', tr[0].translation
 												
 												<button @click.prevent=compare.toggleTranslation({short_name: tr[0].translation}) title=t.delete>
 													<svg src=ICONS.X aria-hidden=yes>

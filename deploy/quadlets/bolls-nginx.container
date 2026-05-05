@@ -19,6 +19,9 @@ PodmanArgs=--cgroup-manager=cgroupfs
 Restart=always
 RestartSec=5
 TimeoutStartSec=900
+CPUQuota=50%
+MemoryHigh=96M
+MemoryMax=256M
 
 [Install]
 WantedBy=default.target

@@ -32,6 +32,67 @@ These are created by the workflow at deploy time:
 - PostgreSQL data: `~/.local/share/bolls/postgres`
 - Nginx config: `~/.local/share/bolls/config/nginx/`
 
+### Server path map (what is generated and copied where)
+
+Use this as the canonical runtime map on the VPS runner account.
+
+#### Core generated paths
+
+- Podman user units root: `~/.config/containers/systemd/`
+- Podman user config: `~/.config/containers/containers.conf`
+- App environment file: `~/.config/bolls/bolls.env`
+- Deployment data root: `~/.local/share/bolls/`
+
+#### Quadlet templates rendered to user systemd directory
+
+- `deploy/quadlets/bolls.network` -> `~/.config/containers/systemd/bolls.network`
+- `deploy/quadlets/bolls-back.network` -> `~/.config/containers/systemd/bolls-back.network`
+- `deploy/quadlets/bolls-edge.pod` -> `~/.config/containers/systemd/bolls-edge.pod`
+- `deploy/quadlets/bolls-app.pod` -> `~/.config/containers/systemd/bolls-app.pod`
+- `deploy/quadlets/bolls-db.pod` -> `~/.config/containers/systemd/bolls-db.pod`
+- `deploy/quadlets/bolls-db.container` -> `~/.config/containers/systemd/bolls-db.container`
+- `deploy/quadlets/bolls-nginx.container` -> `~/.config/containers/systemd/bolls-nginx.container`
+- `deploy/quadlets/bolls-certbot-init.container` -> `~/.config/containers/systemd/bolls-certbot-init.container`
+- `deploy/quadlets/bolls-certbot-renew.container` -> `~/.config/containers/systemd/bolls-certbot-renew.container`
+- `deploy/quadlets/bolls-web.container` -> `~/.config/containers/systemd/bolls-web.container` (with `IMAGE_TAG_PLACEHOLDER` rendered)
+
+After `systemctl --user daemon-reload`, these become user units such as:
+
+- `bolls-network.service`, `bolls-back-network.service`
+- `bolls-edge-pod.service`, `bolls-app-pod.service`, `bolls-db-pod.service`
+- `bolls-db.service`, `bolls-web.service`, `bolls-nginx.service`
+- `bolls-certbot-init.service`, `bolls-certbot-renew.service`
+
+#### Config files copied or generated during deploy
+
+- Repository `nginx/main/nginx.conf` -> `~/.local/share/bolls/config/nginx/main/nginx.conf`
+- Repository `nginx/conf.d/nginx.conf` (domain-substituted via `sed`) -> `~/.local/share/bolls/config/nginx/conf.d/nginx.conf`
+- Remote download `options-ssl-nginx.conf` -> `~/.local/share/bolls/letsencrypt/options-ssl-nginx.conf`
+- Remote download `ssl-dhparams.pem` -> `~/.local/share/bolls/letsencrypt/ssl-dhparams.pem`
+- Secrets/vars rendered by workflow -> `~/.config/bolls/bolls.env`
+- Generated Podman engine config -> `~/.config/containers/containers.conf`
+
+#### Runtime data directories used by containers
+
+- Static volume: `~/.local/share/bolls/static_volume`
+- Certificates and ACME material: `~/.local/share/bolls/letsencrypt`
+- PostgreSQL data directory: `~/.local/share/bolls/postgres`
+- Nginx config root: `~/.local/share/bolls/config/nginx/`
+
+#### ACME challenge location
+
+- Host challenge root used by nginx/certbot: `$GITHUB_WORKSPACE/challenges`
+- Challenge files created under: `$GITHUB_WORKSPACE/challenges/.well-known/acme-challenge/`
+
+On a typical runner checkout this resolves to a path like:
+
+- `~/actions-runner/_work/bain/bain/challenges/.well-known/acme-challenge/`
+
+#### One-time copy into the DB container
+
+- Repository `sql/unaccent_plus.rules` is copied at deploy time to container path:
+  `/usr/share/postgresql/18/tsearch_data/unaccent_plus.rules` inside `bolls-db`
+
 > Do not treat the generated files under `~/.config/containers/systemd/` as the source of truth. Update the templates in the repository and redeploy.
 
 ### User services managed by systemd
@@ -342,3 +403,4 @@ systemctl --user reset-failed bolls-db.service || true
 podman rm -f bolls-db || true
 systemctl --user start bolls-db.service
 ```
+

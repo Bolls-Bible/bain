@@ -4,7 +4,7 @@ importScripts("/static/sw/jszip.min.js");
 importScripts("/static/sw/dexie.min.js");
 importScripts("/static/sw/scripts.js");
 
-const CACHE_NAME = "v3.3.5";
+const CACHE_NAME = "v3.3.6";
 const STATICS_CACHE = "statics-v1.0.19";
 const TEXTS_CACHE = "texts-v1.1.3";
 

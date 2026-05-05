@@ -208,6 +208,7 @@ tag books-drawer < nav
 			fill:$c @hover:$acc-hover
 			c@hover:$acc-hover
 			font:inherit
+			list-style:none
 
 			span 
 				flex: 1

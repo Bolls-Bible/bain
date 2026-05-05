@@ -117,6 +117,7 @@ class Reader < GenericReader
 				chapter = randomVerse.chapter
 				book = randomVerse.book
 				verse = randomVerse.verse
+				fetchVerses!
 		catch error
 			console.error error
 			notifications.push('error')

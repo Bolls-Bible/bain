@@ -2,6 +2,16 @@
 
 This directory contains the production systemd quadlets used to run the stack on a Podman host.
 
+## Current sizing baseline
+
+The defaults in these quadlets are sized for a VPS with 4 vCPU and 8 GB RAM:
+
+- `bolls-web.container` runs 3 gunicorn workers and is capped at 2 GB.
+- `bolls-db.container` is capped at 2 GB, with PostgreSQL memory tuned around a 512 MB `shared_buffers` target.
+- `bolls-nginx.container` stays small and capped at 256 MB.
+
+This keeps roughly half of the host memory available for the OS page cache, Podman overhead, certificate renewal, deploy-time image pulls, and temporary traffic spikes.
+
 ## Topology
 
 The production deployment is split into three pods:
