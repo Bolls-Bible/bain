@@ -96,7 +96,6 @@ class Activities
 		reader.show_verse_picker = no
 		parallelReader.show_verse_picker = no
 
-		search.currentQuery = ""
 		if search.inputElement
 			search.inputElement.blur()
 
@@ -210,6 +209,9 @@ class Activities
 	def changeHighlightColor color\string
 		# get tag with title = color
 		let colorBulb = document.querySelector('li.color-option[title="' + color + '"]')
+		unless colorBulb
+			console.warn('Color bulb not found for color: ' + color)
+			return
 		const computedStyle = window.getComputedStyle(colorBulb)
 		const backgroundColor = computedStyle.getPropertyValue('background-color');
 

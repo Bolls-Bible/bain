@@ -233,17 +233,25 @@ class Dictionary
 				for match in matches
 					definition.definition = definition.definition.replace(match[0], match[1])
 
+	def collapseSelection
+		window.getSelection().removeAllRanges()
+		window.getSelection().empty()
+
 
 	def prevDefinition
 		if historyIndex > 0
 			historyIndex -= 1
 			query = history[historyIndex]
+			# unless we clear selection loadDefinitions will overwrite our query
+			collapseSelection!
 			loadDefinitions!
 
 	def nextDefinition
 		if historyIndex < history.length - 1
 			historyIndex += 1
 			query = history[historyIndex]
+			# unless we clear selection loadDefinitions will overwrite our query
+			collapseSelection!
 			loadDefinitions!
 
 	def expandDefinition topic\string

@@ -23,7 +23,7 @@ tag books-drawer < nav
 	@computed get activeLanguage
 		return languages.find(do(lang)
 			return lang.translations.find(do|translation| translation.short_name == activeTranslation)
-		).language
+		)..language
 
 	@computed get activeBook
 		if activeTranslation == parallelReader.translation
