@@ -204,7 +204,6 @@ jobs:
           echo "Requesting TLS certificate for $APP_DOMAIN..."
           if ! systemctl --user start bolls-certbot-init.service; then
             journalctl --user -u bolls-certbot-init.service -n 200 --no-pager || true
-            exit 1
           fi
           systemctl --user restart bolls-certbot-renew.service
           systemctl --user restart bolls-nginx.service

@@ -225,8 +225,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 
 			<p>
-				"v3.3.6 | "
-				<time dateTime='2026-5-5'> "5.5.2026"
+				"v3.3.7 | "
+				<time dateTime='2026-5-10'> "10.5.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"

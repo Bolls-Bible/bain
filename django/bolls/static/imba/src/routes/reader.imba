@@ -43,17 +43,6 @@ tag reader
 			self.dictionary.query = topic
 			self.dictionary.loadDefinitions!
 
-		# TODO clean up this at some point
-		if getValue('enable_dynamic_contrast')
-			setTimeout(&, 2000) do
-				// Tell the user we don't support this feature anymore and offer them to create a custom theme instead which has better control
-				const message = "Dynamic contrast is not supported anymore. You can create a custom theme instead, that has better control over the contrast."
-				const confirm = await window.confirm(message)
-				if confirm
-					activities.openCustomTheme!
-				deleteValue('enable_dynamic_contrast')
-
-
 	def unmount
 		document.removeEventListener('selectionchange', onSelectionChange.bind(self))
 		window.removeEventListener('popstate', onPopState.bind(self))
@@ -125,8 +114,9 @@ tag reader
 
 
 	def closingdrawer e
-		unless e.changedTouches.length
+		if !e.changedTouches.length || initialTouch is null
 			return
+
 		e.dx = e.changedTouches[0].clientX - initialTouch.clientX
 
 		if activities.booksDrawerOffset > -300 && e.dx < 0
@@ -136,8 +126,9 @@ tag reader
 		inClosingTouchZone = yes
 
 	def openingdrawer e
-		unless e.changedTouches.length
+		if !e.changedTouches.length || initialTouch is null
 			return
+
 		if inTouchZone
 			e.dx = e.changedTouches[0].clientX - initialTouch.clientX
 
@@ -147,8 +138,9 @@ tag reader
 				activities.settingsDrawerOffset = - e.dx - 300
 
 	def closedrawersend touch
-		unless touch.changedTouches.length
+		unless touch.changedTouches.length || initialTouch is null
 			return
+
 		touch.dx = touch.changedTouches[0].clientX - initialTouch.clientX
 
 		if activities.booksDrawerOffset > -300
