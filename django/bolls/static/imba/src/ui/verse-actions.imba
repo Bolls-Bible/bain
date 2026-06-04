@@ -1,4 +1,6 @@
 import * as ICONS from 'imba-phosphor-icons'
+import RouteBible from '../icons/route-bible.svg'
+import { getRouteBibleBookCode } from '../../utils/books'
 
 const DEFAULT_Y = 32
 
@@ -42,19 +44,27 @@ tag verse-actions < section
 	def byteCount s\string
 		window.encodeURI(s).split(/%..|./).length - 1
 
+	get selectedVersesPath
+		return '/'+ activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/'
+
+	get bollsShareUrl
+		return "https://bolls.life" + selectedVersesPath
+
+	get routeBibleShareUrl
+		const bookCode = getRouteBibleBookCode(activities.copyObject.book)
+		return "https://route.bible/{bookCode}.{activities.copyObject.chapter}.{activities.versesRange(activities.copyObject.verses)}?mode=launcher&src=bolls&utm_source=bolls&utm_medium=share"
 
 	get canShareViaTelegram
-		return byteCount("https://t.me/share/url?url={window.encodeURIComponent("https://bolls.life" + '/'+ activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/')}&text={window.encodeURIComponent('«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation)}") < 4096
+		return byteCount("https://t.me/share/url?url={window.encodeURIComponent(bollsShareUrl)}&text={window.encodeURIComponent('«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation)}") < 4096
 
 	def telegramSharing
 		const text = '«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation
-		const url = "https://bolls.life" + '/'+ activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/'
-		const link = "https://t.me/share/url?url={window.encodeURIComponent(url)}&text={window.encodeURIComponent(text)}"
+		const link = "https://t.me/share/url?url={window.encodeURIComponent(bollsShareUrl)}&text={window.encodeURIComponent(text)}"
 		if byteCount(link) < 4096
 			window.open(link, '_blank')
 
 	get sharedText
-		const text = '«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation + "https://bolls.life" + '/'+ activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/'
+		const text = '«' + activities.copyObject.text + '»\n\n' + activities.copyObject.title + ' ' + activities.copyObject.translation + " " + bollsShareUrl
 		return text
 
 	get canMakeTweet
@@ -65,11 +75,15 @@ tag verse-actions < section
 		activities.cleanUp!
 
 	def shareViaFB
-		window.open("https://www.facebook.com/sharer.php?u=https://bolls.life/" + activities.copyObject.translation + '/' + activities.copyObject.book + '/' + activities.copyObject.chapter + '/' + activities.versesRange(activities.copyObject.verses) + '/', '_blank')
+		window.open("https://www.facebook.com/sharer.php?u=" + window.encodeURIComponent(bollsShareUrl), '_blank')
 		activities.cleanUp!
 
 	def shareViaWhatsApp
 		window.open("https://api.whatsapp.com/send?text={window.encodeURIComponent(sharedText)}", '_blank')
+		activities.cleanUp!
+
+	def shareViaRouteBible
+		window.open(routeBibleShareUrl, '_blank')
 		activities.cleanUp!
 
 	def deleteBookmark
@@ -129,6 +143,9 @@ tag verse-actions < section
 								if canShareViaTelegram then <button @click=telegramSharing>
 									<svg src=ICONS.TELEGRAM_LOGO aria-hidden=yes>
 									"Telegram"
+								<button @click=shareViaRouteBible>
+									<svg src=RouteBible [size:.875rem] aria-hidden=yes>
+									"route.bible"
 								<button @click=activities.copyWithInternationalLink>
 									<svg src=ICONS.TRANSLATE aria-hidden=yes>
 									t.copy_international
@@ -215,7 +232,7 @@ tag verse-actions < section
 											px:.75rem 2.25rem
 
 										button
-											size:2.5rem miw:2.5rem 
+											size:2.5rem miw:2.5rem
 											pos:absolute r:.5rem top:50% y:-50%
 
 									<input$newcategoryinput
@@ -308,6 +325,6 @@ tag verse-actions < section
 		li
 			list-style-type: none
 			d:inline-block
-		
+
 		.applied
 			c@important:$acc

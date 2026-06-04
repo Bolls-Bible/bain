@@ -172,3 +172,16 @@ export def getBookId(translation\string, book_slug\string)
 		return suggestions[0][0]["bookid"]
 
 	throw new Error("Book not found: " + book_slug)
+
+const route_bible_codes = Object.fromEntries(
+	Object.entries(triple_shortcuts).map(do |entry|
+		return [entry[1], entry[0].toLowerCase!]
+	)
+)
+
+export def getRouteBibleBookCode(bookid\number|string)
+	const code = route_bible_codes[parseInt(bookid)]
+	if code
+		return code
+
+	throw new Error("Route Bible book code not found: " + bookid)
