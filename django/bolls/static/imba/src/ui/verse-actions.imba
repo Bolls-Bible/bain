@@ -1,5 +1,8 @@
 import * as ICONS from 'imba-phosphor-icons'
 
+import ROUTE_BIBLE from '../icons/route-bible.svg'
+import { getBookName } from '../utils'
+
 const DEFAULT_Y = 32
 
 const colors = [
@@ -72,6 +75,11 @@ tag verse-actions < section
 		window.open("https://api.whatsapp.com/send?text={window.encodeURIComponent(sharedText)}", '_blank')
 		activities.cleanUp!
 
+	def shareViaRouteBible
+		const bookName = getBookName(activities.copyObject.translation, activities.copyObject.book)
+		window.open("https://route.bible/?q={window.encodeURIComponent(`{bookName}.{activities.copyObject.chapter}.{activities.getSelectedVersesRange(activities.copyObject.verses)}`)}&mode=launcher&src=bolls&utm_source=bolls&utm_medium=share", '_blank')
+		activities.cleanUp!
+
 	def deleteBookmark
 		if activities.selectedParallel == 'main'
 			reader.deleteBookmark activities.selectedVersesPKs
@@ -117,6 +125,9 @@ tag verse-actions < section
 						t.share
 						if activities.show_sharing
 							<.popup-menu [l:0 @lt-sm:0.5rem top:unset b:calc(100% + .25rem) y@off:2rem o@off:0 w:14rem] ease>
+								<button @click=shareViaRouteBible>
+									<svg src=ROUTE_BIBLE aria-hidden=yes>
+									"Route Bible"
 								<button @click=shareViaWhatsApp>
 									<svg src=ICONS.WHATSAPP_LOGO aria-hidden=yes>
 									"What's App"

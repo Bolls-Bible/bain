@@ -2,18 +2,24 @@
   "folders": [
     {
       "name": "Root",
-      "path": "."
+      "path": ".",
     },
     {
       "name": "Django",
-      "path": "django"
+      "path": "django",
     },
     {
       "name": "Imba",
-      "path": "django/bolls/static/imba"
-    }
+      "path": "django/bolls/static/imba",
+    },
   ],
   "settings": {
+    "files.exclude": {
+      "**/venv": true,
+      "**/node_modules": true,
+      "django/": true,
+      "django/bolls/static/imba/": true,
+    },
     "git.ignoreLimitWarning": true,
     "cSpell.words": [
       "autorun",
@@ -32,7 +38,7 @@
       "pointerup",
       "psql",
       "rgba",
-      "unaccent"
-    ]
-  }
+      "unaccent",
+    ],
+  },
 }

@@ -176,19 +176,22 @@ class Activities
 		cleanUp!
 		openModal 'downloads'
 		show_dictionary_downloads = no
-
-	def getSelectedVersesTitle translation\string, book\number, chapter\number, verses\number[]
-		let row = getBookName(translation, book) + ' ' + chapter + ':'
+	
+	def getSelectedVersesRange verses\number[]
+		let range = ''
 		for id, key in verses.sort(do |a, b| return a - b)
 			if id == verses[key - 1] + 1
 				if id == verses[key+1] - 1
 					continue
-				else row += '-' + id
+				else range += '-' + id
 			else
 				unless key
-					row += id
-				else row += ',' + id
-		return row
+					range += id
+				else range += ',' + id
+		return range
+
+	def getSelectedVersesTitle translation\string, book\number, chapter\number, verses\number[]
+		return getBookName(translation, book) + ' ' + chapter + ':' + getSelectedVersesRange(verses)
 
 	@computed get selectedVersesTitle
 		if selectedParallel == 'main'
