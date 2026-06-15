@@ -1,7 +1,11 @@
+import json
+
+from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 from django.contrib.staticfiles import finders
 from django.urls import reverse
 
+from bolls.models import History
 from bolls.views import is_strongs_number_query
 
 
@@ -103,3 +107,47 @@ class BollsTestCase(TestCase):
             content_type="application/json",
         )
         self.assertIn(b"and the light in the darkness did shine, and the darkness did not perceive it.", request.content)
+
+    def test_history_v2_deduplicates_dict_identity_fields(self):
+        user = User.objects.create_user(username="history-user", password="secret")
+        self.client.force_login(user)
+
+        existing_entry = {
+            "translation": {"short_name": "KJV"},
+            "book": 43,
+            "chapter": 3,
+            "verse": 16,
+            "date": 10,
+        }
+        newer_duplicate = {
+            "translation": {"short_name": "KJV"},
+            "book": 43,
+            "chapter": 3,
+            "verse": 16,
+            "date": 20,
+        }
+
+        History.objects.create(
+            user=user,
+            history=json.dumps([existing_entry]),
+            purge_date=0,
+            compare_translations="[]",
+            favorite_translations="[]",
+        )
+
+        request = self.client.put(
+            "/v2/history/",
+            data=json.dumps({"history": json.dumps([newer_duplicate]), "purge_date": 0}),
+            content_type="application/json",
+        )
+
+        self.assertEqual(request.status_code, 200)
+        self.assertJSONEqual(
+            request.content,
+            {
+                "history": json.dumps([newer_duplicate]),
+                "purge_date": 0,
+                "compare_translations": "[]",
+                "favorite_translations": "[]",
+            },
+        )

@@ -149,9 +149,11 @@ class GenericReader
 		else ''
 
 	def pushCollectionIfExist pk\number
-		for piece in getCollectionOfChosen(pk).split(' | ')
-			if piece != '' && !activities.selectedCategories.includes(piece)
-				activities.selectedCategories.push(piece)
+		let collectionsOfChosen = getCollectionOfChosen(pk)
+		if collectionsOfChosen
+			for piece in collectionsOfChosen.split(' | ')
+				if piece != '' && !activities.selectedCategories.includes(piece)
+					activities.selectedCategories.push(piece)
 
 
 	def selectVerse pk\number, id\number

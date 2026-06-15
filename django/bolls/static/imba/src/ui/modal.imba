@@ -362,7 +362,8 @@ tag modal < section
 									<li key=language.language>
 										<a.li [jc: start pl: 0px] dir="auto" @click=expandLanguageDownloads(language.language)>
 											language.language
-											<svg[ml:auto s:1.5rem] src=ICONS.CARET_DOWN [transform:rotate(180deg)]=(language.language == expandedLanguage) aria-label=t.open>
+											<svg[ml:auto s:1.5rem] src=ICONS.CARET_DOWN [transform:rotate(180deg)]=(language.language == expandedLanguage)>
+												<title> t.open
 
 										if language.language == expandedLanguage
 											<ul[o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0 of:hidden] dir="auto" ease>
@@ -536,7 +537,8 @@ tag modal < section
 							<h2> t.theme
 
 							if Math.abs(customTheme.contrast) < 15
-								<svg src=ICONS.WARNING aria-label=t.contrast [c:$acc-hover s:1.5rem]>
+								<svg src=ICONS.WARNING [c:$acc-hover s:1.5rem]>
+									<title> t.contrast
 								<span[c:{customTheme.contrastRateColor}]>
 									customTheme.contrast
 							<button @click=theme.applyCustomTheme title=t.save disabled=(Math.abs(customTheme.contrast) < 15)>

@@ -842,6 +842,16 @@ def history_v2(request):
     user = request.user
     if request.method == "PUT":
         received_json_data = json.loads(request.body)
+
+        def history_entry_key(entry):
+            identity = {
+                "translation": entry.get("translation"),
+                "book": entry.get("book"),
+                "chapter": entry.get("chapter"),
+                "verse": entry.get("verse"),
+            }
+            return json.dumps(identity, sort_keys=True, separators=(",", ":"), default=str)
+
         try:
             obj = user.history_set.get(user=user)
             # Merge existing history with the new one
@@ -854,7 +864,7 @@ def history_v2(request):
             # Remove duplicates, keeping the entry with the most recent date
             seen = {}
             for h in merged_history:
-                key = (h.get("translation"), h.get("book"), h.get("chapter"), h.get("verse"))
+                key = history_entry_key(h)
                 if key not in seen or h.get("date", 0) > seen[key].get("date", 0):
                     seen[key] = h
             # sort it from the newest to the oldest and crop it to 256 entries

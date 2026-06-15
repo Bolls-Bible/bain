@@ -115,13 +115,14 @@ tag books-drawer < nav
 			<[d:flex jc:space-between ai:center cursor:pointer padding-inline:0.5rem]>
 				<svg src=ICONS.HOURGLASS
 					[transform:rotate({63 * (1 - +settings.chronorder)}deg)]
-					@click=toggleChronorder
-					aria-label=t.chronological_order>
+					@click=toggleChronorder>
+						<title> t.chronological_order
 				<button.btn title=t.change_translation @click=(unfoldTranslationsList = !unfoldTranslationsList)>
 					activeTranslation
-					<svg[min-width:1rem h:1.1em mb:-0.2em transform:rotate({180 * +unfoldTranslationsList}deg)] src=ICONS.CARET_DOWN aria-label="">
+					<svg[min-width:1rem h:1.1em mb:-0.2em transform:rotate({180 * +unfoldTranslationsList}deg)] src=ICONS.CARET_DOWN area-hidden=true>
 				if vault.available
-					<svg src=ICONS.DOWNLOAD_SIMPLE role="button" @click=activities.toggleDownloads aria-label=t.download>
+					<svg src=ICONS.DOWNLOAD_SIMPLE role="button" @click=activities.toggleDownloads>
+						<title> t.downloads
 			
 		if unfoldTranslationsList
 			<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-1rem] ease>
@@ -134,7 +135,7 @@ tag books-drawer < nav
 					<section key=language.language>
 						<p.li .active=(language.language == activeLanguage) @click=toggleLanguageTranslations(language.language)>
 							language.language
-							<svg[min-width:1rem h:1.1em ml:auto mb:-0.2em transform:rotate({180 * +(language.language == unfoldedLanguage)}deg)] src=ICONS.CARET_DOWN aria-label="">
+							<svg[min-width:1rem h:1.1em ml:auto mb:-0.2em transform:rotate({180 * +(language.language == unfoldedLanguage)}deg)] src=ICONS.CARET_DOWN aria-hidden=true>
 						if language.language == unfoldedLanguage
 							<ul [o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 								for translation in language.translations

@@ -36,6 +36,7 @@ help:
 	@echo -e "    "${CYAN}"migrations"${RESET}"            Create migrations"
 	@echo -e "    "${CYAN}"migrate"${RESET}"               Apply migrations"
 	@echo -e "    "${CYAN}"shell"${RESET}"                 Open the Django shell"
+	@echo -e "    "${CYAN}"django-tests, dt"${RESET}"       Run Django tests"
 	@echo -e ""
 	@echo -e "  "${GREEN}"Node/Imba"${RESET}
 	@echo -e "    "${CYAN}"npm-install, ni"${RESET}"        Install npm packages"
@@ -130,6 +131,9 @@ shell:
 
 django-logs dl:
 	$(CONTAINER_MANAGER) logs -f django
+
+django-tests dt:
+	$(CONTAINER_MANAGER) exec web python manage.py test --verbosity=2 --keepdb $(filter-out $@,$(MAKECMDGOALS))
 
 # Node/Imba commands
 npm-install ni:

@@ -101,14 +101,15 @@ tag verse-actions < section
 
 		<ul>
 			<li[d:inline-flex ai:center jc:center cursor:pointer c@hover:$acc m:0 0.25rem rotate@hover:27deg @active:360deg transition-duration@active:50ms]>
-				<svg src=ICONS.ARROWS_CLOCKWISE width="2rem" height="1.5rem" role="button" aria-label=t.random
+				<svg src=ICONS.ARROWS_CLOCKWISE width="2rem" height="1.5rem" role="button"
 				@click=(activities.highlight_color = activities.randomColor)>
+					<title> t.random
 
 			<li.color-option[scale:unset]>
 				<color-picker[w:100%] color=activities.highlight_color @change=activities.setHighlightColor>
 
 			for color in colors
-				<li.color-option [background:{color}] title=color role="button" aria-label=color
+				<li.color-option [background:{color}] title=color role="button" title=color
 					@click=activities.changeHighlightColor(color)>
 
 
@@ -242,7 +243,8 @@ tag verse-actions < section
 										type="button"
 										@click=activities.show_add_bookmark=no
 									>
-										<svg src=ICONS.X aria-label=t.cancel>
+										<svg src=ICONS.X>
+											<title> t.cancel
 								<button[jc:center]>
 									t.create_tag
 

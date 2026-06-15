@@ -88,8 +88,8 @@ tag chapter < section
 	def getChevron direction\boolean
 		const textDirection = translationTextDirection(me.translation)
 		if (textDirection == 'rtl' && direction) or (textDirection == 'ltr' && !direction)
-			return <svg[s:1.5rem] src=ICONS.CARET_LEFT aria-label=t.prev> 
-		return <svg[s:1.5rem] src=ICONS.CARET_RIGHT aria-label=t.next>
+			return <svg[s:1.5rem] src=ICONS.CARET_LEFT> <title> t.prev
+		return <svg[s:1.5rem] src=ICONS.CARET_RIGHT> <title> t.next
 	
 	def isMyRect matchId\string
 		if activities.activeModal != '' || !matchId

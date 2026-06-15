@@ -105,12 +105,16 @@ tag settings-drawer < aside
 				<rect x="0" y="22" width="18" height="1">
 		if window.chrome
 			<.btnbox>
-				<svg.cbtn role="button" src=ICONS.TEXT_ALIGN_LEFT @click=theme.changeAlign(yes) aria-label=t.auto_align>
-				<svg.cbtn role="button" src=ICONS.TEXT_ALIGN_JUSTIFY @click=theme.changeAlign(no) aria-label=t.align_justified>
+				<svg.cbtn role="button" src=ICONS.TEXT_ALIGN_LEFT @click=theme.changeAlign(yes)>
+					<title> t.auto_align
+				<svg.cbtn role="button" src=ICONS.TEXT_ALIGN_JUSTIFY @click=theme.changeAlign(no)>
+					<title> t.align_justified
 		if window.innerWidth > 639
 			<.btnbox>
-				<svg.cbtn role="button" src=ICONS.ARROWS_IN_LINE_HORIZONTAL @click=theme.changeMaxWidth(no) aria-label=t.decrease_max_width>
-				<svg.cbtn role="button" src=ICONS.SPLIT_HORIZONTAL @click=theme.changeMaxWidth(yes) aria-label=t.increase_max_width>
+				<svg.cbtn role="button" src=ICONS.ARROWS_IN_LINE_HORIZONTAL @click=theme.changeMaxWidth(no)>
+					<title> t.decrease_max_width
+				<svg.cbtn role="button" src=ICONS.SPLIT_HORIZONTAL @click=theme.changeMaxWidth(yes)>
+					<title> t.increase_max_width
 
 		<menu-popup bind=activities.show_fonts>
 			<.settings-btn [pos:relative] role="button" @click=(do
@@ -225,8 +229,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 
 			<p>
-				"v3.3.8 | "
-				<time dateTime='2026-6-7'> "7.6.2026"
+				"v3.3.9 | "
+				<time dateTime='2026-6-15'> "15.6.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"

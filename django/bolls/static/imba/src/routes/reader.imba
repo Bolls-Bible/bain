@@ -218,8 +218,8 @@ tag reader
 				[transform:translateX({bibleIconTransform}px)]
 				@pointerenter=openBooksDrawer
 				@click=activities.toggleBooksMenu>
-				<svg src=ICONS.CARET_RIGHT aria-label=t.change_book
-					[transform:rotate({180*+!!bibleIconTransform}deg)]>
+				<svg src=ICONS.CARET_RIGHT [transform:rotate({180*+!!bibleIconTransform}deg)]>
+					<title> t.change_book
 
 			<main id="main"
 				.parallel_text=parallelReader.enabled .hide-comments=!settings.verse_commentary .parallels=parallelReader.enabled
@@ -233,8 +233,8 @@ tag reader
 				[transform:translateX({settingsIconTransform}px)]
 				@pointerenter=openSettingsDrawer
 				@click=activities.toggleSettingsMenu>
-				<svg src=ICONS.CARET_LEFT aria-label=t.settings
-					[transform:rotate({180*+!!settingsIconTransform}deg)]>
+				<svg src=ICONS.CARET_LEFT [transform:rotate({180*+!!settingsIconTransform}deg)]>
+					<title> t.settings
 
 			<global
 				@hotkey('mod+shift+f|mod+k').force.prevent.stop.cleanUpSelection=activities.showSearch
@@ -320,10 +320,12 @@ tag reader
 								placeholder=t.find_in_chapter>
 							<button @click=pageSearch.prevOccurrence title=t.prev
 								[rd:0 bgc:$acc-bgc @hover:$acc-bgc-hover]>
-								<svg src=ICONS.CARET_UP aria-label=t.prev>
+								<svg src=ICONS.CARET_UP>
+									<title> t.prev
 							<button @click=pageSearch.nextOccurrence title=t.next
 								[border-top-right-radius:.25rem border-bottom-right-radius:.25rem bgc:$acc-bgc @hover:$acc-bgc-hover]>
-								<svg src=ICONS.CARET_DOWN aria-label=t.next>
+								<svg src=ICONS.CARET_DOWN>
+									<title> t.next
 
 						if pageSearch.matches.length
 							<p> pageSearch.current_occurrence + 1, ' / ', pageSearch.matches.length
@@ -331,7 +333,8 @@ tag reader
 							<p> t.phrase_not_found
 
 						<button[c@hover:red4 ml:auto] @click=activities.cleanUp title=t.close>
-							<svg src=ICONS.X aria-label=t.close>
+							<svg src=ICONS.X>
+								<title> t.close
 
 				if dictionary.tooltip
 					<div
@@ -347,7 +350,7 @@ tag reader
 								cursor:pointer p: 8px
 
 						<button @click=dictionary.loadDefinitions(dictionary.tooltip.selected)> dictionary.tooltip.selected
-						if dictionary.tooltip.strong
+						if dictionary.tooltip..strong
 							'|'
 							<button @click=dictionary.loadDefinitions(dictionary.tooltip.strong)> dictionary.tooltip.strong
 

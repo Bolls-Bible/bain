@@ -30,10 +30,10 @@ tag number-cell
 			change(newValue)
 
 	<self @pointerup=cancel @pointercancel=cancel @pointerleave=cancel>
-		<button @pointerdown=hold('up') aria-label='up'> 
+		<button @pointerdown=hold('up') title='up'> 
 			<svg src=ICONS.CARET_UP width=1rem height=1rem aria-hidden=true>
 		<input name=name type="text" value=Math.round(value) @change=proxyChange>
-		<button @pointerdown=hold('down') aria-label='down'> 
+		<button @pointerdown=hold('down') title='down'> 
 			<svg src=ICONS.CARET_DOWN width=1rem height=1rem aria-hidden=true>
 
 	css
