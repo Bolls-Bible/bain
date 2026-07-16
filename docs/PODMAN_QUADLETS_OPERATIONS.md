@@ -49,7 +49,7 @@ Use this as the canonical runtime map on the VPS runner account.
 - `deploy/quadlets/bolls-back.network` -> `~/.config/containers/systemd/bolls-back.network`
 - `deploy/quadlets/bolls-edge.pod` -> `~/.config/containers/systemd/bolls-edge.pod`
 - `deploy/quadlets/bolls-app.pod` -> `~/.config/containers/systemd/bolls-app.pod`
-- `deploy/quadlets/bolls-db.pod` -> `~/.config/containers/systemd/bolls-db.pod`
+- `deploy/quadlets/bolls-db.pod` -> `~/.config/containers/systemd/bolls-db.pod` (owns the DB pod's `/dev/shm` sizing)
 - `deploy/quadlets/bolls-db.container` -> `~/.config/containers/systemd/bolls-db.container`
 - `deploy/quadlets/bolls-nginx.container` -> `~/.config/containers/systemd/bolls-nginx.container`
 - `deploy/quadlets/bolls-certbot-init.container` -> `~/.config/containers/systemd/bolls-certbot-init.container`

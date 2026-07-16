@@ -6,6 +6,7 @@ Requires=bolls-back-network.service
 [Pod]
 Network=bolls-back.network
 NetworkAlias=bolls-db
+PodmanArgs=--shm-size=2g
 ExitPolicy=continue
 
 [Service]

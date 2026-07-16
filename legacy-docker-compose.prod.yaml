@@ -15,7 +15,7 @@ services:
       - internal
     volumes:
       - bolls_db:/var/lib/postgresql:Z
-    shm_size: '256mb' # Matches shared_buffers below
+    shm_size: '2gb' # Allows large vector index builds during migrations
     deploy:
       resources:
         limits:
@@ -27,6 +27,7 @@ services:
       -c shared_buffers=256MB
       -c effective_cache_size=600MB
       -c work_mem=16MB
+      -c maintenance_work_mem=256MB
 
   web:
     image: ghcr.io/bolls-bible/bain/django:${IMAGE_TAG:-latest}
