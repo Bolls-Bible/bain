@@ -4,7 +4,7 @@ After=bolls-back-network.service bolls-db-pod.service
 Requires=bolls-back-network.service bolls-db-pod.service
 
 [Container]
-Image=docker.io/library/postgres:18-trixie
+Image=docker.io/pgvector/pgvector:pg18-trixie
 ContainerName=bolls-db
 Pod=bolls-db.pod
 CgroupsMode=no-conmon

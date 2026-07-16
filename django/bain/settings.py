@@ -179,3 +179,10 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024  # 25 MB
+
+MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "")
+MISTRAL_EMBEDDING_MODEL = "codestral-embed"
+# I tried 1024 dimensions, but it poorly performed on other than English texts. 1536 dimensions performed better on all languages.
+VECTOR_EMBEDDING_DIMENSIONS = 1536
+VECTOR_SEARCH_MIN_SCORE = float(os.environ.get("VECTOR_SEARCH_MIN_SCORE", "0.6"))
+VECTOR_EMBEDDING_BATCH_SIZE = int(os.environ.get("VECTOR_EMBEDDING_BATCH_SIZE", "256"))

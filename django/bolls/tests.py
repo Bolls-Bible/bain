@@ -1,8 +1,8 @@
 import json
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
-from django.contrib.staticfiles import finders
 from django.urls import reverse
 
 from bolls.models import History
@@ -46,7 +46,10 @@ class BollsTestCase(TestCase):
     def test_get_chapter(self):
         request = self.client.get("/get-chapter/YLT/22/8/")
         self.assertIn(
-            b"Many waters are not able to quench the love, And floods do not wash it away. If one give all the wealth of his house for love, Treading down -- they tread upon it.",
+            (
+                b"Many waters are not able to quench the love, And floods do not wash it away. "
+                b"If one give all the wealth of his house for love, Treading down -- they tread upon it."
+            ),
             request.content,
         )
         self.assertEqual(request.status_code, 200)
@@ -56,6 +59,26 @@ class BollsTestCase(TestCase):
         request = self.client.get("/search/KJV/?search=Haggi&match_case=false&match_whole=true")
         self.assertIn(b"Haggi", request.content)
         self.assertEqual(request.status_code, 200)
+
+    def test_v2_search_vector_default_uses_page_and_limit(self):
+        with patch("bolls.views._vector_search") as mocked_vector_search:
+            mocked_vector_search.return_value = ([], 0)
+
+            request = self.client.get(
+                "/v2/find/KJV?search=Haggi&page=3&limit=10&match_case=false&match_whole=false"
+            )
+
+            self.assertEqual(request.status_code, 200)
+            mocked_vector_search.assert_called_once_with("KJV", "Haggi", None, 3, 10)
+
+    def test_v2_search_match_case_disables_vector_default(self):
+        with patch("bolls.views._vector_search") as mocked_vector_search:
+            request = self.client.get(
+                "/v2/find/KJV?search=Haggi&page=1&limit=10&match_case=true&match_whole=false"
+            )
+
+            self.assertEqual(request.status_code, 200)
+            mocked_vector_search.assert_not_called()
 
     # check if dictionary search works
     def test_dictionary(self):

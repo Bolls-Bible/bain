@@ -3,6 +3,7 @@ from django.db.models import F, Func
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector
+from pgvector.django import VectorField, HnswIndex
 
 
 class Verses(models.Model):
@@ -11,14 +12,16 @@ class Verses(models.Model):
     chapter = models.PositiveSmallIntegerField()
     verse = models.PositiveSmallIntegerField()
     text = models.TextField()
+    embedding = VectorField(dimensions=1536, null=True, blank=True)
 
     def natural_key(self):
-        return (self.translation, self.book, self.chapter, self.verse, self.text)
+        return (self.translation, self.book, self.chapter, self.verse)
 
     class Meta:
         indexes = [
-            models.Index(fields=['translation', 'book', 'chapter']),
-            models.Index(fields=['translation', 'book', 'chapter', 'verse']),
+            models.Index(fields=["translation", "book", "chapter"]),
+            models.Index(fields=["translation", "book", "chapter", "verse"]),
+            HnswIndex(name="text_vector_index", fields=["embedding"], m=16, ef_construction=64, opclasses=["vector_cosine_ops"]),
         ]
 
 
@@ -31,8 +34,8 @@ class Commentary(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['translation', 'book', 'chapter']),
-            models.Index(fields=['translation', 'book', 'chapter', 'verse']),
+            models.Index(fields=["translation", "book", "chapter"]),
+            models.Index(fields=["translation", "book", "chapter", "verse"]),
         ]
 
 
