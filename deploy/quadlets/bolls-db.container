@@ -11,8 +11,8 @@ CgroupsMode=no-conmon
 Volume=POSTGRES_HOST_PATH:/var/lib/postgresql:Z
 EnvironmentFile=ENV_FILE_PATH
 Environment=PGDATA=/var/lib/postgresql/data/bolls
-PodmanArgs=--cgroup-manager=cgroupfs --shm-size=768m
-Exec=postgres -c shared_buffers=512MB -c effective_cache_size=2048MB -c work_mem=24MB -c maintenance_work_mem=128MB
+PodmanArgs=--cgroup-manager=cgroupfs
+Exec=postgres -c shared_buffers=512MB -c effective_cache_size=2048MB -c work_mem=24MB -c maintenance_work_mem=256MB
 HealthCmd=sh -c 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 HealthInterval=10s
 HealthTimeout=5s
