@@ -58,10 +58,14 @@ class ReadingHistory
 				history: JSON.stringify(history),
 			})
 			if cloudData.compare_translations..length
-				compare.translations = JSON.parse(cloudData.compare_translations) || compare.translations
+				const newCompareTranslations = JSON.parse(cloudData.compare_translations) || compare.translations
+				if JSON.stringify(newCompareTranslations) != JSON.stringify(compare.translations)
+					compare.translations = newCompareTranslations
 
 			if cloudData.favorite_translations
-				settings.favoriteTranslations = JSON.parse(cloudData.favorite_translations) || settings.favoriteTranslations
+				const newFavoriteTranslations = JSON.parse(cloudData.favorite_translations) || settings.favoriteTranslations
+				if JSON.stringify(newFavoriteTranslations) != JSON.stringify(settings.favoriteTranslations)
+					settings.favoriteTranslations = newFavoriteTranslations
 
 			if cloudData.history
 				history = JSON.parse(cloudData.history) || history

@@ -127,13 +127,16 @@ showmigrations:
 	$(CONTAINER_MANAGER) exec web python manage.py showmigrations
 
 shell:
-	$(CONTAINER_MANAGER) exec web python manage.py shell
+	$(CONTAINER_MANAGER) exec -it web python manage.py shell
 
 django-logs dl:
-	$(CONTAINER_MANAGER) logs -f django
+	$(CONTAINER_MANAGER) logs -f web
 
 django-tests dt:
 	$(CONTAINER_MANAGER) exec web python manage.py test --verbosity=2 --keepdb $(filter-out $@,$(MAKECMDGOALS))
+
+pip:
+	$(CONTAINER_MANAGER) exec web pip $(filter-out $@,$(MAKECMDGOALS))
 
 # Node/Imba commands
 npm-install ni:

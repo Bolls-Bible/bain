@@ -3,6 +3,7 @@ from django.db.models import F, Func
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVectorField
 
 
 class Verses(models.Model):
@@ -13,7 +14,7 @@ class Verses(models.Model):
     text = models.TextField()
 
     def natural_key(self):
-        return (self.translation, self.book, self.chapter, self.verse, self.text)
+        return (self.translation, self.book, self.chapter, self.verse)
 
     class Meta:
         indexes = [
