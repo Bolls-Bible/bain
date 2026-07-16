@@ -45,7 +45,7 @@ def _get_query_embedding(query):
         with Mistral(
             api_key=settings.MISTRAL_API_KEY,
         ) as mistral:
-            embedding_dimensions = int(getattr(settings, "VECTOR_EMBEDDING_DIMENSIONS", 1024))
+            embedding_dimensions = int(getattr(settings, "VECTOR_EMBEDDING_DIMENSIONS", 1536))
             res = mistral.embeddings.create(
                 model=settings.MISTRAL_EMBEDDING_MODEL,
                 inputs=[query],

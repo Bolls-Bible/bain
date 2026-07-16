@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="verses",
             name="embedding",
-            field=pgvector.django.vector.VectorField(blank=True, dimensions=1024, null=True),
+            field=pgvector.django.vector.VectorField(blank=True, dimensions=1536, null=True),
         ),
         migrations.AddIndex(
             model_name="verses",

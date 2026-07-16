@@ -105,7 +105,7 @@ class Command(BaseCommand):
             return
 
         model_name = getattr(settings, "MISTRAL_EMBEDDING_MODEL", "codestral-embed")
-        expected_dims = int(getattr(settings, "VECTOR_EMBEDDING_DIMENSIONS", 1024))
+        expected_dims = int(getattr(settings, "VECTOR_EMBEDDING_DIMENSIONS", 1536))
 
         selected_translations = options["translation"]
         if not selected_translations:
@@ -138,12 +138,16 @@ class Command(BaseCommand):
         failed = 0
         last_pk = 0
         next_dispatch_at = time.monotonic()
+        overall_start = time.monotonic()
+        super_batch_index = 0
 
         while True:
             super_batch = list(queryset.filter(pk__gt=last_pk)[:super_batch_size])
             if not super_batch:
                 break
 
+            super_batch_index += 1
+            super_batch_start = time.monotonic()
             last_pk = super_batch[-1].pk
             chunked_batches = [
                 super_batch[start:start + batch_size]
@@ -190,8 +194,14 @@ class Command(BaseCommand):
                         verse.embedding = vector
                         verses_to_update.append(verse)
 
+            super_batch_elapsed = time.monotonic() - super_batch_start
+            total_elapsed = time.monotonic() - overall_start
             if not verses_to_update:
-                self.stdout.write(f"Processed {processed}/{total} (failed={failed})")
+                self.stdout.write(
+                    f"Processed {processed}/{total} (failed={failed}) "
+                    f"batch={super_batch_index} batch_elapsed={super_batch_elapsed:.2f}s "
+                    f"total_elapsed={total_elapsed:.2f}s"
+                )
                 continue
 
             try:
@@ -202,9 +212,19 @@ class Command(BaseCommand):
                 continue
 
             processed += len(verses_to_update)
-            self.stdout.write(f"Processed {processed}/{total} (failed={failed})")
+            processing_rate = (processed / total_elapsed) if total_elapsed > 0 else 0.0
+            self.stdout.write(
+                f"Processed {processed}/{total} (failed={failed}) "
+                f"batch={super_batch_index} batch_elapsed={super_batch_elapsed:.2f}s "
+                f"total_elapsed={total_elapsed:.2f}s rate={processing_rate:.2f}/s"
+            )
 
-        self.stdout.write(f"Done. processed={processed} failed={failed}")
+        total_elapsed = time.monotonic() - overall_start
+        overall_rate = (processed / total_elapsed) if total_elapsed > 0 else 0.0
+        self.stdout.write(
+            f"Done. processed={processed} failed={failed} "
+            f"total_elapsed={total_elapsed:.2f}s rate={overall_rate:.2f}/s"
+        )
 
 
 # Usage example:

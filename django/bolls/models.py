@@ -12,7 +12,7 @@ class Verses(models.Model):
     chapter = models.PositiveSmallIntegerField()
     verse = models.PositiveSmallIntegerField()
     text = models.TextField()
-    embedding = VectorField(dimensions=1024, null=True, blank=True)
+    embedding = VectorField(dimensions=1536, null=True, blank=True)
 
     def natural_key(self):
         return (self.translation, self.book, self.chapter, self.verse)
