@@ -38,6 +38,62 @@ incorrect_body = "The body of the request is incorrect"
 _imba_assets_cache = None
 
 
+def _get_query_embedding(query):
+    try:
+        from mistralai.client import Mistral
+
+        with Mistral(
+            api_key=settings.MISTRAL_API_KEY,
+        ) as mistral:
+            embedding_dimensions = int(getattr(settings, "VECTOR_EMBEDDING_DIMENSIONS", 1024))
+            res = mistral.embeddings.create(
+                model=settings.MISTRAL_EMBEDDING_MODEL,
+                inputs=[query],
+                output_dimension=embedding_dimensions,
+                output_dtype="float",
+            )
+
+            return res.data[0].embedding
+
+    except Exception:
+        return None
+
+
+def _vector_search(translation, piece, book, page, limit):
+    from pgvector.django import CosineDistance
+
+    query_embedding = _get_query_embedding(piece)
+    if query_embedding is None:
+        return []
+
+    search_params = {
+        "translation": translation,
+        "embedding__isnull": False,
+    }
+    if book:
+        if is_number(book):
+            search_params["book"] = book
+        else:
+            if book == "ot":
+                search_params["book__lt"] = 40
+            if book == "nt":
+                search_params["book__gte"] = 40
+
+    min_score = float(getattr(settings, "VECTOR_SEARCH_MIN_SCORE", 0.6))
+    queryset = (
+        Verses.objects.filter(**search_params)
+        .annotate(distance=CosineDistance("embedding", query_embedding))
+        .annotate(rank=1 - F("distance"))
+        .filter(rank__gte=min_score)
+        .order_by("distance")
+    )
+
+    total = queryset.count()
+    offset = max(0, (page - 1) * limit)
+    paginated = list(queryset[offset : offset + limit])
+    return paginated, min(total, 8192)  # Limit the total to 8192 to avoid overwhelming the client
+
+
 # The function is used to get the paths of the imba assets. It uses caching to avoid unnecessary file system operations, which can be expensive. The cache is invalidated in DEBUG mode to ensure that changes to static files are reflected immediately during development.
 def getImbaIndexAssets():
     global _imba_assets_cache
@@ -185,7 +241,7 @@ def link_to_verse(request, translation, book, chapter, verse):
     try:
         bookid = get_book_id(translation, book)
         if str(bookid) != book:
-            return redirect('link_to_verse', translation=translation, book=bookid, chapter=chapter, verse=verse)
+            return redirect("link_to_verse", translation=translation, book=bookid, chapter=chapter, verse=verse)
     except Exception as e:
         print(e)
         return HttpResponse("The verse is not found", status=404)
@@ -201,7 +257,7 @@ def link_to_verse(request, translation, book, chapter, verse):
             "verse": verse,
             "verses": verses,
             "description": get_description(verses, verse, 0),
-            **getImbaIndexAssets()
+            **getImbaIndexAssets(),
         },
     )
 
@@ -210,7 +266,7 @@ def link_to_verses(request, translation, book, chapter, verse, endverse):
     try:
         bookid = get_book_id(translation, book)
         if str(bookid) != book:
-            return redirect('link_to_verses', translation=translation, book=bookid, chapter=chapter, verse=verse, endverse=endverse)
+            return redirect("link_to_verses", translation=translation, book=bookid, chapter=chapter, verse=verse, endverse=endverse)
     except Exception as e:
         print(e)
         return HttpResponse("The verses are not found", status=404)
@@ -227,7 +283,7 @@ def link_to_verses(request, translation, book, chapter, verse, endverse):
             "endverse": endverse,
             "verses": verses,
             "description": get_description(verses, verse, endverse),
-            **getImbaIndexAssets()
+            **getImbaIndexAssets(),
         },
     )
 
@@ -236,7 +292,7 @@ def link_to_chapter(request, translation, book, chapter):
     try:
         bookid = get_book_id(translation, book)
         if str(bookid) != book:
-            return redirect('link_to_chapter', translation=translation, book=bookid, chapter=chapter)
+            return redirect("link_to_chapter", translation=translation, book=bookid, chapter=chapter)
     except Exception as e:
         print(e)
         return HttpResponse("The chapter is not found", status=404)
@@ -245,20 +301,22 @@ def link_to_chapter(request, translation, book, chapter):
     return render(
         request,
         bolls_index,
-        {
-            "translation": translation,
-            "book": book,
-            "chapter": chapter,
-            "verses": verses,
-            "description": get_description(verses, 1, 3),
-            **getImbaIndexAssets()
-        },
+        {"translation": translation, "book": book, "chapter": chapter, "verses": verses, "description": get_description(verses, 1, 3), **getImbaIndexAssets()},
     )
 
 
-def find(translation: str, piece: str, book: int, match_case: bool, match_whole: bool, page: int = 1, limit: int = 1024):
+def find(
+    translation: str,
+    piece: str,
+    book: int,
+    match_case: bool,
+    match_whole: bool,
+    page: int = 1,
+    limit: int = 1024,
+):
     d = []
     search_results = []
+    total = 0
     # ensure page is a positive integer
     if page < 1:
         page = 1
@@ -281,18 +339,16 @@ def find(translation: str, piece: str, book: int, match_case: bool, match_whole:
             linear_search_params["text__contains"] = piece
         else:
             linear_search_params["text__icontains"] = piece
-        search_results = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
-    else:
+        search_results = list(Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse"))
+        total = len(search_results)
+    elif match_case:
         query_set = []
 
         for word in piece.split():
-            if match_case:
-                query_set.append('Q(translation="' + translation + '", text__contains=' + json.dumps(word) + ")")
-            else:
-                query_set.append('Q(translation="' + translation + '", text__search=' + json.dumps(word) + ")")
+            query_set.append('Q(translation="' + translation + '", text__contains=' + json.dumps(word) + ")")
         if book:
             if is_number(book):
-                query_set.append('Q(book="' + book + '")')
+                query_set.append('Q(book="' + str(book) + '")')
             else:
                 if book == "ot":
                     query_set.append("Q(book__lt=40)")
@@ -300,38 +356,10 @@ def find(translation: str, piece: str, book: int, match_case: bool, match_whole:
                     query_set.append("Q(book__gte=40)")
 
         query = " & ".join(query_set)
-
-        results_of_exec_search = Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse")
-
-        if len(results_of_exec_search) < 24:
-            search_params = {
-                "translation": translation,
-            }
-            if book:
-                if is_number(book):
-                    search_params["book"] = book
-                else:
-                    if book == "ot":
-                        search_params["book__lt"] = 40
-                    if book == "nt":
-                        search_params["book__gte"] = 40
-
-            results_of_rank = Verses.objects.annotate(rank=SearchRank("text", SearchQuery(piece))).filter(**search_params, rank__gt=(0.1)).order_by("-rank")
-
-            search_results = []
-            if len(results_of_rank) < 24:
-                results_of_similarity = (
-                    Verses.objects.annotate(rank=TrigramWordSimilarity(piece, "text")).filter(**search_params, rank__gt=0.7).order_by("-rank")
-                )
-
-                search_results = list(results_of_similarity) + list(set(results_of_rank) - set(results_of_similarity))
-
-            search_results.sort(key=lambda verse: verse.rank, reverse=True)
-
-            if len(results_of_exec_search) > 0:
-                search_results = list(results_of_exec_search) + list(set(search_results) - set(results_of_exec_search))
-        else:
-            search_results = results_of_exec_search
+        search_results = list(Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse"))
+        total = len(search_results)
+    else:
+        search_results, total = _vector_search(translation, piece, book, page, limit)
 
     def highlight_headline(text):
         highlighted_text = text
@@ -353,7 +381,10 @@ def find(translation: str, piece: str, book: int, match_case: bool, match_whole:
     for obj in search_results:
         exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
-    for obj in search_results[(page * limit - limit) : (page * limit)]:
+    if match_case or match_whole:
+        search_results = search_results[(page * limit - limit) : (page * limit)]
+
+    for obj in search_results:
         d.append(
             {
                 "pk": obj.pk,
@@ -364,11 +395,7 @@ def find(translation: str, piece: str, book: int, match_case: bool, match_whole:
                 "text": highlight_headline(obj.text),
             }
         )
-    return {
-        "results": d,
-        "exact_matches": exact_matches,
-        "total": len(search_results),
-    }
+    return {"results": d, "exact_matches": exact_matches, "total": total}
 
 
 def search(request, translation, piece=""):
@@ -408,7 +435,15 @@ def v2_search(request, translation):
     if len(piece) <= 2 and not piece.isdigit():
         return JsonResponse([{"readme": "Your query is not longer than 2 characters! And don't forget to trim it"}], safe=False, status=400)
 
-    result = find(translation, piece, book, match_case, match_whole, page, limit)
+    result = find(
+        translation,
+        piece,
+        book,
+        match_case,
+        match_whole,
+        page,
+        limit,
+    )
     return JsonResponse(result, safe=False)
 
 

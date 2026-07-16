@@ -86,7 +86,7 @@ Result fields for each verse:
 
 ## Search
 
-Updated at: 13 March 2025.
+Update: from 16 July 2026 API uses semantic vector search for queries without `match_case` or `match_whole` set to true.
 
 To find verses by a slug or a string:
 
@@ -114,9 +114,16 @@ Optional parameters:
 - `page`: Pagination page.
 - `limit`: Pagination page limit.
 
+Search behavior:
+
+- By default (`match_case=false` and `match_whole=false`), search uses vector similarity.
+- If `match_case=true` or `match_whole=true`, search switches to lexical matching.
+- The total number of results of semantic search is capped at 8192, you don't really need more than that.
+
 Example:
 
 - https://bolls.life/v2/find/YLT?search=haggi&match_case=false&match_whole=true&limit=128&page=1
+- https://bolls.life/v2/find/YLT?search=haggi&limit=128&page=1
 
 Result object fields:
 
@@ -182,28 +189,29 @@ You can request different verses in different translations only within one chapt
 Imba example:
 
 ```javascript
-window.fetch('/get-parallel-verses/', {
-  method: 'POST',
-  cache: 'no-cache',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    // Here are list of translations for comparison
-    translations: ['YLT', 'WEB', 'KJV'],
+window
+  .fetch("/get-parallel-verses/", {
+    method: "POST",
+    cache: "no-cache",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      // Here are list of translations for comparison
+      translations: ["YLT", "WEB", "KJV"],
 
-    // It may be a single verse there [3], or any number of verses,
-    // and if they exist they will be returned
-    verses: [3, 4, 5],
+      // It may be a single verse there [3], or any number of verses,
+      // and if they exist they will be returned
+      verses: [3, 4, 5],
 
-    book: 43, // an id of the book
-    chapter: 1 // number of chapter
+      book: 43, // an id of the book
+      chapter: 1, // number of chapter
+    }),
   })
-})
   .then((response) => response.json())
   .then((result) => {
     // do something with the result
-  })
+  });
 ```
 
 Result example:
@@ -309,29 +317,30 @@ Body item fields:
 Example:
 
 ```javascript
-window.fetch('/get-verses/', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify([
-    {
-      translation: 'YLT',
-      book: 19,
-      chapter: 145,
-      verses: [14, 15, 16]
+window
+  .fetch("/get-verses/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-    {
-      translation: 'KJV',
-      book: 19,
-      chapter: 91,
-      verses: [1, 2, 3]
-    }
-  ])
-})
+    body: JSON.stringify([
+      {
+        translation: "YLT",
+        book: 19,
+        chapter: 145,
+        verses: [14, 15, 16],
+      },
+      {
+        translation: "KJV",
+        book: 19,
+        chapter: 91,
+        verses: [1, 2, 3],
+      },
+    ]),
+  })
   .then((response) => response.json())
   .then((data) => console.log(data))
-  .catch(console.error)
+  .catch(console.error);
 ```
 
 Result example:
@@ -492,8 +501,15 @@ This API allows you to automatically tag Bible references in your text. Include 
 
 ```html
 <head>
-  <script type="text/javascript" src="https://bolls.life/reference-tool/tool.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://bolls.life/reference-tool/popover.css" />
+  <script
+    type="text/javascript"
+    src="https://bolls.life/reference-tool/tool.js"
+  ></script>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://bolls.life/reference-tool/popover.css"
+  />
 </head>
 <body>
   <div id="text">
@@ -501,11 +517,11 @@ This API allows you to automatically tag Bible references in your text. Include 
     <p>Another text with references to the Bible: Genesis 1:1</p>
   </div>
   <script type="text/javascript">
-    ReferenceTagging.init()
+    ReferenceTagging.init();
     // Set defaults. Full list of public options look at the source code.
-    ReferenceTagging.translation = 'KJV'
-    ReferenceTagging.theme = 'dark' // or 'light' (default)
-    ReferenceTagging.linkVerses()
+    ReferenceTagging.translation = "KJV";
+    ReferenceTagging.theme = "dark"; // or 'light' (default)
+    ReferenceTagging.linkVerses();
   </script>
 </body>
 ```
