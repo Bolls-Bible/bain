@@ -64,21 +64,40 @@ class BollsTestCase(TestCase):
         with patch("bolls.views._vector_search") as mocked_vector_search:
             mocked_vector_search.return_value = ([], 0)
 
-            request = self.client.get(
-                "/v2/find/KJV?search=Haggi&page=3&limit=10&match_case=false&match_whole=false"
-            )
+            request = self.client.get("/v2/find/KJV?search=Haggi&page=3&limit=10&match_case=false&match_whole=false")
 
             self.assertEqual(request.status_code, 200)
             mocked_vector_search.assert_called_once_with("KJV", "Haggi", None, 3, 10)
 
     def test_v2_search_match_case_disables_vector_default(self):
         with patch("bolls.views._vector_search") as mocked_vector_search:
-            request = self.client.get(
-                "/v2/find/KJV?search=Haggi&page=1&limit=10&match_case=true&match_whole=false"
-            )
+            request = self.client.get("/v2/find/KJV?search=Haggi&page=1&limit=10&match_case=true&match_whole=false")
 
             self.assertEqual(request.status_code, 200)
             mocked_vector_search.assert_not_called()
+
+    # add test for /search/NIV/?search=app&match_case=false&match_whole=false
+    def test_search_niv(self):
+        request = self.client.get("/search/NIV/?search=app&match_case=false&match_whole=false")
+        self.assertIn(b"app", request.content)
+        self.assertEqual(request.status_code, 200)
+
+    # and for /find/WEB/?search=Do%20not&limit=60
+    def test_find_web(self):
+        request = self.client.get("/find/WEB/?search=Do%20not&limit=60")
+        self.assertIn(b"Do not", request.content)
+        self.assertEqual(request.status_code, 200)
+
+    # /search/WEB/MARY%20MAGDALENE/
+    def test_search_web_mary_magdalene(self):
+        request = self.client.get("/search/WEB/MARY%20MAGDALENE/")
+        self.assertIn(b"Mary Magdalene", request.content)
+        self.assertEqual(request.status_code, 200)
+
+    # add test with emojies in the query
+    def test_search_with_emojies(self):
+        request = self.client.get("/search/KJV/?search=love%20💖&match_case=false&match_whole=false")
+        self.assertEqual(request.status_code, 200)
 
     # check if dictionary search works
     def test_dictionary(self):

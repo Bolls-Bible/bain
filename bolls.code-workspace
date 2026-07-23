@@ -43,5 +43,8 @@
       "rgba",
       "unaccent"
     ],
+    "chat.tools.terminal.autoApprove": {
+      "make": true
+    },
   },
 }

@@ -64,7 +64,25 @@ def _vector_search(translation, piece, book, page, limit):
 
     query_embedding = _get_query_embedding(piece)
     if query_embedding is None:
-        return []
+        # Fall back to regular icontains search when embeddings are unavailable.
+        linear_search_params = {
+            "translation": translation,
+            "text__icontains": piece,
+        }
+        if book:
+            if is_number(book):
+                linear_search_params["book"] = book
+            else:
+                if book == "ot":
+                    linear_search_params["book__lt"] = 40
+                if book == "nt":
+                    linear_search_params["book__gte"] = 40
+
+        queryset = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
+        total = queryset.count()
+        offset = max(0, (page - 1) * limit)
+        paginated = list(queryset[offset : offset + limit])
+        return paginated, total
 
     search_params = {
         "translation": translation,
@@ -364,8 +382,9 @@ def find(
     def highlight_headline(text):
         highlighted_text = text
         text_to_wrap_in_mark_regex = re.compile(re.escape(piece), re.IGNORECASE)
+        phrase_has_match = text_to_wrap_in_mark_regex.search(highlighted_text) is not None
         highlighted_text = text_to_wrap_in_mark_regex.sub(r"<mark>\g<0></mark>", highlighted_text)
-        if not match_whole:
+        if not match_whole and not phrase_has_match:
             for word in piece.split():
                 if word == piece:
                     break

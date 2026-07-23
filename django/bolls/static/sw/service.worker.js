@@ -6,7 +6,7 @@ importScripts("/static/sw/scripts.js");
 
 const CACHE_NAME = "v3.3.9";
 const STATICS_CACHE = "statics-v1.0.19";
-const TEXTS_CACHE = "texts-v1.1.5";
+const TEXTS_CACHE = "texts-v1.1.6";
 
 const urlsToCache = [
   "/",
