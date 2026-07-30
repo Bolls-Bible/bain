@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: build django image for ghcr
         run: |
           echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -60,7 +60,7 @@ jobs:
       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Deploy on VPS runner
         shell: bash

@@ -44,7 +44,8 @@
       "unaccent"
     ],
     "chat.tools.terminal.autoApprove": {
-      "make": true
+      "make": true,
+      ".venv/bin/python": true
     },
   },
 }

@@ -1,3 +1,5 @@
+from itertools import islice
+
 from django.db import connection
 from django.db.models import F, Func
 import re
@@ -34,6 +36,14 @@ bolls_index = "bolls/index.html"
 incorrect_body = "The body of the request is incorrect"
 
 _imba_assets_cache = None
+
+
+def _paginate_results(queryset, offset, limit):
+    if offset < 0:
+        offset = 0
+    if limit < 0:
+        limit = 0
+    return list(islice(queryset, offset, offset + limit))
 
 
 def _get_query_embedding(query):
@@ -80,7 +90,7 @@ def _vector_search(translation, piece, book, page, limit):
 
         queryset = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
         total = queryset.count()
-        paginated = list(queryset[offset : offset + limit])
+        paginated = _paginate_results(queryset, offset, limit)
         return paginated, total
 
     search_params = {
@@ -106,7 +116,7 @@ def _vector_search(translation, piece, book, page, limit):
     )
 
     total = queryset.count()
-    paginated = list(queryset[offset : offset + limit])
+    paginated = _paginate_results(queryset, offset, limit)
     return paginated, min(total, 8192)  # Limit the total to 8192 to avoid overwhelming the client
 
 
@@ -399,7 +409,7 @@ def find(
         exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
 
     if match_case or match_whole:
-        search_results = search_results[(page * limit - limit) : (page * limit)]
+        search_results = _paginate_results(search_results, page * limit - limit, limit)
 
     for obj in search_results:
         d.append(

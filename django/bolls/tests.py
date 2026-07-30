@@ -1,8 +1,9 @@
 import json
 from unittest.mock import patch
 
+import bolls.views as views
 from django.contrib.auth.models import User
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
 from bolls.models import History
@@ -185,3 +186,26 @@ class BollsTestCase(TestCase):
                 "favorite_translations": "[]",
             },
         )
+
+    # /v2/find/KJV?search=searched+the+scriptures&page=1&limit=30 returns 6 while total is 9
+    def test_paginate_results_materializes_iterables_before_slicing(self):
+        class IterableWithoutSlice:
+            def __init__(self, values):
+                self.values = values
+
+            def __iter__(self):
+                return iter(self.values)
+
+        self.assertEqual(views._paginate_results(IterableWithoutSlice([1, 2, 3, 4]), 0, 10), [1, 2, 3, 4])
+
+
+class BollsPaginationTests(SimpleTestCase):
+    def test_paginate_results_materializes_iterables_before_slicing(self):
+        class IterableWithoutSlice:
+            def __init__(self, values):
+                self.values = values
+
+            def __iter__(self):
+                return iter(self.values)
+
+        self.assertEqual(views._paginate_results(IterableWithoutSlice([1, 2, 3, 4]), 0, 10), [1, 2, 3, 4])
