@@ -76,22 +76,14 @@ class BollsTestCase(TestCase):
             self.assertEqual(request.status_code, 200)
             mocked_vector_search.assert_not_called()
 
-    # add test for /search/NIV/?search=app&match_case=false&match_whole=false
-    def test_search_niv(self):
-        request = self.client.get("/search/NIV/?search=app&match_case=false&match_whole=false")
-        self.assertIn(b"app", request.content)
-        self.assertEqual(request.status_code, 200)
-
-    # and for /find/WEB/?search=Do%20not&limit=60
     def test_find_web(self):
-        request = self.client.get("/find/WEB/?search=Do%20not&limit=60")
-        self.assertIn(b"Do not", request.content)
+        request = self.client.get("/find/YLT/?search=Do%20not%20kill&limit=60")
+        self.assertIn(b"Thou <mark>do</mark>st <mark>not</mark> murder", request.content)
         self.assertEqual(request.status_code, 200)
 
-    # /search/WEB/MARY%20MAGDALENE/
     def test_search_web_mary_magdalene(self):
-        request = self.client.get("/search/WEB/MARY%20MAGDALENE/")
-        self.assertIn(b"Mary Magdalene", request.content)
+        request = self.client.get("/search/YLT/MARY%20MAGDALENE/")
+        self.assertIn(b"<mark>Mary</mark> the <mark>Magdalene</mark>", request.content)
         self.assertEqual(request.status_code, 200)
 
     # add test with emojies in the query

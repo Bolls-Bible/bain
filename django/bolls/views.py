@@ -20,8 +20,6 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 
-# from django.templatetags.static import static
-
 from bolls.books_map import books_map
 from bolls.forms import SignUpForm
 from bolls.utils.find_static_match import find_static_match
@@ -62,8 +60,10 @@ def _get_query_embedding(query):
 def _vector_search(translation, piece, book, page, limit):
     from pgvector.django import CosineDistance
 
+    offset = max(0, (page - 1) * limit)
     query_embedding = _get_query_embedding(piece)
     if query_embedding is None:
+        print("Embedding API is unavailable, falling back to linear search")
         # Fall back to regular icontains search when embeddings are unavailable.
         linear_search_params = {
             "translation": translation,
@@ -80,7 +80,6 @@ def _vector_search(translation, piece, book, page, limit):
 
         queryset = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
         total = queryset.count()
-        offset = max(0, (page - 1) * limit)
         paginated = list(queryset[offset : offset + limit])
         return paginated, total
 
@@ -107,7 +106,6 @@ def _vector_search(translation, piece, book, page, limit):
     )
 
     total = queryset.count()
-    offset = max(0, (page - 1) * limit)
     paginated = list(queryset[offset : offset + limit])
     return paginated, min(total, 8192)  # Limit the total to 8192 to avoid overwhelming the client
 
