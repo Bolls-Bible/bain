@@ -67,28 +67,38 @@ def _get_query_embedding(query):
         return None
 
 
+def _set_book_filter(book):
+    if book:
+        if is_number(book):
+            return {"book": book}
+        else:
+            if book == "ot":
+                return Q(book__lt=40) | Q(book__gt=66)
+            if book == "nt":
+                return Q(book__gt=39) & Q(book__lt=67)
+    return {}
+
+
 def _vector_search(translation, piece, book, page, limit):
     from pgvector.django import CosineDistance
 
     offset = max(0, (page - 1) * limit)
     query_embedding = _get_query_embedding(piece)
-    if query_embedding is None:
+    # TODO: We only check if there is embedding for query string, but not checking if the embedding is generated for the verses. We should check if the embedding is generated for the verses as well, and if not, we should fall back to linear search.
+    translation_has_embeddings = Verses.objects.filter(translation=translation, embedding__isnull=False).exists()
+    if query_embedding is None or not translation_has_embeddings:
         print("Embedding API is unavailable, falling back to linear search")
-        # Fall back to regular icontains search when embeddings are unavailable.
+        # Fall back to a regex search that can cross Strong's tags and punctuation.
         linear_search_params = {
             "translation": translation,
-            "text__icontains": piece,
+            "text__iregex": _build_query_regex(piece).pattern,
         }
-        if book:
-            if is_number(book):
-                linear_search_params["book"] = book
-            else:
-                if book == "ot":
-                    linear_search_params["book__lt"] = 40
-                if book == "nt":
-                    linear_search_params["book__gte"] = 40
-
-        queryset = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
+        book_filter = _set_book_filter(book)
+        if isinstance(book_filter, Q):
+            queryset = Verses.objects.filter(Q(**linear_search_params) & book_filter).order_by("book", "chapter", "verse")
+        else:
+            linear_search_params.update(book_filter)
+            queryset = Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse")
         total = queryset.count()
         paginated = _paginate_results(queryset, offset, limit)
         return paginated, total
@@ -97,23 +107,25 @@ def _vector_search(translation, piece, book, page, limit):
         "translation": translation,
         "embedding__isnull": False,
     }
-    if book:
-        if is_number(book):
-            search_params["book"] = book
-        else:
-            if book == "ot":
-                search_params["book__lt"] = 40
-            if book == "nt":
-                search_params["book__gte"] = 40
-
+    book_filter = _set_book_filter(book)
     min_score = float(getattr(settings, "VECTOR_SEARCH_MIN_SCORE", 0.6))
-    queryset = (
-        Verses.objects.filter(**search_params)
-        .annotate(distance=CosineDistance("embedding", query_embedding))
-        .annotate(rank=1 - F("distance"))
-        .filter(rank__gte=min_score)
-        .order_by("distance")
-    )
+    if isinstance(book_filter, Q):
+        queryset = (
+            Verses.objects.filter(Q(**search_params) & book_filter)
+            .annotate(distance=CosineDistance("embedding", query_embedding))
+            .annotate(rank=1 - F("distance"))
+            .filter(rank__gte=min_score)
+            .order_by("distance")
+        )
+    else:
+        search_params.update(book_filter)
+        queryset = (
+            Verses.objects.filter(**search_params)
+            .annotate(distance=CosineDistance("embedding", query_embedding))
+            .annotate(rank=1 - F("distance"))
+            .filter(rank__gte=min_score)
+            .order_by("distance")
+        )
 
     total = queryset.count()
     paginated = _paginate_results(queryset, offset, limit)
@@ -250,6 +262,13 @@ def clean_up_html(raw_html):
     return clean_text
 
 
+def _build_query_regex(piece):
+    words = piece.split()
+    separator = r"(?:<S>\d+</S>|\W)+"
+    regex_pattern = separator.join(re.escape(word) for word in words)
+    return re.compile(regex_pattern, re.IGNORECASE)
+
+
 def get_description(verses, verse, endverse):
     if verse <= len(verses) and len(verses) > 0:
         i = 0
@@ -352,20 +371,17 @@ def find(
             "translation": translation,
         }
 
-        if book:
-            if is_number(book):
-                linear_search_params["book"] = book
-            else:
-                if book == "ot":
-                    linear_search_params["book__lt"] = 40
-                if book == "nt":
-                    linear_search_params["book__gte"] = 40
-
+        book_filter = _set_book_filter(book)
         if match_case:
             linear_search_params["text__contains"] = piece
         else:
             linear_search_params["text__icontains"] = piece
-        search_results = list(Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse"))
+
+        if isinstance(book_filter, Q):
+            search_results = list(Verses.objects.filter(Q(**linear_search_params) & book_filter).order_by("book", "chapter", "verse"))
+        else:
+            linear_search_params.update(book_filter)
+            search_results = list(Verses.objects.filter(**linear_search_params).order_by("book", "chapter", "verse"))
         total = len(search_results)
     elif match_case:
         query_set = []
@@ -377,9 +393,9 @@ def find(
                 query_set.append('Q(book="' + str(book) + '")')
             else:
                 if book == "ot":
-                    query_set.append("Q(book__lt=40)")
+                    query_set.append("Q(book__lt=40) | Q(book__gt=66)")
                 if book == "nt":
-                    query_set.append("Q(book__gte=40)")
+                    query_set.append("Q(book__gte=40) & Q(book__lt=67)")
 
         query = " & ".join(query_set)
         search_results = list(Verses.objects.filter(eval(query)).order_by("book", "chapter", "verse"))
@@ -389,9 +405,10 @@ def find(
 
     def highlight_headline(text):
         highlighted_text = text
-        text_to_wrap_in_mark_regex = re.compile(re.escape(piece), re.IGNORECASE)
+        text_to_wrap_in_mark_regex = _build_query_regex(piece)
         phrase_has_match = text_to_wrap_in_mark_regex.search(highlighted_text) is not None
-        highlighted_text = text_to_wrap_in_mark_regex.sub(r"<mark>\g<0></mark>", highlighted_text)
+        if phrase_has_match:
+            highlighted_text = text_to_wrap_in_mark_regex.sub(r"<mark>\g<0></mark>", highlighted_text)
         if not match_whole and not phrase_has_match:
             for word in piece.split():
                 if word == piece:
@@ -405,8 +422,9 @@ def find(
 
     # count number of all exact matches
     exact_matches = 0
+    text_to_wrap_in_mark_regex = _build_query_regex(piece)
     for obj in search_results:
-        exact_matches += len(re.findall(re.escape(piece), obj.text, re.IGNORECASE))
+        exact_matches += len(text_to_wrap_in_mark_regex.findall(obj.text))
 
     if match_case or match_whole:
         search_results = _paginate_results(search_results, page * limit - limit, limit)

@@ -77,11 +77,15 @@ class BollsTestCase(TestCase):
             self.assertEqual(request.status_code, 200)
             mocked_vector_search.assert_not_called()
 
+    # NOTE: Tests semantic vector search. Disabled if you have no embeddings generated for the verses.
+    # You can generate embeddings by running `python manage.py embed_verses --translation KJV` and `python manage.py embed_verses --translation KJV`.
     def test_find_web(self):
-        request = self.client.get("/find/YLT/?search=Do%20not%20kill&limit=60")
+        request = self.client.get("/find/KJV/?search=Do%20not%20kill&limit=60")
         self.assertIn(b"Thou <mark>do</mark>st <mark>not</mark> murder", request.content)
         self.assertEqual(request.status_code, 200)
 
+    # NOTE: Tests semantic vector search. Disabled if you have no embeddings generated for the verses.
+    # You can generate embeddings by running `python manage.py embed_verses --translation KJV` and `python manage.py embed_verses --translation YLT`.
     def test_search_web_mary_magdalene(self):
         request = self.client.get("/search/YLT/MARY%20MAGDALENE/")
         self.assertIn(b"<mark>Mary</mark> the <mark>Magdalene</mark>", request.content)
@@ -97,6 +101,28 @@ class BollsTestCase(TestCase):
         request = self.client.get("/dictionary-definition/BDBT/אֹ֑ור/")
         self.assertIn(b"to be or become light, shine", request.content)
         self.assertEqual(request.status_code, 200)
+
+    # test if book filter works for search in a translation with apocrypha like KJV
+    def test_search_with_book_filter_ot(self):
+        request = self.client.get("/search/KJV/?search=Jesus wept&match_case=false&match_whole=&book=ot")
+        self.assertEqual(request.status_code, 200)
+        # every book in the result should be less than 40 (the first book of the NT) and more than 66 (the last book of the NT)
+        for verse in json.loads(request.content):
+            self.assertTrue(verse["book"] < 40 or verse["book"] > 66)
+
+    def test_search_with_book_filter_nt(self):
+        request = self.client.get("/search/KJV/?search=Jesus wept&match_case=false&match_whole=&book=nt")
+        self.assertEqual(request.status_code, 200)
+        # every book in the result should be greater than or equal to 40 (the first book of the NT) and less than 67 (the last book of the NT + 1)
+        for verse in json.loads(request.content):
+            self.assertTrue(verse["book"] >= 40 and verse["book"] < 67)
+
+    def test_search_with_book_filter_specific_book(self):
+        request = self.client.get("/search/KJV/?search=Jesus wept&match_case=false&match_whole=&book=43")
+        self.assertEqual(request.status_code, 200)
+        # every book in the result should be equal to 43 (the book of John)
+        for verse in json.loads(request.content):
+            self.assertEqual(verse["book"], 43)
 
     def test_is_strongs_number_query(self):
         self.assertTrue(is_strongs_number_query("H123"))

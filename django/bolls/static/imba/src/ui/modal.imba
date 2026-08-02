@@ -15,7 +15,8 @@ tag modal < section
 	expandedLanguage = ''
 	translationsSearch = ''
 
-	@action def changeTranslation translation\string
+	@action def openSuggestedTranslation translation\string
+		search.query = ''
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
 			reader.book = ALL_BOOKS[reader.translation][0].bookid
 			reader.chapter = 1
@@ -151,12 +152,14 @@ tag modal < section
 		return color.to("hsl").toString()
 
 	def openSuggestedBook bookId\string
+		search.query = ''
 		reader.book = bookId
 		reader.chapter = search.suggestions.chapter
 		reader.verse = search.suggestions.verse
 		reader.fetchVerses!
 
 	def openSuggestedBookInParallel bookId\string
+		search.query = ''
 		openInParallel({
 			translation:search.suggestions.translation,
 			book: bookId,
@@ -657,7 +660,7 @@ tag modal < section
 
 									for translation in search.suggestions.translations
 										<li>
-											<p.li.focusable [display: flex] tabIndex="0" @click=changeTranslation(translation.short_name) @keydown.enter=changeTranslation(translation.short_name)>
+											<p.li.focusable [display: flex] tabIndex="0" @click=openSuggestedTranslation(translation.short_name) @keydown.enter=openSuggestedTranslation(translation.short_name)>
 												<span>
 													<b> translation.short_name
 													', '
