@@ -5,6 +5,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path("", include("social_django.urls", namespace="social")),
     path('', include('bolls.urls')),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),
 ]

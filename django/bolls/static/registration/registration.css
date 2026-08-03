@@ -138,6 +138,10 @@ input[type="password"]:focus {
   border-bottom-color: var(--a-background);
 }
 
+.social-login {
+  width: 50%;
+}
+
 .with,
 #login_after_reset,
 input[type="submit"] {
@@ -170,7 +174,6 @@ input[type="submit"]:hover {
   justify-content: center;
   align-items: center;
   background-color: var(--btn-bg);
-  width: 50%;
   color: var(--a-background);
   margin: 0;
   font-weight: bold;

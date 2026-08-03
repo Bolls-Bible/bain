@@ -140,6 +140,7 @@ STATIC_URL = "/static/"
 
 ADMINS = [("Bohuslav", "bpavlisinec@gmail.com")]
 
+LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/"
 

@@ -1,11 +1,9 @@
 from django.urls import path
 from . import views
-from django.conf.urls import include
 
 urlpatterns = [
     path("health/live/", views.health_live),
     path("health/ready/", views.health_ready),
-    path("", include("social_django.urls", namespace="social")),
     path("", views.index, name="index"),
     path("donate/", views.index),
     path("profile/", views.index),
