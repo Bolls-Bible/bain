@@ -150,6 +150,7 @@ jobs:
           sed \
             -e "s|NGINX_DOMAIN_NAME|$APP_DOMAIN|g" \
             nginx/conf.d/nginx.conf > "$CONFIG_ROOT/nginx/conf.d/nginx.conf"
+          cp -r nginx/conf.d/includes/ "$CONFIG_ROOT/nginx/conf.d/includes/"
 
           curl -fsSL https://raw.githubusercontent.com/certbot/certbot/main/certbot/src/certbot/_internal/plugins/nginx/tls_configs/options-ssl-nginx.conf > "$LETSENCRYPT_DIR/options-ssl-nginx.conf"
           curl -fsSL https://raw.githubusercontent.com/certbot/certbot/main/certbot/src/certbot/ssl-dhparams.pem > "$LETSENCRYPT_DIR/ssl-dhparams.pem"
