@@ -228,6 +228,6 @@ class Command(BaseCommand):
 
 
 # Usage example:
-# podman exec web python manage.py embed_verses --translation YLT
 # podman exec web python manage.py embed_verses --translation KJV
 # python manage.py embed_verses --translation YLT --translation WEB --batch-size 128
+# podman exec bolls-web python manage.py embed_verses --translation NIVUK

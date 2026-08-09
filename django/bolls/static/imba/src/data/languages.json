@@ -363,6 +363,21 @@
         "short_name": "WPNT",
         "full_name": "Wilbur Pickering’s New Testament",
         "updated": 1778403247137
+      },
+      {
+        "short_name": "NIVUK",
+        "full_name": "New International Version® (Anglicised), NIV®, 2011",
+        "updated": 1786277420232
+      },
+      {
+        "short_name": "TNIV",
+        "full_name": "Today's New International Version, 2005",
+        "updated": 1786277420232
+      },
+      {
+        "short_name": "NIRV",
+        "full_name": "New International Reader's Version",
+        "updated": 1786277420232
       }
     ]
   },

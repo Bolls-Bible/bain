@@ -428,6 +428,7 @@ for (const book of books) {
 
 // After you got that chapters format them into array, similar to others and run the next code.
 
+// [{bookid: 1, chapters: 50}, {bookid: 2, chapters: 40}, ...]
 const chapters = [
   // Here should be that chapters
 ];

@@ -8,19 +8,27 @@ I prefer sqlite modules from MyBible app. I download that modules from 'https://
 
 Unarchive the downloaded zip. Export the `dictionary` table in csv format. `.csv` format is handy for working with data.  Mind that the output will be interpreted as html.
 
-Also add before all a new collumn `dictionary` that should be filled with the abbreviation of the dictionaty aka `BDB`, `RUSD`, `BDBSC` &c. *It should be unique!*
+Also add before all a new column `dictionary` that should be filled with the abbreviation of the dictionary aka `BDB`, `RUSD`, `BDBSC` &c. *It should be unique!*
 
 🚧🚧🚧 Work in Progress 🚧🚧🚧
 
 ### Add it to the app.
 
-After formating the text and books you may add it to the app. First of all copy the verses to the database with the next command:
+After formating the text and books you may add it to the app. First of all copy it to the database with the next command:
 
 ```sql
 \copy bolls_dictionary(...) FROM '/home/path_to_the_file/dictionary.csv' DELIMITER '|' CSV HEADER;
 ```
 
-Also paste the books array with the abbreviation of the translation as a name. This abbreviation should be the same as the first collumn of the `translation` collumn in the database that is described above.
+Create a new entry at `imba/src/data/dictionaries.json` with the next structure:
+
+```json
+{
+  "short_name": "BDB",
+  "full_name": "Brown-Driver-Briggs Hebrew and English Lexicon",
+  "updated": 1786277420232
+}
+```
 
 ### Create pull request.
 

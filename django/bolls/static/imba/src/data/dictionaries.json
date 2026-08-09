@@ -10,5 +10,9 @@
     {
         "abbr":"SCGES",
         "name":"Gesenius' Hebrew and Chaldee Lexicon to the Old Testament Scriptures combined with Hebrew and Aramaic part of the Strong's Exhausive Concordance (Enhanced)"
+    },
+    {
+        "abbr":"SECE",
+        "name":"Strong's Exhaustive Concordance (Enhanced)"
     }
 ]
