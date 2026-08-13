@@ -1,0 +1,31 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour, on the hour
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/Bolls-Bible/bain.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream into master
+        run: |
+          git checkout master
+          git merge upstream/master --no-edit
+
+      - name: Push
+        run: git push origin master
