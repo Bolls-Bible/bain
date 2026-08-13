@@ -1,0 +1,67 @@
+name: Bain-Fork Security and Quality Auto-Fix
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Auto-runs every hour
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+permissions:
+  contents: write 
+  security-events: write 
+  actions: read
+
+jobs:
+  # ==========================================
+  # JOB 1: Code Quality Auto-Fix 
+  # ==========================================
+  quality-autofix:
+    name: Code Quality Auto-Fix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Run Super-Linter (Auto-Fix Mode)
+        uses: super-linter/super-linter/slim@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Language Fixers mapped to bain-fork stack:
+          FIX_PYTHON_BLACK: true      # Formats Python code (18.1%)
+          FIX_JAVASCRIPT_PRETTIER: true # Formats JavaScript code (10.8%)
+          FIX_HTML_PRETTIER: true     # Formats HTML files (8.3%)
+          FIX_CSS_PRETTIER: true      # Formats CSS files (4.2%)
+          FIX_SQLFLUFF: true          # Formats SQL/PLpgSQL files (1.8%)
+          FIX_YAML_PRETTIER: true     # Formats GitHub workflow YAML files
+
+      - name: Commit and Push Auto-Fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-fix code quality findings"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+
+  # ==========================================
+  # JOB 2: Security Scanning (CodeQL)
+  # ==========================================
+  security-scan:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+    needs: quality-autofix 
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          # Configured for your repo's supported backend & frontend languages
+          languages: javascript-typescript, python 
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
