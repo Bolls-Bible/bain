@@ -1,0 +1,87 @@
+name: Auto-Release AppImage
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    # ONLY trigger automatically when files in these specific paths change
+    paths:
+      - 'package.json'
+      - 'VERSION'
+      - 'src/**'
+      - 'build-scripts/**'
+  # ADDED: Enables the manual "Run workflow" button in GitHub Actions
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Override version (leave blank to auto-detect)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to check existing Git tags
+
+      - name: Grab Current Version
+        id: get_version
+        run: |
+          # If triggered manually AND a version was typed in, use that:
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            echo "Using manual override version: $VERSION"
+          else
+            # Otherwise, auto-detect it from package.json
+            VERSION=$(jq -r '.version' package.json)
+            echo "Auto-detected version: $VERSION"
+          fi
+          
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Check if Version Already Released
+        id: check_tag
+        run: |
+          # Checks remote tags to see if this version was already released
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.get_version.outputs.VERSION }}$"; then
+            echo "Release v${{ steps.get_version.outputs.VERSION }} already exists. Skipping build."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "New version detected. Proceeding with build."
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install AppImage dependencies
+        if: steps.check_tag.outputs.skip == 'false'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fuse libfuse2 wget
+
+      - name: Build AppImage
+        if: steps.check_tag.outputs.skip == 'false'
+        run: |
+          echo "Building AppImage version ${{ steps.get_version.outputs.VERSION }}..."
+          
+          # -----------------------------------------------------------------
+          # INSERT YOUR APPIMAGE BUILD COMMANDS HERE
+          # -----------------------------------------------------------------
+          
+      - name: Create GitHub Release & Upload AppImage
+        if: steps.check_tag.outputs.skip == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: "Release v${{ steps.get_version.outputs.VERSION }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          # Make sure this matches the output path of your AppImage
+          files: |
+            *.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
