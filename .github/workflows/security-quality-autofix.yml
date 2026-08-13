@@ -22,12 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0 
 
       - name: Run Super-Linter (Auto-Fix Mode)
-        uses: super-linter/super-linter/slim@v7
+        uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Language Fixers mapped to bain-fork stack:
@@ -55,13 +55,13 @@ jobs:
     
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@9e3211c9a3b9311dfe05da2ed48eea3386f042dd
         with:
           # Configured for your repo's supported backend & frontend languages
           languages: javascript-typescript, python 
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@9e3211c9a3b9311dfe05da2ed48eea3386f042dd

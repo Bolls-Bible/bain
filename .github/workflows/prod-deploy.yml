@@ -15,13 +15,16 @@ on:
         required: true
         default: '0.0.0'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build and Push Docker Image to GitHub Container Registry
     runs-on: ubuntu-latest
     environment: prod
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: build django image for ghcr
         run: |
           echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -60,7 +63,7 @@ jobs:
       SOCIAL_AUTH_GITHUB_SECRET_SECRET: ${{ secrets.SOCIAL_AUTH_GITHUB_SECRET_SECRET }}
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Deploy on VPS runner
         shell: bash

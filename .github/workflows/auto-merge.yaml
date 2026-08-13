@@ -24,6 +24,9 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event.pull_request.draft == false
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Enable Auto-Merge via GitHub CLI
         run: |
