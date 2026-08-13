@@ -2,18 +2,16 @@ name: Auto-Release AppImage
 
 on:
   push:
-    branches: [ "main", "master" ]
-    # ONLY trigger automatically when files in these specific paths change
+    branches: ["main", "master"]
     paths:
-      - 'package.json'
-      - 'VERSION'
-      - 'src/**'
-      - 'build-scripts/**'
-  # ADDED: Enables the manual "Run workflow" button in GitHub Actions
+      - "django/bolls/static/imba/package.json"
+      - "django/bolls/static/imba/src/**"
+      - "django/bolls/static/imba/public/**"
+      - ".github/workflows/release-appimage.yaml"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Override version (leave blank to auto-detect)'
+        description: "Override version (leave blank to auto-detect)"
         required: false
         type: string
 
@@ -27,60 +25,149 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required to check existing Git tags
+          fetch-depth: 0
 
-      - name: Grab Current Version
-        id: get_version
+      - name: Detect app package and version
+        id: detect
+        shell: bash
         run: |
-          # If triggered manually AND a version was typed in, use that:
-          if [ -n "${{ github.event.inputs.version }}" ]; then
+          set -euo pipefail
+
+          CANDIDATES=(
+            "django/bolls/static/imba/package.json"
+            "package.json"
+          )
+
+          APP_DIR=""
+          for candidate in "${CANDIDATES[@]}"; do
+            if [[ -f "$candidate" ]]; then
+              APP_DIR="$(dirname "$candidate")"
+              break
+            fi
+          done
+
+          if [[ -z "$APP_DIR" ]]; then
+            echo "No package.json found for the app bundle; skipping AppImage release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ -n "${{ github.event.inputs.version }}" ]]; then
             VERSION="${{ github.event.inputs.version }}"
-            echo "Using manual override version: $VERSION"
           else
-            # Otherwise, auto-detect it from package.json
-            VERSION=$(jq -r '.version' package.json)
-            echo "Auto-detected version: $VERSION"
+            VERSION="$(jq -r '.version // .appVersion // empty' "$APP_DIR/package.json")"
+            if [[ -z "$VERSION" ]]; then
+              VERSION="$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")"
+            fi
           fi
-          
-          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
 
-      - name: Check if Version Already Released
-        id: check_tag
-        run: |
-          # Checks remote tags to see if this version was already released
-          if git ls-remote --tags origin | grep -q "refs/tags/v${{ steps.get_version.outputs.VERSION }}$"; then
-            echo "Release v${{ steps.get_version.outputs.VERSION }} already exists. Skipping build."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "New version detected. Proceeding with build."
-            echo "skip=false" >> $GITHUB_OUTPUT
+          if git ls-remote --tags origin | grep -q "refs/tags/v${VERSION}$"; then
+            echo "Release v${VERSION} already exists. Skipping build."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+
+          echo "APP_DIR=$APP_DIR" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "Using app source in $APP_DIR with version $VERSION"
+
+      - name: Skip when no package is present
+        if: steps.detect.outputs.skip == 'true'
+        run: echo "No AppImage source is available for this repository state; no release was created."
+
+      - name: Setup Node
+        if: steps.detect.outputs.skip == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install app dependencies
+        if: steps.detect.outputs.skip == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm --prefix "${{ steps.detect.outputs.APP_DIR }}" install
+
+      - name: Build static web bundle
+        if: steps.detect.outputs.skip == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm --prefix "${{ steps.detect.outputs.APP_DIR }}" run build
 
       - name: Install AppImage dependencies
-        if: steps.check_tag.outputs.skip == 'false'
+        if: steps.detect.outputs.skip == 'false'
+        shell: bash
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y fuse libfuse2 wget
+          sudo apt-get install -y fuse libfuse2 wget desktop-file-utils squashfs-tools
 
-      - name: Build AppImage
-        if: steps.check_tag.outputs.skip == 'false'
+      - name: Package AppImage
+        if: steps.detect.outputs.skip == 'false'
+        shell: bash
         run: |
-          echo "Building AppImage version ${{ steps.get_version.outputs.VERSION }}..."
-          
-          # -----------------------------------------------------------------
-          # INSERT YOUR APPIMAGE BUILD COMMANDS HERE
-          # -----------------------------------------------------------------
-          
+          set -euo pipefail
+
+          APP_DIR="$RUNNER_TEMP/Bolls.AppDir"
+          DIST_DIR="${{ steps.detect.outputs.APP_DIR }}/dist"
+          APPIMAGE_PATH="$GITHUB_WORKSPACE/Bolls-${{ steps.detect.outputs.VERSION }}.AppImage"
+
+          if [[ ! -d "$DIST_DIR" ]]; then
+            echo "Expected build output at $DIST_DIR but it was not generated."
+            exit 1
+          fi
+
+          rm -rf "$APP_DIR"
+          mkdir -p "$APP_DIR/usr/bin" "$APP_DIR/usr/share/applications"
+
+          cp -a "$DIST_DIR"/. "$APP_DIR/"
+
+          cat > "$APP_DIR/AppRun" <<'EOF'
+          #!/bin/bash
+          set -eu
+
+          HERE="$(dirname "$(readlink -f "$0")")"
+          PORT="${PORT:-8000}"
+
+          if [[ -f "$HERE/index.html" ]]; then
+            python3 -m http.server "$PORT" --directory "$HERE" >/dev/null 2>&1 &
+            SERVER_PID=$!
+            sleep 2
+            xdg-open "http://127.0.0.1:${PORT}/" || true
+            wait "$SERVER_PID"
+          else
+            echo "No bundled app content was found in this AppImage; expected an index.html file."
+            exit 1
+          fi
+          EOF
+          chmod +x "$APP_DIR/AppRun"
+
+          cat > "$APP_DIR/Bolls.desktop" <<'EOF'
+          [Desktop Entry]
+          Name=Bolls
+          Exec=AppRun
+          Type=Application
+          Terminal=false
+          Categories=Network;Utility;
+          EOF
+
+          wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" -O "$RUNNER_TEMP/appimagetool.AppImage"
+          chmod +x "$RUNNER_TEMP/appimagetool.AppImage"
+          "$RUNNER_TEMP/appimagetool.AppImage" "$APP_DIR" "$APPIMAGE_PATH"
+
+          ls -lh "$APPIMAGE_PATH"
+
       - name: Create GitHub Release & Upload AppImage
-        if: steps.check_tag.outputs.skip == 'false'
+        if: steps.detect.outputs.skip == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: "Release v${{ steps.get_version.outputs.VERSION }}"
+          tag_name: v${{ steps.detect.outputs.VERSION }}
+          name: "Release v${{ steps.detect.outputs.VERSION }}"
           draft: false
           prerelease: false
           generate_release_notes: true
-          # Make sure this matches the output path of your AppImage
           files: |
             *.AppImage
         env:
