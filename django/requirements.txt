@@ -7,7 +7,7 @@ chardet==7.4.3
 charset-normalizer==3.4.9
 cryptography==49.0.0
 defusedxml==0.7.1
-Django==6.0.7
+Django==5.2.16
 docopt==0.6.2
 eval_type_backport==0.4.0
 gunicorn==26.0.0
@@ -34,7 +34,7 @@ pytz==2026.2
 requests==2.34.2
 requests-oauthlib==2.0.0
 six==1.17.0
-social-auth-app-django==6.0.0
+social-auth-app-django==5.6.0
 social-auth-core==5.0.2
 sqlparse==0.5.5
 typing-inspection==0.4.2
