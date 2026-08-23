@@ -16,12 +16,13 @@ tag modal < section
 	translationsSearch = ''
 
 	@action def openSuggestedTranslation translation\string
-		search.query = ''
 		unless ALL_BOOKS[translation].find(do |element| return element.bookid == reader.book)
-			reader.book = ALL_BOOKS[reader.translation][0].bookid
+			reader.book = ALL_BOOKS[translation][0].bookid
+			console.log('Book not found in translation', translation, 'switching to first book', reader.book)
 			reader.chapter = 1
 		reader.translation = translation
 		reader.fetchVerses!
+		search.query = ''
 
 	@action def openTranslationInParallel translation\string
 		parallelReader.enable = yes
@@ -152,20 +153,20 @@ tag modal < section
 		return color.to("hsl").toString()
 
 	def openSuggestedBook bookId\string
-		search.query = ''
 		reader.book = bookId
 		reader.chapter = search.suggestions.chapter
 		reader.verse = search.suggestions.verse
 		reader.fetchVerses!
+		search.query = ''
 
 	def openSuggestedBookInParallel bookId\string
-		search.query = ''
 		openInParallel({
 			translation:search.suggestions.translation,
 			book: bookId,
 			chapter: search.suggestions.chapter,
 			verse: search.suggestions.verse
 		})
+		search.query = ''
 
 	@action def openHistoryEntry history\HistoryEntry
 		reader.translation = history.translation

@@ -485,6 +485,16 @@
         "short_name": "TR",
         "full_name": "Elzevir Textus Receptus (1624)",
         "updated": 1695799046182
+      },
+      {
+        "short_name": "NA28",
+        "full_name": "Novum Testamentum Graece, 28th Revised Edition. 2012",
+        "updated": 1787514259973
+      },
+      {
+        "short_name": "SBLGNT",
+        "full_name": "The Greek New Testament: SBL Edition. Michael Holmes, 2010",
+        "updated": 1787514259973
       }
     ]
   },

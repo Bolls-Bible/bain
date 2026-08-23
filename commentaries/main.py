@@ -3,10 +3,10 @@ import re
 from books_map import books_map, books_short_names
 
 
-translation = "NIVUK"
+translation = "NA28"
 
 
-def parseLinks(text):
+def parse_links(text):
     if type(text) is float:
         return ""
 
@@ -35,7 +35,7 @@ def parseLinks(text):
     return result
 
 
-# print(parseLinks("<a href='B:230 102:25'>Ps. 102:25</a>; <a href='B:290 40:21'>Is. 40:21</a>; (<a href='B:500 1:1-3'>John 1:1–3</a>; <a href='B:650 1:10'>Heb. 1:10</a>)"))
+# print(parse_links("<a href='B:230 102:25'>Ps. 102:25</a>; <a href='B:290 40:21'>Is. 40:21</a>; (<a href='B:500 1:1-3'>John 1:1–3</a>; <a href='B:650 1:10'>Heb. 1:10</a>)"))
 
 
 def generate_links_from_cross_references(row):
@@ -74,14 +74,14 @@ def convert_cross_references_into_links():
 
 
 def main():
-    df = pd.read_csv("mybcommentaries.csv", sep=",")
+    df = pd.read_csv("mybcommentaries.csv", sep=",", quotechar="'")
 
     del df["chapter_number_to"]
     del df["verse_number_to"]
     # del df["is_preceding"]
 
-    df["text"] = df.apply(lambda row: parseLinks(f'{row["marker"]} {row["text"]}'), axis=1)
-    # df["text"] = df.apply(lambda row: parseLinks(row["text"]), axis=1)
+    df["text"] = df.apply(lambda row: parse_links(f'{row["marker"]} {row["text"]}'), axis=1)
+    # df["text"] = df.apply(lambda row: parse_links(row["text"]), axis=1)
     df.rename(columns={"book_number": "book", "chapter_number_from": "chapter", "verse_number_from": "verse"}, inplace=True)
     del df["marker"]
 

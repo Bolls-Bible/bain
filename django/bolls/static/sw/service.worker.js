@@ -4,9 +4,9 @@ importScripts("/static/sw/jszip.min.js");
 importScripts("/static/sw/dexie.min.js");
 importScripts("/static/sw/scripts.js");
 
-const CACHE_NAME = "v3.4.1";
+const CACHE_NAME = "v3.4.2";
 const STATICS_CACHE = "statics-v1.0.19";
-const TEXTS_CACHE = "texts-v1.1.9";
+const TEXTS_CACHE = "texts-v1.2.0";
 
 const urlsToCache = [
   "/",

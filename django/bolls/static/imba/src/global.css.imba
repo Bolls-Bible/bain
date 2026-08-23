@@ -290,7 +290,7 @@ global css
 	html[data-transitions="true"] #iosinstall a@hover, html[data-transitions="true"] .main span@hover, html[data-transitions="true"] footer a@hover,html[data-transitions="true"] .rich-text a@hover
 		animation: 0.4s cubic-bezier(0.58, 0.3, 0.005, 1) 0s 1 normal none link-hover
 
-	s
+	s, m
 		d:none
 
 

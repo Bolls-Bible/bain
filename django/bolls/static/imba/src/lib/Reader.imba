@@ -50,6 +50,7 @@ class Reader < GenericReader
 
 	def fetchVerses
 		unless theChapterExistInThisTranslation book, chapter
+			console.warn("The chapter {book}:{chapter} does not exist in translation {translation}.")
 			return
 		
 		document.title = nameOfCurrentBook + ' ' + chapter + ' ' + translationNames[translation] + " Bolls Bible"

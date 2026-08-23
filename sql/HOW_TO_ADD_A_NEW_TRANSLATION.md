@@ -1,5 +1,11 @@
 # How to add a new translation to the project.
 
+## Automated way
+
+Go to `export-mybible-module` folder, place there the extracted downloaded MyBible sqlite module and run `python3 main.py`. It will extract the translation and books and commentaries (if any) into verses.csv, books.json and commentaries.csv. Then you may add them to the project as described below.
+
+## Manual way [deprecated]
+
 ### Find it in appropriate format.
 
 I prefer sqlite modules from MyBible app. I have a `myBible_concordance.sql` file where is code for converting MyBible modules into appropriate for me format. I download that modules from 'https://www.ph4.ru/b4_poisk.php?text=YLT&abbr=0'. Except of sqlite modules it may be also any database or csv or structured data but mind that you will need to convert it into csv format to insert it into my postgresql db.
@@ -10,7 +16,7 @@ The downloaded zip may ,contain two sqlite databases. The translation itself and
 
 Mind that the output will be interpreted as html. You may use there html tags like `<i></i>` or `<br>` &c to get the text neater. I would say also that you should use some text to make it looks better. Usually I get the text from MyBible modules and there are some patters. The `<J>` tags are incapsulating <i>Jesus words</i>. I delete it. There are `<t>` tags. Delete them. But the closing `</t>` tags you may change to new line tag `</br>`. There are many tags that I simply delete with regex. But you may find a new use for them. Map `<e>` to `<b>`, `<f>` and `<n>` to `<sup>`. Delete all `<pb/>`.
 
-Also add before all a new column `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c. *It should be unique!*  
+Also add before all a new column `translation` that should be filled with the abbreviation of the translation aka `YLT`, `KJV`, `UBIO` &c. _It should be unique!_
 
 ### Prepare Books list for given translation
 
@@ -26,7 +32,6 @@ Export the commentaries table as .csv from the formatted database, save it to `/
 Change `translation` variable at `/commentaries/main.py` to the translation abbreviation (for example 'JNT'), save and run it.
 It will store to the commentaries.csv file commentaries, ready for pushing to the app database.
 Run `\copy bolls_commentary(translation, book, chapter, verse, text) FROM '/home/bohuslav/bain/commentaries/commentaries.csv' DELIMITER ',' CSV HEADER;` to push the comments to the database (don't forget to edit the path :).
-
 
 ### Add it to the app.
 
@@ -64,6 +69,5 @@ If it times out try to get it from inside container, `wget -O verses.json -timeo
 ### Test it.
 
 Check out if it works. If the books chapters are in a proper number, if there are no weird signs. Check out everything that you think should be verified. And if everything is right... let me know and I'll check and deploy it.
-
 
 ### May Jhovah bless you!
