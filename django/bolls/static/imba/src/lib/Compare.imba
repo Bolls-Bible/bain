@@ -112,6 +112,18 @@ class Compare
 		activities.show_comparison_options = no
 		imba.commit!
 
+	def nextVerse
+		# Increment each number within versesToCompare,
+		# even if we hid the end of chapter -- an end of chapter in one translation doesn't mean the end in others
+		versesToCompare = versesToCompare.map(do |verse| return verse + 1)
+		load!
+
+	def previousVerse
+		# Decrement each number within versesToCompare, unless we are at the beginning of the chapter
+		unless versesToCompare.some(do |verse| return verse == 1)
+			versesToCompare = versesToCompare.map(do |verse| return verse - 1)
+			load!
+
 const compare = new Compare()
 
 export default compare

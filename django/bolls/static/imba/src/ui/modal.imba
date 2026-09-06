@@ -272,7 +272,15 @@ tag modal < section
 								<svg src=ICONS.X aria-hidden=yes>
 
 						<article.body id="compare" [scroll-behavior:auto]>
-							<p[o:0.75 mb:.5rem]> t.add_translations_msg
+							<[d:hcr]>
+								<p[o:0.75 mb:.5rem mr:auto]> t.add_translations_msg
+
+								<button.icnbtn @click=compare.previousVerse title=t.previous_verse disabled=compare.versesToCompare.some(do |verse| return verse == 1)>
+									<svg src=ICONS.CARET_LEFT aria-hidden=yes>
+
+								<button.icnbtn @click=compare.nextVerse title=t.next_verse>
+									<svg src=ICONS.CARET_RIGHT aria-hidden=yes>
+
 
 							<sortable bind=compare.list idKey="0.translation" namespace="compare" @sorted=onCompareListSorted>
 								css
@@ -757,12 +765,6 @@ tag modal < section
 		header
 			d:hcc
 
-			& > button, a
-				bgc:transparent c:inherit @hover:$acc-hover
-				px:.25em w:2rem cursor:pointer
-				d:flex fls:0
-				o@disabled:0.5
-
 			h2
 				text-align: center
 				margin: auto
@@ -781,6 +783,12 @@ tag modal < section
 			svg
 				min-inline-size: 1.5rem
 				min-block-size: 1.5rem
+
+		header > button, a, .icnbtn
+			bgc:transparent c:inherit @hover:$acc-hover
+			px:.25em w:2rem cursor:pointer
+			d:flex fls:0
+			o@disabled:0.5
 
 		.body
 			overflow-y: auto

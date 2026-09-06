@@ -80,7 +80,7 @@ export const english = {
 	"extended_search": "Extended search",
 	"filter_name": "Filter:",
 	"find_in_chapter": "Find in chapter",
-	"fixdrawers": "Fix drawers"
+	"fixdrawers": "Fix drawers",
 	"help": "Help",
 	"history": "History",
 	"ios_install": "Add to home screen",
@@ -107,9 +107,10 @@ export const english = {
 	"nt": "GREEK SCRIPTURES",
 	"ot": "HEBREW-ARAMAIC SCRIPTURES",
 	"next": "Next",
+	"next_verse": "Next verse",
 	"nighttheme": "Night theme",
 	"note": "Note",
-	"notes": "Notes"
+	"notes": "Notes",
 	"nothing": "We didn't find anything. Check or simplify your query.",
 	"nothing_else": "Nothing else",
 	"no_translation_downloaded": "There is no downloaded translation. Be online to download some",
@@ -122,6 +123,7 @@ export const english = {
 	"parallel_sync": "Parallel synchronization",
 	"phrase_not_found": "Phrase not found",
 	"prev": "Previous",
+	"previous_verse": "Previous verse",
 	"purge_cache": "Purge cache",
 	"random": "Random verse",
 	"reload": "Reload",
@@ -270,7 +272,7 @@ export const ukrainian = {
 	"extended_search": "Розширений пошук",
 	"filter_name": "Фільтр:",
 	"find_in_chapter": "Шукати в главі",
-	"fixdrawers": "Закріпити панелі"
+	"fixdrawers": "Закріпити панелі",
 	"help": "Допомога",
 	"history": "Історія",
 	"ios_install": "Додати на головний екран",
@@ -297,6 +299,7 @@ export const ukrainian = {
 	"nt": "ГРЕЦЬКІ ПИСАННЯ",
 	"ot": "ЄВРЕЙСЬКО-АРАМЕЙСЬКЕ ПИСАННЯ",
 	"next": "Вперед",
+	"next_verse": "Наступний вірш",
 	"nighttheme": "Нічна тема",
 	"note": "Нотатка",
 	"notes": "Нотатки",
@@ -312,6 +315,7 @@ export const ukrainian = {
 	"parallel_sync": "Синхронізація паралелей",
 	"phrase_not_found": "Фраза не знайдена",
 	"prev": "Назад",
+	"previous_verse": "Попередній вірш",
 	"purge_cache": "Очистити кеш",
 	"random": "Випадковий вірш",
 	"reload": "Перезавантажити",
@@ -325,7 +329,7 @@ export const ukrainian = {
 	"search": "Пошук",
 	"setlocalfont": "Вибрати локальний шрифт",
 	"share_via": "Поділитися через",
-	"share": "Поділитися"
+	"share": "Поділитися",
 	"copy_with_link": "Копіювати з посиланням",
 	"shortcuts": "Гярячі клавіші",
 	"shortcuts_list": [
@@ -361,10 +365,10 @@ export const ukrainian = {
 	"username_taken": "Ім'я користувача не доступне",
 	"username_mismatch": "Ім'я користувача не співпадає",
 	"usual_reading": "Звичайне читання",
-	"unexisten_chapter": "Ця глава неіснує"
+	"unexisten_chapter": "Ця глава неіснує",
 	"verse_break": "Перенос віршів",
 	"verse_commentary": "Коментар вірша",
-	"verse_number": "Номер вірша"
+	"verse_number": "Номер вірша",
 	"verse_picker": "Вибір вірша",
 	"view_source": "Дивитися джерельний код",
 	"write_something_awesone": "Напишіть щось дивовижне",
@@ -401,7 +405,7 @@ export const russian = {
 		"<a target='_blank' rel='noreferrer' href='https://t.me/Boguslavv'>Переведите интерфейс приложения на новый язык.</a>",
 		"<a target='_blank' relnoreferrer href='/donate/'>Пожертвуйте 🐈</a>. Это приложение не бесплатное. Всегда есть потребность в деньгах для хостинга и времени на разработку..."
 	],
-	"all": "Всё"
+	"all": "Всё",
 	"account_deleted": "Аккаунт удалён",
 	"account_edited": "Аккаунт изменён",
 	"add_translation_btn": "Добавить перевод",
@@ -460,7 +464,7 @@ export const russian = {
 	"extended_search": "Расширенный поиск",
 	"filter_name": "Фильтр:",
 	"find_in_chapter": "Искать в главе",
-	"fixdrawers": "Закрепить панели"
+	"fixdrawers": "Закрепить панели",
 	"help": "Помощь",
 	"history": "История",
 	"ios_install": "Добавить на главный экран",
@@ -487,9 +491,10 @@ export const russian = {
 	"nt": "ГРЕЧЕСКИЕ ПИСАНИЯ",
 	"ot": "ЕВРЕЙСКО-АРАМАЙСКИЕ ПИСАНИЯ",
 	"next": "Вперед",
+	"next_verse": "Следующий стих",
 	"nighttheme": "Ночная тема",
 	"note": "Заметка",
-	"notes": "Заметки"
+	"notes": "Заметки",
 	"nothing": "Мы ничего не нашли. Проверьте или упростите запрос.",
 	"nothing_else": "Нечего больше",
 	"no_translation_downloaded": "Нет загруженного перевода. Будьте онлайн, чтобы скачать",
@@ -502,6 +507,7 @@ export const russian = {
 	"parallel_sync": "Синхронизация параллельных переводов",
 	"phrase_not_found": "Фраза не найдена",
 	"prev": "Назад",
+	"previous_verse": "Предыдущий стих",
 	"purge_cache": "Очистить кэш",
 	"random": "Случайный стих",
 	"reload": "Обновить",
@@ -515,7 +521,7 @@ export const russian = {
 	"search": "Поиск",
 	"setlocalfont": "Выбрать локальный шрифт",
 	"share_via": "Отправить по",
-	"share": "Поделиться"
+	"share": "Поделиться",
 	"copy_with_link": "Копировать со ссылкой",
 	"shortcuts": "Горячие клавиши",
 	"shortcuts_list": [
@@ -551,10 +557,10 @@ export const russian = {
 	"username_taken": "Имя пользователя не доступно",
 	"username_mismatch": "Имя пользователя не совпадает",
 	"usual_reading": "Обычное чтение",
-	"unexisten_chapter": "Такой главы не существует"
+	"unexisten_chapter": "Такой главы не существует",
 	"verse_break": "Перенос стихов",
 	"verse_commentary": "Комментарий стиха",
-	"verse_number": "Номер стиха"
+	"verse_number": "Номер стиха",
 	"verse_picker": "Выбор стиха",
 	"view_source": "Смотреть исходный код",
 	"write_something_awesone": "Напишите что-нибудь классное",
@@ -591,7 +597,7 @@ export const portuguese = {
 		"<a target='_blank'rel='noreferrer' href='https://t.me/Boguslavv'>Traduza a interface para um novo idioma.</a>",
 		"<a target='_blank' relnoreferrer href='/donate/'>Doe 🐈</a>. Este aplicativo não é gratuito. Há sempre uma necessidade de dinheiro para hospedagem e tempo de desenvolvimento…"
 	],
-	"all": "Tudo"
+	"all": "Tudo",
 	"account_deleted": "Conta excluída",
 	"account_edited": "Conta editada",
 	"add_translation_btn": "Adicionar tradução",
@@ -650,7 +656,7 @@ export const portuguese = {
 	"extended_search": "Pesquisa avançada",
 	"filter_name": "Filtro:",
 	"find_in_chapter": "Localizar no capítulo",
-	"fixdrawers": "Fixar menus laterais"
+	"fixdrawers": "Fixar menus laterais",
 	"help": "Ajuda",
 	"history": "Histórico",
 	"ios_install": "Adicionar à tela inicial",
@@ -677,9 +683,10 @@ export const portuguese = {
 	"nt": "ESCRITURAS GREGAS",
 	"ot": "ESCRITURAS HEBRAICO-ARAMÁTICAS",
 	"next": "Próximo",
+	"next_verse": "Próximo verso",
 	"nighttheme": "Tema noturno",
 	"note": "Nota",
-	"notes": "Notas"
+	"notes": "Notas",
 	"nothing": "Não encontramos nada. Verifique ou simplifique sua consulta.",
 	"nothing_else": "Nada mais",
 	"no_translation_downloaded": "Não há tradução baixada. Esteja online para baixar alguns",
@@ -692,6 +699,7 @@ export const portuguese = {
 	"parallel_sync": "Sincronização lado a lado",
 	"phrase_not_found": "Frase não encontrada",
 	"prev": "Anterior",
+	"previous_verse": "Verso anterior",
 	"purge_cache": "Limpar cache",
 	"random": "Verso aleatório",
 	"reload": "Recarregar",
@@ -705,7 +713,7 @@ export const portuguese = {
 	"search": "Procurar",
 	"setlocalfont": "Escolha uma fonte local",
 	"share_via": "Compartilhar via",
-	"share": "Compartilhar"
+	"share": "Compartilhar",
 	"copy_with_link": "Copiar com link",
 	"shortcuts": "Atalhos",
 	"shortcuts_list": [
@@ -741,10 +749,10 @@ export const portuguese = {
 	"username_taken": "Nome de usuário não está disponível",
 	"username_mismatch": "Nome de usuário não corresponde",
 	"usual_reading": "Leitura habitual",
-	"unexisten_chapter": "Este capítulo não existe"
+	"unexisten_chapter": "Este capítulo não existe",
 	"verse_break": "Um versículo por linha",
 	"verse_commentary": "Comentário do verso",
-	"verse_number": "Número do verso"
+	"verse_number": "Número do verso",
 	"verse_picker": "Seletor de versículo",
 	"view_source": "Veja o código fonte",
 	"write_something_awesone": "Escreva algo incrível",
@@ -866,6 +874,7 @@ export const espanol = {
 	"nt": "ESCRITURAS GRIEGAS",
 	"ot": "ESCRITURAS HEBREO-ARAMAICAS",
 	"next": "Pos",
+	"next_verse": "Verso siguiente",
 	"nighttheme": "Tema nocturno",
 	"note": "Nota",
 	"notes": "Notas",
@@ -881,6 +890,7 @@ export const espanol = {
 	"parallel_sync": "Sincronización de paralelos",
 	"phrase_not_found": "Frase no encontrada",
 	"prev": "Anterior",
+	"previous_verse": "Verso anterior",
 	"purge_cache": "Purgar caché",
 	"random": "Verso al azar",
 	"reload": "Recargar",
@@ -1030,7 +1040,7 @@ export const german = {
 	"feedback": "Feedback",
 	"filter_name": "Namensfilter:",
 	"find_in_chapter": "Finden im Kapitel",
-	"fixdrawers": "Schubladen reparieren"
+	"fixdrawers": "Schubladen reparieren",
 	"help": "Hilfen",
 	"history": "History",
 	"ios_install": "Zum Startbildschirm hinzufügen",
@@ -1057,9 +1067,10 @@ export const german = {
 	"nt": "GRIECHISCHE SCHRIFTEN",
 	"ot": "HEBRÄISCH-ARAMAISCHE SCHRIFTEN",
 	"next": "Nächster",
+	"next_verse": "Nächster Vers",
 	"nighttheme": "Nachtthema",
 	"note": "Note",
-	"notes": "Notes"
+	"notes": "Notes",
 	"nothing": "Wir haben nichts gefunden. Bitte überprüfen oder vereinfachen Sie Ihre Anfrage.",
 	"nothing_else": "Sonst nichts zu sehen",
 	"no_translation_downloaded": "Es gibt keine heruntergeladene Übersetzung. Seien Sie online, um einige herunterzuladen",
@@ -1072,6 +1083,7 @@ export const german = {
 	"parallel_sync": "Synchronisation von Parallelen",
 	"phrase_not_found": "Satzteil nicht gefunden",
 	"prev": "Vorheriger",
+	"previous_verse": "Vorheriger Vers",
 	"purge_cache": "Cache leeren",
 	"random": "Zufälliger Vers",
 	"reload": "Nachfüllen",

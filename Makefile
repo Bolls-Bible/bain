@@ -172,8 +172,6 @@ nginx-logs nl:
 nginx-reload:
 	$(CONTAINER_MANAGER) exec nginx nginx -s reload
 
-# TODO: Add commands for adding translations along with commentaries
-
 # Ignore issues when command does not exist
 %:
 	@:
