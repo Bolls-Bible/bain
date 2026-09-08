@@ -1296,14 +1296,19 @@ def save_favorite_translations(request):
 
 def get_verse_counts(_, translation):
     try:
-        verses = Verses.objects.filter(translation=translation)
+        verse_counts = (
+            Verses.objects
+            .filter(translation=translation)
+            .values('book', 'chapter')
+            .annotate(count=Count('id'))
+        )
         verses_coun_map = {}
-        for verse in verses:
-            if verse.book not in verses_coun_map:
-                verses_coun_map[verse.book] = {}
-            if verse.chapter not in verses_coun_map[verse.book]:
-                verses_coun_map[verse.book][verse.chapter] = 0
-            verses_coun_map[verse.book][verse.chapter] += 1
+        for entry in verse_counts:
+            book = entry['book']
+            chapter = entry['chapter']
+            if book not in verses_coun_map:
+                verses_coun_map[book] = {}
+            verses_coun_map[book][chapter] = entry['count']
         return JsonResponse(verses_coun_map, safe=False)
     except Exception as error:
         print(error)
