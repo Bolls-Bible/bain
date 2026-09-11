@@ -142,6 +142,10 @@ tag settings-drawer < aside
 						<button .active-butt=('es'==language) @click=(language = 'es')> "Español"
 						<button .active-butt=('ru'==language) @click=(language = 'ru')> "русский"
 
+		<button.settings-btn @click=activities.showTranslationsList>
+			<svg src=ICONS.ORANGE_SLICE aria-hidden=true>
+			t.change_translation
+
 		<button.option-box.checkbox-parent @click=(parallelReader.enable = !parallelReader.enabled) .checkbox-turned=parallelReader.enabled>
 			t.parallel
 			<.checkbox> <span>
@@ -229,8 +233,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 
 			<p>
-				"v3.4.4 | "
-				<time dateTime='2026-9-9'> "9.9.2026"
+				"v3.4.5 | "
+				<time dateTime='2026-9-11'> "11.9.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"

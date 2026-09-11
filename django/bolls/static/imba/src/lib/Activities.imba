@@ -31,6 +31,7 @@ class Activities
 	show_bookmarks = no
 	show_add_bookmark = no
 	show_color_picker = no
+	unfold_translations_list = no
 
 	blockInScroll = null
 	scrollLockTimeout = null
@@ -135,6 +136,11 @@ class Activities
 			imba.commit!.then do
 				settingsDrawerOffset = -300
 				imba.commit!
+
+	def showTranslationsList
+		unfold_translations_list = !unfold_translations_list
+		toggleBooksMenu!
+		toggleSettingsMenu!
 
 	def openModal modal_name\string
 		if activeModal !== modal_name

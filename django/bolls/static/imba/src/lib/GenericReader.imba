@@ -244,10 +244,7 @@ class GenericReader
 		setTimeout(&,250) do
 			const verseNumberElement = document.getElementById(id)
 			if verseNumberElement
-				verseNumberElement.offsetParent.scrollTo({
-					behavior: theme.scrollBehavior,
-					top: verseNumberElement.offsetTop - theme.fontSize
-				})
+				verseNumberElement.scrollIntoView({behavior: theme.scrollBehavior, block: 'start'})
 				if highlight then highlightLinkedVerses(id, endverse)
 			else
 				findVerse(id, endverse, highlight)

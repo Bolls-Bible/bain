@@ -4,7 +4,6 @@ import ALL_BOOKS from '../data/translations_books.json'
 import * as ICONS from 'imba-phosphor-icons'
 
 tag books-drawer < nav
-	unfoldTranslationsList = no
 	unfoldedLanguage = ''
 	unfoldedBook = reader.book
 
@@ -93,7 +92,7 @@ tag books-drawer < nav
 				reader.chapter = 1
 			reader.translation = translation
 			reader.fetchVerses!
-		unfoldTranslationsList = no
+		activities.unfold_translations_list = no
 
 	@action def goToChapter bookid\number, chapter\number
 		if parallelReader.enabled && activeTranslation == parallelReader.translation
@@ -117,14 +116,14 @@ tag books-drawer < nav
 					[transform:rotate({63 * (1 - +settings.chronorder)}deg)]
 					@click=toggleChronorder>
 						<title> t.chronological_order
-				<button.btn title=t.change_translation @click=(unfoldTranslationsList = !unfoldTranslationsList)>
+				<button.btn title=t.change_translation @click=(activities.unfold_translations_list = !activities.unfold_translations_list)>
 					activeTranslation
-					<svg[min-width:1rem h:1.1em mb:-0.2em transform:rotate({180 * +unfoldTranslationsList}deg)] src=ICONS.CARET_DOWN area-hidden=true>
+					<svg[min-width:1rem h:1.1em mb:-0.2em transform:rotate({180 * +activities.unfold_translations_list}deg)] src=ICONS.CARET_DOWN area-hidden=true>
 				if vault.available
 					<svg src=ICONS.DOWNLOAD_SIMPLE role="button" @click=activities.toggleDownloads>
 						<title> t.downloads
 			
-		if unfoldTranslationsList
+		if activities.unfold_translations_list
 			<div[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-1rem] ease>
 				if settings.favoriteTranslations.length
 					<[d:flex flw:wrap ai:center p:0.5rem]>
