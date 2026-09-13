@@ -234,7 +234,7 @@ tag settings-drawer < aside
 
 			<p>
 				"v3.4.5 | "
-				<time dateTime='2026-9-11'> "11.9.2026"
+				<time dateTime='2026-9-13'> "13.9.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"

@@ -138,9 +138,9 @@ class Activities
 				imba.commit!
 
 	def showTranslationsList
-		unfold_translations_list = !unfold_translations_list
-		toggleBooksMenu!
+		unfold_translations_list = yes
 		toggleSettingsMenu!
+		booksDrawerOffset = 0
 
 	def openModal modal_name\string
 		if activeModal !== modal_name
