@@ -151,7 +151,7 @@ tag books-drawer < nav
 		else
 			<ul[h:auto max-height:100% @off:0px o@off:0 ofy:scroll @off:hidden -webkit-overflow-scrolling:touch pb:8rem @off:0 y@off:-1rem] ease>
 				for book, index in books
-					<li key=book.bookid>
+					<li key=book.bookid id="book-{book.bookid}">
 						<p.li dir="auto" .active=(book.bookid == activeBook) @click=(unfoldedBook = book.bookid)> book.name
 						if book.bookid == unfoldedBook
 							<ul[o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>

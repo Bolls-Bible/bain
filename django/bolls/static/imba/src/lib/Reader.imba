@@ -25,6 +25,8 @@ class Reader < GenericReader
 
 	@autorun def saveBook
 		setValue('book', book)
+		if activities && !activities.activeParallelAtBooksDrawer
+			findVerse("book-{book}")
 
 	@autorun def saveChapter
 		setValue('chapter', chapter)
@@ -44,6 +46,7 @@ class Reader < GenericReader
 			book = getValue('book') || 1
 			chapter = getValue('chapter') || 1
 			fetchVerses()
+		findVerse("book-{book}")
 
 	get myRenderer
 		document.getElementById('main-reader')

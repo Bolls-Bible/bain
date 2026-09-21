@@ -30,6 +30,8 @@ class ParallelReader < GenericReader
 
 	@autorun def saveBook
 		setValue('parallel_book', book)
+		if activities && activities.activeParallelAtBooksDrawer and enabled
+			findVerse("book-{book}")
 
 	@autorun def saveChapter
 		setValue('parallel_chapter', chapter)
