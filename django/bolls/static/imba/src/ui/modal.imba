@@ -260,7 +260,7 @@ tag modal < section
 												language.language
 												<svg src=ICONS.PLUS width="1.5rem" height="1.5rem">
 
-											for translation in language.translations when filterCompareTranslation(translation)
+											for translation in language.translations when filterCompareTranslation(translation) and !translation.ablated
 												<button[w:100% p:0.5rem] @click=compare.toggleTranslation(translation)>
 													<strong> translation.short_name
 													', ', translation.full_name
@@ -687,7 +687,7 @@ tag modal < section
 									<div.suggestions>
 										<input.suggestions-search [mb:0] placeholder=t.search bind=translationsSearch minLength=2 @click.stop>
 										<ul.focusable[visibility:visible o:1]>
-											for translation in translationsSearch.length >= 2 ? search.suggestTranslations(translationsSearch) : translations
+											for translation in translationsSearch.length >= 2 ? search.suggestTranslations(translationsSearch) : translations when !translation.ablated
 												<li.li @click=(do search.translation = translation.short_name)>
 													translation.short_name
 													', '

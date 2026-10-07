@@ -70,8 +70,9 @@
       {
         "full_name": "كتاب الحياة",
         "short_name": "NAV",
-        "updated": 1771704695932,
-        "dir": "rtl"
+        "updated": 1791366628177,
+        "dir": "rtl",
+        "ablated": true
       },
       {
         "full_name": "Smith and Van Dyke",
@@ -237,12 +238,14 @@
       {
         "short_name": "NIV2011",
         "full_name": "New International Version, 2011",
-        "updated": 1626349711821
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "NIV",
         "full_name": "New International Version, 1984",
-        "updated": 1626349711821
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "NLT",
@@ -367,17 +370,20 @@
       {
         "short_name": "NIVUK",
         "full_name": "New International Version® (Anglicised), NIV®, 2011",
-        "updated": 1786277420232
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "TNIV",
         "full_name": "Today's New International Version, 2005",
-        "updated": 1786277420232
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "NIRV",
         "full_name": "New International Reader's Version",
-        "updated": 1786277420232
+        "updated": 1791366628177,
+        "ablated": true
       }
     ]
   },
@@ -393,8 +399,9 @@
       {
         "short_name": "FACB",
         "full_name": "کتاب مقدس، ترجمه تفسیری Farsi Contemporary Bible",
-        "updated": 1626349711821,
-        "dir": "rtl"
+        "updated": 1791366628177,
+        "dir": "rtl",
+        "ablated": true
       }
     ]
   },
@@ -709,7 +716,8 @@
       {
         "short_name": "NVIPT",
         "full_name": "Nova Versão Internacional",
-        "updated": 1781522639873
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "NVT",
@@ -869,7 +877,8 @@
       {
         "short_name": "NVI",
         "full_name": "Nueva Versión Internacional, 2015",
-        "updated": 1772652300633
+        "updated": 1791366628177,
+        "ablated": true
       },
       {
         "short_name": "NTV",

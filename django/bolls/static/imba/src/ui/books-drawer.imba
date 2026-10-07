@@ -139,12 +139,12 @@ tag books-drawer < nav
 							<ul [o@off:0 m:0 0 1rem @off:-1.5rem 0 1.5rem transition-timing-function:quad h@off:0px of:hidden] dir="auto" ease>
 								for translation in language.translations
 									if window.navigator.onLine || vault.downloaded_translations.indexOf(translation.short_name) != -1
-										<li.li .active=(translation.short_name == activeTranslation) [display: flex]>
+										<li.li .active=(translation.short_name == activeTranslation) [d:flex] [text-decoration:line-through]=translation.ablated>
 											<span @click=changeTranslation(translation.short_name)>
 												<b> translation.short_name
 												', '
 												translation.full_name
-											<[d:flex fld:column ml:.25rem]>
+											unless translation.ablated then <[d:flex fld:column ml:.25rem]>
 												<svg src=ICONS.HEART fill="white" [size:1em stroke:$c @hover:$acc-hover] .fill-svg=settings.favoriteTranslations.includes(translation.short_name) @click.prevent.stop=toggleTranslationFavor(translation.short_name)>
 								if vault.downloaded_translations.length == 0 && !window.navigator.onLine
 									<p.li> t["no_translation_downloaded"]

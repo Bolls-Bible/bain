@@ -76,7 +76,7 @@ class Compare
 		imba.commit!
 	
 	@action def addAllTranslations language\{translations: Translation[]}
-		for translation in language.translations
+		for translation in language.translations when !translation.ablated
 			if translations.indexOf(translation.short_name) == -1
 				translations.unshift(translation.short_name)
 		load!

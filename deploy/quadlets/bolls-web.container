@@ -24,7 +24,7 @@ HealthStartPeriod=30s
 Restart=always
 RestartSec=5
 TimeoutStartSec=900
-CPUQuota=250%
+CPUQuota=200%
 MemoryHigh=1500M
 MemoryMax=2G
 

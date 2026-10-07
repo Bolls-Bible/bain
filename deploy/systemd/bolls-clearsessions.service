@@ -1,0 +1,8 @@
+[Unit]
+Description=Purge expired Django sessions and vacuum the session table
+After=bolls-web.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/podman exec bolls-web python manage.py clearsessions
+ExecStart=/usr/bin/podman exec bolls-db sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -c "VACUUM (ANALYZE) django_session;"'

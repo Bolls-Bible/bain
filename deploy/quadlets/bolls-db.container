@@ -12,7 +12,13 @@ Volume=POSTGRES_HOST_PATH:/var/lib/postgresql:Z
 EnvironmentFile=ENV_FILE_PATH
 Environment=PGDATA=/var/lib/postgresql/data/bolls
 PodmanArgs=--cgroup-manager=cgroupfs
-Exec=postgres -c shared_buffers=512MB -c effective_cache_size=2048MB -c work_mem=24MB -c maintenance_work_mem=256MB
+Exec=postgres \
+  -c shared_buffers=1536MB -c effective_cache_size=5GB -c work_mem=16MB -c maintenance_work_mem=1GB \
+  -c max_connections=50 -c max_wal_size=8GB -c min_wal_size=1GB -c checkpoint_timeout=15min \
+  -c checkpoint_completion_target=0.9 -c wal_compression=on -c wal_buffers=64MB \
+  -c random_page_cost=1.1 -c effective_io_concurrency=200 -c max_parallel_maintenance_workers=3 \
+  -c autovacuum_max_workers=4 -c autovacuum_vacuum_cost_limit=2000 \
+  -c autovacuum_vacuum_scale_factor=0.05 -c autovacuum_analyze_scale_factor=0.02
 HealthCmd=sh -c 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
 HealthInterval=10s
 HealthTimeout=5s
@@ -22,9 +28,9 @@ HealthRetries=10
 Restart=always
 RestartSec=5
 TimeoutStartSec=900
-CPUQuota=150%
-MemoryHigh=1500M
-MemoryMax=2G
+CPUQuota=300%
+MemoryHigh=3500M
+MemoryMax=4G
 
 [Install]
 WantedBy=default.target

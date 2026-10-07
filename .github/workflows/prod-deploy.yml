@@ -181,6 +181,11 @@ jobs:
             -e "s|NGINX_CONFD_HOST_PATH|$CONFIG_ROOT/nginx/conf.d|g" \
             deploy/quadlets/bolls-web.container > "$QUADLET_DIR/bolls-web.container"
 
+          echo "Installing maintenance timers..."
+          SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
+          mkdir -p "$SYSTEMD_USER_DIR"
+          cp deploy/systemd/bolls-clearsessions.service deploy/systemd/bolls-clearsessions.timer "$SYSTEMD_USER_DIR/"
+
           echo "Pulling release image: $IMAGE_TAG"
           podman pull ghcr.io/bolls-bible/bain/django:$IMAGE_TAG
 
@@ -194,6 +199,7 @@ jobs:
           systemctl --user restart bolls-db.service
           systemctl --user restart bolls-web.service
           systemctl --user restart bolls-nginx.service
+          systemctl --user enable --now bolls-clearsessions.timer
 
           echo "Verifying ACME challenge path..."
           mkdir -p "$CHALLENGES_DIR/.well-known/acme-challenge"

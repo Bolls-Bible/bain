@@ -51,7 +51,7 @@ class Search
 		let suggested_translations = []
 		if query.length >= 2
 			const lowerQuery = query.toLowerCase()
-			for translation in translations
+			for translation in translations when !translation.ablated
 				if lowerQuery in translation.short_name.toLowerCase! or lowerQuery in translation.full_name.toLowerCase! or lowerQuery in translation.language.toLowerCase!
 					suggested_translations.push(translation)
 		return suggested_translations

@@ -44,6 +44,7 @@ export type Translation = {
   short_name: string;
   updated: number;
   dir?: string; // "rtl" | "ltr";
+  ablated?: boolean;
 };
 
 export type HighlightRectangular = {

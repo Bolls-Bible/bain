@@ -1,6 +1,6 @@
 from itertools import islice
 
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import F, Func
 import re
 import os
@@ -84,7 +84,7 @@ def _vector_search(translation, piece, book, page, limit):
 
     offset = max(0, (page - 1) * limit)
     query_embedding = _get_query_embedding(piece)
-    # TODO: We only check if there is embedding for query string, but not checking if the embedding is generated for the verses. We should check if the embedding is generated for the verses as well, and if not, we should fall back to linear search.
+    # We only check if there is embedding for query string, but not checking if the embedding is generated for the verses. We should check if the embedding is generated for the verses as well, and if not, we should fall back to linear search.
     translation_has_embeddings = Verses.objects.filter(translation=translation, embedding__isnull=False).exists()
     if query_embedding is None or not translation_has_embeddings:
         print("Embedding API is unavailable, falling back to linear search")
@@ -770,6 +770,7 @@ def get_a_verse(_, translation, book, chapter, verse):
 
 
 @require_POST
+@transaction.atomic
 def save_bookmarks(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=401)
@@ -952,7 +953,7 @@ def history_v2(request):
             merged_history = sorted(seen.values(), key=lambda x: x.get("date", 0), reverse=True)[:256]
 
             obj.history = json.dumps(merged_history)
-            obj.save()
+            obj.save(update_fields=["history"])
 
         except History.DoesNotExist:
             user.history_set.create(history=received_json_data["history"])
@@ -1205,6 +1206,7 @@ def download_notes(request):
 
 
 @require_POST
+@transaction.atomic
 def import_notes(request):
     if not request.user.is_authenticated:
         return HttpResponse(status=405)
@@ -1260,7 +1262,7 @@ def save_compare_translations(request):
     try:
         history = user.history_set.get(user=user)
         history.compare_translations = received_json_data["translations"]
-        history.save()
+        history.save(update_fields=["compare_translations"])
 
     except History.DoesNotExist:
         user.history_set.create(history="[]", compare_translations=received_json_data["translations"])
@@ -1283,7 +1285,7 @@ def save_favorite_translations(request):
     try:
         history = user.history_set.get(user=user)
         history.favorite_translations = received_json_data["translations"]
-        history.save()
+        history.save(update_fields=["favorite_translations"])
 
     except History.DoesNotExist:
         user.history_set.create(history="[]", favorite_translations=received_json_data["translations"])

@@ -242,6 +242,10 @@ tag chapter < section
 			background-size: 100% calc(0.2em + .25rem)
 			padding-bottom: .25rem
 
+			>>> a
+				c@hover:$acc-hover
+				text-decoration: underline
+
 		.verse
 			c: $acc @hover:$acc-hover
 			bgc@hover:$acc-bgc-hover

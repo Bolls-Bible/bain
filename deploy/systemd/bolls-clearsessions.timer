@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily purge of expired Django sessions
+
+[Timer]
+OnCalendar=*-*-* 03:30:00
+RandomizedDelaySec=15m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
