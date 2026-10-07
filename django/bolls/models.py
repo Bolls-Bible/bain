@@ -1,9 +1,9 @@
 from django.db import models
-from django.db.models import F, Func
+from django.db.models import F, Func, Q
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector
-from pgvector.django import VectorField, HnswIndex
+from pgvector.django import HnswIndex, HalfVectorField
 
 
 class Verses(models.Model):
@@ -12,7 +12,7 @@ class Verses(models.Model):
     chapter = models.PositiveSmallIntegerField()
     verse = models.PositiveSmallIntegerField()
     text = models.TextField()
-    embedding = VectorField(dimensions=1536, null=True, blank=True)
+    embedding = HalfVectorField(dimensions=1536, null=True, blank=True)
 
     def natural_key(self):
         return (self.translation, self.book, self.chapter, self.verse)
@@ -21,7 +21,14 @@ class Verses(models.Model):
         indexes = [
             models.Index(fields=["translation", "book", "chapter"]),
             models.Index(fields=["translation", "book", "chapter", "verse"]),
-            HnswIndex(name="text_vector_index", fields=["embedding"], m=16, ef_construction=64, opclasses=["vector_cosine_ops"]),
+            HnswIndex(
+                name="text_vector_halfvec_idx",
+                fields=["embedding"],
+                m=16,
+                ef_construction=48,
+                opclasses=["halfvec_cosine_ops"],
+                condition=Q(embedding__isnull=False),
+            ),
         ]
 
 

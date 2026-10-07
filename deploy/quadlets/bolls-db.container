@@ -13,7 +13,7 @@ EnvironmentFile=ENV_FILE_PATH
 Environment=PGDATA=/var/lib/postgresql/data/bolls
 PodmanArgs=--cgroup-manager=cgroupfs
 Exec=postgres \
-  -c shared_buffers=1536MB -c effective_cache_size=5GB -c work_mem=16MB -c maintenance_work_mem=1GB \
+  -c shared_buffers=1536MB -c effective_cache_size=5GB -c work_mem=16MB -c maintenance_work_mem=2500MB \
   -c max_connections=50 -c max_wal_size=8GB -c min_wal_size=1GB -c checkpoint_timeout=15min \
   -c checkpoint_completion_target=0.9 -c wal_compression=on -c wal_buffers=64MB \
   -c random_page_cost=1.1 -c effective_io_concurrency=200 -c max_parallel_maintenance_workers=3 \

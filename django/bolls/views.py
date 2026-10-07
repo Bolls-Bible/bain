@@ -81,6 +81,7 @@ def _set_book_filter(book):
 
 def _vector_search(translation, piece, book, page, limit):
     from pgvector.django import CosineDistance
+    from pgvector.django.halfvec import HalfVector
 
     offset = max(0, (page - 1) * limit)
     query_embedding = _get_query_embedding(piece)
@@ -112,7 +113,7 @@ def _vector_search(translation, piece, book, page, limit):
     if isinstance(book_filter, Q):
         queryset = (
             Verses.objects.filter(Q(**search_params) & book_filter)
-            .annotate(distance=CosineDistance("embedding", query_embedding))
+            .annotate(distance=CosineDistance("embedding", HalfVector(query_embedding)))
             .annotate(rank=1 - F("distance"))
             .filter(rank__gte=min_score)
             .order_by("distance")
@@ -121,7 +122,7 @@ def _vector_search(translation, piece, book, page, limit):
         search_params.update(book_filter)
         queryset = (
             Verses.objects.filter(**search_params)
-            .annotate(distance=CosineDistance("embedding", query_embedding))
+            .annotate(distance=CosineDistance("embedding", HalfVector(query_embedding)))
             .annotate(rank=1 - F("distance"))
             .filter(rank__gte=min_score)
             .order_by("distance")
