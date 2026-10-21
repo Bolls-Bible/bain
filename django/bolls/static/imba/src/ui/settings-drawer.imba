@@ -204,7 +204,7 @@ tag settings-drawer < aside
 				<svg src=ICONS.HAND_COINS aria-hidden=true>
 				t.donate
 
-		<a.settings-btn target="_blank" href="/api">
+		<a.settings-btn target="_blank" href="/api/docs/">
 			<svg src=ICONS.CODE aria-hidden=true>
 			"API"
 
@@ -233,8 +233,8 @@ tag settings-drawer < aside
 				<a target="_blank" rel="noreferrer" href="https://docs.djangoproject.com"> "Django"
 
 			<p>
-				"v3.5.0 | "
-				<time dateTime='2026-10-7'> "7.10.2026"
+				"v3.5.1 | "
+				<time dateTime='2026-10-21'> "21.10.2026"
 
 			<p>
 				"© 2019-present Павлишинець Богуслав 🎻 Bohuslav Pavlyshynets"
