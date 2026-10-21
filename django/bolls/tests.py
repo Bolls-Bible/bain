@@ -213,6 +213,66 @@ class BollsTestCase(TestCase):
             },
         )
 
+    def test_link_to_chapter(self):
+        request = self.client.get("/YLT/22/8/")
+        self.assertEqual(request.status_code, 200)
+        self.assertIn(b"window.chapter = 8;", request.content)
+        self.assertIn(b"Many waters are not able to quench the love", request.content)
+
+    def test_link_to_chapter_redirects_book_name_to_id(self):
+        request = self.client.get("/YLT/SNG/8/")
+        self.assertRedirects(request, "/YLT/22/8/")
+
+    def test_link_to_chapter_unknown_translation(self):
+        request = self.client.get("/NOPE/Genesis/1/")
+        self.assertEqual(request.status_code, 404)
+
+    def test_link_to_verse(self):
+        request = self.client.get("/YLT/22/8/7/")
+        self.assertEqual(request.status_code, 200)
+        self.assertIn(b"window.verse = 7;", request.content)
+        self.assertIn(
+            b'<meta name="description" content="Many waters are not able to quench the love',
+            request.content,
+        )
+
+    def test_link_to_verse_redirects_book_name_to_id(self):
+        request = self.client.get("/YLT/SNG/8/7/")
+        self.assertRedirects(request, reverse("link_to_verse", kwargs={"translation": "YLT", "book": 22, "chapter": 8, "verse": 7}))
+
+    def test_link_to_verse_international(self):
+        request = self.client.get("/international/YLT/22/8/7/")
+        self.assertEqual(request.status_code, 200)
+        self.assertIn(b"window.verse = 7;", request.content)
+
+        request = self.client.get("/international/YLT/SNG/8/7/")
+        self.assertRedirects(request, "/YLT/22/8/7/")
+
+    def test_link_to_verse_unknown_translation(self):
+        request = self.client.get("/NOPE/Genesis/1/1/")
+        self.assertEqual(request.status_code, 404)
+
+    def test_link_to_verses(self):
+        request = self.client.get("/YLT/22/8/6-7/")
+        self.assertEqual(request.status_code, 200)
+        self.assertIn(b"window.verse = 6;", request.content)
+        self.assertIn(b"Many waters are not able to quench the love", request.content)
+
+    def test_link_to_verses_redirects_book_name_to_id(self):
+        request = self.client.get("/YLT/SNG/8/6-7/")
+        self.assertRedirects(
+            request,
+            reverse("link_to_verses", kwargs={"translation": "YLT", "book": 22, "chapter": 8, "verse": 6, "endverse": 7}),
+        )
+
+    def test_link_to_verses_international(self):
+        request = self.client.get("/international/YLT/SNG/8/6-7/")
+        self.assertRedirects(request, "/YLT/22/8/6-7/")
+
+    def test_link_to_verses_unknown_translation(self):
+        request = self.client.get("/NOPE/Genesis/1/1-3/")
+        self.assertEqual(request.status_code, 404)
+
     # /v2/find/KJV?search=searched+the+scriptures&page=1&limit=30 returns 6 while total is 9
     def test_paginate_results_materializes_iterables_before_slicing(self):
         class IterableWithoutSlice:
