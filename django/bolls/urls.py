@@ -69,9 +69,10 @@ urlpatterns = [
         views.link_to_verses,
     ),
     path("<slug:translation>/<str:book>/<int:chapter>/", views.link_to_chapter, name="link_to_chapter"),
-    path("<slug:translation>/<str:book>/<int:chapter>/<int:verse>/", views.link_to_verse),
+    path("<slug:translation>/<str:book>/<int:chapter>/<int:verse>/", views.link_to_verse, name="link_to_verse"),
     path(
         "<slug:translation>/<str:book>/<int:chapter>/<int:verse>-<int:endverse>/",
         views.link_to_verses,
+        name="link_to_verses",
     ),
 ]
