@@ -57,7 +57,6 @@ Create the A or AAAA record for `bolls.life` and point it to the VPS before the 
 
 Set the same production secrets already used by the workflow:
 
-- `GH_PAT`
 - `DEBUG_SECRET`, `SECRET_KEY_SECRET`
 - `POSTGRES_DB_SECRET`, `POSTGRES_USER_SECRET`, `POSTGRES_PASSWORD_SECRET`
 - `EMAIL_HOST_USER_SECRET`, `EMAIL_HOST_PASSWORD_SECRET`
@@ -65,6 +64,10 @@ Set the same production secrets already used by the workflow:
 - `SOCIAL_AUTH_GITHUB_KEY_SECRET`, `SOCIAL_AUTH_GITHUB_SECRET_SECRET`
 - variable: `DJANGO_ALLOWED_HOSTS_SECRET`
 - secret: `NGINX_DOMAIN_NAME=bolls.life`
+
+The build job publishes to GHCR using its automatically provided `GITHUB_TOKEN`.
+The package must grant the repository Actions write access. The public image can
+be pulled on the VPS without GHCR credentials.
 
 ### 5. What the deploy pipeline does now
 

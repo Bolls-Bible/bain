@@ -20,11 +20,17 @@ jobs:
     name: Build and Push Docker Image to GitHub Container Registry
     runs-on: ubuntu-latest
     environment: prod
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v7
+      - name: Log in to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
       - name: build django image for ghcr
         run: |
-          echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == feat/* ]]; then
             IMAGE_TAG="${GITHUB_SHA}"
