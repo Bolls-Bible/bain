@@ -855,6 +855,13 @@
     "language": "Spanish Español",
     "translations": [
       {
+        "short_name": "NTBT",
+        "full_name": "Santa Biblia, Nueva Traducción BibliaTodo",
+        "updated": 1794157847058,
+        "source": "https://www.bibliatodo.com/ntbt/",
+        "credit": "Santa Biblia, Nueva Traducción BibliaTodo (NTBT). Publicada por BibliaTodo Bible Society, sello editorial de BibliaTodo LLC. Uso, reproducción y distribución autorizados gratuitamente conforme a la Licencia NTBT."
+      },
+      {
         "short_name": "BTX3",
         "full_name": "La Biblia Textual 3ra Edicion",
         "updated": 1635446313426

@@ -45,6 +45,8 @@ export type Translation = {
   updated: number;
   dir?: string; // "rtl" | "ltr";
   ablated?: boolean;
+  credit?: string;
+  source?: string;
 };
 
 export type HighlightRectangular = {

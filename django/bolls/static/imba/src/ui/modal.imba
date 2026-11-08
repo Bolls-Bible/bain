@@ -219,6 +219,10 @@ tag modal < section
 								<svg src=ICONS.PAPER_PLANE_TILT aria-hidden=yes>
 
 						<article.body.rich-text>
+							css
+								& >>> a
+									w@important:fit-content
+
 							<h3> t.content
 							<ul>
 								for q in t.HB

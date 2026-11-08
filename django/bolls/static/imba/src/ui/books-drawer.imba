@@ -144,8 +144,13 @@ tag books-drawer < nav
 												<b> translation.short_name
 												', '
 												translation.full_name
-											unless translation.ablated then <[d:flex fld:column ml:.25rem]>
-												<svg src=ICONS.HEART fill="white" [size:1em stroke:$c @hover:$acc-hover] .fill-svg=settings.favoriteTranslations.includes(translation.short_name) @click.prevent.stop=toggleTranslationFavor(translation.short_name)>
+
+											if translation.credit then <a[d:hcc p:.25rem] href=translation.source target="_blank">
+												<svg src=ICONS.COPYRIGHT fill="white" [size:1.5em stroke:$c @hover:$acc-hover] title=translation.credit>
+
+											unless translation.ablated then <[d:hcc p:.25rem] @click.prevent.stop=toggleTranslationFavor(translation.short_name)>
+												<svg src=ICONS.HEART fill="white" [size:1.5em stroke:$c @hover:$acc-hover] .fill-svg=settings.favoriteTranslations.includes(translation.short_name)>
+
 								if vault.downloaded_translations.length == 0 && !window.navigator.onLine
 									<p.li> t["no_translation_downloaded"]
 		else
@@ -198,7 +203,7 @@ tag books-drawer < nav
 			c@hover:$acc-hover
 
 		.li
-			d:hcs
+			d:hss
 			color:inherit
 			background:inherit
 			padding:0.75rem

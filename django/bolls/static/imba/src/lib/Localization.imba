@@ -28,7 +28,7 @@ class Localization
 					#language = 'es'
 					document.documentElement.lang = "es"
 					if !window.translation
-						setValue('translation', 'BTX3')
+						setValue('translation', 'NTBT')
 				when 'pt'
 					#language = 'pt'
 					document.documentElement.lang = "pt"
